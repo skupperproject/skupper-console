@@ -3,7 +3,7 @@ import { SKTableColumn } from 'types/SkTable.interfaces';
 import { BiFlowListLabels } from './BiFlowList.enum';
 import { ProcessesRoutesPaths } from '../../../pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '../../../pages/Sites/Sites.enum';
-import { BiFlowResponse } from '../../../types/REST.interfaces';
+import { BiFlowResponse, TransportFlowResponse } from '../../../types/REST.interfaces';
 import { formatBytes } from '../../utils/formatBytes';
 import { formatLatency } from '../../utils/formatLatency';
 import SkDurationCell from '../SKDurationCell';
@@ -41,7 +41,7 @@ export const customCells = {
 };
 
 // no wrap fix the column
-export const tcpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
+export const tcpBiFlowColumns: SKTableColumn<TransportFlowResponse>[] = [
   {
     name: BiFlowListLabels.Closed,
     prop: 'endTime',
@@ -67,23 +67,6 @@ export const tcpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     modifier: 'fitContent'
   },
   {
-    name: BiFlowListLabels.Port,
-    prop: 'sourcePort' as keyof BiFlowResponse,
-    modifier: 'nowrap'
-  },
-  {
-    name: BiFlowListLabels.TxBytes,
-    prop: 'octets',
-    format: formatBytes,
-    modifier: 'nowrap'
-  },
-  {
-    name: BiFlowListLabels.TxLatency,
-    prop: 'latency',
-    format: formatLatency,
-    modifier: 'nowrap'
-  },
-  {
     name: BiFlowListLabels.Server,
     prop: 'destProcessName',
     customCellName: 'TargetProcessNameLinkCell',
@@ -96,16 +79,28 @@ export const tcpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     modifier: 'fitContent'
   },
   {
+    name: BiFlowListLabels.Port,
+    prop: 'sourcePort' as keyof BiFlowResponse
+  },
+  {
+    name: BiFlowListLabels.TxBytes,
+    prop: 'octets',
+    format: formatBytes
+  },
+  {
     name: BiFlowListLabels.RxBytes,
     prop: 'octetsReverse',
-    format: formatBytes,
-    modifier: 'nowrap'
+    format: formatBytes
+  },
+  {
+    name: BiFlowListLabels.TxLatency,
+    prop: 'latency',
+    format: formatLatency
   },
   {
     name: BiFlowListLabels.RxLatency,
     prop: 'latencyReverse',
-    format: formatLatency,
-    modifier: 'nowrap'
+    format: formatLatency
   },
   {
     name: '',
@@ -122,6 +117,26 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     modifier: 'nowrap'
   },
   {
+    name: BiFlowListLabels.From,
+    prop: 'sourceProcessName',
+    customCellName: 'ProcessNameLinkCell'
+  },
+  {
+    name: BiFlowListLabels.Site,
+    prop: 'sourceSiteName',
+    customCellName: 'SiteNameLinkCell'
+  },
+  {
+    name: BiFlowListLabels.To,
+    prop: 'destProcessName',
+    customCellName: 'TargetProcessNameLinkCell'
+  },
+  {
+    name: BiFlowListLabels.ServerSite,
+    prop: 'destSiteName',
+    customCellName: 'TargetSiteNameLinkCell'
+  },
+  {
     name: BiFlowListLabels.Protocol,
     prop: 'protocol',
     modifier: 'fitContent'
@@ -136,37 +151,15 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
     prop: 'method' as keyof BiFlowResponse
   },
   {
-    name: BiFlowListLabels.From,
-    prop: 'sourceProcessName',
-    customCellName: 'ProcessNameLinkCell'
+    name: BiFlowListLabels.TxBytes,
+    prop: 'octets',
+    format: formatBytes
   },
   {
-    name: BiFlowListLabels.Site,
-    prop: 'sourceSiteName',
-    customCellName: 'SiteNameLinkCell'
+    name: BiFlowListLabels.RxBytes,
+    prop: 'octetsReverse',
+    format: formatBytes
   },
-  // {
-  //   name: BiFlowListLabels.TxBytes,
-  //   prop: 'octets',
-  //   format: formatBytes,
-  //   modifier: 'nowrap'
-  // },
-  {
-    name: BiFlowListLabels.To,
-    prop: 'destProcessName',
-    customCellName: 'TargetProcessNameLinkCell'
-  },
-  {
-    name: BiFlowListLabels.ServerSite,
-    prop: 'destSiteName',
-    customCellName: 'TargetSiteNameLinkCell'
-  },
-  // {
-  //   name: BiFlowListLabels.RxBytes,
-  //   prop: 'octetsReverse',
-  //   format: formatBytes,
-  //   modifier: 'nowrap'
-  // },
   {
     name: '',
     customCellName: 'viewDetailsLinkCell',

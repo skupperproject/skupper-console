@@ -12,6 +12,15 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js']
   },
 
+  cache: {
+    cacheDirectory: path.resolve(__dirname, '.webpack-cache'),
+    type: 'filesystem'
+  },
+
+  output: {
+    pathinfo: false
+  },
+
   module: {
     rules: [
       {
@@ -51,16 +60,12 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.BRAND_APP_LOGO': JSON.stringify(process.env.BRAND_APP_LOGO || ''),
-      'process.env.APP_VERSION': JSON.stringify(process.env.APP_VERSION) || JSON.stringify(version),
       'process.env.COLLECTOR_URL': JSON.stringify(process.env.COLLECTOR_URL || ''),
       'process.env.MOCK_ITEM_COUNT': JSON.stringify(process.env.MOCK_ITEM_COUNT),
       'process.env.MOCK_DELAY_RESPONSE': JSON.stringify(process.env.MOCK_DELAY_RESPONSE)
     }),
     new HtmlWebpackPlugin({
-      template: path.join(ROOT, '/public/index.html'),
-      templateParameters: {
-        title: process.env.BRAND_TITLE || 'Skupper console'
-      }
+      template: path.join(ROOT, '/public/index.html')
     })
   ]
 };

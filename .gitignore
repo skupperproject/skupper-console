@@ -12,6 +12,7 @@ yarn-error.log*
 package-lock.json
 
 .eslintcache
+.webpack-cache
 
 # IDEs and editors
 .idea

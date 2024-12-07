@@ -7,9 +7,9 @@ import { getTestsIds } from '../../../config/testIds';
 import { getIdAndNameFromUrlParams } from '../../../core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '../../../layout/MainContainer';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '../../Topology/Topology.enum';
-import BiFlowList from '../components/ProcessBiFlowList';
+import BiFlowList from '../components/BiFlowList';
 import ProcessPairDetails from '../components/ProcessPairDetails';
-import { useProcessPairData } from '../hooks/useProcessPairsData';
+import { useProcessPairData } from '../hooks/useProcessPairData';
 import { ProcessesLabels } from '../Processes.enum';
 
 export interface ProcessPairProps {

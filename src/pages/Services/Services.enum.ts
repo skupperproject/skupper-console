@@ -46,6 +46,7 @@ export enum ServicesLabels {
   SankeyChartTitle = '',
   SankeyChartDescription = '',
   Name = 'Name',
+  RoutingKey = 'Routing key',
   TransportProtocol = 'Transport protocol',
   ApplicationProtocols = 'Application protocols',
   DestHost = 'Host',

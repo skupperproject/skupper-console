@@ -14,7 +14,7 @@
   - [Testing](#testing)
 - [Project structure](#project-structure)
   - [Page sections](#page-sections)
-- [Brand customization](#brand-customization)
+- [ENV variables](#env-variables)
 
 Skupper Console is a web-based graphical user interface (GUI) designed for easy observability and monitoring of your [Skupper](https://github.com/skupperproject/skupper) network resources. With Skupper Console, you can visualize your network topology, explore components and endpoints, and monitor traffic patterns to gain valuable insights into the health and performance of your Skupper infrastructure. Whether you are a developer or a network operator, Skupper Console makes it easy to stay on top of your Skupper network by providing an intuitive and user-friendly interface.
 
@@ -136,3 +136,12 @@ The project has the following directory structure:
 ### Page sections
 
 Please note that the `services` folder contains utilities for data normalization, sanitization, and manipulation for a specific page, while other generic app functionalities such as date and formatting utilities can be found in the `core/utils` folder.
+
+## Env variables
+
+- `COLLECTOR_URL`: The console uses a real network observer.
+- `BRAND_APP_LOGO`
+- `BRAND_FAVICON`
+- `ENABLE_MOCK_SERVER`
+- `ENABLE_DELAY_RESPONSE`: It simulates a delay in the response.
+- `MOCK_ITEM_COUNT`: It generates X random resources (processes, sites, links, etc.)

@@ -42,4 +42,4 @@ you can run **`yarn commit`** to make a valid commit.
 
 `feat,fix,docs,style,refactor,perf,test,build,ci,chore,revert`
 
- (you can find more info in *commitlint.config.js* -> *prompt* -> *types*)
+ (you can find more info in *commitlint.config* -> *prompt* -> *types*)

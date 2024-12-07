@@ -12,7 +12,7 @@ import { combineInstantMetricsToPairs } from '../../../core/utils/combineInstant
 import { invertPairs } from '../../../core/utils/invertPairs';
 import { PairsWithInstantMetrics, ProcessResponse } from '../../../types/REST.interfaces';
 import { SKTableColumn } from '../../../types/SkTable.interfaces';
-import { useProcessPairsListData } from '../hooks/useProcessPairsListData';
+import { useProcessPairsListData } from '../hooks/usePairsListData';
 import { CustomProcessPairCells, PairsListColumnsWithLinkDetails } from '../Processes.constants';
 import { ProcessesLabels } from '../Processes.enum';
 

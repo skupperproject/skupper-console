@@ -2,11 +2,9 @@ import { FC, startTransition, useCallback, useState, MouseEvent as ReactMouseEve
 
 import { Card, CardBody, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { ResourcesEmptyIcon } from '@patternfly/react-icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '../../../API/REST.api';
 import { Protocols, SortDirection, TcpStatus } from '../../../API/REST.enum';
-import { DEFAULT_PAGINATION_SIZE, UPDATE_INTERVAL } from '../../../config/config';
+import { DEFAULT_PAGINATION_SIZE } from '../../../config/config';
 import SkBiFlowList from '../../../core/components/SkBiFlowList';
 import { httpBiFlowColumns, tcpBiFlowColumns } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
 import SKEmptyData from '../../../core/components/SkEmptyData';
@@ -15,7 +13,8 @@ import useUpdateQueryStringValueWithoutNavigation from '../../../hooks/useUpdate
 import { QueryFiltersProtocolMap } from '../../../types/Processes.interfaces';
 import { QueryFilters } from '../../../types/REST.interfaces';
 import { TopologyURLQueyParams } from '../../Topology/Topology.enum';
-import { ProcessesLabels, QueriesProcesses } from '../Processes.enum';
+import { useConnectionsData, useRequestsData } from '../hooks/useBiflowListData';
+import { ProcessesLabels } from '../Processes.enum';
 
 const TAB_1_KEY = 'liveConnections';
 const TAB_2_KEY = 'connections';
@@ -60,31 +59,7 @@ const initPaginatedQueryParams: QueryFiltersProtocolMap = {
   }
 };
 
-const useBiFlowsQuery = (
-  queryParams: QueryFilters,
-  sourceProcessId: string,
-  destProcessId: string,
-  enabled = true,
-  isApplicationFlow = false
-) => {
-  const biFlowsQuery = isApplicationFlow ? RESTApi.fetchApplicationFlows : RESTApi.fetchTransportFlows;
-  const { data } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetBiFlows, queryParams, sourceProcessId, destProcessId],
-    queryFn: () =>
-      enabled
-        ? biFlowsQuery({
-            ...queryParams,
-            sourceProcessId,
-            destProcessId
-          })
-        : null,
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  return data;
-};
-
-const useProcessBiFlowsState = ({ protocol }: { protocol: Protocols | 'undefined' }) => {
+const useBiFlowsState = ({ protocol }: { protocol: Protocols | 'undefined' }) => {
   const [queryParamsPaginated, setQueryParamsPaginated] = useState<QueryFiltersProtocolMap>(initPaginatedQueryParams);
 
   const handleGetFilters = useCallback(
@@ -114,7 +89,7 @@ interface ProcessBiFlowListProps {
   protocol: Protocols | 'undefined';
 }
 
-const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, destProcessId, protocol }) {
+const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, destProcessId, protocol }) {
   const [tabSelected, setTabSelected] = useState<string>();
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected || '', true);
 
@@ -122,22 +97,22 @@ const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessI
     setTabSelected(tabIndex as string);
   }
 
-  const { queryParamsPaginated, handleGetFilters } = useProcessBiFlowsState({ protocol });
+  const { queryParamsPaginated, handleGetFilters } = useBiFlowsState({ protocol });
 
   const { results: httpRequests, count: httpRequestsCount } = extractData(
-    useBiFlowsQuery(queryParamsPaginated[Protocols.Http], sourceProcessId, destProcessId, true, true)
+    useRequestsData(queryParamsPaginated[Protocols.Http], sourceProcessId, destProcessId)
   );
 
   const { results: http2Requests, count: http2RequestsCount } = extractData(
-    useBiFlowsQuery(queryParamsPaginated[Protocols.Http2], sourceProcessId, destProcessId, true, true)
+    useRequestsData(queryParamsPaginated[Protocols.Http2], sourceProcessId, destProcessId)
   );
 
   const { results: activeConnections, count: activeConnectionsCount } = extractData(
-    useBiFlowsQuery(queryParamsPaginated[Protocols.Tcp].active, sourceProcessId, destProcessId, true)
+    useConnectionsData(queryParamsPaginated[Protocols.Tcp].active, sourceProcessId, destProcessId)
   );
 
   const { results: oldConnections, count: oldConnectionsCount } = extractData(
-    useBiFlowsQuery(queryParamsPaginated[Protocols.Tcp].old, sourceProcessId, destProcessId, true)
+    useConnectionsData(queryParamsPaginated[Protocols.Tcp].old, sourceProcessId, destProcessId)
   );
 
   const activeTab = tabSelected
@@ -262,7 +237,7 @@ const ProcessBiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessI
   );
 };
 
-export default ProcessBiFlowList;
+export default BiFlowList;
 
 interface Data<T> {
   results?: T[];

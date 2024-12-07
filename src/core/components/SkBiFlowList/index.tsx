@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 
@@ -9,10 +9,12 @@ import SkViewDetailCell from '../SkViewDetailsCell';
 import { customCells } from './BiFlowList.constants';
 import SkBiFlowDetails from '../SkBiFlowDetails';
 
-const SkBiFlowList: FC<SKTableProps<BiFlowResponse>> = function ({ ...props }) {
-  const [biFlowSelected, setBiflowSelected] = useState<BiFlowResponse>();
+interface SkBiFlowListProps<T extends BiFlowResponse> extends SKTableProps<T> {}
 
-  const handleOnClickDetails = useCallback((biflow?: BiFlowResponse) => {
+const SkBiFlowList = function <T extends BiFlowResponse>({ ...props }: SkBiFlowListProps<T>) {
+  const [biFlowSelected, setBiflowSelected] = useState<T>();
+
+  const handleOnClickDetails = useCallback((biflow?: T) => {
     setBiflowSelected(biflow);
   }, []);
 
@@ -22,7 +24,7 @@ const SkBiFlowList: FC<SKTableProps<BiFlowResponse>> = function ({ ...props }) {
         {...props}
         customCells={{
           ...customCells,
-          viewDetailsLinkCell: ({ data }: SkLinkCellProps<BiFlowResponse>) => (
+          viewDetailsLinkCell: ({ data }: SkLinkCellProps<T>) => (
             <SkViewDetailCell onClick={handleOnClickDetails} value={data} />
           )
         }}

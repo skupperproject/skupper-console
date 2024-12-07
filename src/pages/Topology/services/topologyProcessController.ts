@@ -1,6 +1,7 @@
 import { GraphEdge, GraphNode } from 'types/Graph.interfaces';
 
 import { Role } from '../../../API/REST.enum';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/config';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import { ProcessPairsResponse, ProcessResponse } from '../../../types/REST.interfaces';
 import { TopologyMetrics } from '../../../types/Topology.interfaces';
@@ -64,9 +65,10 @@ export const TopologyProcessController = {
     // a process can be filered by services
     if (serviceIdsSelected) {
       const serverIds = processesSelected
-        // the format of one address is  serviceName@seviceId@protocol
-        .filter(({ addresses }) =>
-          addresses?.map((address) => address.split('@')[1]).some((address) => serviceIdsSelected.includes(address))
+        .filter(({ addresses: services }) =>
+          services
+            ?.map((service) => parseService(service).serviceId)
+            .some((service) => serviceIdsSelected.includes(service))
         )
         .map(({ identity }) => identity);
 
@@ -133,4 +135,15 @@ function filterProcessesBySelectedServices(processes: ProcessResponse[], service
       process.addresses?.some((address) => serviceIdSelected.some((serviceId) => address.includes(`@${serviceId}`))) ||
       serviceIdSelected.includes(process.identity)
   );
+}
+
+// the format of one servce is  serviceName@seviceId@protocol
+function parseService(serviceString: string) {
+  const [serviceName, serviceId, protocol] = serviceString.split(DEFAULT_COMPLEX_STRING_SEPARATOR);
+
+  return {
+    serviceName,
+    serviceId,
+    protocol
+  };
 }
