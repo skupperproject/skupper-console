@@ -1,14 +1,4 @@
 const Configuration = {
-  /*
-   * Referenced packages must be installed
-   */
-  extends: ['@commitlint/config-conventional'],
-  /*
-   * Functions that return true if commitlint should ignore the given message.
-   */
-  /*
-   * Any rules defined here will override rules from @commitlint/config-conventional
-   */
   rules: {
     'subject-case': [2, 'always', 'sentence-case'],
     'type-empty': [2, 'never']
@@ -19,17 +9,13 @@ const Configuration = {
    */
   defaultIgnores: true,
   /*
-   * Custom URL to show upon failure
-   */
-  helpUrl: 'https://github.com/conventional-changelog/commitlint/#what-is-commitlint',
-  /*
    * Custom prompt configs
    */
   prompt: {
     alias: {},
     messages: {
       type: "Select the type of change that you're committing:",
-      scope: 'Denote the SCOPE of this change (optional):',
+      scope: 'Denote the SCOPE of this change:',
       customScope: 'Denote the SCOPE of this change:',
       subject: 'Write a SHORT, IMPERATIVE tense description of the change:\n',
       body: 'Provide a LONGER description of the change (optional). Use "|" to break new line:\n',
@@ -91,7 +77,19 @@ const Configuration = {
     useAI: false,
     aiNumber: 1,
     themeColorCode: '',
-    scopes: ['Site', 'Component', 'Process', 'Services', 'Topology', 'Metrics', 'Shared', 'Core', 'Core UI', 'General'],
+    scopes: [
+      'API',
+      'Metrics',
+      'Site',
+      'Component',
+      'Process',
+      'Services',
+      'Topology',
+      'Metrics',
+      'Shared',
+      'Core utils',
+      'Core UI'
+    ],
     allowCustomScopes: false,
     allowEmptyScopes: true,
     customScopesAlign: 'bottom',
