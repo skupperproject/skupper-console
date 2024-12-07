@@ -1,5 +1,5 @@
 import { HexColors } from '../../../config/colors';
-import { CONNECTOR_NAME_IP_SEPARATOR } from '../../../config/config';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/config';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../../../core/components/SKSanckeyChart/SkSankey.constants';
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
 import { GraphCombo, GraphEdge, GraphElementNames, GraphIconKeys, GraphNode } from '../../../types/Graph.interfaces';
@@ -26,13 +26,13 @@ export const ServicesController = {
   },
 
   mapListenersToRoutingKey: (listeners: ListenerResponse[]) =>
-    listeners.map((item) => ({
-      sourceId: item.identity,
-      sourceName: item.name,
-      siteId: `${item.siteId}-listener`, // Avoids including connectors and processes in the combo
-      siteName: item.siteName,
-      destinationId: item.addressId,
-      destinationName: item.address,
+    listeners.map(({ identity, name, siteId, siteName, address, addressId }) => ({
+      sourceId: identity,
+      sourceName: name,
+      siteId: `${siteId}-listener`, // Avoids including connectors and processes in the combo
+      siteName,
+      destinationId: addressId,
+      destinationName: address,
       type: 'SkEmptyNode' as GraphElementNames,
       iconName: 'listener' as GraphIconKeys
     })),
@@ -199,7 +199,7 @@ function getBaseName(name: string): string {
 
   if (partialName.length) {
     // the name of a connector as this format name@IP
-    return name.split(CONNECTOR_NAME_IP_SEPARATOR)[0];
+    return name.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[0];
   }
 
   return name;

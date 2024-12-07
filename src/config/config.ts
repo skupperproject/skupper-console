@@ -3,12 +3,12 @@ import { t_global_font_family_100 } from '@patternfly/react-tokens';
 import Logo from '../assets/skupper-logo.svg';
 
 /**  URL config: contains configuration options and constants related to backend URLs and routing */
-const BASE_URL_COLLECTOR = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;
+const BASE_URL_NETWORK_OBSERVER = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;
 const API_VERSION = '/api/v1alpha1';
 const PROMETHEUS_SUFFIX = '/internal/prom';
 
 // Base URL for the collector backend. Defaults to current host if not set in environment variables.
-export const API_URL = `${BASE_URL_COLLECTOR}${API_VERSION}`;
+export const API_URL = `${BASE_URL_NETWORK_OBSERVER}${API_VERSION}`;
 export const PROMETHEUS_URL = `${API_URL}${PROMETHEUS_SUFFIX}`;
 
 // Default page size for tables. Set in environment variables, but can be overridden.
@@ -32,7 +32,7 @@ export const EMPTY_VALUE_PLACEHOLDER = '-';
 export const IDS_GROUP_SEPARATOR = '~';
 export const IDS_MULTIPLE_SELECTION_SEPARATOR = ',';
 export const PAIR_SEPARATOR = 'processpair-';
-export const CONNECTOR_NAME_IP_SEPARATOR = '@';
+export const DEFAULT_COMPLEX_STRING_SEPARATOR = '@';
 
 export const MIN_DRAWER_WIDTH = 500;
 export const MAX_DRAWER_WIDTH = 800;

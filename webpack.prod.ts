@@ -14,6 +14,9 @@ const commonConfigProd = require('./webpack.common');
 const prodConfig = {
   mode: 'production',
   devtool: 'source-map',
+  infrastructureLogging: {
+    debug: true
+  },
   output: {
     path: pathProd.join(ROOT_PROD, '/build'),
     filename: '[name]-[contenthash].min.js',
@@ -39,7 +42,6 @@ const prodConfig = {
     }),
     new CopyWebpackPlugin({
       patterns: [
-        pathProd.resolve(ROOT_PROD, 'public', 'manifest.json'),
         {
           from: process.env.BRAND_FAVICON || pathProd.resolve(ROOT_PROD, 'public', 'favicon.ico'),
           to: pathProd.resolve(ROOT_PROD, 'build', 'favicon.v.ico')
