@@ -1,7 +1,7 @@
 import ConnectorProcessCountCell from './components/ConnectorProcessCountCell';
 import { ServicesRoutesPaths, ServicesLabels } from './Services.enum';
 import { SortDirection, TcpStatus } from '../../API/REST.enum';
-import { BIG_PAGINATION_SIZE, EMPTY_VALUE_PLACEHOLDER } from '../../config/app';
+import { BIG_PAGINATION_SIZE, EMPTY_VALUE_SYMBOL } from '../../config/app';
 import { BiFlowListLabels } from '../../core/components/SkBiFlowList/BiFlowList.enum';
 import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
@@ -77,7 +77,7 @@ export const customServiceCells = {
     }),
   TimestampCell: SkEndTimeCell,
   ApplicationProtocolCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
-    data?.observedApplicationProtocols.join(', ') || EMPTY_VALUE_PLACEHOLDER,
+    data?.observedApplicationProtocols.join(', ') || EMPTY_VALUE_SYMBOL,
   ConnectorProcessCountCell
 };
 

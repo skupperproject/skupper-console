@@ -1,8 +1,8 @@
 import { useQueries, useSuspenseQueries } from '@tanstack/react-query';
 
 import { RESTApi } from '../../../API/REST.resources';
-import { UPDATE_INTERVAL } from '../../../config/app';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { PairsResponse } from '../../../types/REST.interfaces';
 import { TopologyController } from '../../Topology/services';
 import { QueriesPairs } from '../../Topology/Topology.enum';

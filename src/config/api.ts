@@ -6,6 +6,10 @@ const PROMETHEUS_SUFFIX = '/internal/prom';
 // Base URL for the collector backend. Defaults to current host if not set in environment variables.
 export const API_URL = `${BASE_URL_NETWORK_OBSERVER}${API_VERSION}`;
 export const PROMETHEUS_URL = `${API_URL}${PROMETHEUS_SUFFIX}`;
+
+// Error message to display when a request times out
+export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
+
 /* 
   Backend -> Frontend props mapper
   This object maps the property names from the backend API response

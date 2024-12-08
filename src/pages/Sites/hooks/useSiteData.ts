@@ -2,7 +2,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { Role } from '../../../API/REST.enum';
 import { RESTApi } from '../../../API/REST.resources';
-import { UPDATE_INTERVAL } from '../../../config/app';
+import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { QueriesSites } from '../Sites.enum';
 
 const processQueryParams = {

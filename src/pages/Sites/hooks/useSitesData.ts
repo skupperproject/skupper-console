@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '../../../API/REST.resources';
-import { UPDATE_INTERVAL } from '../../../config/app';
+import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { QueriesSites } from '../Sites.enum';
 
 export const useSitesData = () => {

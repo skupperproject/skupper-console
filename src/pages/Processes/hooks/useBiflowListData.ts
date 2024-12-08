@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '../../../API/REST.resources';
-import { UPDATE_INTERVAL } from '../../../config/app';
+import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { QueryFilters } from '../../../types/REST.interfaces';
 import { QueriesProcesses } from '../Processes.enum';
 

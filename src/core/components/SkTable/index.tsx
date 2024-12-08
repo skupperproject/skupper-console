@@ -17,7 +17,7 @@ import {
 
 import SkPagination from './SkPagination';
 import { sortRowsByColumnName } from './SkTable.utils';
-import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/app';
+import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
 import { NonNullableValue, SKTableColumn } from '../../../types/SkTable.interfaces';
 import { getValueFromNestedProperty } from '../../utils/getValueFromNestedProperty';
 import SKEmptyData from '../SkEmptyData';
@@ -243,7 +243,7 @@ const SkTable = function <T>({
                               <Component
                                 value={
                                   value === '' || value === undefined || value === null
-                                    ? EMPTY_VALUE_PLACEHOLDER
+                                    ? EMPTY_VALUE_SYMBOL
                                     : `${value}`
                                 }
                                 data={data}
@@ -258,7 +258,7 @@ const SkTable = function <T>({
                                 {format
                                   ? format(value)
                                   : value === '' || value === undefined || value === null
-                                    ? EMPTY_VALUE_PLACEHOLDER
+                                    ? EMPTY_VALUE_SYMBOL
                                     : `${value}`}
                               </TableText>
                             )}

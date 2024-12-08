@@ -22,7 +22,7 @@ import {
 import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
-import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/app';
+import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import ResourceIcon from '../../../core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
@@ -157,14 +157,14 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
                       <DescriptionListGroup>
                         <DescriptionListTerm>{TopologyLabels.TransportProtocol}</DescriptionListTerm>
                         <DescriptionListDescription>
-                          {itemSelected.protocol || EMPTY_VALUE_PLACEHOLDER}
+                          {itemSelected.protocol || EMPTY_VALUE_SYMBOL}
                         </DescriptionListDescription>
                       </DescriptionListGroup>
 
                       <DescriptionListGroup>
                         <DescriptionListTerm>{TopologyLabels.ApplicationProtocol}</DescriptionListTerm>
                         <DescriptionListDescription>
-                          {itemSelected.observedApplicationProtocols || EMPTY_VALUE_PLACEHOLDER}
+                          {itemSelected.observedApplicationProtocols || EMPTY_VALUE_SYMBOL}
                         </DescriptionListDescription>
                       </DescriptionListGroup>
 

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { SelectOptionProps } from '@patternfly/react-core';
 
+import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
+
 export interface SkSelectTypeHeadWithCheckboxUseDataUseDataProps {
   initIdsSelected: string[];
   initOptions: {
@@ -83,7 +85,7 @@ export const SkSelectTypeHeadWithCheckboxUseData = ({
         setFocusedItemIndex(indexToFocus);
 
         const focusedItem = initOptions.filter((option) => !option.isDisabled)[indexToFocus];
-        setActiveItem(`select-multi-typeahead-checkbox-${focusedItem.value.replace(' ', '-')}`);
+        setActiveItem(`select-multi-typeahead-checkbox-${focusedItem.value.replace(' ', EMPTY_VALUE_SYMBOL)}`);
       }
     }
   };

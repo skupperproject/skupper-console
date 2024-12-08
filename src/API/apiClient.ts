@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
 import { mapResponseProperties, mapFiltersToRequestQueryParams } from './REST.utils';
-import { MSG_TIMEOUT_ERROR } from '../config/app';
+import { MSG_TIMEOUT_ERROR } from '../config/api';
 import { QueryFilters, ApiResponse } from '../types/REST.interfaces';
 
 /**

@@ -3,7 +3,7 @@ import { FC, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { RESTApi } from '../../../API/REST.resources';
-import { UPDATE_INTERVAL } from '../../../config/app';
+import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import SkSelectTypeHeadWithCheckbox from '../../../core/components/SkSelectTypeHeadWithCheckbox';
 import { QueriesServices } from '../../Services/Services.enum';
 

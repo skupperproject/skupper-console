@@ -5,7 +5,8 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { NonNullableValue, SKTableColumn } from 'types/SkTable.interfaces';
 
 import { RESTApi } from '../../../API/REST.resources';
-import { BIG_PAGINATION_SIZE, UPDATE_INTERVAL } from '../../../config/app';
+import { BIG_PAGINATION_SIZE } from '../../../config/app';
+import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import SkBiFlowList from '../../../core/components/SkBiFlowList';
 import { SkSelectOption } from '../../../core/components/SkSelect';
 import SkSearchFilter from '../../../core/components/SkTable/SkSearchFilter';

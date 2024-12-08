@@ -1,7 +1,7 @@
 import { Truncate } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 
-import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/app';
+import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
 import ResourceIcon from '../ResourceIcon';
 
 export interface SkLinkCellProps<T> {
@@ -36,7 +36,7 @@ function renderValue(value: string, isDisabled: boolean, fitContent: boolean) {
 const SkLinkCell = function <T>({ value, link, type, isDisabled = false, fitContent = false }: SkLinkCellProps<T>) {
   // If there is no value, display an empty string
   if (!value) {
-    return EMPTY_VALUE_PLACEHOLDER;
+    return EMPTY_VALUE_SYMBOL;
   }
 
   const stringValue = value.toString();
