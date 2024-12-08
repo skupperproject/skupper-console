@@ -1,5 +1,3 @@
-import { t_global_font_family_100 } from '@patternfly/react-tokens';
-
 import Logo from '../assets/skupper-logo.svg';
 
 // Default page size for tables. Set in environment variables, but can be overridden.
@@ -16,8 +14,6 @@ export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
 
 /** Tests */
 export const waitForElementToBeRemovedTimeout = 10000;
-
-export const DEFAULT_FONT_VAR = t_global_font_family_100.value;
 
 export const EMPTY_VALUE_PLACEHOLDER = '-';
 export const IDS_GROUP_SEPARATOR = '~';

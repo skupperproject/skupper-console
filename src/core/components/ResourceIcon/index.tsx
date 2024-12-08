@@ -3,26 +3,26 @@ import { FC } from 'react';
 import { Tooltip } from '@patternfly/react-core';
 
 import skupperProcessSVG from '../../../assets/skupper.svg';
-import { HexColors } from '../../../config/colors';
+import { hexColors, styles } from '../../../config/styles';
 
 import './ResourceIcon.css';
 
 const RESOURCE_MAP = {
   site: {
     symbol: 'S',
-    style: { background: HexColors.Green500 }
+    style: { background: hexColors.Green500 }
   },
   component: {
     symbol: 'C',
-    style: { background: HexColors.Teal500 }
+    style: { background: hexColors.Teal500 }
   },
   service: {
     symbol: 'RK',
-    style: { background: HexColors.Purple500 }
+    style: { background: hexColors.Purple500 }
   },
   process: {
     symbol: 'P',
-    style: { background: HexColors.Black500 }
+    style: { background: styles.default.darkBackgroundColor }
   },
   skupper: {
     symbol: '',

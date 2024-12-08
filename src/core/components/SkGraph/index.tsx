@@ -2,7 +2,6 @@ import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } f
 
 import { Edge, EdgeEvent, Graph, GraphOptions, IPointerEvent, Node, NodeEvent } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
-import { t_global_border_radius_large, t_global_border_width_100 } from '@patternfly/react-tokens';
 
 import { GraphCombo, GraphEdge, GraphNode, SkGraphProps, LocalStorageData } from 'types/Graph.interfaces';
 
@@ -282,9 +281,9 @@ const SkGraph: FC<SkGraphProps> = memo(
           overflow: 'hidden',
           height: '99%',
           borderStyle: 'solid',
-          borderWidth: t_global_border_width_100.value,
-          borderColor: theme.colors.graphBorder,
-          borderRadius: t_global_border_radius_large.value
+          borderWidth: theme.graph.borderWidth,
+          borderRadius: theme.graph.borderRadius,
+          borderColor: theme.graph.borderColor
         }}
       >
         {topologyGraphRef.current && <ControlBar graphInstance={topologyGraphRef.current} />}

@@ -4,12 +4,11 @@ import { ResponsiveSankey } from '@nivo/sankey';
 
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE, DEFAULT_SANKEY_CHART_HEIGHT } from './SkSankey.constants';
 import SankeyFilter from './SkSankeyFilter';
-import { HexColors } from '../../../config/colors';
+import { styles } from '../../../config/styles';
 import { MetricsLabels } from '../../../pages/shared/Metrics/Metrics.enum';
 import { SkSankeyChartLink, SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
 import { formatByteRate } from '../../utils/formatBytes';
 import SKEmptyData from '../SkEmptyData';
-import { theme } from '../SkGraph/config';
 
 export function addThemeChangeListener(callback: Function) {
   const observer = new MutationObserver((mutations) => {
@@ -27,7 +26,7 @@ export function addThemeChangeListener(callback: Function) {
 }
 
 export function getColors({ nodeColor }: SkSankeyChartNode): string {
-  return nodeColor || HexColors.Black500;
+  return nodeColor || styles.default.darkBackgroundColor;
 }
 
 export function valueFormat(value: number): string {
@@ -77,11 +76,11 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps; onSearch?: Function }> = fun
             theme={{
               text: {
                 fontSize: 14,
-                fontFamily: theme.font.family
+                fontFamily: styles.default.fontFamily
               },
-              tooltip: { container: { color: HexColors.Black900 } }
+              tooltip: { container: { color: styles.default.darkTextColor } }
             }}
-            labelTextColor={HexColors.Black900}
+            labelTextColor={styles.default.darkTextColor}
             valueFormat={valueFormat}
             colors={getColors}
           />

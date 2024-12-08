@@ -5,7 +5,7 @@ import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import TrafficCharts from './TrafficCharts';
-import { HexColors } from '../../../../config/colors';
+import { hexColors, styles } from '../../../../config/styles';
 import SKEmptyData from '../../../../core/components/SkEmptyData';
 import SkIsLoading from '../../../../core/components/SkIsLoading';
 import { QueriesMetrics, QueryMetricsParams } from '../../../../types/Metrics.interfaces';
@@ -90,7 +90,7 @@ const Traffic: FC<TrafficProps> = function ({
                 <small>{MetricsLabels.ByteRateDataSentDescription} </small>
                 <TrafficCharts
                   byteRateData={data.trafficClient}
-                  colorScale={[HexColors.Orange100, HexColors.Orange400]}
+                  colorScale={[hexColors.Orange100, styles.default.warningColor]}
                 />
               </>
             )}
@@ -103,7 +103,7 @@ const Traffic: FC<TrafficProps> = function ({
                 <small>{MetricsLabels.ByteRateDataReceivedDescription} </small>
                 <TrafficCharts
                   byteRateData={data.trafficServer}
-                  colorScale={[HexColors.Purple100, HexColors.Purple400]}
+                  colorScale={[hexColors.Purple100, hexColors.Purple500]}
                 />
               </>
             )}

@@ -3,7 +3,7 @@ import { FC, memo } from 'react';
 import { ChartThemeColor } from '@patternfly/react-charts';
 import { Divider, Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';
 
-import { HexColors } from '../../../../config/colors';
+import { hexColors } from '../../../../config/styles';
 import SkBasicTile from '../../../../core/components/SkBasicTile';
 import SkChartArea from '../../../../core/components/SkChartArea';
 import SkChartPie from '../../../../core/components/SkChartPie';
@@ -28,28 +28,28 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
           <SkBasicTile
             title={createStatusLabel(responseData.statusCode2xx.label)}
             value={convertToPercentage(responseData.statusCode2xx.total, responseData.total) || ' - '}
-            bgColor={HexColors.Green500}
+            bgColor={hexColors.Green500}
           />
         </GridItem>
         <GridItem span={3}>
           <SkBasicTile
             title={createStatusLabel(responseData.statusCode3xx.label)}
             value={convertToPercentage(responseData.statusCode3xx.total, responseData.total) || ' - '}
-            bgColor={HexColors.Blue400}
+            bgColor={hexColors.Blue400}
           />
         </GridItem>
         <GridItem span={3}>
           <SkBasicTile
             title={createStatusLabel(responseData.statusCode4xx.label)}
             value={convertToPercentage(responseData.statusCode4xx.total, responseData.total) || ' - '}
-            bgColor={HexColors.Orange300}
+            bgColor={hexColors.Orange300}
           />
         </GridItem>
         <GridItem span={3}>
           <SkBasicTile
             title={createStatusLabel(responseData.statusCode5xx.label)}
             value={convertToPercentage(responseData.statusCode5xx.total, responseData.total) || ' - '}
-            bgColor={HexColors.Red200}
+            bgColor={hexColors.Red500}
           />
         </GridItem>
       </Grid>

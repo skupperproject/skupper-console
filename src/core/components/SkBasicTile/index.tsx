@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Card, CardBody, Content, ContentVariants, Flex, FlexItem } from '@patternfly/react-core';
 
-import { HexColors } from '../../../config/colors';
+import { styles } from '../../../config/styles';
 
 interface SkBasicTileProps {
   title?: string;
@@ -14,8 +14,8 @@ interface SkBasicTileProps {
 const SkBasicTile: FC<SkBasicTileProps> = function ({
   title,
   value,
-  bgColor = HexColors.Black500,
-  fontColor = HexColors.White
+  bgColor = styles.default.darkBackgroundColor,
+  fontColor = styles.default.lightTextColor
 }) {
   return (
     <Card

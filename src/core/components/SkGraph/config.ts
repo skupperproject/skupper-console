@@ -11,35 +11,38 @@ import processIcon from '../../../assets/process.svg';
 import routingKeyIcon from '../../../assets/routingkey.svg';
 import siteIcon from '../../../assets/site.svg';
 import skupperIcon from '../../../assets/skupper.svg';
-import { DEFAULT_FONT_VAR } from '../../../config/app';
-import { HexColors } from '../../../config/colors';
+import { hexColors, styles } from '../../../config/styles';
 import { GraphIconsMap } from '../../../types/Graph.interfaces';
 
 export const theme = {
   colors: {
     comboBackgroundDefault: 'transparent',
-    comboBorderDefault: HexColors.DefaultBorder,
-    comboLabelBackgroundDefault: HexColors.Black900,
-    comboLabelDefault: HexColors.White,
-    edgeBadgeBackground: HexColors.Black500,
-    edgeBadgeText: HexColors.White,
-    edgeBorder: HexColors.DefaultBorder,
-    edgeLabelBackground: HexColors.White,
-    edgeLabelText: HexColors.Black900,
-    edgeLine: HexColors.DefaultEdge,
-    edgeLineDown: HexColors.DefaultStatusDanger,
-    edgeLinePartialDown: HexColors.DefaultStatusWarning,
-    edgeSelectLine: HexColors.DefaultHighLight,
-    edgeTerminal: HexColors.Black500,
-    graphBorder: HexColors.DefaultBorder,
-    nodeBackground: HexColors.White,
-    nodeBadgeBackground: HexColors.Black500,
-    nodeBadgeText: HexColors.White,
-    nodeBorder: HexColors.DefaultBorder,
-    nodeHighlightBorder: HexColors.DefaultHighLight,
-    nodeLabelBackground: HexColors.White,
-    nodeLabelText: HexColors.Black900,
-    nodeSelectBorder: HexColors.DefaultHighLight
+    comboBorderDefault: hexColors.Black300,
+    comboLabelBackgroundDefault: styles.default.darkBackgroundColor,
+    comboLabelDefault: styles.default.lightTextColor,
+    edgeBadgeBackground: styles.default.darkBackgroundColor,
+    edgeBadgeText: styles.default.lightTextColor,
+    edgeBorder: hexColors.Black300,
+    edgeLabelBackground: styles.default.lightBackgroundColor,
+    edgeLabelText: styles.default.darkTextColor,
+    edgeLine: styles.default.darkBackgroundColor,
+    edgeLineDown: styles.default.errorColor,
+    edgeLinePartialDown: styles.default.warningColor,
+    edgeSelectLine: styles.default.infoColor,
+    edgeTerminal: styles.default.darkBackgroundColor,
+    nodeBackground: styles.default.lightBackgroundColor,
+    nodeBadgeBackground: styles.default.darkBackgroundColor,
+    nodeBadgeText: styles.default.lightTextColor,
+    nodeBorder: hexColors.Black300,
+    nodeHighlightBorder: styles.default.infoColor,
+    nodeLabelBackground: styles.default.lightBackgroundColor,
+    nodeLabelText: styles.default.darkTextColor,
+    nodeSelectBorder: styles.default.infoColor
+  },
+  graph: {
+    borderWidth: styles.default.borderWidth,
+    borderRadius: styles.default.borderRadius,
+    borderColor: hexColors.Black300
   },
   node: {
     size: 44,
@@ -50,7 +53,7 @@ export const theme = {
     badgeFontSize: 6
   },
   font: {
-    family: DEFAULT_FONT_VAR,
+    family: styles.default.fontFamily,
     labelFontSize: 9
   },
   opacity: {
