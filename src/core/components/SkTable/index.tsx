@@ -17,7 +17,7 @@ import {
 
 import SkPagination from './SkPagination';
 import { sortRowsByColumnName } from './SkTable.utils';
-import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/app';
 import { NonNullableValue, SKTableColumn } from '../../../types/SkTable.interfaces';
 import { getValueFromNestedProperty } from '../../utils/getValueFromNestedProperty';
 import SKEmptyData from '../SkEmptyData';

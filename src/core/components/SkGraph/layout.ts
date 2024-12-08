@@ -1,12 +1,12 @@
 import { ForceLayoutOptions, LayoutOptions } from '@antv/g6';
 
-import { NODE_SIZE } from './Graph.constants';
+import { theme } from './config';
 import { GraphLayouts } from '../../../types/Graph.interfaces';
 
 const LAYOUT_TOPOLOGY_DEFAULT: ForceLayoutOptions & { type: 'force' } = {
   type: 'force',
-  nodeSize: NODE_SIZE,
-  nodeSpacing: NODE_SIZE,
+  nodeSize: theme.node.size,
+  nodeSpacing: theme.node.size,
   preventOverlap: true,
   linkDistance: 250,
   factor: 4
@@ -14,8 +14,8 @@ const LAYOUT_TOPOLOGY_DEFAULT: ForceLayoutOptions & { type: 'force' } = {
 
 const LAYOUT_TOPOLOGY_COMBO: ForceLayoutOptions & { type: 'force' } = {
   type: 'force',
-  nodeSize: NODE_SIZE,
-  nodeSpacing: NODE_SIZE,
+  nodeSize: theme.node.size,
+  nodeSpacing: theme.node.size,
   preventOverlap: true,
   clustering: true,
   nodeClusterBy: 'cluster',

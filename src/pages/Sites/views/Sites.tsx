@@ -1,4 +1,4 @@
-import { BIG_PAGINATION_SIZE } from '../../../config/config';
+import { BIG_PAGINATION_SIZE } from '../../../config/app';
 import { getTestsIds } from '../../../config/testIds';
 import SkTable from '../../../core/components/SkTable';
 import MainContainer from '../../../layout/MainContainer';
@@ -21,6 +21,7 @@ const Sites = function () {
           columns={siteColumns}
           rows={sites}
           paginationPageSize={BIG_PAGINATION_SIZE}
+          pagination={true}
           customCells={customSiteCells}
         />
       }

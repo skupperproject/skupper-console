@@ -2,8 +2,8 @@ import { startTransition, useCallback, useState } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '../../../API/REST.api';
-import { UPDATE_INTERVAL } from '../../../config/config';
+import { RESTApi } from '../../../API/REST.resources';
+import { UPDATE_INTERVAL } from '../../../config/app';
 import { QueryFilters } from '../../../types/REST.interfaces';
 import { QueriesServices } from '../Services.enum';
 

@@ -15,7 +15,7 @@ import { LaptopIcon, ServerIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 
 import { BiFlowLabels } from './BiFlow.enum';
-import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/app';
 import { ProcessesRoutesPaths } from '../../../pages/Processes/Processes.enum';
 import { formatBytes } from '../../utils/formatBytes';
 import { formatLatency } from '../../utils/formatLatency';

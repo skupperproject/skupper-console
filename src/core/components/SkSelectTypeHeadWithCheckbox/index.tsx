@@ -16,7 +16,7 @@ import {
   SkSelectTypeHeadWithCheckboxUseData,
   SkSelectTypeHeadWithCheckboxUseDataUseDataProps
 } from './SkSelectTypeHeadWithCheckboxUseData';
-import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/app';
 import { TopologyLabels } from '../../../pages/Topology/Topology.enum';
 
 interface SkSelectTypeHeadwithCheckboxProps extends SkSelectTypeHeadWithCheckboxUseDataUseDataProps {

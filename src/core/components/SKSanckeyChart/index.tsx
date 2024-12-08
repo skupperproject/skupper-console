@@ -5,11 +5,11 @@ import { ResponsiveSankey } from '@nivo/sankey';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE, DEFAULT_SANKEY_CHART_HEIGHT } from './SkSankey.constants';
 import SankeyFilter from './SkSankeyFilter';
 import { HexColors } from '../../../config/colors';
-import { DEFAULT_FONT_VAR } from '../../../config/config';
 import { MetricsLabels } from '../../../pages/shared/Metrics/Metrics.enum';
 import { SkSankeyChartLink, SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
 import { formatByteRate } from '../../utils/formatBytes';
 import SKEmptyData from '../SkEmptyData';
+import { theme } from '../SkGraph/config';
 
 export function addThemeChangeListener(callback: Function) {
   const observer = new MutationObserver((mutations) => {
@@ -77,7 +77,7 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps; onSearch?: Function }> = fun
             theme={{
               text: {
                 fontSize: 14,
-                fontFamily: DEFAULT_FONT_VAR
+                fontFamily: theme.font.family
               },
               tooltip: { container: { color: HexColors.Black900 } }
             }}

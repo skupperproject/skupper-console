@@ -20,8 +20,6 @@ export const HexColors = {
   DefaultHighLight: t_color_blue_40.value,
   DefaultBorder: t_global_border_color_100.value,
   DefaultEdge: t_color_gray_50.value,
-  DarkThemeBackground: '#151515',
-  DarkThemeText: '#f2f2f2',
   DefaultStatusDanger: t_color_red_50.value,
   DefaultStatusWarning: '#F0AB00',
 

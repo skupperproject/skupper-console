@@ -1,5 +1,5 @@
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/app';
 import { HexColors } from '../../../config/colors';
-import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/config';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../../../core/components/SKSanckeyChart/SkSankey.constants';
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
 import { GraphCombo, GraphEdge, GraphElementNames, GraphIconKeys, GraphNode } from '../../../types/Graph.interfaces';

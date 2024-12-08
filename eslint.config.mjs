@@ -32,7 +32,7 @@ export default [
     )
   ),
   {
-    ignores: ['**/.js', '**/.mjs']
+    ignores: ['**/*.config.js', 'eslint.config.mjs']
   },
   {
     files: ['src/**/*.ts', 'src/**/*.tsx']
@@ -97,7 +97,7 @@ export default [
       'import/no-cycle': [
         'error',
         {
-          maxDepth: 10,
+          maxDepth: 3,
           ignoreExternal: true
         }
       ],

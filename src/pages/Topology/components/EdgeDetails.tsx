@@ -22,7 +22,7 @@ import {
 import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
-import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/app';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import ResourceIcon from '../../../core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';

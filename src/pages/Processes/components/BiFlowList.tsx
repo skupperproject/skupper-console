@@ -4,7 +4,7 @@ import { Card, CardBody, Tab, Tabs, TabTitleText } from '@patternfly/react-core'
 import { ResourcesEmptyIcon } from '@patternfly/react-icons';
 
 import { Protocols, SortDirection, TcpStatus } from '../../../API/REST.enum';
-import { DEFAULT_PAGINATION_SIZE } from '../../../config/config';
+import { DEFAULT_PAGINATION_SIZE } from '../../../config/app';
 import SkBiFlowList from '../../../core/components/SkBiFlowList';
 import { httpBiFlowColumns, tcpBiFlowColumns } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
 import SKEmptyData from '../../../core/components/SkEmptyData';

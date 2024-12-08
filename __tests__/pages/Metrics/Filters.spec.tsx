@@ -5,7 +5,7 @@ import processesData from '../../../mocks/data/PROCESSES.json';
 import siteData from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { Protocols } from '../../../src/API/REST.enum';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import MetricFilters from '../../../src/pages/shared/Metrics/components/Filters';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
 

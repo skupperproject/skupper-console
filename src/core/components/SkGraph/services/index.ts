@@ -9,8 +9,7 @@ import {
   LocalStorageDataSavedPayload
 } from '../../../../types/Graph.interfaces';
 import { ellipsisInTheMiddle } from '../../../utils/EllipsisInTheMiddle';
-import { graphIconsMap } from '../Graph.config';
-import { NODE_SIZE } from '../Graph.constants';
+import { iconMapper, theme } from '../config';
 
 const prefixLocalStorageItem = 'skupper';
 const GRAPH_CONTAINER_ID = 'container';
@@ -160,7 +159,7 @@ export const GraphController = {
             {
               text: info.primary,
               placement: 'right-top' as CornerPlacement,
-              offsetX: -NODE_SIZE / 6
+              offsetX: -theme.node.size / 6
             }
           ]
         : []),
@@ -169,7 +168,7 @@ export const GraphController = {
             {
               text: info.secondary,
               placement: 'left-top' as CornerPlacement,
-              offsetX: NODE_SIZE / 6,
+              offsetX: theme.node.size / 6,
               fontSize: 6
             }
           ]
@@ -196,7 +195,7 @@ export const GraphController = {
           x,
           y,
           labelText: ellipsisInTheMiddle(label),
-          iconSrc: graphIconsMap[iconName],
+          iconSrc: iconMapper[iconName],
           badge: !!info,
           badges: createBadges(info)
         }

@@ -2,7 +2,7 @@ import { GraphEdge, GraphCombo, GraphNode, GraphElementNames } from 'types/Graph
 
 import { PrometheusApi } from '../../../API/Prometheus.api';
 import { Direction } from '../../../API/REST.enum';
-import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '../../../config/config';
+import { IDS_GROUP_SEPARATOR, IDS_MULTIPLE_SELECTION_SEPARATOR, PAIR_SEPARATOR } from '../../../config/app';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';

@@ -7,7 +7,7 @@ import { Server } from 'miragejs';
 import pairsList from '../../../mocks/data/PROCESS_GROUP_PAIRS.json';
 import components from '../../../mocks/data/PROCESS_GROUPS.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
 import LoadingPage from '../../../src/core/components/SkLoading';

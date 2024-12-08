@@ -23,8 +23,8 @@ import { BarsIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { RESTApi } from '../API/REST.api';
-import { brandLogo } from '../config/config';
+import { RESTApi } from '../API/REST.resources';
+import { brandLogo } from '../config/app';
 
 export enum HeaderLabels {
   Logout = 'Logout',

@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Card, Flex } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 
-import { SMALL_PAGINATION_SIZE } from '../../../config/config';
+import { SMALL_PAGINATION_SIZE } from '../../../config/app';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import SKEmptyData from '../../../core/components/SkEmptyData';
 import SkTable from '../../../core/components/SkTable';

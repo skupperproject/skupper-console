@@ -19,7 +19,7 @@ import { GraphEdge, GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyDetails, { TopoloyDetailsProps } from './TopologyDetails';
 import TopologyToolbar from './TopologyToolbar';
-import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '../../../config/config';
+import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '../../../config/app';
 import SkGraph from '../../../core/components/SkGraph';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../Processes/Processes.enum';
 import useTopologyProcessData from '../hooks/useTopologyProcessData';

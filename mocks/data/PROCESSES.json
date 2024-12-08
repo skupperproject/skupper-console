@@ -149,7 +149,8 @@
       "groupIdentity": "group-mm",
       "hostName": "10.242.0.13",
       "sourceHost": "172.17.12.236",
-      "processRole": "remote"
+      "processRole": "remote",
+      "processBinding": "bound"
     },
     {
       "recType": "PROCESS",
@@ -164,7 +165,8 @@
       "groupIdentity": "group-load-generator",
       "hostName": "10.242.0.53",
       "sourceHost": "172.17.12.296",
-      "processRole": "external"
+      "processRole": "external",
+      "processBinding": "unbound"
     }
   ],
   "count": 10,
