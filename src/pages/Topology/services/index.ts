@@ -15,9 +15,9 @@ import {
 } from '../../../types/Topology.interfaces';
 import { shape } from '../Topology.constants';
 
-export const IDS_GROUP_SEPARATOR = '~';
-export const IDS_MULTIPLE_SELECTION_SEPARATOR = ',';
-export const PAIR_SEPARATOR = 'processpair-';
+const IDS_GROUP_SEPARATOR = '~';
+const IDS_MULTIPLE_SELECTION_SEPARATOR = ',';
+const PAIR_SEPARATOR = 'processpair-';
 
 export const TopologyController = {
   getCombosFromNodes: (nodes: GraphNode[]): GraphCombo[] => {

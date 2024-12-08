@@ -55,14 +55,14 @@ export const getAllConnectors = (): string => apiEndpoints.CONNECTORS;
 /**
  * Tcp connection endpoints.
  */
-export const getAllTcpConnections = (): string => apiEndpoints.TRANSPORT_FLOWS;
-export const getTcpConnectionById = (id: string): string => composePath([apiEndpoints.TRANSPORT_FLOWS, id]);
+export const getAllTcpConnections = (): string => apiEndpoints.TCP_CONNECTIONS;
+export const getTcpConnectionById = (id: string): string => composePath([apiEndpoints.TCP_CONNECTIONS, id]);
 
 /**
  * Http requests endpoints.
  */
-export const getAllHttpRequests = (): string => apiEndpoints.APPLICATION_FLOWS;
-export const getHttpRequestById = (id: string): string => composePath([apiEndpoints.APPLICATION_FLOWS, id]);
+export const getAllHttpRequests = (): string => apiEndpoints.HTTP_REQUESTS;
+export const getHttpRequestById = (id: string): string => composePath([apiEndpoints.HTTP_REQUESTS, id]);
 
 /**
  * Site pair-related endpoints.

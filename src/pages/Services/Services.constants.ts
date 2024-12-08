@@ -167,7 +167,8 @@ export const PairColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
   {
     name: BiFlowListLabels.Client,
     prop: 'sourceName',
-    customCellName: 'SourceProcessNameLinkCell'
+    customCellName: 'SourceProcessNameLinkCell',
+    modifier: 'nowrap'
   },
   {
     name: BiFlowListLabels.Site,

@@ -4,7 +4,7 @@ import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
 
-import BiflowData from '../../../mocks/data/FLOW_PAIRS.json';
+import tcpConnections from '../../../mocks/data/TCP_CONNECTIONS.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
@@ -14,7 +14,7 @@ import { Wrapper } from '../../../src/core/components/Wrapper';
 import TcpTerminatedConnections from '../../../src/pages/Services/components/TcpTerminatedConnections';
 
 const servicesResults = servicesData.results;
-const tcpBiFlowTerminated = BiflowData.results[6];
+const tcpConnectionTerminated = tcpConnections.results[4];
 
 describe('Begin testing the TCP connections component', () => {
   let server: Server;
@@ -30,10 +30,10 @@ describe('Begin testing the TCP connections component', () => {
   });
 
   it('should render the Connection view -> Old Connections after the data loading is complete', async () => {
-    const { queryByTestId, getByText, getAllByText } = render(
+    const { queryByTestId, getByText } = render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <TcpTerminatedConnections routingKey={servicesResults[4].name} />
+          <TcpTerminatedConnections routingKey={servicesResults[1].name} />
         </Suspense>
       </Wrapper>
     );
@@ -42,7 +42,6 @@ describe('Begin testing the TCP connections component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(getAllByText(tcpBiFlowTerminated.sourceProcessName)[0]).toBeInTheDocument();
     expect(getByText('Closed')).toBeInTheDocument();
   });
 });

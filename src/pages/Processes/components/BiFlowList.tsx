@@ -142,25 +142,29 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
   }
 
   return (
-    <Tabs activeKey={activeTab} onSelect={handleTabClick} component="nav" isBox>
+    <Tabs activeKey={activeTab} onSelect={handleTabClick} component="nav">
       {!!activeConnectionsCount && (
         <Tab eventKey={TAB_1_KEY} title={<TabTitleText>{ProcessesLabels.OpenConnections}</TabTitleText>}>
-          <SkBiFlowList
-            data-testid={'tcp-active-connections-table'}
-            columns={setColumnVisibility(tcpBiFlowColumns, {
-              duration: false,
-              endTime: false,
-              sourceProcessName: false,
-              destProcessName: false,
-              sourceSiteName: false,
-              destSiteName: false
-            })}
-            rows={activeConnections}
-            paginationTotalRows={activeConnectionsCount}
-            pagination={true}
-            paginationPageSize={DEFAULT_PAGINATION_SIZE}
-            onGetFilters={(filters: QueryFilters) => handleGetFilters(filters, 'active')}
-          />
+          <Card isFullHeight isPlain>
+            <CardBody>
+              <SkBiFlowList
+                data-testid={'tcp-active-connections-table'}
+                columns={setColumnVisibility(tcpBiFlowColumns, {
+                  duration: false,
+                  endTime: false,
+                  sourceProcessName: false,
+                  destProcessName: false,
+                  sourceSiteName: false,
+                  destSiteName: false
+                })}
+                rows={activeConnections}
+                paginationTotalRows={activeConnectionsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                onGetFilters={(filters: QueryFilters) => handleGetFilters(filters, 'active')}
+              />
+            </CardBody>
+          </Card>
         </Tab>
       )}
 
@@ -170,20 +174,24 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
           eventKey={TAB_2_KEY}
           title={<TabTitleText>{ProcessesLabels.OldConnections}</TabTitleText>}
         >
-          <SkBiFlowList
-            data-testid={'tcp-old-connections-table'}
-            columns={setColumnVisibility(tcpBiFlowColumns, {
-              sourceProcessName: false,
-              destProcessName: false,
-              sourceSiteName: false,
-              destSiteName: false
-            })}
-            rows={oldConnections}
-            paginationTotalRows={oldConnectionsCount}
-            pagination={true}
-            paginationPageSize={DEFAULT_PAGINATION_SIZE}
-            onGetFilters={(filters: QueryFilters) => handleGetFilters(filters, 'old')}
-          />
+          <Card isFullHeight isPlain>
+            <CardBody>
+              <SkBiFlowList
+                data-testid={'tcp-old-connections-table'}
+                columns={setColumnVisibility(tcpBiFlowColumns, {
+                  sourceProcessName: false,
+                  destProcessName: false,
+                  sourceSiteName: false,
+                  destSiteName: false
+                })}
+                rows={oldConnections}
+                paginationTotalRows={oldConnectionsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                onGetFilters={(filters: QueryFilters) => handleGetFilters(filters, 'old')}
+              />
+            </CardBody>
+          </Card>
         </Tab>
       )}
 
@@ -193,20 +201,24 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
           eventKey={TAB_3_KEY}
           title={<TabTitleText>{ProcessesLabels.Http2Requests}</TabTitleText>}
         >
-          <SkBiFlowList
-            data-testid={'http2-table'}
-            columns={setColumnVisibility(httpBiFlowColumns, {
-              sourceProcessName: false,
-              destProcessName: false,
-              sourceSiteName: false,
-              destSiteName: false
-            })}
-            rows={http2Requests}
-            paginationTotalRows={http2RequestsCount}
-            pagination={true}
-            paginationPageSize={DEFAULT_PAGINATION_SIZE}
-            onGetFilters={handleGetFilters}
-          />
+          <Card isFullHeight isPlain>
+            <CardBody>
+              <SkBiFlowList
+                data-testid={'http2-table'}
+                columns={setColumnVisibility(httpBiFlowColumns, {
+                  sourceProcessName: false,
+                  destProcessName: false,
+                  sourceSiteName: false,
+                  destSiteName: false
+                })}
+                rows={http2Requests}
+                paginationTotalRows={http2RequestsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                onGetFilters={handleGetFilters}
+              />
+            </CardBody>
+          </Card>
         </Tab>
       )}
 
@@ -216,21 +228,25 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
           eventKey={TAB_4_KEY}
           title={<TabTitleText>{ProcessesLabels.HttpRequests}</TabTitleText>}
         >
-          <SkBiFlowList
-            data-testid={'http-table'}
-            title={ProcessesLabels.HttpRequests}
-            columns={setColumnVisibility(httpBiFlowColumns, {
-              sourceProcessName: false,
-              destProcessName: false,
-              sourceSiteName: false,
-              destSiteName: false
-            })}
-            rows={httpRequests}
-            paginationTotalRows={httpRequestsCount}
-            pagination={true}
-            paginationPageSize={DEFAULT_PAGINATION_SIZE}
-            onGetFilters={handleGetFilters}
-          />
+          <Card isFullHeight isPlain>
+            <CardBody>
+              <SkBiFlowList
+                data-testid={'http-table'}
+                title={ProcessesLabels.HttpRequests}
+                columns={setColumnVisibility(httpBiFlowColumns, {
+                  sourceProcessName: false,
+                  destProcessName: false,
+                  sourceSiteName: false,
+                  destSiteName: false
+                })}
+                rows={httpRequests}
+                paginationTotalRows={httpRequestsCount}
+                pagination={true}
+                paginationPageSize={DEFAULT_PAGINATION_SIZE}
+                onGetFilters={handleGetFilters}
+              />
+            </CardBody>
+          </Card>
         </Tab>
       )}
     </Tabs>

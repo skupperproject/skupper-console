@@ -37,8 +37,8 @@ import {
 } from '../Topology.constants';
 import { TopologyLabels } from '../Topology.enum';
 
-export const MIN_DRAWER_WIDTH = 500;
-export const MAX_DRAWER_WIDTH = 800;
+const MIN_DRAWER_WIDTH = 500;
+const MAX_DRAWER_WIDTH = 800;
 
 const TopologyProcesses: FC<{
   serviceIds?: string[];

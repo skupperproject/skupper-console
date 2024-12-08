@@ -27,7 +27,7 @@ describe('Metrics component', () => {
     render(
       <MetricFilters
         sourceSites={[{ destinationName: siteData.results[0].name }, { destinationName: siteData.results[1].name }]}
-        destSites={[{ destinationName: siteData.results[2].name }, { destinationName: siteData.results[3].name }]}
+        destSites={[{ destinationName: siteData.results[2].name }, { destinationName: siteData.results[1].name }]}
         sourceProcesses={[
           { destinationName: processesData.results[0].name },
           { destinationName: processesData.results[1].name }
@@ -90,7 +90,7 @@ describe('Metrics component', () => {
     render(
       <MetricFilters
         sourceSites={[{ destinationName: siteData.results[0].name }, { destinationName: siteData.results[1].name }]}
-        destSites={[{ destinationName: siteData.results[2].name }, { destinationName: siteData.results[3].name }]}
+        destSites={[{ destinationName: siteData.results[2].name }, { destinationName: siteData.results[1].name }]}
         sourceProcesses={[
           { destinationName: processesData.results[0].name },
           { destinationName: processesData.results[1].name }
@@ -113,23 +113,13 @@ describe('Metrics component', () => {
     );
 
     fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationSites));
-    await waitFor(() => expect(screen.getByText(siteData.results[3].name)).toBeInTheDocument(), {
+    await waitFor(() => expect(screen.getByText(siteData.results[2].name)).toBeInTheDocument(), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(siteData.results[3].name));
+    fireEvent.click(screen.getByText(siteData.results[2].name));
     await waitFor(() => expect(screen.queryByText(MetricsLabels.FilterAllDestinationSites)).not.toBeInTheDocument(), {
       timeout: waitForElementToBeRemovedTimeout
     });
-
-    // fireEvent.click(screen.getByText(MetricsLabels.FilterProtocolsDefault));
-    // await waitFor(() => expect(screen.getByText(Protocols.Http2)).toBeInTheDocument(), {
-    //   timeout: waitForElementToBeRemovedTimeout
-    // });
-
-    // fireEvent.click(screen.getByText(Protocols.Http2));
-    // await waitFor(() => expect(screen.queryByText(MetricsLabels.FilterProtocolsDefault)).not.toBeInTheDocument(), {
-    //   timeout: waitForElementToBeRemovedTimeout
-    // });
   });
 });

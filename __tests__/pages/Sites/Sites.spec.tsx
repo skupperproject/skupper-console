@@ -12,7 +12,7 @@ import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import ErrorConsole from '../../../src/pages/shared/Errors/Console';
 import Sites from '../../../src/pages/Sites/views/Sites';
-import { MockApiPaths } from '../../../mocks/server.PATH';
+import { MockApiPaths } from '../../../mocks/server.config';
 import { MockApi } from '../../../mocks/server.API';
 
 const siteResults = sitesData.results;

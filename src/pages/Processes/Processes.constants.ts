@@ -55,7 +55,8 @@ export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
   {
     name: ProcessesLabels.Name,
     prop: 'name' as keyof ProcessResponse,
-    customCellName: 'linkCell'
+    customCellName: 'linkCell',
+    modifier: 'nowrap'
   },
   {
     name: ProcessesLabels.Component,

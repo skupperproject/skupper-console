@@ -17,7 +17,7 @@ import { PairsResponse } from '../../../src/types/REST.interfaces';
 
 const processPairsResultOpToCart = processPairsData.results[0] as PairsResponse; // HTTP2 flow
 const processPairsResultDatabaseToPayment = processPairsData.results[6] as PairsResponse; // old TCP flow and active TCP flow
-const processPairsResultPayment2toCatalog = processPairsData.results[4] as PairsResponse; // old TCP flow
+const processPairsResultPayment2toCatalog = processPairsData.results[18] as PairsResponse; // old TCP flow
 
 describe('Begin testing the Processes component', () => {
   let server: Server;

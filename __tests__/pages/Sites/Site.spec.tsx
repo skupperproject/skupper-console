@@ -79,13 +79,13 @@ describe('Site component', () => {
     fireEvent.click(screen.getByText(SiteLabels.Processes));
 
     await waitFor(() => {
-      expect(screen.getByText(processResults[0].name)).toBeInTheDocument();
+      expect(screen.getByText(processResults[1].name)).toBeInTheDocument();
     });
 
     await waitFor(() => {
-      expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
+      expect(screen.getByRole('link', { name: processResults[1].name })).toHaveAttribute(
         'href',
-        `#${ProcessesRoutesPaths.Processes}/${processResults[0].name}@${processResults[0].identity}`
+        `#${ProcessesRoutesPaths.Processes}/${processResults[1].name}@${processResults[1].identity}`
       );
     });
   });

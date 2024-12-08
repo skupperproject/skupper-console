@@ -1,6 +1,6 @@
 import { createServer } from 'miragejs';
 import { MockApi } from './server.API';
-import { MockApiPaths } from './server.PATH';
+import { MockApiPaths } from './server.config';
 
 export function loadMockServer() {
   // The mock server should be disabled if the current environment is not 'development' AND the ENABLE_MOCK_SERVER environment variable is not defined or is falsy
@@ -30,13 +30,12 @@ export function loadMockServer() {
       this.get(MockApiPaths.Process, MockApi.getProcess);
       this.get(MockApiPaths.SitePairs, MockApi.getSitePairs);
       this.get(MockApiPaths.ComponentPairs, MockApi.getComponentPairs);
-      this.get(MockApiPaths.ComponentPair, MockApi.getComponentPair);
       this.get(MockApiPaths.ProcessPairs, MockApi.getProcessPairs);
       this.get(MockApiPaths.ProcessPair, MockApi.getProcessPair);
-      this.get(MockApiPaths.Connections, MockApi.getBiflows);
-      this.get(MockApiPaths.Connection, MockApi.getBiflow);
-      this.get(MockApiPaths.ApplicationFlows, MockApi.getBiflows);
-      this.get(MockApiPaths.ApplicationFlow, MockApi.getBiflow);
+      this.get(MockApiPaths.Connections, MockApi.getTcpConnections);
+      this.get(MockApiPaths.Connection, MockApi.getTcpConnection);
+      this.get(MockApiPaths.ApplicationFlows, MockApi.getHttpRequests);
+      this.get(MockApiPaths.ApplicationFlow, MockApi.getHttpRequest);
       this.get(MockApiPaths.PrometheusQuery, MockApi.getPrometheusQuery);
       this.get(MockApiPaths.PrometheusRangeQuery, MockApi.getPrometheusRangeQuery);
     }

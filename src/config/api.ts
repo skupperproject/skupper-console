@@ -96,8 +96,8 @@ export const apiEndpoints = {
   SERVICES: `${API_URL}/addresses`,
   LISTENERS: `${API_URL}/listeners`,
   CONNECTORS: `${API_URL}/connectors`,
-  TRANSPORT_FLOWS: `${API_URL}/connections`,
-  APPLICATION_FLOWS: `${API_URL}/applicationflows`,
+  TCP_CONNECTIONS: `${API_URL}/connections`,
+  HTTP_REQUESTS: `${API_URL}/applicationflows`,
   SITE_PAIRS: `${API_URL}/sitepairs`,
   COMPONENT_PAIRS: `${API_URL}/processgrouppairs`,
   PROCESS_PAIRS: `${API_URL}/processpairs`

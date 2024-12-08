@@ -182,10 +182,6 @@ interface BaseFlow extends BaseResponse {
   traceRouters: string[];
   traceSites: string[];
   protocol: Protocols;
-  connectorError: null;
-  connectorId: string;
-  listenerId: string;
-  listenerError: string | null;
 }
 
 export interface TransportFlowResponse extends BaseFlow {
@@ -197,12 +193,16 @@ export interface TransportFlowResponse extends BaseFlow {
   destPort: string;
   sourceHost: string; //ie: '172.17.44.196'
   sourcePort: string; //ie:  47504
+  connectorError: null;
+  connectorId: string;
+  listenerId: string;
+  listenerError: string | null;
 }
 
 export interface ApplicationFlowResponse extends BaseFlow {
   connectionId: string;
   method?: string;
-  status?: number;
+  status?: string;
 }
 
 export type BiFlowResponse = TransportFlowResponse | ApplicationFlowResponse;

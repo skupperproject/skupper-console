@@ -1,0 +1,102 @@
+{
+  "count": 12,
+  "results": [
+    {
+      "endTime": 0,
+      "identity": "pg-0c4223a4b4e64185",
+      "name": "cartservice",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495321535035
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-0c5655ed2c6623c9",
+      "name": "productcatalogservice",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495324148595
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-18d29b4e911dc857",
+      "name": "redis",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495321534721
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-43cdb64a292a0df0",
+      "name": "recommendationservice",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495324148761
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-5f1d82bb72e83a81",
+      "name": "loadgenerator",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495324148577
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-6b1c18c4f360df2c",
+      "name": "currencyservice",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495321535070
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-7fba04d7d6346935",
+      "name": "paymentservice",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495321422108
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-d5cc5b94ed10f44a",
+      "name": "adservice",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495321534885
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-d79ebbbdb633fc2a",
+      "name": "frontend",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495324148476
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-f027f5b8c969c415",
+      "name": "shippingservice",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495321422127
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-fb6ba5be06fcfc1b",
+      "name": "emailservice",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495321422077
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-fdda5ea377d48eb3",
+      "name": "checkoutservice",
+      "processCount": 1,
+      "processGroupRole": "external",
+      "startTime": 1733495321535050
+    }
+  ],
+  "timeRangeCount": 12
+}

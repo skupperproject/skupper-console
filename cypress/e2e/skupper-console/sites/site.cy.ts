@@ -4,7 +4,7 @@ import processesData from '../../../../mocks/data/PROCESSES.json';
 
 const site = sitesData.results[0];
 const sitePath = `#/sites/${encodeURIComponent(site.name)}@${encodeURIComponent(site.identity)}`;
-const process = processesData.results[0];
+const process = processesData.results[1];
 const processPath = `#/processes/${encodeURIComponent(process.name)}@${encodeURIComponent(process.identity)}`;
 
 context('Site Detail', () => {
