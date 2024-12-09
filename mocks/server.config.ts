@@ -10,7 +10,6 @@ export const MockApiPaths = {
   Components: `${API_PREFIX}/processgroups`,
   Component: `${API_PREFIX}/processgroups/:id`,
   ComponentPairs: `${API_PREFIX}/processgrouppairs`,
-  ComponentPair: `${API_PREFIX}/processgrouppairs/:id`,
   Connectors: `${API_PREFIX}/connectors`,
   Listeners: `${API_PREFIX}/listeners`,
   Services: `${API_PREFIX}/addresses`,

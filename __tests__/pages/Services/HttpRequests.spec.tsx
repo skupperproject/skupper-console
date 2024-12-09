@@ -4,17 +4,17 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { Server } from 'miragejs';
 
 
-import biFlowData from '../../../mocks/data/FLOW_PAIRS.json';
+import httpRequests from '../../../mocks/data/HTTP_REQUESTS.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import HttpRequests from '../../../src/pages/Services/components/HttpRequests';
 
 const servicesResults = servicesData.results;
-const biFlowResults = biFlowData.results;
+const httpRequestResults = httpRequests.results;
 
 describe('Begin testing the Http requests component', () => {
   let server: Server;
@@ -33,7 +33,7 @@ describe('Begin testing the Http requests component', () => {
     render(
       <Wrapper>
         <Suspense fallback={<LoadingPage />}>
-          <HttpRequests routingKey={servicesResults[0].name} />
+          <HttpRequests routingKey={servicesResults[1].name} />
         </Suspense>
       </Wrapper>
     );
@@ -42,6 +42,6 @@ describe('Begin testing the Http requests component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByText(biFlowResults[0].sourceProcessName)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(httpRequestResults[0].sourceProcessName)[0]).toBeInTheDocument();
   });
 });

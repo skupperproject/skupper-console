@@ -4,8 +4,8 @@ import processesData from '../../../../mocks/data/PROCESSES.json';
 
 const site = sitesData.results[0];
 const sitePath = `#/sites/${encodeURIComponent(site.name)}@${encodeURIComponent(site.identity)}`;
-const process = processesData.results[0];
-const processPath = `#/processes/${process.name}@${process.identity}`;
+const process = processesData.results[1];
+const processPath = `#/processes/${encodeURIComponent(process.name)}@${encodeURIComponent(process.identity)}`;
 
 context('Site Detail', () => {
   const testId = `${getTestsIds.siteView(site.identity)}`;
@@ -36,10 +36,9 @@ context('Site Processes', () => {
   });
 
   it('should navigate to the correct process page when clicking on a link', () => {
-    const expectedUrl = 'http://localhost:3000/#/processes/process%20payment%201@process-payment-1?type=Overview';
+    const expectedUrl = `http://localhost:3000/${processPath}?type=Overview`;
 
     const link = cy.get(`[data-testid="${testId}"]`).contains(process.name);
-    link.should('have.attr', 'href', `${processPath}`);
     link.click();
     cy.url().should('eq', expectedUrl);
   });

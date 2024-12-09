@@ -1,4 +1,4 @@
-import { PROMETHEUS_URL } from '../config/config';
+import { PROMETHEUS_URL } from '../config/api';
 import { PrometheusLabelsV2 } from '../config/prometheus';
 import {
   MetricData as MetricValuesAndLabels,

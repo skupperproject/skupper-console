@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { HexColors } from '../../src/config/colors';
+import { hexColors, styles } from '../../src/config/styles';
 import SkSankeyChart, {
   addThemeChangeListener,
   getColors,
@@ -19,13 +19,13 @@ describe('SkSankeyChart', () => {
   });
 
   it('should return nodeColor if it exists', () => {
-    const node = { id: 'test', nodeColor: HexColors.Blue400 };
-    expect(getColors(node)).toEqual(HexColors.Blue400);
+    const node = { id: 'test', nodeColor: styles.default.infoColor };
+    expect(getColors(node)).toEqual(styles.default.infoColor);
   });
 
-  it('should return HexColors.Black500 if nodeColor does not exist', () => {
+  it('should return the default bg color if nodeColor does not exist', () => {
     const node = { id: 'test' };
-    expect(getColors(node)).toEqual(HexColors.Black500);
+    expect(getColors(node)).toEqual(styles.default.darkBackgroundColor);
   });
 
   it('should render the SkSankeyChart component', () => {

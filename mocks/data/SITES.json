@@ -1,56 +1,39 @@
 {
+  "count": 3,
   "results": [
     {
-      "identity": "site-1",
-      "startTime": 1674048683000000,
       "endTime": 0,
-      "name": "US East - Site 1",
-      "nameSpace": "us-east-site-1-dev",
+      "identity": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
+      "name": "dallas",
+      "nameSpace": "vb-boutique-c",
       "platform": "kubernetes",
-      "siteVersion": "1.8.2",
-      "routerCount": 3
+      "provider": "kubernetes",
+      "routerCount": 1,
+      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "startTime": 1733493767000000
     },
     {
-      "identity": "site-2",
-      "startTime": 1674048662000000,
       "endTime": 0,
-      "name": "US West - Site 2",
-      "nameSpace": "us-west-site-2-prod",
+      "identity": "49becd97-6e22-4645-a22f-b5b98c89d827",
+      "name": "london",
+      "nameSpace": "vb-boutique-b",
       "platform": "kubernetes",
-      "siteVersion": "2.0.0",
-      "routerCount": 2
+      "provider": "kubernetes",
+      "routerCount": 1,
+      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "startTime": 1733493674000000
     },
     {
-      "identity": "site-3",
-      "startTime": 1674048705000000,
       "endTime": 0,
-      "name": "EU Central - Site 3",
-      "nameSpace": "eu-central-site-3-dev",
-      "platform": "docker",
-      "siteVersion": "2.1.0",
-      "routerCount": 4
-    },
-    {
-      "identity": "site-4",
-      "startTime": 1674048705000000,
-      "endTime": 0,
-      "name": "AP South - Site 4",
-      "nameSpace": "ap-south-site-4-prod",
+      "identity": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
+      "name": "malaga",
+      "nameSpace": "vb-boutique-a",
       "platform": "kubernetes",
-      "siteVersion": "1.5.4",
-      "routerCount": 2
-    },
-    {
-      "identity": "site-5",
-      "startTime": 1674048705000000,
-      "endTime": 0,
-      "name": "SA East - Site 5",
-      "nameSpace": "sa-east-site-5-prod",
-      "platform": "podman",
-      "siteVersion": "2.0.0",
-      "routerCount": 1
+      "provider": "kubernetes",
+      "routerCount": 1,
+      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "startTime": 1733493473000000
     }
   ],
-  "count": 5,
-  "timeRangeCount": 5
+  "timeRangeCount": 3
 }

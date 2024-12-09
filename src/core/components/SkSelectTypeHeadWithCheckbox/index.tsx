@@ -16,7 +16,7 @@ import {
   SkSelectTypeHeadWithCheckboxUseData,
   SkSelectTypeHeadWithCheckboxUseDataUseDataProps
 } from './SkSelectTypeHeadWithCheckboxUseData';
-import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
 import { TopologyLabels } from '../../../pages/Topology/Topology.enum';
 
 interface SkSelectTypeHeadwithCheckboxProps extends SkSelectTypeHeadWithCheckboxUseDataUseDataProps {
@@ -109,7 +109,7 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
             key={option.value}
             isFocused={focusedItemIndex === index}
             className={option.className}
-            id={`select-multi-typeahead-${option.value.replace(' ', EMPTY_VALUE_PLACEHOLDER)}`}
+            id={`select-multi-typeahead-${option.value.replace(' ', EMPTY_VALUE_SYMBOL)}`}
             {...option}
             ref={null}
           >

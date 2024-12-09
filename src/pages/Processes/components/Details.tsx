@@ -17,7 +17,7 @@ import {
 } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 
-import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
 import ResourceIcon from '../../../core/components/ResourceIcon';
 import { timeAgo } from '../../../core/utils/timeAgo';
 import { ProcessResponse } from '../../../types/REST.interfaces';
@@ -84,7 +84,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
             <GridItem span={6}>
               <DescriptionListGroup>
                 <DescriptionListTerm>{ProcessesLabels.Host}</DescriptionListTerm>
-                <DescriptionListDescription>{hostName || EMPTY_VALUE_PLACEHOLDER}</DescriptionListDescription>
+                <DescriptionListDescription>{hostName || EMPTY_VALUE_SYMBOL}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 
@@ -100,11 +100,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
                 <DescriptionListTerm>{ProcessesLabels.Image}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <Tooltip content={imageName}>
-                    <Truncate
-                      content={imageName || EMPTY_VALUE_PLACEHOLDER}
-                      trailingNumChars={10}
-                      position={'middle'}
-                    />
+                    <Truncate content={imageName || EMPTY_VALUE_SYMBOL} trailingNumChars={10} position={'middle'} />
                   </Tooltip>
                 </DescriptionListDescription>
               </DescriptionListGroup>

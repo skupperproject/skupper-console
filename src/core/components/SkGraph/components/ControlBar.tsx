@@ -14,7 +14,7 @@ import {
 import { ExpandArrowsAltIcon, SearchMinusIcon, SearchPlusIcon, ExpandIcon } from '@patternfly/react-icons';
 
 import ProcessLegend from './Legend';
-import { GraphLabels } from '../Graph.enum';
+import { GraphLabels } from '../enum';
 import { GraphController } from '../services';
 
 type ZoomControlsProps = {

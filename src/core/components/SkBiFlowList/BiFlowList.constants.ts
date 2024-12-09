@@ -119,7 +119,8 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   {
     name: BiFlowListLabels.From,
     prop: 'sourceProcessName',
-    customCellName: 'ProcessNameLinkCell'
+    customCellName: 'ProcessNameLinkCell',
+    modifier: 'nowrap'
   },
   {
     name: BiFlowListLabels.Site,

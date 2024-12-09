@@ -6,13 +6,13 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 import sitesData from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import ErrorConsole from '../../../src/pages/shared/Errors/Console';
 import Sites from '../../../src/pages/Sites/views/Sites';
-import { MockApiPaths } from '../../../mocks/server.PATH';
+import { MockApiPaths } from '../../../mocks/server.config';
 import { MockApi } from '../../../mocks/server.API';
 
 const siteResults = sitesData.results;

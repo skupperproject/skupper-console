@@ -9,13 +9,13 @@ import {
   ProcessResponse,
   RouterResponse,
   SiteResponse,
-  BiFlowResponse,
   PairsResponse,
   ApplicationFlowResponse,
   ConnectorResponse,
   ListenerResponse
 } from '../src/types/REST.interfaces';
-import { getQueryParams, loadData } from './server.utils';
+import { extractQueryParams, filterResults, getMockData, loadData, paginateResults, sortData } from './server.utils';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../src/config/app';
 
 interface ApiProps {
   params: Record<string, string>;
@@ -27,13 +27,14 @@ const ITEM_COUNT = Number(process.env.MOCK_ITEM_COUNT) || 0;
 
 // Mock data setup
 const sites = loadData<SiteResponse>('SITES');
-const components = loadData<ComponentResponse>('PROCESS_GROUPS');
-const componentPairs = loadData<PairsResponse>('PROCESS_GROUP_PAIRS');
+const components = loadData<ComponentResponse>('COMPONENTS');
+const componentPairs = loadData<PairsResponse>('COMPONENT_PAIRS');
 const processes = loadData<ProcessResponse>('PROCESSES');
 const sitePairs = loadData<PairsResponse>('SITE_PAIRS');
 const processPairs = loadData<ProcessPairsResponse>('PROCESS_PAIRS');
 const services = loadData<ServiceResponse>('SERVICES');
-const biFlow = loadData<BiFlowResponse>('FLOW_PAIRS');
+const tcpConnections = loadData<ConnectorResponse>('TCP_CONNECTIONS');
+const httpRequests = loadData<ApplicationFlowResponse>('HTTP_REQUESTS');
 const links = loadData<RouterLinkResponse>('LINKS');
 const listeners = loadData<ListenerResponse>('LISTENERS');
 const connectors = loadData<ConnectorResponse>('CONNECTORS');
@@ -44,7 +45,6 @@ export const MockApi = {
   get503Error: () => new Response(503),
   get404Error: () => new Response(404),
 
-  // User Authentication
   getUser: () => ({
     username: 'IAM#Mock-User@user.mock',
     authType: 'openshift'
@@ -52,11 +52,21 @@ export const MockApi = {
 
   logout: () => ({}),
 
-  getSites: () => {
+  getSites: (_: unknown, { url }: ApiProps) => {
     const sitesForPerfTests = ITEM_COUNT ? mockSitesForPerf : [];
-    const results = [...sites.results, ...sitesForPerfTests];
+    const results = getMockData(sites.results, ITEM_COUNT > 0, sitesForPerfTests);
 
-    return { ...sites, results };
+    const { limit, offset, sortBy, ...filters } = extractQueryParams(url) || {};
+
+    const filteredResults = filterResults(results, filters);
+    const sortedData = sortData(filteredResults, sortBy);
+    const paginatedResults = paginateResults(sortedData, { offset, limit });
+
+    return {
+      results: paginatedResults,
+      count: filteredResults.length,
+      timeRangeCount: filteredResults.length
+    };
   },
 
   getSite: (_: unknown, { params: { id } }: ApiProps) => ({
@@ -65,22 +75,9 @@ export const MockApi = {
 
   getLinks: (_: unknown, { queryParams }: ApiProps) => {
     const linksForPerfTests = ITEM_COUNT ? mockLinksForPerf : [];
-    const results = [...links.results, ...linksForPerfTests];
+    const results = getMockData(links.results, ITEM_COUNT > 0, linksForPerfTests);
 
-    if (queryParams && !Object.keys(queryParams).length) {
-      return {
-        results,
-        count: results.length,
-        timeRangeCount: results.length
-      };
-    }
-
-    const filteredResults = results.filter(
-      (result) =>
-        (queryParams.sourceSiteId && result.sourceSiteId === queryParams.sourceSiteId) ||
-        (queryParams.destinationSiteId && result.destinationSiteId === queryParams.destinationSiteId)
-    );
-
+    const filteredResults = filterResults(results, queryParams);
     return {
       results: filteredResults,
       count: filteredResults.length,
@@ -88,250 +85,181 @@ export const MockApi = {
     };
   },
 
-  getComponents: (_: unknown, { queryParams }: ApiProps) => {
-    const results = [...components.results];
-    if (queryParams && !Object.keys(queryParams).length) {
-      return {
-        ...components,
-        results,
-        count: results.length,
-        timeRangeCount: results.length
-      };
-    }
+  getComponents: (_: unknown, { url }: ApiProps) => {
+    const results = getMockData(components.results, ITEM_COUNT > 0);
+    const { limit, offset, sortBy, ...filters } = extractQueryParams(url) || {};
 
-    const filteredResults = results.filter(
-      (result) => queryParams.processGroupRole && result.processGroupRole === queryParams.processGroupRole
-    );
-
-    const paginatedResults = filteredResults.slice(
-      Number(queryParams.offset || 0),
-      Number(queryParams.offset || 0) + Number(queryParams.limit || filteredResults.length)
-    );
+    const filteredResults = filterResults(results, filters);
+    const sortedData = sortData(filteredResults, sortBy);
+    const paginatedResults = paginateResults(sortedData, { offset, limit });
 
     return {
-      ...components,
       results: paginatedResults,
       count: filteredResults.length,
       timeRangeCount: filteredResults.length
     };
   },
 
-  getComponent: (_: unknown, { params: { id } }: ApiProps) => {
-    const results = components.results.find(({ identity }: ComponentResponse) => identity === id);
+  getComponent: (_: unknown, { params: { id } }: ApiProps) => ({
+    results: components.results.find(({ identity }) => identity === id)
+  }),
 
-    return { results };
-  },
-
-  getProcesses: (_: unknown, { queryParams, url }: ApiProps) => {
+  getProcesses: (_: unknown, { url }: ApiProps) => {
     const processesForPerfTests = ITEM_COUNT ? mockProcessesForPerf : [];
-    const results = [...processes.results, ...processesForPerfTests];
-    const filters = getQueryParams(url);
+    const results = getMockData(processes.results, ITEM_COUNT > 0, processesForPerfTests);
+    const { limit, offset, sortBy, ...filters } = extractQueryParams(url) || {};
 
-    if (!filters?.processRole?.length) {
-      return {
-        ...processes,
-        results,
-        count: results.length,
-        timeRangeCount: results.length
-      };
-    }
-
-    const filteredResults = results.filter(
-      (result) =>
-        filters.processRole.includes(result.processRole) ||
-        result.groupIdentity === queryParams.groupIdentity ||
-        result.parent === queryParams.parent
-    );
-
-    const paginatedResults = filteredResults.slice(
-      Number(queryParams.offset || 0),
-      Number(queryParams.offset || 0) + Number(queryParams.limit || filteredResults.length)
-    );
+    const filteredResults = filterResults(results, filters);
+    const sortedData = sortData(filteredResults, sortBy);
+    const paginatedResults = paginateResults(sortedData, { offset, limit });
 
     return {
-      ...processes,
       results: paginatedResults,
       count: filteredResults.length,
       timeRangeCount: filteredResults.length
     };
   },
 
-  getProcess: (_: unknown, { params: { id } }: ApiProps) => {
-    const results = processes.results.find(({ identity }: ProcessResponse) => identity === id);
-
-    return { results };
-  },
+  getProcess: (_: unknown, { params: { id } }: ApiProps) => ({
+    results: processes.results.find(({ identity }) => identity === id)
+  }),
 
   getListeners: (_: unknown, { queryParams }: ApiProps) => {
-    let results = listeners.results;
-    if (queryParams.addressId) {
-      results = results.filter(({ addressId }) => addressId === queryParams.addressId);
-    }
-
-    const paginatedResults = results.slice(
-      Number(queryParams.offset || 0),
-      Number(queryParams.offset || 0) + Number(queryParams.limit || results.length)
-    );
+    const results = getMockData(listeners.results, ITEM_COUNT > 0);
+    const filteredResults = filterResults(results, queryParams);
+    const paginatedResults = paginateResults(filteredResults, queryParams);
 
     return {
       results: paginatedResults,
-      count: results.length,
-      timeRangeCount: results.length
+      count: filteredResults.length,
+      timeRangeCount: filteredResults.length
     };
   },
 
   getConnectors: (_: unknown, { queryParams }: ApiProps) => {
-    let results = connectors.results;
-
-    if (queryParams.addressId) {
-      results = results.filter(({ addressId }) => addressId.startsWith(queryParams.addressId as string));
-    }
-
-    const paginatedResults = results.slice(
-      Number(queryParams.offset || 0),
-      Number(queryParams.offset || 0) + Number(queryParams.limit || results.length)
-    );
+    const results = getMockData(connectors.results, ITEM_COUNT > 0);
+    const filteredResults = filterResults(results, queryParams);
+    const paginatedResults = paginateResults(filteredResults, queryParams);
 
     return {
       results: paginatedResults,
-      count: results.length,
-      timeRangeCount: results.length
+      count: filteredResults.length,
+      timeRangeCount: filteredResults.length
     };
   },
 
-  getServices: (_: unknown, { queryParams }: ApiProps) => {
-    let results = services.results;
+  getServices: (_: unknown, { url }: ApiProps) => {
+    const results = getMockData(services.results, ITEM_COUNT > 0);
+    const { limit, offset, sortBy, ...filters } = extractQueryParams(url) || {};
 
-    if (queryParams.name || queryParams.protocol) {
-      results = results.filter(
-        ({ name, protocol }) =>
-          name.startsWith(queryParams.name as string) || protocol.startsWith(queryParams.protocol as string)
-      );
-    }
-
-    const paginatedResults = results.slice(
-      Number(queryParams.offset || 0),
-      Number(queryParams.offset || 0) + Number(queryParams.limit || results.length)
-    );
+    const filteredResults = filterResults(results, filters);
+    const sortedData = sortData(filteredResults, sortBy);
+    const paginatedResults = paginateResults(sortedData, { offset, limit });
 
     return {
       results: paginatedResults,
-      count: results.length,
-      timeRangeCount: results.length
+      count: filteredResults.length,
+      timeRangeCount: filteredResults.length
     };
   },
 
-  getService: (_: unknown, { params: { id } }: ApiProps) => {
-    const results = services.results.find(({ identity }) => identity === id);
-
-    return { results };
-  },
+  getService: (_: unknown, { params: { id } }: ApiProps) => ({
+    results: services.results.find(({ identity }) => identity === id)
+  }),
 
   getServiceProcessPairs: (_: unknown, { params: { id } }: ApiProps) => {
-    return processPairs;
+    const processesByServiceIds = processes.results
+      .filter(
+        ({ addresses }) =>
+          addresses && addresses.some((address) => address.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[1] === id)
+      )
+      .map(({ identity }) => identity);
+
+    const processPairsFiltered = processPairs.results.filter((item) =>
+      processesByServiceIds.includes(item.destinationId)
+    );
+
+    return {
+      results: processPairsFiltered,
+      count: processPairsFiltered.length,
+      timeRangeCount: processPairsFiltered.length
+    };
   },
 
   getSitePairs: (_: unknown, { queryParams }: ApiProps) => {
-    const sitesForPerfTests = ITEM_COUNT ? mockSitePairsForPerf : [];
-    const results = [...sitePairs.results, ...sitesForPerfTests];
-
-    if (queryParams && !Object.keys(queryParams).length) {
-      return { ...sitePairs, results };
-    }
-
-    const resultsFiltered = results.filter(
-      ({ sourceId, destinationId }) => sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
-    );
-
-    return { ...processPairs, results: resultsFiltered };
+    const results = getMockData(sitePairs.results, ITEM_COUNT > 0);
+    const filteredResults = filterResults(results, queryParams);
+    return { ...processPairs, results: filteredResults };
   },
 
   getComponentPairs: (_: unknown, { queryParams }: ApiProps) => {
-    const results = componentPairs.results;
-
-    if (queryParams && !Object.keys(queryParams).length) {
-      return { ...componentPairs, results };
-    }
-
-    const resultsFiltered = results.filter(
-      ({ sourceId, destinationId }) => sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
-    );
-
-    return { ...componentPairs, results: resultsFiltered };
+    const results = getMockData(componentPairs.results, ITEM_COUNT > 0);
+    const filteredResults = filterResults(results, queryParams);
+    return { ...componentPairs, results: filteredResults };
   },
-
-  getComponentPair: (_: unknown, { params: { id } }: ApiProps) => ({
-    results: componentPairs.results.find(({ identity }) => identity === id) || []
-  }),
 
   getProcessPairs: (_: unknown, { queryParams }: ApiProps) => {
-    const processesForPerfTests = ITEM_COUNT ? mockProcessPairsForPerf : [];
-    const results = [...processPairs.results, ...processesForPerfTests];
+    const results = getMockData(processPairs.results, ITEM_COUNT > 0);
+    const filteredResults = filterResults(results, queryParams);
+    return { ...processPairs, results: filteredResults };
+  },
 
-    if (queryParams && !Object.keys(queryParams).length) {
-      return { ...processPairs, results };
+  getProcessPair: (_: unknown, { params: { id } }: ApiProps) => {
+    const processPair = processPairs.results.find(({ identity }) => identity === id);
+    return {
+      results: processPair ? processPair : {}
+    };
+  },
+
+  getTcpConnections: (_: unknown, { url }: ApiProps) => {
+    const results = tcpConnections.results;
+    const { limit, offset, sortBy, state, ...filters } = extractQueryParams(url) || {};
+
+    let filteredResults = filterResults(results, { ...filters });
+
+    if (state) {
+      filteredResults = filteredResults.filter((res) =>
+        state?.length && state[0] === 'terminated' ? res.endTime > 0 : res.endTime === 0
+      );
     }
 
-    const resultsFiltered = results.filter(
-      ({ sourceId, destinationId }) => sourceId === queryParams.sourceId || destinationId === queryParams.destinationId
-    );
+    const sortedData = sortData(filteredResults, sortBy);
+    const paginatedResults = paginateResults(sortedData, { offset, limit });
 
-    return { ...processPairs, results: resultsFiltered };
+    return {
+      results: paginatedResults,
+      count: filteredResults.length,
+      timeRangeCount: filteredResults.length
+    };
   },
 
-  getProcessPair: (_: unknown, { params: { id } }: ApiProps) => ({
-    results: processPairs.results.find(({ identity }) => identity === id) || []
+  getHttpRequests: (_: unknown, { url }: ApiProps) => {
+    const results = httpRequests.results;
+    const { limit, offset, sortBy, ...filters } = extractQueryParams(url) || {};
+    let filteredResults = filterResults(results, { ...filters });
+
+    const sortedData = sortData(filteredResults, sortBy);
+    const paginatedResults = paginateResults(sortedData, { offset, limit });
+
+    return {
+      results: paginatedResults,
+      count: filteredResults.length,
+      timeRangeCount: filteredResults.length
+    };
+  },
+
+  getTcpConnection: (_: unknown, { params: { id } }: ApiProps) => ({
+    results: tcpConnections.results.find(({ identity }) => identity === id)
   }),
 
-  getBiflows: (_: unknown, { queryParams }: ApiProps) => {
-    const queryProcessSourceId = queryParams.sourceProcessId;
-    const queryProcessDestinationId = queryParams.destProcessId;
-    const queryProcessSourceName = queryParams.sourceProcessName;
-    const queryProcessDestinationName = queryParams.destProcessName;
-    const queryProtocol = queryParams.protocol;
-    const queryStatus = queryParams.status;
-    const queryMethod = queryParams.method;
-    const queryRoutingKey = queryParams.routingKey;
-
-    const results = (biFlow.results as ApplicationFlowResponse[]).filter(
-      ({
-        protocol,
-        endTime,
-        sourceProcessId,
-        destProcessId,
-        sourceProcessName,
-        destProcessName,
-        status,
-        method,
-        routingKey
-      }) =>
-        (!queryRoutingKey && queryProcessSourceId ? sourceProcessId === queryProcessSourceId : true) &&
-        (!queryRoutingKey && queryProcessDestinationId ? destProcessId === queryProcessDestinationId : true) &&
-        (queryProtocol ? protocol === queryProtocol : true) &&
-        (queryRoutingKey && queryProcessSourceName
-          ? sourceProcessName.startsWith(queryProcessSourceName as string)
-          : true) &&
-        (queryRoutingKey && queryProcessDestinationId
-          ? destProcessName.startsWith(queryProcessDestinationName as string)
-          : true) &&
-        (queryMethod ? !!method?.startsWith(queryMethod as string) : true) &&
-        (queryStatus ? !!status?.toString()?.startsWith(queryStatus as string) : true) &&
-        (queryProtocol ? protocol.startsWith(queryProtocol as string) : true) &&
-        (queryRoutingKey ? routingKey === queryRoutingKey : true) &&
-        (queryParams.state === 'active' ? endTime === 0 : endTime > 0)
-    );
-
-    return { ...processPairs, results, timeRangeCount: results.length };
-  },
-
-  getBiflow: (_: unknown, { params: { id } }: ApiProps) => ({
-    results: biFlow.results.find(({ identity }) => identity === id)
+  getHttpRequest: (_: unknown, { params: { id } }: ApiProps) => ({
+    results: httpRequests.results.find(({ identity }) => identity === id)
   }),
 
   getPrometheusQuery: (_: unknown, { queryParams }: ApiProps) => {
     if (
       (queryParams.query as string)?.includes(
-        `sum by(destProcess, sourceProcess, direction)(rate(${PrometheusMetricsV2.SentBytes}`
+        `sum by(source_process_name,dest_process_name)(rate(${PrometheusMetricsV2.SentBytes}`
       )
     ) {
       return {
@@ -340,25 +268,22 @@ export const MockApi = {
           result: [
             {
               metric: {
-                destProcess: 'process payment 1',
-                direction: 'outgoing',
-                sourceProcess: 'process cash desk 1'
+                dest_process_name: 'paymentservice-69f99b8c87-kztsn',
+                source_process_name: 'checkoutservice-684ff774fd-4bttd'
               },
               value: [1700918014, '1024']
             },
             {
               metric: {
-                destProcess: 'process cash desk 2',
-                direction: 'outgoing',
-                sourceProcess: 'process payment 3'
+                dest_process_name: 'paymentservice-131f99g8c15-replica-1',
+                source_process_name: 'checkoutservice-684ff774fd-4bttd'
               },
               value: [1700918024.674, '10000']
             },
             {
               metric: {
-                destProcess: 'process cash desk 1',
-                direction: 'outgoing',
-                sourceProcess: 'process payment 1'
+                dest_process_name: 'process cash desk 1',
+                source_process_name: 'checkoutservice-684ff774fd-4bttd'
               },
               value: [1700918904.674, '20000']
             }

@@ -1,73 +1,126 @@
 {
+  "count": 10,
   "results": [
     {
-      "identity": "cart:3000",
-      "startTime": 1674048767157175,
-      "endTime": 0,
-      "name": "cart:3000",
-      "protocol": "tcp",
-      "observedApplicationProtocols": [],
-      "connectorCount": 2,
-      "listenerCount": 2,
-      "hasListener": true
-    },
-    {
-      "identity": "payment:5000",
-      "startTime": 1674048767157175,
-      "endTime": 0,
-      "name": "payment:5000",
-      "protocol": "tcp",
-      "observedApplicationProtocols": ["http2"],
-      "connectorCount": 2,
-      "listenerCount": 0,
-      "hasListener": false
-    },
-    {
-      "identity": "cash-desk-http2:3000",
-      "startTime": 1674048767157175,
-      "endTime": 0,
-      "name": "cash-desk:3000",
-      "protocol": "tcp",
-      "observedApplicationProtocols": ["http2"],
-      "connectorCount": 2,
-      "listenerCount": 2,
-      "hasListener": true
-    },
-    {
-      "identity": "cash-desk-http1:3000",
-      "startTime": 1674048767157175,
-      "endTime": 0,
-      "name": "cash-desk:3000",
-      "protocol": "tcp",
-      "observedApplicationProtocols": ["http1"],
-      "connectorCount": 2,
-      "listenerCount": 2,
-      "hasListener": true
-    },
-
-    {
-      "identity": "catalog:4900",
-      "startTime": 1674048767157175,
-      "endTime": 0,
-      "name": "catalog:4900",
-      "protocol": "tcp",
-      "observedApplicationProtocols": [],
-      "connectorCount": 0,
-      "listenerCount": 2,
-      "hasListener": true
-    },
-    {
-      "identity": "database:8000",
-      "startTime": 1674048767157175,
-      "endTime": 0,
-      "name": "database:8000",
-      "protocol": "tcp",
-      "observedApplicationProtocols": [],
       "connectorCount": 1,
-      "listenerCount": 2,
-      "hasListener": true
+      "endTime": 0,
+      "hasListener": true,
+      "identity": "adr-00ffe0b268c6eae4",
+      "isBound": true,
+      "listenerCount": 3,
+      "name": "shippingservice",
+      "observedApplicationProtocols": ["http2"],
+      "protocol": "tcp",
+      "startTime": 1733493698912135
+    },
+    {
+      "connectorCount": 1,
+      "endTime": 0,
+      "hasListener": true,
+      "identity": "adr-026fd79c9d4f5db4",
+      "isBound": true,
+      "listenerCount": 3,
+      "name": "productcatalogservice",
+      "observedApplicationProtocols": ["http2"],
+      "protocol": "tcp",
+      "startTime": 1733493698081082
+    },
+    {
+      "connectorCount": 1,
+      "endTime": 0,
+      "hasListener": true,
+      "identity": "adr-0b47bb519031b31f",
+      "isBound": true,
+      "listenerCount": 3,
+      "name": "recommendationservice",
+      "observedApplicationProtocols": ["http2"],
+      "protocol": "tcp",
+      "startTime": 1733493697285137
+    },
+    {
+      "connectorCount": 1,
+      "endTime": 0,
+      "hasListener": true,
+      "identity": "adr-28bab4448f1c9a48",
+      "isBound": true,
+      "listenerCount": 3,
+      "name": "cartservice",
+      "observedApplicationProtocols": ["http2"],
+      "protocol": "tcp",
+      "startTime": 1733493693265429
+    },
+    {
+      "connectorCount": 1,
+      "endTime": 0,
+      "hasListener": true,
+      "identity": "adr-3f65f628c8aa2f3e",
+      "isBound": true,
+      "listenerCount": 3,
+      "name": "checkoutservice",
+      "observedApplicationProtocols": ["http2"],
+      "protocol": "tcp",
+      "startTime": 1733493693356096
+    },
+    {
+      "connectorCount": 1,
+      "endTime": 0,
+      "hasListener": true,
+      "identity": "adr-5193d597cb3d8442",
+      "isBound": true,
+      "listenerCount": 3,
+      "name": "emailservice",
+      "observedApplicationProtocols": [],
+      "protocol": "tcp",
+      "startTime": 1733493694938611
+    },
+    {
+      "connectorCount": 1,
+      "endTime": 0,
+      "hasListener": true,
+      "identity": "adr-52d2eda644143ced",
+      "isBound": true,
+      "listenerCount": 3,
+      "name": "redis-cart",
+      "observedApplicationProtocols": [],
+      "protocol": "tcp",
+      "startTime": 1733493696546846
+    },
+    {
+      "connectorCount": 1,
+      "endTime": 0,
+      "hasListener": true,
+      "identity": "adr-7375c1d0dcc0c921",
+      "isBound": true,
+      "listenerCount": 3,
+      "name": "adservice",
+      "observedApplicationProtocols": ["http2"],
+      "protocol": "tcp",
+      "startTime": 1733493693148947
+    },
+    {
+      "connectorCount": 1,
+      "endTime": 0,
+      "hasListener": true,
+      "identity": "adr-97d6f0970aa36488",
+      "isBound": true,
+      "listenerCount": 3,
+      "name": "paymentservice",
+      "observedApplicationProtocols": ["http2"],
+      "protocol": "tcp",
+      "startTime": 1733493695692332
+    },
+    {
+      "connectorCount": 1,
+      "endTime": 0,
+      "hasListener": true,
+      "identity": "adr-cab8785b7b99f93f",
+      "isBound": true,
+      "listenerCount": 3,
+      "name": "currencyservice",
+      "observedApplicationProtocols": ["http2"],
+      "protocol": "tcp",
+      "startTime": 1733493694088604
     }
   ],
-  "count": 6,
-  "timeRangeCount": 6
+  "timeRangeCount": 10
 }

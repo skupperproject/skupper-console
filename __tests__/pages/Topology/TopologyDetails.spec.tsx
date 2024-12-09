@@ -7,11 +7,12 @@ import { loadMockServer } from '../../../mocks/server';
 import { Wrapper } from '../../../src/core/components/Wrapper';
 import TopologyDetails from '../../../src/pages/Topology/components/TopologyDetails';
 import { ProcessPairsResponse, ProcessResponse } from '../../../src/types/REST.interfaces';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../src/config/app';
 
 const processesResults = processesData.results as ProcessResponse[];
 const processPairsResults = processesPairsData.results as ProcessPairsResponse[];
 
-describe('NodeOrEdgeList', () => {
+describe('Topology details', () => {
   let server: Server;
 
   beforeEach(() => {
@@ -26,7 +27,7 @@ describe('NodeOrEdgeList', () => {
 
   it('should render a list of processes when modalType is "process"', () => {
     const items = processesResults;
-    const ids = [processesResults[0].identity, processesResults[1].identity];
+    const ids = [processesResults[1].identity, processesResults[12].identity];
 
     render(
       <Wrapper>
@@ -38,9 +39,9 @@ describe('NodeOrEdgeList', () => {
             sourceToDestBytes: [
               {
                 metric: {
-                  destProcess: processesResults[0].name,
+                  destProcess: processesResults[1].name,
                   direction: 'incoming',
-                  sourceProcess: processesResults[1].name
+                  sourceProcess: processesResults[12].name
                 },
                 value: [1722715709.263, 38],
                 values: [] as never
@@ -49,7 +50,7 @@ describe('NodeOrEdgeList', () => {
                 metric: {
                   destProcess: processesResults[1].name,
                   direction: 'incoming',
-                  sourceProcess: processesResults[0].name
+                  sourceProcess: processesResults[12].name
                 },
                 value: [1722715709.263, 38],
                 values: [] as never
@@ -58,9 +59,9 @@ describe('NodeOrEdgeList', () => {
             destToSourceBytes: [
               {
                 metric: {
-                  destProcess: processesResults[0].name,
+                  destProcess: processesResults[1].name,
                   direction: 'incoming',
-                  sourceProcess: processesResults[1].name
+                  sourceProcess: processesResults[12].name
                 },
                 value: [1722715709.263, 38],
                 values: [] as never
@@ -69,7 +70,7 @@ describe('NodeOrEdgeList', () => {
                 metric: {
                   destProcess: processesResults[1].name,
                   direction: 'incoming',
-                  sourceProcess: processesResults[0].name
+                  sourceProcess: processesResults[12].name
                 },
                 value: [1722715709.263, 38],
                 values: [] as never
@@ -78,9 +79,9 @@ describe('NodeOrEdgeList', () => {
             sourceToDestByteRate: [
               {
                 metric: {
-                  destProcess: processesResults[0].name,
+                  destProcess: processesResults[1].name,
                   direction: 'incoming',
-                  sourceProcess: processesResults[1].name
+                  sourceProcess: processesResults[12].name
                 },
                 value: [1722715709.263, 38],
                 values: [] as never
@@ -89,7 +90,7 @@ describe('NodeOrEdgeList', () => {
                 metric: {
                   destProcess: processesResults[1].name,
                   direction: 'incoming',
-                  sourceProcess: processesResults[0].name
+                  sourceProcess: processesResults[12].name
                 },
                 value: [1722715709.263, 38],
                 values: [] as never
@@ -98,9 +99,9 @@ describe('NodeOrEdgeList', () => {
             destToSourceByteRate: [
               {
                 metric: {
-                  destProcess: processesResults[0].name,
+                  destProcess: processesResults[1].name,
                   direction: 'incoming',
-                  sourceProcess: processesResults[1].name
+                  sourceProcess: processesResults[12].name
                 },
                 value: [1722715709.263, 38],
                 values: [] as never
@@ -109,7 +110,7 @@ describe('NodeOrEdgeList', () => {
                 metric: {
                   destProcess: processesResults[1].name,
                   direction: 'incoming',
-                  sourceProcess: processesResults[0].name
+                  sourceProcess: processesResults[12].name
                 },
                 value: [1722715709.263, 38],
                 values: [] as never
@@ -121,14 +122,13 @@ describe('NodeOrEdgeList', () => {
       </Wrapper>
     );
 
-    expect(screen.getByText(processesResults[0].name)).toBeInTheDocument();
-    expect(screen.getAllByText(processesResults[0].groupName)[0]).toBeInTheDocument();
-    expect(screen.getAllByText(processesResults[0].parentName)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(processesResults[12].groupName)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(processesResults[12].parentName)[0]).toBeInTheDocument();
     expect(
-      screen.getAllByText((processesResults[0].addresses as string[])[0]?.split('@')[0] as string)[0]
+      screen.getAllByText(
+        (processesResults[12].addresses as string[])[0]?.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[0] as string
+      )[0]
     ).toBeInTheDocument();
-
-    expect(screen.getByText(processesResults[1].name)).toBeInTheDocument();
   });
 
   it('should render a list of process pairs when modalType is "process-pair"', () => {

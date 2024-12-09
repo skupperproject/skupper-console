@@ -7,7 +7,7 @@ import { Server } from 'miragejs';
 import pairsList from '../../../mocks/data/SITE_PAIRS.json';
 import sites from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
 import LoadingPage from '../../../src/core/components/SkLoading';
@@ -16,7 +16,12 @@ import PairsList from '../../../src/pages/Sites/components/PairList';
 import { BasePairs, SiteResponse } from '../../../src/types/REST.interfaces';
 
 const data = sites.results[0] as SiteResponse;
-const dataNoPairs = sites.results[4] as SiteResponse;
+const dataNoPairs = {
+  endTime: 0,
+  identity: 'no-pairs',
+  name: 'no-pairs',
+  startTime: 1728076321000000
+} as SiteResponse;
 const pairs = pairsList.results[0] as BasePairs;
 
 describe('Site Pairs List component', () => {

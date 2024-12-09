@@ -3,9 +3,9 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import componentsData from '../../../mocks/data/PROCESS_GROUPS.json';
+import componentsData from '../../../mocks/data/COMPONENTS.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';

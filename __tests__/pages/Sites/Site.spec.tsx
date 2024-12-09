@@ -8,7 +8,7 @@ import * as router from 'react-router';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import sitesData from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
@@ -79,13 +79,13 @@ describe('Site component', () => {
     fireEvent.click(screen.getByText(SiteLabels.Processes));
 
     await waitFor(() => {
-      expect(screen.getByText(processResults[0].name)).toBeInTheDocument();
+      expect(screen.getByText(processResults[1].name)).toBeInTheDocument();
     });
 
     await waitFor(() => {
-      expect(screen.getByRole('link', { name: processResults[0].name })).toHaveAttribute(
+      expect(screen.getByRole('link', { name: processResults[1].name })).toHaveAttribute(
         'href',
-        `#${ProcessesRoutesPaths.Processes}/${processResults[0].name}@${processResults[0].identity}`
+        `#${ProcessesRoutesPaths.Processes}/${processResults[1].name}@${processResults[1].identity}`
       );
     });
   });

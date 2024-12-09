@@ -1,7 +1,7 @@
 import { GraphEdge, GraphNode } from 'types/Graph.interfaces';
 
 import { Role } from '../../../API/REST.enum';
-import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/config';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/app';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import { ProcessPairsResponse, ProcessResponse } from '../../../types/REST.interfaces';
 import { TopologyMetrics } from '../../../types/Topology.interfaces';

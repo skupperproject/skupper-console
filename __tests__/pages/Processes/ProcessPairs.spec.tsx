@@ -7,7 +7,7 @@ import * as router from 'react-router';
 
 import processPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';
@@ -17,7 +17,7 @@ import { PairsResponse } from '../../../src/types/REST.interfaces';
 
 const processPairsResultOpToCart = processPairsData.results[0] as PairsResponse; // HTTP2 flow
 const processPairsResultDatabaseToPayment = processPairsData.results[6] as PairsResponse; // old TCP flow and active TCP flow
-const processPairsResultPayment2toCatalog = processPairsData.results[4] as PairsResponse; // old TCP flow
+const processPairsResultPayment2toCatalog = processPairsData.results[18] as PairsResponse; // old TCP flow
 
 describe('Begin testing the Processes component', () => {
   let server: Server;

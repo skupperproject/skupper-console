@@ -1,4 +1,4 @@
-import { BIG_PAGINATION_SIZE } from '../../../config/config';
+import { BIG_PAGINATION_SIZE } from '../../../config/app';
 import { getTestsIds } from '../../../config/testIds';
 import SkTable from '../../../core/components/SkTable';
 import SkSearchFilter from '../../../core/components/SkTable/SkSearchFilter';

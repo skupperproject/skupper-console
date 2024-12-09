@@ -22,11 +22,10 @@ import {
 import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
-import { EMPTY_VALUE_PLACEHOLDER } from '../../../config/config';
+import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import ResourceIcon from '../../../core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
-import { formatLatency } from '../../../core/utils/formatLatency';
 import { ProcessPairsResponse } from '../../../types/REST.interfaces';
 import { TopologyMetrics } from '../../../types/Topology.interfaces';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../Processes/Processes.enum';
@@ -68,25 +67,8 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
     {} as Record<string, number>
   );
 
-  const latency = metrics.latencyByProcessPairs.reduce(
-    (acc, { metric, value }) => {
-      const id = `${metric[PrometheusLabelsV2.SourceProcessName]}-to-${metric[PrometheusLabelsV2.DestProcessName]}`;
-
-      if (
-        sourceNames.includes(metric[PrometheusLabelsV2.SourceProcessName]) &&
-        destinationNames.includes(metric[PrometheusLabelsV2.DestProcessName])
-      ) {
-        acc[id] = (acc[id] || 0) + Number(value[1]);
-      }
-
-      return acc;
-    },
-    {} as Record<string, number>
-  );
-
   const totalByteRateSum = Object.values(byteRate).reduce((acc, val) => acc + val, 0);
   const totalBytesSum = Object.values(bytes).reduce((acc, val) => acc + val, 0);
-  const totalLatencySum = Object.values(latency).reduce((acc, val) => acc + val, 0);
 
   return (
     <>
@@ -102,13 +84,6 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
                   <b>{ProcessesLabels.ByteRate}</b>
                 </Td>
                 <Td>{formatByteRate(totalByteRateSum)}</Td>
-              </Tr>
-
-              <Tr>
-                <Td>
-                  <b>{ProcessesLabels.Latency}</b>
-                </Td>
-                <Td>{formatLatency(totalLatencySum)}</Td>
               </Tr>
 
               <Tr>
@@ -157,14 +132,14 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
                       <DescriptionListGroup>
                         <DescriptionListTerm>{TopologyLabels.TransportProtocol}</DescriptionListTerm>
                         <DescriptionListDescription>
-                          {itemSelected.protocol || EMPTY_VALUE_PLACEHOLDER}
+                          {itemSelected.protocol || EMPTY_VALUE_SYMBOL}
                         </DescriptionListDescription>
                       </DescriptionListGroup>
 
                       <DescriptionListGroup>
                         <DescriptionListTerm>{TopologyLabels.ApplicationProtocol}</DescriptionListTerm>
                         <DescriptionListDescription>
-                          {itemSelected.observedApplicationProtocols || EMPTY_VALUE_PLACEHOLDER}
+                          {itemSelected.observedApplicationProtocols || EMPTY_VALUE_SYMBOL}
                         </DescriptionListDescription>
                       </DescriptionListGroup>
 
@@ -180,13 +155,6 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
                           <DescriptionListGroup>
                             <DescriptionListTerm>{TopologyLabels.CheckboxShowCurrentByteRate}</DescriptionListTerm>
                             <DescriptionListDescription>{`${formatByteRate(byteRate[`${itemSelected.sourceName}-to-${itemSelected.destinationName}`] || 0)}`}</DescriptionListDescription>
-                          </DescriptionListGroup>
-                        )}
-
-                        {!!latency && (
-                          <DescriptionListGroup>
-                            <DescriptionListTerm>{TopologyLabels.CheckboxShowLatency}</DescriptionListTerm>
-                            <DescriptionListDescription>{`${formatLatency(latency[`${itemSelected.sourceName}-to-${itemSelected.destinationName}`] || 0)}`}</DescriptionListDescription>
                           </DescriptionListGroup>
                         )}
                       </Flex>

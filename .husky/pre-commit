@@ -3,9 +3,9 @@
 
 if [ ! -d "node_modules" ]; then
   echo "node_modules directory not found. Running yarn install..."
-  npm install
+  yarn install
 fi
 
 # prettier
-npm run format
+yarn format
 

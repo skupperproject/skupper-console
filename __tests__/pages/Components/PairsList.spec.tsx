@@ -4,10 +4,10 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import { Server } from 'miragejs';
 
 
-import pairsList from '../../../mocks/data/PROCESS_GROUP_PAIRS.json';
-import components from '../../../mocks/data/PROCESS_GROUPS.json';
+import pairsList from '../../../mocks/data/COMPONENT_PAIRS.json';
+import components from '../../../mocks/data/COMPONENTS.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
 import LoadingPage from '../../../src/core/components/SkLoading';
@@ -16,8 +16,13 @@ import PairsList from '../../../src/pages/Components/components/PairList';
 import { ComponentResponse, BasePairs } from '../../../src/types/REST.interfaces';
 
 const data = components.results[0] as ComponentResponse;
-const dataNoPairs = components.results[6] as ComponentResponse;
-const pairs = pairsList.results[1] as BasePairs;
+const dataNoPairs = {
+  endTime: 0,
+  identity: 'no-pairs',
+  name: 'no-pairs',
+  startTime: 1728076321000000
+} as ComponentResponse;
+const pairs = pairsList.results[5] as BasePairs;
 
 describe('Component Pairs Llist component', () => {
   let server: Server;

@@ -18,3 +18,5 @@ export const queryClientConfig: QueryClientConfig = {
     }
   }
 };
+
+export const UPDATE_INTERVAL = 0 * 1000; // React query: Time in milliseconds to polling data from the backend

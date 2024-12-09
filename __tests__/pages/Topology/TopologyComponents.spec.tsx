@@ -5,10 +5,10 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-l
 import { Server } from 'miragejs';
 
 
-import componentPairsData from '../../../mocks/data/PROCESS_GROUP_PAIRS.json';
-import componentData from '../../../mocks/data/PROCESS_GROUPS.json';
+import componentPairsData from '../../../mocks/data/COMPONENT_PAIRS.json';
+import componentData from '../../../mocks/data/COMPONENTS.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';

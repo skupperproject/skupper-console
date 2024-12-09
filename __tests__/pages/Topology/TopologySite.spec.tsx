@@ -8,7 +8,7 @@ import { Server } from 'miragejs';
 import sitePairsData from '../../../mocks/data/SITE_PAIRS.json';
 import sitesData from '../../../mocks/data/SITES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Wrapper } from '../../../src/core/components/Wrapper';

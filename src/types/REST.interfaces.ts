@@ -1,10 +1,6 @@
-import { AxiosError, AxiosRequestConfig } from 'axios';
-
 import { TopologyMetrics } from './Topology.interfaces';
 import { Protocols, Binding, Role, SortDirection } from '../API/REST.enum';
 import { PrometheusLabelsV2 } from '../config/prometheus';
-
-export type FetchWithOptions = AxiosRequestConfig;
 
 export interface QueryFilters extends Record<string, string | string[] | number | boolean | SortDirection | undefined> {
   filter?: string;
@@ -26,10 +22,6 @@ export interface QueryParams {
   sortBy?: string | null;
 }
 
-export interface HTTPError extends AxiosError {
-  httpStatus?: string;
-}
-
 /**
  * Represents a response wrapper that contains the results, count, and time range count.
  * The `results` property holds the actual data based on the Response interface.
@@ -39,7 +31,7 @@ export interface HTTPError extends AxiosError {
  * @typeParam T - The type of the results based on the Response interface.
  * @returns A ResponseWrapper object containing the results, count, and time range count.
  */
-export type ResponseWrapper<T> = {
+export type ApiResponse<T> = {
   results: T; // Type based on the Response interface
   count: number;
   timeRangeCount: number;
@@ -190,10 +182,6 @@ interface BaseFlow extends BaseResponse {
   traceRouters: string[];
   traceSites: string[];
   protocol: Protocols;
-  connectorError: null;
-  connectorId: string;
-  listenerId: string;
-  listenerError: string | null;
 }
 
 export interface TransportFlowResponse extends BaseFlow {
@@ -205,12 +193,16 @@ export interface TransportFlowResponse extends BaseFlow {
   destPort: string;
   sourceHost: string; //ie: '172.17.44.196'
   sourcePort: string; //ie:  47504
+  connectorError: null;
+  connectorId: string;
+  listenerId: string;
+  listenerError: string | null;
 }
 
 export interface ApplicationFlowResponse extends BaseFlow {
   connectionId: string;
   method?: string;
-  status?: number;
+  status?: string;
 }
 
 export type BiFlowResponse = TransportFlowResponse | ApplicationFlowResponse;

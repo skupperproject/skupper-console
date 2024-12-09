@@ -2,15 +2,13 @@ import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } f
 
 import { Edge, EdgeEvent, Graph, GraphOptions, IPointerEvent, Node, NodeEvent } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
-import { t_global_border_radius_large, t_global_border_width_100 } from '@patternfly/react-tokens';
 
 import { GraphCombo, GraphEdge, GraphNode, SkGraphProps, LocalStorageData } from 'types/Graph.interfaces';
 
 import ControlBar from './components/ControlBar';
 import { registerElements } from './components/CustomElements';
-import { DEFAULT_GRAPH_CONFIG } from './Graph.config';
-import { GRAPH_BORDER_COLOR } from './Graph.constants';
-import { GraphElementStates } from './Graph.enum';
+import { options, theme } from './config';
+import { GraphLabels } from './enum';
 import { LAYOUT_MAP } from './layout';
 import { GraphController } from './services';
 
@@ -83,14 +81,14 @@ const SkGraph: FC<SkGraphProps> = memo(
       if (nodesWithoutPosition && !topologyGraphRef.current) {
         const nodes = savePositions ? GraphController.addPositionsToNodes(nodesWithoutPosition) : nodesWithoutPosition;
 
-        const options: GraphOptions = {
-          ...DEFAULT_GRAPH_CONFIG,
+        const configuration: GraphOptions = {
+          ...options,
           container: $node,
           layout: LAYOUT_MAP[layout],
           data: GraphController.transformData({ edges, nodes, combos })
         };
 
-        const graph = new Graph(options);
+        const graph = new Graph(configuration);
 
         graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_ENTER, (e) => setLabelText(e.target.id, 'fullLabelText'));
         graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_LEAVE, (e) => setLabelText(e.target.id, 'partialLabelText'));
@@ -100,14 +98,14 @@ const SkGraph: FC<SkGraphProps> = memo(
 
         graph.on<IPointerEvent<Node>>(NodeEvent.CLICK, ({ target }) => {
           // if the node is already selected , set id = undefined to deleselect it
-          const selected = graph.getElementDataByState('node', GraphElementStates.Select);
+          const selected = graph.getElementDataByState('node', GraphLabels.Select);
           const data = graph.getElementData(target.id).data as unknown as GraphNode;
 
           onClickNode?.(target.id === (selected.length && selected[0].id) ? null : data);
         });
         graph.on<IPointerEvent<Edge>>(EdgeEvent.CLICK, ({ target }) => {
           // if the edge is already selected , set id = undefined to deleselect it
-          const selected = graph.getElementDataByState('edge', GraphElementStates.Select);
+          const selected = graph.getElementDataByState('edge', GraphLabels.Select);
           const data = graph.getElementData(target.id).data as unknown as GraphEdge;
 
           onClickEdge?.(target.id === (selected.length && selected[0].id) ? null : data);
@@ -166,15 +164,13 @@ const SkGraph: FC<SkGraphProps> = memo(
       const allElemetsStateMap: Record<string, string[]> = {};
       [...graphInstance.getNodeData(), ...graphInstance.getEdgeData()].forEach(({ id, states }) => {
         const filteredStates =
-          states?.filter(
-            (state) => state !== GraphElementStates.HighlightNode && state !== GraphElementStates.Exclude
-          ) || [];
+          states?.filter((state) => state !== GraphLabels.HighlightNode && state !== GraphLabels.Exclude) || [];
 
         if (id) {
           const selectedState = itemsToHighlight?.length
             ? itemsToHighlight.includes(id)
-              ? GraphElementStates.HighlightNode
-              : GraphElementStates.Exclude
+              ? GraphLabels.HighlightNode
+              : GraphLabels.Exclude
             : '';
           allElemetsStateMap[id] = selectedState ? [selectedState, ...filteredStates] : filteredStates;
         }
@@ -192,27 +188,27 @@ const SkGraph: FC<SkGraphProps> = memo(
       const graphInstance = topologyGraphRef.current!;
 
       if (itemSelected) {
-        graphInstance.setElementState(itemSelected, GraphElementStates.Select);
+        graphInstance.setElementState(itemSelected, GraphLabels.Select);
 
         return;
       }
 
-      const nodes = graphInstance?.getElementDataByState('node', GraphElementStates.Select);
+      const nodes = graphInstance?.getElementDataByState('node', GraphLabels.Select);
       if (nodes.length) {
         graphInstance.setElementState(
           nodes[0].id,
-          nodes[0].states?.filter((state) => state !== GraphElementStates.Select) || []
+          nodes[0].states?.filter((state) => state !== GraphLabels.Select) || []
         );
 
         return;
       }
 
-      const activeEdges = graphInstance?.getElementDataByState('edge', GraphElementStates.Select);
+      const activeEdges = graphInstance?.getElementDataByState('edge', GraphLabels.Select);
 
       if (activeEdges.length && activeEdges[0].id) {
         graphInstance.setElementState(
           activeEdges[0].id,
-          activeEdges[0].states?.filter((state) => state !== GraphElementStates.Select) || []
+          activeEdges[0].states?.filter((state) => state !== GraphLabels.Select) || []
         );
       }
     }, [isGraphLoaded, itemSelected]);
@@ -254,7 +250,7 @@ const SkGraph: FC<SkGraphProps> = memo(
         const graphInstance = topologyGraphRef.current!;
 
         const container = GraphController.getParent()!.getBoundingClientRect();
-        const nodes = graphInstance.getElementDataByState('node', GraphElementStates.Select);
+        const nodes = graphInstance.getElementDataByState('node', GraphLabels.Select);
         if (nodes?.length) {
           const itemSelectedPos = graphInstance.getElementPosition(nodes[0].id);
           // we need to keep in consideration scaling from zoom
@@ -285,9 +281,9 @@ const SkGraph: FC<SkGraphProps> = memo(
           overflow: 'hidden',
           height: '99%',
           borderStyle: 'solid',
-          borderWidth: t_global_border_width_100.value,
-          borderColor: GRAPH_BORDER_COLOR,
-          borderRadius: t_global_border_radius_large.value
+          borderWidth: theme.graph.borderWidth,
+          borderRadius: theme.graph.borderRadius,
+          borderColor: theme.graph.borderColor
         }}
       >
         {topologyGraphRef.current && <ControlBar graphInstance={topologyGraphRef.current} />}

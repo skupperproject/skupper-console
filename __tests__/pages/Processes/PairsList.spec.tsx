@@ -7,7 +7,7 @@ import { Server } from 'miragejs';
 import processesPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { waitForElementToBeRemovedTimeout } from '../../../src/config/config';
+import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
 import LoadingPage from '../../../src/core/components/SkLoading';
@@ -16,9 +16,15 @@ import PairsList from '../../../src/pages/Processes/components/PairsList';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import { ProcessResponse, PairsResponse } from '../../../src/types/REST.interfaces';
 
-const data = processesData.results[7] as ProcessResponse;
-const dataNoPairs = processesData.results[9] as ProcessResponse;
-const processPairsResult = processesPairsData.results[6] as PairsResponse;
+const data = processesData.results[0] as ProcessResponse;
+const dataNoPairs = {
+  endTime: 0,
+  identity: 'no-pairs',
+  name: 'no-pairs',
+  startTime: 1728076321000000
+} as ProcessResponse;
+
+const processPairsResult = processesPairsData.results[17] as PairsResponse;
 
 describe('Process Pairs List component', () => {
   let server: Server;

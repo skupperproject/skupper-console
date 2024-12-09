@@ -1,5 +1,5 @@
-import { HexColors } from '../../../config/colors';
-import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/config';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/app';
+import { styles } from '../../../config/styles';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../../../core/components/SKSanckeyChart/SkSankey.constants';
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
 import { GraphCombo, GraphEdge, GraphElementNames, GraphIconKeys, GraphNode } from '../../../types/Graph.interfaces';
@@ -160,14 +160,14 @@ const generateSankeyNodes = (
     color?: string;
   }[]
 ): SkSankeyChartNode[] => {
-  const clients = servicePairs.map(({ sourceName, sourceSiteName, color = HexColors.Blue400 }) => ({
+  const clients = servicePairs.map(({ sourceName, sourceSiteName, color = styles.default.infoColor }) => ({
     id: `${sourceName}.`,
-    nodeColor: sourceSiteName ? HexColors.Black400 : color
+    nodeColor: sourceSiteName ? styles.default.darkBackgroundColor : color
   }));
 
-  const servers = servicePairs.map(({ destinationName, destinationSiteName, color = HexColors.Blue400 }) => ({
+  const servers = servicePairs.map(({ destinationName, destinationSiteName, color = styles.default.infoColor }) => ({
     id: destinationName,
-    nodeColor: destinationSiteName ? HexColors.Black400 : color
+    nodeColor: destinationSiteName ? styles.default.darkBackgroundColor : color
   }));
 
   return removeDuplicates([...clients, ...servers], 'id');
