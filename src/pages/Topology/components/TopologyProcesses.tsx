@@ -33,7 +33,6 @@ import {
   SHOW_LINK_BYTES,
   SHOW_LINK_METRIC_DISTRIBUTION,
   SHOW_LINK_METRIC_VALUE,
-  SHOW_INBOUND_METRICS,
   displayOptionsForProcesses
 } from '../Topology.constants';
 
@@ -109,7 +108,6 @@ const TopologyProcesses: FC<{
     options: {
       showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-      showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
       showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),
       showMetricValue: displayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE),
       showDeployments: displayOptionsSelected.includes(SHOW_DEPLOYMENTS) // a deployment is a group of processes in the same site that have the same function

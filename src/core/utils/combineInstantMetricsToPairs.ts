@@ -27,12 +27,10 @@ export function combineInstantMetricsToPairs<T extends BasePairs>({
 
   const sourceToDestBytesMap = getPairsMap(metrics?.sourceToDestBytes, prometheusKey);
   const sourceToDestByteRateMap = getPairsMap(metrics?.sourceToDestByteRate, prometheusKey);
-  const txLatencyByPairsMap = getPairsMap(metrics?.latencyByProcessPairs, prometheusKey);
 
   return processesPairs?.map((processPairsData) => ({
     ...processPairsData,
     bytes: sourceToDestBytesMap[processPairsData[processPairsKey]] || 0,
-    byteRate: sourceToDestByteRateMap[processPairsData[processPairsKey]] || 0,
-    latency: txLatencyByPairsMap[processPairsData[processPairsKey]] || 0
+    byteRate: sourceToDestByteRateMap[processPairsData[processPairsKey]] || 0
   }));
 }

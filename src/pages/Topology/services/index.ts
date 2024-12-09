@@ -1,7 +1,6 @@
 import { GraphEdge, GraphCombo, GraphNode, GraphElementNames } from 'types/Graph.interfaces';
 
 import { PrometheusApi } from '../../../API/Prometheus.api';
-import { Direction } from '../../../API/REST.enum';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
@@ -59,27 +58,23 @@ export const TopologyController = {
   getAllTopologyMetrics: async ({
     showBytes = false,
     showByteRate = false,
-    showLatency = false,
     metricQueryParams
   }: TopologyConfigMetrics): Promise<TopologyMetrics> => {
     try {
       // Fetch metrics based on the provided flags
-      const [sourceToDestBytes, destToSourceBytes, sourceToDestByteRate, destToSourceByteRate, latencyByProcessPairs] =
-        await Promise.all([
-          fetchBytesMetrics(showBytes, metricQueryParams),
-          fetchBytesMetrics(showBytes, metricQueryParams, true),
-          fetchByteRateMetrics(showByteRate, metricQueryParams),
-          fetchByteRateMetrics(showByteRate, metricQueryParams, true),
-          fetchLatencyMetrics(showLatency, metricQueryParams)
-        ]);
+      const [sourceToDestBytes, destToSourceBytes, sourceToDestByteRate, destToSourceByteRate] = await Promise.all([
+        fetchBytesMetrics(showBytes, metricQueryParams),
+        fetchBytesMetrics(showBytes, metricQueryParams, true),
+        fetchByteRateMetrics(showByteRate, metricQueryParams),
+        fetchByteRateMetrics(showByteRate, metricQueryParams, true)
+      ]);
 
       // Return the collected metrics
       return {
         sourceToDestBytes,
         destToSourceBytes,
         sourceToDestByteRate,
-        destToSourceByteRate,
-        latencyByProcessPairs
+        destToSourceByteRate
       };
     } catch (e: unknown) {
       return Promise.reject(e);
@@ -111,19 +106,7 @@ export const TopologyController = {
       );
 
     const sourceToDestBytesMap = getPairsMap(metrics?.sourceToDestBytes);
-    const destToSourceBytesMap = getPairsMap(metrics?.destToSourceBytes);
     const sourceToDestByteRateMap = getPairsMap(metrics?.sourceToDestByteRate);
-    const destToSourceByteRateMap = getPairsMap(metrics?.destToSourceByteRate);
-
-    // Incoming metrics indicate that the source is the client and the destination is the server. In our case, the edges have a direction from client to server
-    const latencyByPairsMapIn = getPairsMap(
-      metrics?.latencyByProcessPairs?.filter((pair) => pair.metric.direction === Direction.Incoming)
-    );
-
-    // Outgoing metrics indicate that the source is the server and the destination is the client. It is used to determine the reverse metric
-    const latencyByPairsMapOut = getPairsMap(
-      metrics?.latencyByProcessPairs?.filter((pair) => pair.metric.direction === Direction.Outgoing)
-    );
 
     return edges.map((edge) => {
       // processes use name to query prometheus
@@ -131,18 +114,11 @@ export const TopologyController = {
       // sites use id to query prometheus
       const pairKeyId = `${edge.source}${edge.target}`;
 
-      const inversePairKey = `${edge.targetName}${edge.sourceName}`;
-      const inversePairKeyId = `${edge.target}${edge.source}`;
-
       return {
         ...edge,
         metrics: {
           bytes: sourceToDestBytesMap[pairKeyId] || sourceToDestBytesMap[pairKey],
-          byteRate: sourceToDestByteRateMap[pairKeyId] || sourceToDestByteRateMap[pairKey],
-          latency: latencyByPairsMapIn[pairKeyId] || latencyByPairsMapIn[pairKey],
-          bytesReverse: destToSourceBytesMap[pairKeyId] || destToSourceBytesMap[pairKey],
-          byteRateReverse: destToSourceByteRateMap[pairKeyId] || destToSourceByteRateMap[pairKey],
-          latencyReverse: latencyByPairsMapOut[inversePairKeyId] || latencyByPairsMapOut[inversePairKey]
+          byteRate: sourceToDestByteRateMap[pairKeyId] || sourceToDestByteRateMap[pairKey]
         }
       };
     });
@@ -153,12 +129,6 @@ export const TopologyController = {
       const byteRate = options?.showLinkByteRate ? edge?.metrics?.byteRate || 0 : undefined;
       const bytes = options?.showLinkBytes ? edge?.metrics?.bytes || 0 : undefined;
 
-      // The same edge has RX === Tx
-      const showRxMetric = !!options?.showInboundMetrics && !(edge.source === edge.target);
-
-      const byteRateRx = showRxMetric && byteRate !== undefined ? edge?.metrics?.byteRateReverse || 0 : undefined;
-      const bytesRx = showRxMetric && bytes !== undefined ? edge?.metrics?.bytesReverse || 0 : undefined;
-
       const metricsString = [
         bytes !== undefined && `${formatBytes(bytes)}`,
         byteRate !== undefined && `${formatByteRate(byteRate)}`
@@ -166,14 +136,7 @@ export const TopologyController = {
         .filter(Boolean)
         .join(', ');
 
-      const metricsRxString = [
-        bytesRx !== undefined && `(${formatBytes(bytesRx)})`,
-        byteRateRx !== undefined && `(${formatByteRate(byteRateRx)})`
-      ]
-        .filter(Boolean)
-        .join(', ');
-
-      const label = options?.showMetricValue ? [metricsString, metricsRxString].filter(Boolean).join('   ') : undefined;
+      const label = options?.showMetricValue ? metricsString : undefined;
 
       return {
         ...edge,
@@ -271,11 +234,7 @@ export function groupEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[] 
         id: '', // The 'id' string will be concatenated with the process ID
         metrics: {
           bytes: 0,
-          byteRate: 0,
-          latency: 0,
-          bytesReverse: 0,
-          byteRateReverse: 0,
-          latencyReverse: 0
+          byteRate: 0
         },
         source: newSource,
         target: newTarget
@@ -290,11 +249,7 @@ export function groupEdges(nodes: GraphNode[], edges: GraphEdge[]): GraphEdge[] 
       if (edge.metrics) {
         acc[group].metrics = {
           bytes: (acc[group]?.metrics?.bytes || 0) + (edge.metrics.bytes || 0),
-          byteRate: (acc[group]?.metrics?.byteRate || 0) + (edge.metrics.byteRate || 0),
-          latency: (acc[group]?.metrics?.latency || 0) + (edge.metrics.latency || 0),
-          bytesReverse: (acc[group]?.metrics?.bytesReverse || 0) + (edge.metrics.bytesReverse || 0),
-          byteRateReverse: (acc[group]?.metrics?.byteRateReverse || 0) + (edge.metrics.byteRateReverse || 0),
-          latencyReverse: (acc[group]?.metrics?.latencyReverse || 0) + (edge.metrics.latencyReverse || 0)
+          byteRate: (acc[group]?.metrics?.byteRate || 0) + (edge.metrics.byteRate || 0)
         };
       }
 
@@ -329,13 +284,4 @@ const fetchByteRateMetrics = async (
         metricQueryParams.filterBy,
         isRx
       )
-    : [];
-
-// Helper function to fetch latency metrics
-const fetchLatencyMetrics = async (
-  showLatency: boolean,
-  metricQueryParams: TopologyConfigMetricsParams
-): Promise<PrometheusMetric<'vector'>[]> =>
-  showLatency
-    ? PrometheusApi.fetchAllProcessPairsLatencies(metricQueryParams.fetchLatency.groupBy, metricQueryParams.filterBy)
     : [];

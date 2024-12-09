@@ -10,8 +10,7 @@ import { TopologyController } from '../../Topology/services';
 
 const metricQueryParams = {
   fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` },
-  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` },
-  fetchLatency: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` }
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` }
 };
 
 export const useProcessPairsListData = (id: string, name: string) => {
@@ -25,7 +24,6 @@ export const useProcessPairsListData = (id: string, name: string) => {
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
             showByteRate: true,
-            showLatency: true,
             metricQueryParams: {
               ...metricQueryParams,
               filterBy: { sourceProcess: name }
@@ -39,7 +37,6 @@ export const useProcessPairsListData = (id: string, name: string) => {
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
             showByteRate: true,
-            showLatency: true,
             metricQueryParams: {
               ...metricQueryParams,
               filterBy: { destProcess: name }

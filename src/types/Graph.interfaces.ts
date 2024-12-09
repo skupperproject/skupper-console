@@ -62,10 +62,6 @@ export interface GraphCombo {
 interface GraphEdgeMetrics {
   bytes: number | undefined;
   byteRate: number | undefined;
-  latency: number | undefined;
-  bytesReverse: number | undefined;
-  byteRateReverse: number | undefined;
-  latencyReverse: number | undefined;
 }
 
 export interface GraphEdge {

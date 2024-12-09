@@ -9,7 +9,6 @@ import { SkSelectGroupedOptions } from '../../../core/components/SkSelect';
 import {
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
-  SHOW_INBOUND_METRICS,
   SHOW_ROUTER_LINKS,
   SHOW_LINK_METRIC_DISTRIBUTION,
   SHOW_LINK_METRIC_VALUE
@@ -41,10 +40,6 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
   const displayOptionsDisabled = {
     [SHOW_LINK_BYTES]: !!defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS),
     [SHOW_LINK_BYTERATE]: !!defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS),
-    [SHOW_INBOUND_METRICS]:
-      defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) ||
-      !defaultDisplayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE) ||
-      !areMetricAvailable(defaultDisplayOptionsSelected),
     [SHOW_LINK_METRIC_DISTRIBUTION]:
       defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) || !areMetricAvailable(defaultDisplayOptionsSelected),
     [SHOW_LINK_METRIC_VALUE]:

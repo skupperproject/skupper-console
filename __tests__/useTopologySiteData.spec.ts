@@ -12,7 +12,7 @@ describe('useTopologySiteData', () => {
     jest.clearAllMocks();
   });
 
-  it('should return the expected data when showDataLink, showBytes, showByteRate, and showLatency are true', async () => {
+  it('should return the expected data when showDataLink, showBytes, showByteRate are true', async () => {
     const mockSites = [{ identity: 'site1' }, { identity: 'site2' }];
     const mockSitesPairs = [{ sourceId: 'site1', destinationId: 'site2' }];
     const mockMetrics = { bytes: 1000 };

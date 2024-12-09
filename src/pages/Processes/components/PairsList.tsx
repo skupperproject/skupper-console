@@ -51,8 +51,8 @@ const PairsList: FC<PairsListProps> = function ({ process: { identity: id, name 
 
   return (
     <Flex direction={{ default: 'column' }}>
-      {renderTable(Labels.Clients, clients, setColumnVisibility(PairsListColumnsWithLinkDetails, { latency: false }))}
-      {renderTable(Labels.Servers, servers, setColumnVisibility(PairsListColumnsWithLinkDetails, { latency: false }))}
+      {renderTable(Labels.Clients, clients, setColumnVisibility(PairsListColumnsWithLinkDetails))}
+      {renderTable(Labels.Servers, servers, setColumnVisibility(PairsListColumnsWithLinkDetails))}
     </Flex>
   );
 };

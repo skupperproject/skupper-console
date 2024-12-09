@@ -206,5 +206,4 @@ export interface PairsWithMetrics<T> {
 export type PairsWithInstantMetrics = PairsResponse & {
   bytes: number;
   byteRate: number;
-  latency: number;
 };

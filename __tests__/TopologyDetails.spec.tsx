@@ -115,8 +115,7 @@ describe('Topology details', () => {
                 value: [1722715709.263, 38],
                 values: [] as never
               }
-            ],
-            latencyByProcessPairs: []
+            ]
           }}
         />
       </Providers>
@@ -173,16 +172,6 @@ describe('Topology details', () => {
               }
             ],
             destToSourceByteRate: [
-              {
-                metric: {
-                  destProcess: processPairsResults[2].destinationName,
-                  sourceProcess: processPairsResults[2].sourceName
-                },
-                value: [1722715709.263, 38],
-                values: [] as never
-              }
-            ],
-            latencyByProcessPairs: [
               {
                 metric: {
                   destProcess: processPairsResults[2].destinationName,

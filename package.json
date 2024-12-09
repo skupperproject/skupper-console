@@ -2,15 +2,27 @@
   "name": "skupper-network-console",
   "version": "2.0.0",
   "author": "Skupper team",
-  "description": "Skupper Network Console",
+  "homepage": "https://skupperproject.io",
+  "description": "The Network Console is a user interface for monitoring and managing Skupper networks, providing observability, connectivity metrics, and integration with OpenShift.",
+  "contributors": [
+    {
+      "name": "Skupper Team",
+      "url": "https://skupperproject.io"
+    }
+  ],
   "license": "Apache-2.0",
   "keywords": [
     "skupper",
+    "networking",
     "console",
     "monitoring",
     "observability",
     "connectivity",
-    "openshift"
+    "openshift",
+    "metrics",
+    "kubernetes",
+    "multicloud",
+    "service-mesh"
   ],
   "repository": {
     "type": "git",
@@ -120,8 +132,8 @@
     }
   },
   "browserslist": [
-    ">10%",
-    "last 2 versions",
-    "not ie <= 11"
+    "defaults",
+    "not IE 11",
+    "maintained node versions"
   ]
 }
