@@ -1,9 +1,10 @@
 import { useCallback, useState, startTransition } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { NonNullableValue, SKTableColumn } from 'types/SkTable.interfaces';
 
+import { QueriesBiFlowLogs } from './BiFlowLogs.enum';
 import { RESTApi } from '../../../API/REST.resources';
 import { BIG_PAGINATION_SIZE } from '../../../config/app';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
@@ -11,35 +12,37 @@ import SkBiFlowList from '../../../core/components/SkBiFlowList';
 import { SkSelectOption } from '../../../core/components/SkSelect';
 import SkSearchFilter from '../../../core/components/SkTable/SkSearchFilter';
 import { BiFlowResponse, QueryFilters } from '../../../types/REST.interfaces';
-import { QueriesServices } from '../Services.enum';
 
-interface ServiceBiFlowProps<T extends BiFlowResponse> {
+interface BiFlowProps<T extends BiFlowResponse> {
   columns: SKTableColumn<NonNullableValue<T>>[];
   filters: QueryFilters;
-  options: SkSelectOption[];
+  options?: SkSelectOption[];
   pagination?: number;
   showAppplicationFlows?: boolean;
 }
 
-const ServiceBiFlowList = function <T extends BiFlowResponse>({
+const BiFlowLogs = function <T extends BiFlowResponse>({
   columns,
   filters,
   options,
   pagination = BIG_PAGINATION_SIZE,
   showAppplicationFlows = false
-}: ServiceBiFlowProps<T>) {
+}: BiFlowProps<T>) {
   const [queryParams, setQueryParams] = useState({});
 
-  const { data: transportFlows } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetTransportFlows, { ...filters, ...queryParams }],
-    queryFn: () => (!showAppplicationFlows ? RESTApi.fetchTransportFlows({ ...filters, ...queryParams }) : null),
-    refetchInterval: UPDATE_INTERVAL
-  });
-
-  const { data: applicationFlows } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetApplicationFlows, { ...filters, ...queryParams }],
-    queryFn: () => (showAppplicationFlows ? RESTApi.fetchApplicationFlows({ ...filters, ...queryParams }) : null),
-    refetchInterval: UPDATE_INTERVAL
+  const [{ data: transportFlows }, { data: applicationFlows }] = useSuspenseQueries({
+    queries: [
+      {
+        queryKey: [QueriesBiFlowLogs.GetTcpConnections, { ...filters, ...queryParams }],
+        queryFn: () => (!showAppplicationFlows ? RESTApi.fetchTransportFlows({ ...filters, ...queryParams }) : null),
+        refetchInterval: UPDATE_INTERVAL
+      },
+      {
+        queryKey: [QueriesBiFlowLogs.GetHttpRequests, { ...filters, ...queryParams }],
+        queryFn: () => (showAppplicationFlows ? RESTApi.fetchApplicationFlows({ ...filters, ...queryParams }) : null),
+        refetchInterval: UPDATE_INTERVAL
+      }
+    ]
   });
 
   const handleGetFilters = useCallback((params: QueryFilters) => {
@@ -52,7 +55,7 @@ const ServiceBiFlowList = function <T extends BiFlowResponse>({
 
   return (
     <>
-      <SkSearchFilter onSearch={handleGetFilters} selectOptions={options} />
+      {options && <SkSearchFilter onSearch={handleGetFilters} selectOptions={options} />}
 
       <SkBiFlowList
         columns={columns}
@@ -66,4 +69,4 @@ const ServiceBiFlowList = function <T extends BiFlowResponse>({
   );
 };
 
-export default ServiceBiFlowList;
+export default BiFlowLogs;

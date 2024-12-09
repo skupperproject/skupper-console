@@ -3,6 +3,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { TcpStatus } from '../../../API/REST.enum';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
+import { QueriesBiFlowLogs } from '../../shared/BiFlowLogs/BiFlowLogs.enum';
 import { QueriesServices } from '../Services.enum';
 
 const initServersQueryParams = {
@@ -36,20 +37,20 @@ const useServiceData = (serviceId: string) => {
   });
 
   const { data: requestsData } = useQuery({
-    queryKey: [QueriesServices.GetApplicationFlows, initServersQueryParams],
+    queryKey: [QueriesBiFlowLogs.GetHttpRequests, initServersQueryParams],
     queryFn: () => RESTApi.fetchApplicationFlows({ ...initServersQueryParams, routingKey: service.results.name }),
     enabled: !!service.results.observedApplicationProtocols.length,
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: activeConnectionsData } = useQuery({
-    queryKey: [QueriesServices.GetTransportFlows, activeConnectionsQueryParams],
+    queryKey: [QueriesBiFlowLogs.GetTcpConnections, activeConnectionsQueryParams],
     queryFn: () => RESTApi.fetchTransportFlows({ ...activeConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: terminatedConnectionsData } = useQuery({
-    queryKey: [QueriesServices.GetTransportFlows, terminatedConnectionsQueryParams],
+    queryKey: [QueriesBiFlowLogs.GetHttpRequests, terminatedConnectionsQueryParams],
     queryFn: () =>
       RESTApi.fetchTransportFlows({ ...terminatedConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL
