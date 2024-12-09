@@ -142,6 +142,7 @@ Please note that the `services` folder contains utilities for data normalization
 ## Env variables
 
 - `COLLECTOR_URL`: The console uses a real network observer.
+- `API_VERSION`: Defaults to 'api/v1alpha1'. **Note**: Do not include a leading slash (/) in the value of API_VERSION.
 - `BRAND_APP_LOGO`
 - `BRAND_FAVICON`
 - `ENABLE_MOCK_SERVER`

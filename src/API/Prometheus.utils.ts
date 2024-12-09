@@ -1,4 +1,4 @@
-import { PROMETHEUS_URL } from '../config/api';
+import { PROMETHEUS_URL_RANGE_QUERY, PROMETHEUS_URL_SINGLE_QUERY } from '../config/api';
 import { PrometheusLabelsV2 } from '../config/prometheus';
 import {
   MetricData as MetricValuesAndLabels,
@@ -8,7 +8,7 @@ import {
 import { skAxisXY } from '../types/SkChartArea.interfaces';
 
 export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
-  queryType === 'range' ? `${PROMETHEUS_URL}/rangequery/` : `${PROMETHEUS_URL}/query/`;
+  queryType === 'range' ? PROMETHEUS_URL_RANGE_QUERY : PROMETHEUS_URL_SINGLE_QUERY;
 
 export function convertToPrometheusQueryParams({
   sourceSite,
@@ -21,50 +21,24 @@ export function convertToPrometheusQueryParams({
   protocol,
   direction,
   code
-}: PrometheusLabels) {
-  let queryFilters: string[] = [];
+}: PrometheusLabels): string {
+  const uiFilterValueToPrometheusLabelMapper = {
+    [PrometheusLabelsV2.SourceSiteName]: sourceSite,
+    [PrometheusLabelsV2.DestSiteName]: destSite,
+    [PrometheusLabelsV2.SourceProcessName]: sourceProcess,
+    [PrometheusLabelsV2.DestProcessName]: destProcess,
+    [PrometheusLabelsV2.SourceComponentName]: sourceComponent,
+    [PrometheusLabelsV2.DestComponentName]: destComponent,
+    [PrometheusLabelsV2.RoutingKey]: service,
+    [PrometheusLabelsV2.Protocol]: protocol,
+    [PrometheusLabelsV2.Code]: code,
+    [PrometheusLabelsV2.Direction]: direction
+  };
 
-  if (sourceSite) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.SourceSiteName}=~"${sourceSite}"`];
-  }
-
-  if (destSite) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestSiteName}=~"${destSite}"`];
-  }
-
-  if (sourceProcess) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.SourceProcessName}=~"${sourceProcess}"`];
-  }
-
-  if (destProcess) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestProcessName}=~"${destProcess}"`];
-  }
-
-  if (sourceComponent) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.SourceComponentName}=~"${sourceComponent}"`];
-  }
-
-  if (destComponent) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.DestComponentName}=~"${destComponent}"`];
-  }
-
-  if (service) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.RoutingKey}=~"${service}"`];
-  }
-
-  if (protocol) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.Protocol}=~"${protocol}"`];
-  }
-
-  if (code) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.Code}=~"${code}"`];
-  }
-
-  if (direction) {
-    queryFilters = [...queryFilters, `${PrometheusLabelsV2.Direction}=~"${direction}"`];
-  }
-
-  return queryFilters.join(',');
+  return Object.entries(uiFilterValueToPrometheusLabelMapper)
+    .filter(([, value]) => value) // Keep only entries with non-empty values
+    .map(([key, value]) => `${key}=~"${value}"`) // Format the key-value pair
+    .join(','); // Join the filters with commas
 }
 
 export function getTimeSeriesValuesFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): skAxisXY[][] | null {

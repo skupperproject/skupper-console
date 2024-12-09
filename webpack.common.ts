@@ -61,6 +61,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.BRAND_APP_LOGO': JSON.stringify(process.env.BRAND_APP_LOGO || ''),
       'process.env.COLLECTOR_URL': JSON.stringify(process.env.COLLECTOR_URL || ''),
+      'process.env.API_VERSION': JSON.stringify(process.env.API_VERSION || ''),
       'process.env.MOCK_ITEM_COUNT': JSON.stringify(process.env.MOCK_ITEM_COUNT),
       'process.env.MOCK_DELAY_RESPONSE': JSON.stringify(process.env.MOCK_DELAY_RESPONSE)
     }),
