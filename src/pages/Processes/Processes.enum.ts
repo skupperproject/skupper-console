@@ -4,18 +4,12 @@ export enum ProcessesRoutesPaths {
 
 export enum QueriesProcesses {
   GetProcessesPaginated = 'get-processes-paginated-query',
-  GetRemoteProcessesPaginated = 'get-remote-processes-paginated-query',
   GetProcesses = 'get-processes-query',
   GetProcess = 'get-process-query',
   GetProcessResult = 'get-process-result-query',
-  GetSource = 'get-process-query',
-  GetDestination = 'get-destination-process-query',
   GetProcessPairs = 'get-process-pairs',
   GetProcessPair = 'get-process-pair',
-  GetProcessPairsResult = 'get-process-pairs-result',
-  GetHttpRequests = 'get-process-http-requests',
-  GetTcpConnections = 'get-process-tcp-connections',
-  GetServicesByProcessId = 'get-services-by-process-id-query'
+  GetProcessPairsResult = 'get-process-pairs-result'
 }
 
 export enum ProcessesLabels {

@@ -23,7 +23,7 @@ export const useProcessPairData = ({ id }: useProcessPairDataProps) => {
         queryFn: () => RESTApi.fetchProcess(sourceId)
       },
       {
-        queryKey: [QueriesProcesses.GetDestination, destId],
+        queryKey: [QueriesProcesses.GetProcess, destId],
         queryFn: () => RESTApi.fetchProcess(destId)
       }
     ]

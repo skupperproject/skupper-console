@@ -3,7 +3,7 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { TcpStatus } from '../../../API/REST.enum';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
-import { QueriesProcesses } from '../Processes.enum';
+import { QueriesBiFlowLogs } from '../../shared/BiFlowLogs/BiFlowLogs.enum';
 
 const initServersQueryParams = {
   limit: 0
@@ -24,7 +24,7 @@ export const useBiflowListData = (sourceProcessId: string, destProcessId: string
     useSuspenseQueries({
       queries: [
         {
-          queryKey: [QueriesProcesses.GetHttpRequests, initServersQueryParams, sourceProcessId, destProcessId],
+          queryKey: [QueriesBiFlowLogs.GetHttpRequests, initServersQueryParams, sourceProcessId, destProcessId],
           queryFn: () =>
             RESTApi.fetchApplicationFlows({
               ...initServersQueryParams,
@@ -34,7 +34,7 @@ export const useBiflowListData = (sourceProcessId: string, destProcessId: string
           refetchInterval: UPDATE_INTERVAL
         },
         {
-          queryKey: [QueriesProcesses.GetTcpConnections, activeConnectionsQueryParams, sourceProcessId, destProcessId],
+          queryKey: [QueriesBiFlowLogs.GetTcpConnections, activeConnectionsQueryParams, sourceProcessId, destProcessId],
           queryFn: () =>
             RESTApi.fetchTransportFlows({
               ...activeConnectionsQueryParams,
@@ -45,7 +45,7 @@ export const useBiflowListData = (sourceProcessId: string, destProcessId: string
         },
         {
           queryKey: [
-            QueriesProcesses.GetTcpConnections,
+            QueriesBiFlowLogs.GetTcpConnections,
             terminatedConnectionsQueryParams,
             sourceProcessId,
             destProcessId

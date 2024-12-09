@@ -50,7 +50,7 @@ const useServiceData = (serviceId: string) => {
   });
 
   const { data: terminatedConnectionsData } = useQuery({
-    queryKey: [QueriesBiFlowLogs.GetHttpRequests, terminatedConnectionsQueryParams],
+    queryKey: [QueriesBiFlowLogs.GetTcpConnections, terminatedConnectionsQueryParams],
     queryFn: () =>
       RESTApi.fetchTransportFlows({ ...terminatedConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL

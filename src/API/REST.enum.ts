@@ -6,7 +6,7 @@ export enum RestResources {
   Services = 'addresses',
   Listeners = 'listeners',
   Connectors = 'connectors',
-  TcpConnections = 'connectors',
+  TcpConnections = 'connections',
   HttpRequests = 'applicationflows',
   SiteDataLinks = 'sitepairs',
   ComponentDataLinks = 'processgrouppairs',
