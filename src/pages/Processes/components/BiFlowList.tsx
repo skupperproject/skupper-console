@@ -71,7 +71,7 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
         sourceSiteName: false,
         destSiteName: false
       }),
-      filters: { ...initActiveConnectionsQueryParams, sourceProcessId, destProcessId }
+      filters: { ...initActiveConnectionsQueryParams, limit: SMALL_PAGINATION_SIZE, sourceProcessId, destProcessId }
     },
     {
       key: TAB_KEYS.TERMINATED,
@@ -83,7 +83,7 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
         sourceSiteName: false,
         destSiteName: false
       }),
-      filters: { ...initTerminatedConnectionsQueryParams, sourceProcessId, destProcessId }
+      filters: { ...initTerminatedConnectionsQueryParams, limit: SMALL_PAGINATION_SIZE, sourceProcessId, destProcessId }
     },
     {
       key: TAB_KEYS.REQUESTS,
@@ -95,7 +95,7 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
         sourceSiteName: false,
         destSiteName: false
       }),
-      filters: { ...initRequestsQueryParams, sourceProcessId, destProcessId },
+      filters: { ...initRequestsQueryParams, limit: SMALL_PAGINATION_SIZE, sourceProcessId, destProcessId },
       additionalProps: { showAppplicationFlows: true, pagination: SMALL_PAGINATION_SIZE }
     }
   ];

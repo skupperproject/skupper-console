@@ -1,4 +1,4 @@
-import { PROMETHEUS_URL } from '../config/api';
+import { PROMETHEUS_URL_RANGE_QUERY, PROMETHEUS_URL_SINGLE_QUERY } from '../config/api';
 import { PrometheusLabelsV2 } from '../config/prometheus';
 import {
   MetricData as MetricValuesAndLabels,
@@ -8,7 +8,7 @@ import {
 import { skAxisXY } from '../types/SkChartArea.interfaces';
 
 export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
-  queryType === 'range' ? `${PROMETHEUS_URL}/rangequery/` : `${PROMETHEUS_URL}/query/`;
+  queryType === 'range' ? PROMETHEUS_URL_RANGE_QUERY : PROMETHEUS_URL_SINGLE_QUERY;
 
 export function convertToPrometheusQueryParams({
   sourceSite,

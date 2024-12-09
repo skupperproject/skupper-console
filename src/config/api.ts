@@ -1,11 +1,16 @@
-/**  URL config: contains configuration options and constants related to backend URLs and routing */
-const BASE_URL_NETWORK_OBSERVER = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;
-const API_VERSION = '/api/v1alpha1';
-const PROMETHEUS_SUFFIX = '/internal/prom';
+import { RestResources } from '../API/REST.enum';
 
-// Base URL for the collector backend. Defaults to current host if not set in environment variables.
+/*
+Base URL used to connect to the Network Observer backend. 
+If not explicitly set via environment variables, it defaults to the current host.
+*/
+const BASE_URL_NETWORK_OBSERVER = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;
+export const API_VERSION = process.env.API_VERSION ? `/${process.env.API_VERSION}` : '/api/v1alpha1';
 export const API_URL = `${BASE_URL_NETWORK_OBSERVER}${API_VERSION}`;
-export const PROMETHEUS_URL = `${API_URL}${PROMETHEUS_SUFFIX}`;
+
+export const PROMETHEUS_SUFFIX = '/internal/prom';
+export const PROMETHEUS_URL_SINGLE_QUERY = `${API_URL}${PROMETHEUS_SUFFIX}/query/`;
+export const PROMETHEUS_URL_RANGE_QUERY = `${API_URL}${PROMETHEUS_SUFFIX}/rangequery/`;
 
 // Error message to display when a request times out
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
@@ -89,16 +94,16 @@ export const backendToFrontendPropertydMapper: Record<string, string> = {
  * Base paths for API resources.
  */
 export const apiEndpoints = {
-  SITES: `${API_URL}/sites`,
-  LINKS: `${API_URL}/routerlinks`,
-  COMPONENTS: `${API_URL}/processgroups`,
-  PROCESSES: `${API_URL}/processes`,
-  SERVICES: `${API_URL}/addresses`,
-  LISTENERS: `${API_URL}/listeners`,
-  CONNECTORS: `${API_URL}/connectors`,
-  TCP_CONNECTIONS: `${API_URL}/connections`,
-  HTTP_REQUESTS: `${API_URL}/applicationflows`,
-  SITE_PAIRS: `${API_URL}/sitepairs`,
-  COMPONENT_PAIRS: `${API_URL}/processgrouppairs`,
-  PROCESS_PAIRS: `${API_URL}/processpairs`
+  SITES: `${API_URL}/${RestResources.Sites}`,
+  LINKS: `${API_URL}/${RestResources.RouterLinks}`,
+  COMPONENTS: `${API_URL}/${RestResources.Components}`,
+  PROCESSES: `${API_URL}/${RestResources.Processes}`,
+  SERVICES: `${API_URL}/${RestResources.Services}`,
+  LISTENERS: `${API_URL}/${RestResources.Listeners}`,
+  CONNECTORS: `${API_URL}/${RestResources.Connectors}`,
+  TCP_CONNECTIONS: `${API_URL}/${RestResources.TcpConnections}`,
+  HTTP_REQUESTS: `${API_URL}/${RestResources.HttpRequests}`,
+  SITE_PAIRS: `${API_URL}/${RestResources.SiteDataLinks}`,
+  COMPONENT_PAIRS: `${API_URL}/${RestResources.ComponentDataLinks}`,
+  PROCESS_PAIRS: `${API_URL}/${RestResources.ProcessDataLinks}`
 };
