@@ -4,8 +4,6 @@ export enum ServicesRoutesPaths {
 
 export enum QueriesServices {
   GetBiFlow = 'services-biFlow-query',
-  GetTransportFlows = 'services-transport-flows-query',
-  GetApplicationFlows = 'services-application-flows-query',
   GetProcessesByService = 'processes-by-service-query',
   GetTcpByteRateByService = 'tcp-byterate-by-service-query',
   GetServices = 'services-query',

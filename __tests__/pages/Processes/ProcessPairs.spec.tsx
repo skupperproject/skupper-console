@@ -63,7 +63,7 @@ describe('Begin testing the Processes component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByTestId('http2-table')).toBeInTheDocument();
+    expect(screen.getByTestId(ProcessesLabels.Requests)).toBeInTheDocument();
   });
 
   it('should render render the TCP Process Pairs Content Component and the tab Open connection is active', async () => {
@@ -79,7 +79,7 @@ describe('Begin testing the Processes component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(getByTestId('tcp-active-connections-table')).toBeInTheDocument();
+    expect(getByTestId(ProcessesLabels.OpenConnections)).toBeInTheDocument();
   });
 
   it('should render render the TCP Process Pairs Content Component and the Tab connection history is active', async () => {
@@ -95,8 +95,8 @@ describe('Begin testing the Processes component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(getByText(ProcessesLabels.OldConnections));
+    fireEvent.click(getByText(ProcessesLabels.TerminatedConnections));
 
-    expect(getByTestId('tcp-old-connections-table')).toBeInTheDocument();
+    expect(getByTestId(ProcessesLabels.TerminatedConnections)).toBeInTheDocument();
   });
 });

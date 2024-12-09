@@ -1,8 +1,8 @@
 import { FC } from 'react';
 
-import ServiceBiFlowList from './ServiceBiFlowList';
 import { tcpBiFlowColumns, tcpSelectOptions } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
-import { initOldConnectionsQueryParams } from '../Services.constants';
+import BiFlowLogs from '../../shared/BiFlowLogs';
+import { initTerminatedConnectionsQueryParams } from '../Services.constants';
 
 interface TcpConnectionsProps {
   routingKey: string;
@@ -10,10 +10,10 @@ interface TcpConnectionsProps {
 
 const TcpTerminatedConnections: FC<TcpConnectionsProps> = function ({ routingKey }) {
   return (
-    <ServiceBiFlowList
+    <BiFlowLogs
       options={tcpSelectOptions}
       columns={tcpBiFlowColumns}
-      filters={{ ...initOldConnectionsQueryParams, routingKey }}
+      filters={{ ...initTerminatedConnectionsQueryParams, routingKey }}
     />
   );
 };

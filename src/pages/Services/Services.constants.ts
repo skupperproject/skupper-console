@@ -214,7 +214,7 @@ export const initActiveConnectionsQueryParams: QueryFilters = {
   sortDirection: SortDirection.DESC
 };
 
-export const initOldConnectionsQueryParams: QueryFilters = {
+export const initTerminatedConnectionsQueryParams: QueryFilters = {
   state: TcpStatus.Terminated,
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
-import ServiceBiFlowList from './ServiceBiFlowList';
 import { httpBiFlowColumns, httpSelectOptions } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
+import BiFlowLogs from '../../shared/BiFlowLogs';
 import { initRequestsQueryParams } from '../Services.constants';
 
 interface HttpRequestsProps {
@@ -10,7 +10,7 @@ interface HttpRequestsProps {
 
 const HttpRequests: FC<HttpRequestsProps> = function ({ routingKey }) {
   return (
-    <ServiceBiFlowList
+    <BiFlowLogs
       options={httpSelectOptions}
       columns={httpBiFlowColumns}
       filters={{ ...initRequestsQueryParams, routingKey }}

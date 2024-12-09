@@ -80,6 +80,7 @@ const Configuration = {
     scopes: [
       'API',
       'Metrics',
+      'Biflows',
       'Site',
       'Component',
       'Process',

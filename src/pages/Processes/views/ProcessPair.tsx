@@ -17,7 +17,7 @@ export interface ProcessPairProps {
 }
 
 export const ProcessPairContent: FC<ProcessPairProps> = function ({ id }) {
-  const { processPair, source, destination } = useProcessPairData({ id });
+  const { source, destination } = useProcessPairData({ id });
 
   return (
     <MainContainer
@@ -31,11 +31,7 @@ export const ProcessPairContent: FC<ProcessPairProps> = function ({ id }) {
           </StackItem>
 
           <StackItem isFilled>
-            <BiFlowList
-              sourceProcessId={source.identity}
-              destProcessId={destination.identity}
-              protocol={processPair.protocol}
-            />
+            <BiFlowList sourceProcessId={source.identity} destProcessId={destination.identity} />
           </StackItem>
         </Stack>
       }
