@@ -10,7 +10,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import TcpTerminatedConnections from '../../../src/pages/Services/components/TcpTerminatedConnections';
 
 const servicesResults = servicesData.results;
@@ -31,11 +31,11 @@ describe('Begin testing the TCP connections component', () => {
 
   it('should render the Connection view -> Old Connections after the data loading is complete', async () => {
     const { queryByTestId, getByText } = render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <TcpTerminatedConnections routingKey={servicesResults[1].name} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => queryByTestId(getTestsIds.loadingView()), {

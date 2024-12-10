@@ -1,14 +1,11 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useRoutes, RouteObject } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom';
 
 import ErrorConsole from '../pages/shared/Errors/Console';
+import { routes } from '../routes';
 
-interface RouteProps {
-  children: RouteObject[];
-}
-
-const RouteContainer = function ({ children: routes }: RouteProps) {
+const AppRouter = function () {
   const appRoutes = useRoutes([...routes, { path: '/', element: routes[0].element }]);
   if (!appRoutes) {
     return null;
@@ -25,4 +22,4 @@ const RouteContainer = function ({ children: routes }: RouteProps) {
   );
 };
 
-export default RouteContainer;
+export default AppRouter;

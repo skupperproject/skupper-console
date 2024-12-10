@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
 import SkLinkCell from '../../src/core/components/SkLinkCell';
-import { Wrapper } from '../../src/core/components/Wrapper';
+import { Providers } from '../../src/providers';
 
 describe('SkLinkCell', () => {
   const data = { id: 1, name: 'Test' };
@@ -14,9 +14,9 @@ describe('SkLinkCell', () => {
 
   it('should render a non-disabled cell with Link for non-empty value', () => {
     render(
-      <Wrapper>
+      <Providers>
         <SkLinkCell data={data} value="Long text" link="/some-link" />
-      </Wrapper>
+      </Providers>
     );
     const linkElement = screen.getByRole('link');
     expect(linkElement).toHaveAttribute('href', '#/some-link');
@@ -30,9 +30,9 @@ describe('SkLinkCell', () => {
 
   it('should render a non-disabled cell with fitContent', () => {
     render(
-      <Wrapper>
+      <Providers>
         <SkLinkCell data={data} value="Long text" link="/some-link" fitContent={true} />
-      </Wrapper>
+      </Providers>
     );
     const textElement = screen.getByText('Long text');
     expect(textElement).toBeInTheDocument();

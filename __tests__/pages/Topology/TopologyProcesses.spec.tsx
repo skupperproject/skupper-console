@@ -13,7 +13,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import { TopoloyDetailsProps } from '../../../src/pages/Topology/components/TopologyDetails';
 import TopologyProcesses from '../../../src/pages/Topology/components/TopologyProcesses';
@@ -95,7 +95,7 @@ describe('Topology Process', () => {
     jest.spyOn(router, 'useNavigate').mockImplementation(() => mockNavigate);
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <TopologyProcesses
             ids={TopologyController.transformStringIdsToIds(processesResults[2].name)}
@@ -104,7 +104,7 @@ describe('Topology Process', () => {
             serviceIds={serviceResults.map(({ identity }) => identity)}
           />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
   });
 

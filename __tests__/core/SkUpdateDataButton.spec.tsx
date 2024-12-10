@@ -1,14 +1,14 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 
 import SkUpdateDataButton, { refreshDataIntervalMap } from '../../src/core/components/SkUpdateDataButton';
-import { Wrapper } from '../../src/core/components/Wrapper';
+import { Providers } from '../../src/providers';
 
 describe('SkUpdateDataButton component', () => {
   it('should renders the component with "Refresh off" text', () => {
     render(
-      <Wrapper>
+      <Providers>
         <SkUpdateDataButton />
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getByText('Refresh off')).toBeInTheDocument();
@@ -17,9 +17,9 @@ describe('SkUpdateDataButton component', () => {
   it('should opens the refresh interval dropdown on button click', async () => {
     const onClickMock = jest.fn();
     render(
-      <Wrapper>
+      <Providers>
         <SkUpdateDataButton onClick={onClickMock} />
-      </Wrapper>
+      </Providers>
     );
 
     await waitFor(() => {
@@ -33,12 +33,12 @@ describe('SkUpdateDataButton component', () => {
     const revalidateLiveQueriesMock = jest.fn();
 
     render(
-      <Wrapper>
+      <Providers>
         <SkUpdateDataButton
           onRefreshIntervalSelected={onRefreshIntervalSelectedMock}
           onClick={revalidateLiveQueriesMock}
         />
-      </Wrapper>
+      </Providers>
     );
 
     fireEvent.click(screen.getByText(refreshDataIntervalMap[0].label));
@@ -54,9 +54,9 @@ describe('SkUpdateDataButton component', () => {
   it('should calls functions on refresh interval selection', async () => {
     const revalidateLiveQueriesMock = jest.fn();
     render(
-      <Wrapper>
+      <Providers>
         <SkUpdateDataButton onClick={revalidateLiveQueriesMock} refreshIntervalDefault={'15'} />
-      </Wrapper>
+      </Providers>
     );
 
     fireEvent.click(screen.getByTestId('update-data-click'));

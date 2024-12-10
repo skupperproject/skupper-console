@@ -10,7 +10,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import { ComponentLabels } from '../../../src/pages/Components/Components.enum';
 import Component from '../../../src/pages/Components/views/Component';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
@@ -31,11 +31,11 @@ describe('Component component', () => {
       .mockReturnValue({ id: `${componentResults[0].name}@${componentResults[0].identity}` });
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Component />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
   });
 

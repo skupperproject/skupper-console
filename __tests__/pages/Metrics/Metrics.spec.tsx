@@ -5,7 +5,7 @@ import { act, render, renderHook } from '@testing-library/react';
 
 import { Protocols } from '../../../src/API/REST.enum';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import Metrics, { MetricsProps } from '../../../src/pages/shared/Metrics';
 import { useMetricsState } from '../../../src/pages/shared/Metrics/hooks/useMetricsState';
 import { configDefaultFilters } from '../../../src/pages/shared/Metrics/Metrics.constants';
@@ -72,11 +72,11 @@ describe('Metrics Component', () => {
 
   it('renders correctly', () => {
     const { asFragment } = render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Metrics {...setup()} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
     expect(asFragment()).toMatchSnapshot();
   });

@@ -11,7 +11,7 @@ import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import PairsList from '../../../src/pages/Processes/components/PairsList';
 import { ProcessesLabels, ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import { ProcessResponse, PairsResponse } from '../../../src/types/REST.interfaces';
@@ -40,11 +40,11 @@ describe('Process Pairs List component', () => {
 
   it('Should ensure the Process associated renders with correct link href after loading page', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <PairsList process={data} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
@@ -59,11 +59,11 @@ describe('Process Pairs List component', () => {
 
   it('Should handle the empty case', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <PairsList process={dataNoPairs} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {

@@ -3,7 +3,7 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { loadMockServer } from '../../mocks/server';
-import { Wrapper } from '../../src/core/components/Wrapper';
+import { Providers } from '../../src/providers';
 import SkHeader, { HeaderLabels, UserDropdown } from '../../src/layout/Header';
 
 describe('SkHeader', () => {
@@ -21,9 +21,9 @@ describe('SkHeader', () => {
 
   it('should renders the header with logo', () => {
     const { getByAltText } = render(
-      <Wrapper>
+      <Providers>
         <SkHeader />
-      </Wrapper>
+      </Providers>
     );
 
     const logo = getByAltText('logo');
@@ -32,9 +32,9 @@ describe('SkHeader', () => {
 
   it('should show the username', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <UserDropdown />
-      </Wrapper>
+      </Providers>
     );
 
     await waitFor(() => expect(screen.getByText('IAM#Mock-User@user.mock')).toBeInTheDocument());
@@ -45,9 +45,9 @@ describe('SkHeader', () => {
     jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate);
 
     render(
-      <Wrapper>
+      <Providers>
         <UserDropdown />
-      </Wrapper>
+      </Providers>
     );
 
     await waitFor(() => expect(screen.getByText('IAM#Mock-User@user.mock')).toBeInTheDocument());

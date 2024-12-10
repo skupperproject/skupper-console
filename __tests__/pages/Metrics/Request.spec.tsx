@@ -9,7 +9,7 @@ import * as PrometheusAPIModule from '../../../src/API/Prometheus.api';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import Request from '../../../src/pages/shared/Metrics/components/Request';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
 import { ProcessResponse } from '../../../src/types/REST.interfaces';
@@ -32,7 +32,7 @@ describe('Request component', () => {
     const handleGetisSectionExpanded = jest.fn();
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Request
             selectedFilters={{
@@ -43,7 +43,7 @@ describe('Request component', () => {
             onGetIsSectionExpanded={handleGetisSectionExpanded}
           />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
@@ -62,7 +62,7 @@ describe('Request component', () => {
       .mockImplementation(jest.fn().mockReturnValue({ data: null }));
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Request
             selectedFilters={{
@@ -72,7 +72,7 @@ describe('Request component', () => {
             forceUpdate={1}
           />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {

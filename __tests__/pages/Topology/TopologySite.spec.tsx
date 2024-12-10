@@ -11,14 +11,13 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import TopologySite from '../../../src/pages/Topology/components/TopologySite';
 import { TopologyController } from '../../../src/pages/Topology/services';
 import { convertSiteToNode } from '../../../src/pages/Topology/services/topologySiteController';
 import { SHOW_DATA_LINKS } from '../../../src/pages/Topology/Topology.constants';
 import { SkGraphProps } from '../../../src/types/Graph.interfaces';
 import { PairsResponse, SiteResponse } from '../../../src/types/REST.interfaces';
-
 
 const sitesResults = sitesData.results as SiteResponse[];
 const sitePairsResults = sitePairsData.results as PairsResponse[];
@@ -61,14 +60,14 @@ describe('TopologySite', () => {
 
   it('should display with idSelected', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <TopologySite
             ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)}
             GraphComponent={MockGraphComponent}
           />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
@@ -80,14 +79,14 @@ describe('TopologySite', () => {
 
   it('should clicking on a node', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <TopologySite
             ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)}
             GraphComponent={MockGraphComponent}
           />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
@@ -99,14 +98,14 @@ describe('TopologySite', () => {
 
   it('should clicking on a edge', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <TopologySite
             ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)}
             GraphComponent={MockGraphComponent}
           />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
@@ -118,11 +117,11 @@ describe('TopologySite', () => {
 
   it('should render data links', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <TopologySite GraphComponent={MockGraphComponent} initDisplayOptionsEnabled={[SHOW_DATA_LINKS]} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {

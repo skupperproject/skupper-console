@@ -11,7 +11,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import { ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import { SiteLabels } from '../../../src/pages/Sites/Sites.enum';
 import Site from '../../../src/pages/Sites/views/Site';
@@ -30,11 +30,11 @@ describe('Site component', () => {
     jest.spyOn(router, 'useParams').mockReturnValue({ id: `${siteResults[0].name}@${siteResults[0].identity}` });
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Site />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
   });
 

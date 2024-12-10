@@ -9,7 +9,7 @@ import httpRequests from '../../mocks/data/HTTP_REQUESTS.json';
 import tcpConnections from '../../mocks/data/TCP_CONNECTIONS.json';
 import { loadMockServer } from '../../mocks/server';
 import SkBiFlowDetails from '../../src/core/components/SkBiFlowDetails';
-import { Wrapper } from '../../src/core/components/Wrapper';
+import { Providers } from '../../src/providers';
 import { ApplicationFlowResponse, BiFlowResponse } from '../../src/types/REST.interfaces';
 
 describe('BiFlowDetails component', () => {
@@ -27,9 +27,9 @@ describe('BiFlowDetails component', () => {
 
   it('should render the http/2 Open Request', () => {
     render(
-      <Wrapper>
+      <Providers>
         <SkBiFlowDetails biflow={httpRequests.results[0] as ApplicationFlowResponse} />
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getByTestId(getTestsIds.biFlowView(httpRequests.results[0].identity))).toBeInTheDocument();
@@ -43,9 +43,9 @@ describe('BiFlowDetails component', () => {
 
   it('should render a Terminated Connection', () => {
     render(
-      <Wrapper>
+      <Providers>
         <SkBiFlowDetails biflow={tcpConnections.results[5] as BiFlowResponse} />
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getByText(BiFlowLabels.Closed)).toBeInTheDocument();
@@ -58,9 +58,9 @@ describe('BiFlowDetails component', () => {
 
   it('should render an Open Connection', () => {
     render(
-      <Wrapper>
+      <Providers>
         <SkBiFlowDetails biflow={tcpConnections.results[3] as BiFlowResponse} />
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getByText(BiFlowLabels.Open)).toBeInTheDocument();

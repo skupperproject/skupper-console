@@ -4,7 +4,6 @@ import { Page } from '@patternfly/react-core';
 import { AnimatePresence } from 'framer-motion';
 
 import LoadingPage from './core/components/SkLoading';
-import { routes } from './routes';
 
 const SkBreadcrumb = lazy(() => import('./core/components/SkBreadcrumb'));
 const SkHeader = lazy(() => import('./layout/Header'));
@@ -24,7 +23,7 @@ const App = function () {
     >
       <Suspense fallback={<LoadingPage />}>
         <AnimatePresence mode="wait">
-          <RouteContainer>{routes}</RouteContainer>
+          <RouteContainer />
         </AnimatePresence>
       </Suspense>
     </Page>

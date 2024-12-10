@@ -11,7 +11,7 @@ import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import { SkEmptyDataLabels } from '../../../src/core/components/SkEmptyData';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import PairsList from '../../../src/pages/Components/components/PairList';
 import { ComponentResponse, BasePairs } from '../../../src/types/REST.interfaces';
 
@@ -38,11 +38,11 @@ describe('Component Pairs Llist component', () => {
 
   it('Should ensure the Process associated renders with correct link href after loading page', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <PairsList component={data} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
@@ -54,11 +54,11 @@ describe('Component Pairs Llist component', () => {
 
   it('Should handle the empty case', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <PairsList component={dataNoPairs} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {

@@ -10,7 +10,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import { ProcessesLabels } from '../../../src/pages/Processes/Processes.enum';
 import ProcessPair, { ProcessPairContent } from '../../../src/pages/Processes/views/ProcessPair';
 import { PairsResponse } from '../../../src/types/REST.interfaces';
@@ -35,11 +35,11 @@ describe('Begin testing the Processes component', () => {
 
   it('should render the ProcessPairs view after the data loading is complete', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <ProcessPair />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
@@ -52,11 +52,11 @@ describe('Begin testing the Processes component', () => {
 
   it('should render render the HTTP2 Process Pairs Content Component', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <ProcessPairContent id={processPairsResultOpToCart.identity} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
@@ -68,11 +68,11 @@ describe('Begin testing the Processes component', () => {
 
   it('should render render the TCP Process Pairs Content Component and the tab Open connection is active', async () => {
     const { queryByTestId, getByTestId } = render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <ProcessPairContent id={processPairsResultDatabaseToPayment.identity} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => queryByTestId(getTestsIds.loadingView()), {
@@ -84,11 +84,11 @@ describe('Begin testing the Processes component', () => {
 
   it('should render render the TCP Process Pairs Content Component and the Tab connection history is active', async () => {
     const { queryByTestId, getByText, getByTestId } = render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <ProcessPairContent id={processPairsResultPayment2toCatalog.identity} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => queryByTestId(getTestsIds.loadingView()), {

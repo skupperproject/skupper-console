@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 
 import { loadMockServer } from '../../mocks/server';
 import LoadingPage from '../../src/core/components/SkLoading';
-import { Wrapper } from '../../src/core/components/Wrapper';
+import { Providers } from '../../src/providers';
 import ErrorConsole from '../../src/pages/shared/Errors/Console';
 
 describe('Begin testing the Error Console view', () => {
@@ -23,14 +23,14 @@ describe('Begin testing the Error Console view', () => {
 
   it('should render the error Console page as javascript stack error', () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <ErrorConsole
             error={{ message: 'javascript error', stack: 'stack trace description' }}
             resetErrorBoundary={jest.fn()}
           />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getByText('javascript error')).toBeInTheDocument();
@@ -39,11 +39,11 @@ describe('Begin testing the Error Console view', () => {
 
   it('should render the error Console page as Network error when code = ERR_NETWORK', () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <ErrorConsole error={{ code: 'ERR_NETWORK' }} resetErrorBoundary={jest.fn()} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getByText('ERR_NETWORK')).toBeInTheDocument();
@@ -51,14 +51,14 @@ describe('Begin testing the Error Console view', () => {
 
   it('should render the error Console page as HTTP status error', () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <ErrorConsole
             error={{ message: 'http network', httpStatus: '500', code: '' }}
             resetErrorBoundary={jest.fn()}
           />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getByText('http network')).toBeInTheDocument();

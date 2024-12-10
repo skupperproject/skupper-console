@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 
 import { loadMockServer } from '../../mocks/server';
 import LoadingPage from '../../src/core/components/SkLoading';
-import { Wrapper } from '../../src/core/components/Wrapper';
+import { Providers } from '../../src/providers';
 import NotFound from '../../src/pages/shared/Errors/NotFound';
 import { NotFoundLabels } from '../../src/pages/shared/Errors/NotFound/NotFound.enum';
 
@@ -17,11 +17,11 @@ describe('Begin testing the NotFound view', () => {
     server.logging = false;
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <NotFound />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
   });
 
