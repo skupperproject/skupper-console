@@ -1,6 +1,6 @@
 import { FC, memo } from 'react';
 
-import { ChartThemeColor } from '@patternfly/react-charts';
+import { ChartThemeColor } from '@patternfly/react-charts/victory';
 import { Divider, Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';
 
 import { hexColors } from '../../../../config/styles';
@@ -81,7 +81,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
             ]}
             data={[responseRateData?.statusCode5xx.data || [{ x: 0, y: 0 }]]}
             padding={errorRateChartPadding}
-            themeColor={ChartThemeColor.gold}
+            themeColor={ChartThemeColor.yellow}
           />
         </FlexItem>
 

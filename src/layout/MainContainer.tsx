@@ -31,8 +31,67 @@ interface MainContainerProps {
   description?: string;
   hasMainContentPadding?: boolean;
   navigationComponent?: ReactElement;
-  mainContentChildren?: ReactElement;
+  mainContentChildren: ReactElement;
 }
+
+/** Subcomponent for rendering the header section */
+const HeaderSection: FC<{
+  title?: string;
+  description?: string;
+  link?: string;
+  linkLabel?: string;
+  iconName?: 'topologyIcon' | 'listIcon';
+}> = function ({ title, description, link, linkLabel, iconName }) {
+  return (
+    <PageSection role="sk-heading">
+      <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }} alignItems={{ default: 'alignItemsFlexStart' }}>
+        <Content>
+          {title && <Title headingLevel="h1">{title}</Title>}
+          {description && <Content component={ContentVariants.p} dangerouslySetInnerHTML={{ __html: description }} />}
+        </Content>
+        <Flex>
+          <FlexItem>
+            <Toolbar>
+              <ToolbarContent>
+                <ToolbarItem id="custom-element">
+                  <SkUpdateDataButton />
+                </ToolbarItem>
+                {link && <ToolbarItem variant="separator" />}
+                {link && linkLabel && (
+                  <ToolbarItem>
+                    <SkNavigationViewLink link={link} linkLabel={linkLabel} iconName={iconName} />
+                  </ToolbarItem>
+                )}
+              </ToolbarContent>
+            </Toolbar>
+          </FlexItem>
+        </Flex>
+      </Flex>
+    </PageSection>
+  );
+};
+
+/** Subcomponent for rendering navigation */
+const NavigationSection: FC<{ navigationComponent?: ReactElement }> = function ({ navigationComponent }) {
+  return navigationComponent ? (
+    <>
+      <Flex>{navigationComponent}</Flex>
+      <Divider />
+    </>
+  ) : null;
+};
+
+/** Subcomponent for rendering the main content */
+const ContentSection: FC<{
+  contentChildren: ReactElement;
+  hasPadding?: boolean;
+}> = function ({ contentChildren, hasPadding }) {
+  return (
+    <PageSection hasBodyWrapper={false} padding={{ default: hasPadding ? 'noPadding' : 'padding' }} isFilled>
+      <Suspense fallback={<LoadingPage />}>{contentChildren}</Suspense>
+    </PageSection>
+  );
+};
 
 const MainContainer: FC<MainContainerProps> = function ({
   dataTestId,
@@ -49,54 +108,16 @@ const MainContainer: FC<MainContainerProps> = function ({
     <TransitionPage>
       <PageGroup data-testid={dataTestId}>
         {title && (
-          <PageSection hasBodyWrapper={false} role="sk-heading">
-            <Flex
-              justifyContent={{ default: 'justifyContentSpaceBetween' }}
-              alignItems={{ default: 'alignItemsFlexStart' }}
-            >
-              <Content>
-                <Title headingLevel="h1">{title}</Title>
-                {description && (
-                  <Content component={ContentVariants.p} dangerouslySetInnerHTML={{ __html: description }} />
-                )}
-              </Content>
-              <Flex>
-                <FlexItem>
-                  <Toolbar style={{ padding: 0 }}>
-                    <ToolbarContent style={{ padding: 0 }}>
-                      <ToolbarItem id="custom-element">
-                        <SkUpdateDataButton />
-                      </ToolbarItem>
-                      {link && <ToolbarItem variant="separator" />}
-                      {link && (
-                        <ToolbarItem>
-                          {<SkNavigationViewLink link={link} linkLabel={linkLabel} iconName={iconName} />}
-                        </ToolbarItem>
-                      )}
-                    </ToolbarContent>
-                  </Toolbar>
-                </FlexItem>
-              </Flex>
-            </Flex>
-          </PageSection>
+          <HeaderSection
+            title={title}
+            description={description}
+            link={link}
+            linkLabel={linkLabel}
+            iconName={iconName}
+          />
         )}
-
-        {navigationComponent && (
-          <>
-            <Flex>{navigationComponent}</Flex>
-
-            <Divider />
-          </>
-        )}
-        {mainContentChildren && (
-          <PageSection
-            hasBodyWrapper={false}
-            padding={{ default: hasMainContentPadding ? 'noPadding' : 'padding' }}
-            isFilled={true}
-          >
-            <Suspense fallback={<LoadingPage />}>{mainContentChildren} </Suspense>
-          </PageSection>
-        )}
+        <NavigationSection navigationComponent={navigationComponent} />
+        <ContentSection contentChildren={mainContentChildren} hasPadding={hasMainContentPadding} />
       </PageGroup>
     </TransitionPage>
   );

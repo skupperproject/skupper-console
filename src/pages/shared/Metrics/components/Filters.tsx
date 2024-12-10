@@ -1,6 +1,6 @@
 import { FC, memo } from 'react';
 
-import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, PageSection } from '@patternfly/react-core';
+import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup } from '@patternfly/react-core';
 import { OutlinedClockIcon } from '@patternfly/react-icons';
 
 import { Protocols } from '../../../../API/REST.enum';
@@ -54,99 +54,83 @@ const MetricFilters: FC<MetricFiltersProps> = memo(
     });
 
     return (
-      <PageSection hasBodyWrapper={false} padding={{ default: 'noPadding' }}>
-        <Toolbar>
-          <ToolbarContent>
-            <ToolbarGroup>
-              <ToolbarItem>
-                {!config.sourceSites?.hide && (
-                  <SkSelect
-                    selected={selectedFilters.sourceSite}
-                    items={generateFilterItems({ data: sourceSites })}
-                    onSelect={handleSelectSourceSite}
-                    placeholder={config.sourceSites?.placeholder || ''}
-                    icon={<ResourceIcon type="site" />}
-                    isDisabled={config.sourceSites?.disabled}
-                  />
-                )}
-              </ToolbarItem>
-
-              <ToolbarItem>
-                {!config.sourceProcesses?.hide && (
-                  <SkSelect
-                    selected={selectedFilters.sourceProcess}
-                    items={generateFilterItems({
-                      data: sourceProcesses,
-                      parentSelected: selectedFilters.sourceSite
-                    })}
-                    onSelect={handleSelectSourceProcess}
-                    placeholder={config.sourceProcesses?.placeholder || ''}
-                    icon={<ResourceIcon type="process" />}
-                    isDisabled={config.sourceProcesses?.disabled}
-                  />
-                )}
-              </ToolbarItem>
-
-              <ToolbarItem>
-                {!config.destSites?.hide && (
-                  <SkSelect
-                    selected={selectedFilters.destSite}
-                    items={generateFilterItems({ data: destSites })}
-                    onSelect={handleSelectDestSite}
-                    placeholder={config.destSites?.placeholder || ''}
-                    icon={<ResourceIcon type="site" />}
-                    isDisabled={config.destSites?.disabled}
-                  />
-                )}
-              </ToolbarItem>
-
-              <ToolbarItem>
-                {!config.destinationProcesses?.hide && (
-                  <SkSelect
-                    selected={selectedFilters.destProcess}
-                    items={generateFilterItems({
-                      data: destProcesses,
-                      parentSelected: selectedFilters.destSite
-                    })}
-                    onSelect={handleSelectDestProcess}
-                    placeholder={config.destinationProcesses?.placeholder || ''}
-                    icon={<ResourceIcon type="process" />}
-                    isDisabled={config.destinationProcesses?.disabled}
-                  />
-                )}
-              </ToolbarItem>
-              {/*
-              {!!availableProtocols.length && (
-                <ToolbarItem>
-                  <SkSelect
-                    selected={selectedFilters.protocol}
-                    items={availableProtocols.map((name) => ({
-                      id: name,
-                      label: name
-                    }))}
-                    onSelect={handleSelectProtocol}
-                    placeholder={MetricsLabels.FilterProtocolsDefault}
-                  />
-                </ToolbarItem>
-              )} */}
-            </ToolbarGroup>
-
-            <ToolbarGroup align={{ default: 'alignEnd' }}>
-              <ToolbarItem>
+      <Toolbar>
+        <ToolbarContent>
+          <ToolbarGroup>
+            <ToolbarItem>
+              {!config.sourceSites?.hide && (
                 <SkSelect
-                  selected={selectedFilters.duration}
-                  items={Object.values(timeIntervalMap).map(({ label, seconds }) => ({
-                    id: seconds.toString(),
-                    label
-                  }))}
-                  icon={<OutlinedClockIcon />}
-                  onSelect={handleSelectTimeInterval}
+                  selected={selectedFilters.sourceSite}
+                  items={generateFilterItems({ data: sourceSites })}
+                  onSelect={handleSelectSourceSite}
+                  placeholder={config.sourceSites?.placeholder || ''}
+                  icon={<ResourceIcon type="site" />}
+                  isDisabled={config.sourceSites?.disabled}
                 />
-              </ToolbarItem>
-            </ToolbarGroup>
-          </ToolbarContent>
-        </Toolbar>
-      </PageSection>
+              )}
+            </ToolbarItem>
+
+            <ToolbarItem>
+              {!config.sourceProcesses?.hide && (
+                <SkSelect
+                  selected={selectedFilters.sourceProcess}
+                  items={generateFilterItems({
+                    data: sourceProcesses,
+                    parentSelected: selectedFilters.sourceSite
+                  })}
+                  onSelect={handleSelectSourceProcess}
+                  placeholder={config.sourceProcesses?.placeholder || ''}
+                  icon={<ResourceIcon type="process" />}
+                  isDisabled={config.sourceProcesses?.disabled}
+                />
+              )}
+            </ToolbarItem>
+
+            <ToolbarItem>
+              {!config.destSites?.hide && (
+                <SkSelect
+                  selected={selectedFilters.destSite}
+                  items={generateFilterItems({ data: destSites })}
+                  onSelect={handleSelectDestSite}
+                  placeholder={config.destSites?.placeholder || ''}
+                  icon={<ResourceIcon type="site" />}
+                  isDisabled={config.destSites?.disabled}
+                />
+              )}
+            </ToolbarItem>
+
+            <ToolbarItem>
+              {!config.destinationProcesses?.hide && (
+                <SkSelect
+                  selected={selectedFilters.destProcess}
+                  items={generateFilterItems({
+                    data: destProcesses,
+                    parentSelected: selectedFilters.destSite
+                  })}
+                  onSelect={handleSelectDestProcess}
+                  placeholder={config.destinationProcesses?.placeholder || ''}
+                  icon={<ResourceIcon type="process" />}
+                  isDisabled={config.destinationProcesses?.disabled}
+                />
+              )}
+            </ToolbarItem>
+          </ToolbarGroup>
+
+          <ToolbarGroup align={{ default: 'alignEnd' }}>
+            <ToolbarItem>
+              <SkSelect
+                selected={selectedFilters.duration}
+                items={Object.values(timeIntervalMap).map(({ label, seconds }) => ({
+                  id: seconds.toString(),
+                  label
+                }))}
+                icon={<OutlinedClockIcon />}
+                onSelect={handleSelectTimeInterval}
+              />
+            </ToolbarItem>
+          </ToolbarGroup>
+        </ToolbarContent>
+      </Toolbar>
     );
   }
 );

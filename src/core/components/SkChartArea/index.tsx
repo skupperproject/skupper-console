@@ -10,7 +10,7 @@ import {
   ChartThemeColor,
   ChartArea,
   ChartLine
-} from '@patternfly/react-charts';
+} from '@patternfly/react-charts/victory';
 import { getResizeObserver } from '@patternfly/react-core';
 
 import { skAxisXY } from '../../../types/SkChartArea.interfaces';

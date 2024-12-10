@@ -1,6 +1,6 @@
 import { Suspense, lazy } from 'react';
 
-import { Page, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import { Page } from '@patternfly/react-core';
 import { AnimatePresence } from 'framer-motion';
 
 import LoadingPage from './core/components/SkLoading';
@@ -16,28 +16,18 @@ import '@patternfly/react-core/dist/styles/base.css';
 const App = function () {
   return (
     <Page
-      isContentFilled
       masthead={<SkHeader />}
       sidebar={<SkSidebar />}
-      breadcrumb={
-        <Toolbar style={{ padding: 0 }}>
-          <ToolbarContent style={{ padding: 0 }}>
-            <ToolbarItem>
-              <SkBreadcrumb />
-            </ToolbarItem>
-          </ToolbarContent>
-        </Toolbar>
-      }
+      breadcrumb={<SkBreadcrumb />}
+      isContentFilled
       isManagedSidebar
-      isBreadcrumbGrouped
-      additionalGroupedContent={
-        <Suspense fallback={<LoadingPage />}>
-          <AnimatePresence mode="wait">
-            <RouteContainer>{routes}</RouteContainer>
-          </AnimatePresence>
-        </Suspense>
-      }
-    />
+    >
+      <Suspense fallback={<LoadingPage />}>
+        <AnimatePresence mode="wait">
+          <RouteContainer>{routes}</RouteContainer>
+        </AnimatePresence>
+      </Suspense>
+    </Page>
   );
 };
 

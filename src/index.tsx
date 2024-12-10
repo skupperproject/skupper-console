@@ -4,9 +4,7 @@ import App from './App';
 import { Wrapper } from './core/components/Wrapper';
 
 const rootElement = document.getElementById('app') as HTMLDivElement;
-const root = createRoot(rootElement);
-
-root.render(
+createRoot(rootElement).render(
   <Wrapper>
     <App />
   </Wrapper>
