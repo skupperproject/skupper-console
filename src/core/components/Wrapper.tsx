@@ -25,7 +25,7 @@ export const Wrapper = function ({ children, config }: { config?: QueryClientCon
     <HashRouter
       future={{
         v7_relativeSplatPath: true,
-        v7_startTransition: true
+        v7_startTransition: false
       }}
     >
       <QueryClientContext config={config}>{children}</QueryClientContext>
