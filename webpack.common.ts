@@ -1,57 +1,53 @@
-const path = require('path');
-const ROOT = process.cwd();
-
-const webpack = require('webpack');
-
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { version } = require(path.join(ROOT, '/package.json'));
+const path = require('path'); // Path module to handle file system paths
+const ROOT = process.cwd(); // Root directory of the project
+const webpack = require('webpack'); // Webpack core library
+const HtmlWebpackPlugin = require('html-webpack-plugin'); // Plugin to generate an HTML file
 
 module.exports = {
-  entry: path.join(ROOT, 'src/index.tsx'),
+  entry: path.join(ROOT, 'src/index.tsx'), // Entry point for the application (main TypeScript file)
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.tsx', '.js'] // Resolve file extensions for TypeScript and JavaScript
   },
 
   cache: {
-    cacheDirectory: path.resolve(__dirname, '.webpack-cache'),
-    type: 'filesystem'
+    cacheDirectory: path.resolve(__dirname, '.webpack-cache'), // Directory to store Webpack cache
+    type: 'filesystem' // Enable filesystem caching to improve build performance
   },
 
   output: {
-    pathinfo: false
+    pathinfo: false // Disable output path information to reduce build log noise
   },
 
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.tsx?$/, // Apply ts-loader for TypeScript files (.ts, .tsx)
         loader: 'ts-loader',
-        include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'mocks')],
+        include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'mocks')], // Include source and mocks directories
         options: {
-          transpileOnly: true,
-          happyPackMode: true
+          transpileOnly: true, // Only transpile, don't type-check
+          happyPackMode: true // Enable HappyPack mode for faster builds
         }
       },
       {
-        test: /\.(svg|jpg|jpeg|png)$/i,
-        type: 'asset/resource',
+        test: /\.(svg|jpg|jpeg|png)$/i, // Handle image assets (SVG, JPG, PNG)
+        type: 'asset/resource', // Treat them as resources and copy to the output folder
         generator: {
-          filename: 'assets/[name].[contenthash][ext]'
+          filename: 'assets/[name].[contenthash][ext]' // Use content hash for cache busting
         }
       },
       {
-        test: /\.(png)$/i,
+        test: /\.(png)$/i, // Handle PNG files separately (similar to above)
         type: 'asset/resource',
-        exclude: /assets/,
         generator: {
           filename: '[name].[contenthash][ext]'
         }
       },
       {
-        test: /\.(woff|woff2|eot|ttf|otf)$/i,
-        type: 'asset/resource',
+        test: /\.(woff|woff2|eot|ttf|otf)$/i, // Handle font files (woff, woff2, eot, ttf, otf)
+        type: 'asset/resource', // Treat them as resources and copy to the output folder
         generator: {
-          filename: 'fonts/[name][ext]'
+          filename: 'fonts/[name][ext]' // Save fonts in the 'fonts' directory
         }
       }
     ]
@@ -59,6 +55,7 @@ module.exports = {
 
   plugins: [
     new webpack.DefinePlugin({
+      // Define environment variables for use in the application
       'process.env.BRAND_APP_LOGO': JSON.stringify(process.env.BRAND_APP_LOGO || ''),
       'process.env.COLLECTOR_URL': JSON.stringify(process.env.COLLECTOR_URL || ''),
       'process.env.API_VERSION': JSON.stringify(process.env.API_VERSION || ''),
@@ -66,7 +63,7 @@ module.exports = {
       'process.env.MOCK_DELAY_RESPONSE': JSON.stringify(process.env.MOCK_DELAY_RESPONSE)
     }),
     new HtmlWebpackPlugin({
-      template: path.join(ROOT, '/public/index.html')
+      template: path.resolve(ROOT, 'public', 'index.html') // Generate HTML from a template
     })
   ]
 };
