@@ -10,7 +10,6 @@ import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
 import { Providers } from '../../../src/providers';
 import Processes from '../../../src/pages/Processes/views/Processes';
-import { ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '../../../src/pages/Sites/Sites.enum';
 import { ComponentRoutesPaths } from '../../../src/pages/Components/Components.enum';
 

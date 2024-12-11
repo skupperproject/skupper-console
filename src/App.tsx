@@ -6,7 +6,7 @@ import { AnimatePresence } from 'framer-motion';
 const SkBreadcrumb = lazy(() => import('./core/components/SkBreadcrumb'));
 const SkHeader = lazy(() => import('./layout/Header'));
 const SkSidebar = lazy(() => import('./layout/SideBar'));
-const RouteContainer = lazy(() => import('./layout/RouteContainer'));
+const RouteContainer = lazy(() => import('./core/AppRouter'));
 
 import '@patternfly/react-core/dist/styles/base.css';
 

@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { hexColors, styles } from '../../src/config/styles';
+import { styles } from '../../src/config/styles';
 import SkSankeyChart, {
   addThemeChangeListener,
   getColors,
