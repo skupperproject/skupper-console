@@ -55,20 +55,17 @@ export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
   {
     name: ProcessesLabels.Name,
     prop: 'name' as keyof ProcessResponse,
-    customCellName: 'linkCell',
-    modifier: 'nowrap'
+    customCellName: 'linkCell'
   },
   {
     name: ProcessesLabels.Component,
     prop: 'groupName' as keyof ProcessResponse,
-    customCellName: 'linkComponentCell',
-    modifier: 'truncate'
+    customCellName: 'linkComponentCell'
   },
   {
     name: ProcessesLabels.Site,
     prop: 'parentName' as keyof ProcessResponse,
-    customCellName: 'linkCellSite',
-    modifier: 'truncate'
+    customCellName: 'linkCellSite'
   },
   {
     name: ProcessesLabels.BindingState,
@@ -78,8 +75,7 @@ export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
     name: ProcessesLabels.Created,
     prop: 'startTime' as keyof ProcessResponse,
     customCellName: 'TimestampCell',
-    modifier: 'fitContent',
-    width: 15
+    modifier: 'fitContent'
   }
 ];
 
@@ -91,25 +87,21 @@ export const PairsListColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
   },
   {
     name: ProcessesLabels.TransportProtocol,
-    prop: 'protocol',
-    modifier: 'fitContent'
+    prop: 'protocol'
   },
   {
     name: ProcessesLabels.ApplicationProtocols,
-    prop: 'observedApplicationProtocols',
-    modifier: 'fitContent'
+    prop: 'observedApplicationProtocols'
   },
   {
     name: ProcessesLabels.Bytes,
     prop: 'bytes',
-    format: formatBytes,
-    modifier: 'fitContent'
+    format: formatBytes
   },
   {
     name: ProcessesLabels.ByteRate,
     prop: 'byteRate',
-    format: formatByteRate,
-    modifier: 'fitContent'
+    format: formatByteRate
   }
 ];
 

@@ -48,8 +48,7 @@ export const siteColumns: SKTableColumn<SiteResponse>[] = [
   {
     name: SiteLabels.Name,
     prop: 'name',
-    customCellName: 'LinkCell',
-    modifier: 'nowrap'
+    customCellName: 'LinkCell'
   },
 
   {
@@ -102,7 +101,7 @@ export const linksColumns: SKTableColumn<RouterLinkResponse>[] = [
     name: SiteLabels.Created,
     prop: 'startTime',
     customCellName: 'TimestampCell',
-    width: 15
+    modifier: 'fitContent'
   }
 ];
 

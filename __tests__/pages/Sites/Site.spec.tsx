@@ -77,11 +77,13 @@ describe('Site component', () => {
     fireEvent.click(screen.getByText(SiteLabels.Processes));
 
     await waitFor(() => {
-      expect(screen.getByText(processResults[1].name)).toBeInTheDocument();
+      expect(screen.getByTestId(processResults[1].name)).toBeInTheDocument();
     });
 
     await waitFor(() => {
-      expect(screen.getByRole('link', { name: processResults[1].name })).toHaveAttribute(
+      const container = screen.getByTestId(processResults[1].name);
+      const link = container.querySelector('a');
+      expect(link).toHaveAttribute(
         'href',
         `#${ProcessesRoutesPaths.Processes}/${processResults[1].name}@${processResults[1].identity}`
       );

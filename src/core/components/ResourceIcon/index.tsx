@@ -30,7 +30,7 @@ const RESOURCE_MAP = {
   }
 };
 
-interface ResourceIconProps {
+export interface ResourceIconProps {
   type: 'site' | 'component' | 'service' | 'process' | 'skupper';
 }
 

@@ -21,7 +21,6 @@ export const CustomComponentCells = {
   ProcessCountCell: (props: SkLinkCellProps<ComponentResponse>) =>
     SkLinkCell({
       ...props,
-      fitContent: true,
       link: `${ComponentRoutesPaths.Components}/${props.data.name}@${props.data.identity}?type=${ComponentLabels.Processes}`
     })
 };
@@ -45,13 +44,12 @@ export const ComponentColumns: SKTableColumn<ComponentResponse>[] = [
     name: ComponentLabels.Count,
     prop: 'processCount' as keyof ComponentResponse,
     customCellName: 'ProcessCountCell',
-    width: 15
+    modifier: 'fitContent'
   },
   {
     name: ComponentLabels.Created,
     prop: 'startTime' as keyof ComponentResponse,
     customCellName: 'TimestampCell',
-    modifier: 'fitContent',
-    width: 15
+    modifier: 'fitContent'
   }
 ];
