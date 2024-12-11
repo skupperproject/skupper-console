@@ -20,8 +20,6 @@ import SkUpdateDataButton from '../core/components/SkUpdateDataButton';
 import TransitionPage from '../core/components/TransitionPages/Fade';
 import { TopologyLabels } from '../pages/Topology/Topology.enum';
 
-import '@patternfly/patternfly/patternfly-addons.css';
-
 interface MainContainerProps {
   dataTestId?: string;
   title?: string;
