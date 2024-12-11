@@ -8,7 +8,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import Traffic from '../../../src/pages/shared/Metrics/components/Traffic';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
 import * as MetricsModule from '../../../src/pages/shared/Metrics/services/index';
@@ -32,7 +32,7 @@ describe('Traffic component', () => {
     const handleGetisSectionExpanded = jest.fn();
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Traffic
             selectedFilters={{
@@ -43,7 +43,7 @@ describe('Traffic component', () => {
             onGetIsSectionExpanded={handleGetisSectionExpanded}
           />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
@@ -66,7 +66,7 @@ describe('Traffic component', () => {
     );
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Traffic
             selectedFilters={{
@@ -74,7 +74,7 @@ describe('Traffic component', () => {
             }}
           />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {

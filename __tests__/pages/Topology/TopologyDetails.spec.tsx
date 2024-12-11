@@ -4,7 +4,7 @@ import { Server } from 'miragejs';
 import processesPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import TopologyDetails from '../../../src/pages/Topology/components/TopologyDetails';
 import { ProcessPairsResponse, ProcessResponse } from '../../../src/types/REST.interfaces';
 import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../src/config/app';
@@ -30,7 +30,7 @@ describe('Topology details', () => {
     const ids = [processesResults[1].identity, processesResults[12].identity];
 
     render(
-      <Wrapper>
+      <Providers>
         <TopologyDetails
           ids={ids}
           items={items}
@@ -119,7 +119,7 @@ describe('Topology details', () => {
             latencyByProcessPairs: []
           }}
         />
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getAllByText(processesResults[12].groupName)[0]).toBeInTheDocument();
@@ -136,7 +136,7 @@ describe('Topology details', () => {
     const ids = [processPairsResults[2].identity];
 
     render(
-      <Wrapper>
+      <Providers>
         <TopologyDetails
           ids={ids}
           items={items}
@@ -194,7 +194,7 @@ describe('Topology details', () => {
             ]
           }}
         />
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getByText(processPairsResults[2].sourceName)).toBeInTheDocument();

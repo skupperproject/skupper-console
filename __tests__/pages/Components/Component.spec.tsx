@@ -5,20 +5,17 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import componentsData from '../../../mocks/data/COMPONENTS.json';
-import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import { ComponentLabels } from '../../../src/pages/Components/Components.enum';
 import Component from '../../../src/pages/Components/views/Component';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
-import { ProcessResponse, ComponentResponse } from '../../../src/types/REST.interfaces';
-import { ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
+import { ComponentResponse } from '../../../src/types/REST.interfaces';
 
 const componentResults = componentsData.results as ComponentResponse[];
-const processResults = processesData.results as ProcessResponse[];
 
 describe('Component component', () => {
   let server: Server;
@@ -31,11 +28,11 @@ describe('Component component', () => {
       .mockReturnValue({ id: `${componentResults[0].name}@${componentResults[0].identity}` });
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Component />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
   });
 

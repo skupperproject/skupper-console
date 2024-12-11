@@ -1,6 +1,6 @@
 import { FC, memo } from 'react';
 
-import { ChartThemeColor } from '@patternfly/react-charts';
+import { ChartThemeColor } from '@patternfly/react-charts/victory';
 import { Divider, Flex, FlexItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
@@ -19,7 +19,7 @@ const RequestCharts: FC<{
         data={requestRateData.map(({ data }) => data)}
         formatY={(y: number) => `${formatToDecimalPlacesIfCents(y, 3)} rps`}
         legendLabels={requestRateData.map(({ label }) => `${label}`)}
-        themeColor={ChartThemeColor.gold}
+        themeColor={ChartThemeColor.yellow}
       />
     </FlexItem>
 

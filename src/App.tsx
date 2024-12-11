@@ -1,43 +1,28 @@
-import { Suspense, lazy } from 'react';
+import { lazy } from 'react';
 
-import { Page, Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
+import { Page } from '@patternfly/react-core';
 import { AnimatePresence } from 'framer-motion';
-
-import LoadingPage from './core/components/SkLoading';
-import { routes } from './routes';
 
 const SkBreadcrumb = lazy(() => import('./core/components/SkBreadcrumb'));
 const SkHeader = lazy(() => import('./layout/Header'));
 const SkSidebar = lazy(() => import('./layout/SideBar'));
-const RouteContainer = lazy(() => import('./layout/RouteContainer'));
+const RouteContainer = lazy(() => import('./core/AppRouter'));
 
 import '@patternfly/react-core/dist/styles/base.css';
 
 const App = function () {
   return (
     <Page
-      isContentFilled
       masthead={<SkHeader />}
       sidebar={<SkSidebar />}
-      breadcrumb={
-        <Toolbar style={{ padding: 0 }}>
-          <ToolbarContent style={{ padding: 0 }}>
-            <ToolbarItem>
-              <SkBreadcrumb />
-            </ToolbarItem>
-          </ToolbarContent>
-        </Toolbar>
-      }
+      breadcrumb={<SkBreadcrumb />}
+      isContentFilled
       isManagedSidebar
-      isBreadcrumbGrouped
-      additionalGroupedContent={
-        <Suspense fallback={<LoadingPage />}>
-          <AnimatePresence mode="wait">
-            <RouteContainer>{routes}</RouteContainer>
-          </AnimatePresence>
-        </Suspense>
-      }
-    />
+    >
+      <AnimatePresence mode="wait">
+        <RouteContainer />
+      </AnimatePresence>
+    </Page>
   );
 };
 

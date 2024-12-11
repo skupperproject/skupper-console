@@ -11,7 +11,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import TopologyComponent from '../../../src/pages/Topology/components/TopologyComponent';
 import { TopologyController } from '../../../src/pages/Topology/services';
 import { convertComponentToNode } from '../../../src/pages/Topology/services/topologyComponentController';
@@ -54,14 +54,14 @@ describe('Topology Components', () => {
     server.logging = false;
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <TopologyComponent
             ids={TopologyController.transformStringIdsToIds(componentResult[2].name)}
             GraphComponent={MockGraphComponent}
           />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
   });
 

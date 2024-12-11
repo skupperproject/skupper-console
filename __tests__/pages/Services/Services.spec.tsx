@@ -10,7 +10,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import Services from '../../../src/pages/Services/views/Services';
 
 const servicesResults = servicesData.results;
@@ -24,11 +24,11 @@ describe('Begin testing the Service component', () => {
     server.logging = false;
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Services />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
   });
 

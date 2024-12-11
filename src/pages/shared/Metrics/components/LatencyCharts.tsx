@@ -1,6 +1,6 @@
 import { FC, memo } from 'react';
 
-import { ChartThemeColor } from '@patternfly/react-charts';
+import { ChartThemeColor } from '@patternfly/react-charts/victory';
 import { Grid, GridItem, Title } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
@@ -20,7 +20,7 @@ const LatencyCharts: FC<{
   bucketsData: LatencyBucketDistributionData[];
   summary: LatencyBucketSummary[];
 }> = memo(({ latenciesData, bucketsData, summary }) => (
-  <Grid hasGutter>
+  <Grid>
     <GridItem md={12} xl={12}>
       <Title headingLevel="h4">{MetricsLabels.LatencyPercentileTitle}</Title>
       <SkChartArea

@@ -9,7 +9,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import { ProcessesLabels } from '../../../src/pages/Processes/Processes.enum';
 import Process from '../../../src/pages/Processes/views/Process';
 import { ProcessResponse } from '../../../src/types/REST.interfaces';
@@ -25,11 +25,11 @@ describe('Process component', () => {
     jest.spyOn(router, 'useParams').mockReturnValue({ id: `${processResult.name}@${processResult.identity}` });
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Process />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
   });
 

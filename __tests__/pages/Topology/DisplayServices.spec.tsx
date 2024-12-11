@@ -5,7 +5,7 @@ import { Server } from 'miragejs';
 
 import { loadMockServer } from '../../../mocks/server';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import DisplayServices from '../../../src/pages/Topology/components/DisplayServices';
 
 describe('DisplayServices', () => {
@@ -23,11 +23,11 @@ describe('DisplayServices', () => {
 
   it('renders DisplayServices component placehoder without service options an disabled', () => {
     const { getByRole } = render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <DisplayServices initialIdsSelected={undefined} onSelected={jest.fn()} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     const selectElement = getByRole('togglebox');

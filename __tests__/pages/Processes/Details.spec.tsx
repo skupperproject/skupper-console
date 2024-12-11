@@ -7,7 +7,7 @@ import * as router from 'react-router';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../../../mocks/server';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import Details from '../../../src/pages/Processes/components/Details';
 import { ProcessResponse } from '../../../src/types/REST.interfaces';
 
@@ -22,11 +22,11 @@ describe('Process component', () => {
     jest.spyOn(router, 'useParams').mockReturnValue({ id: `${processResult.name}@${processResult.identity}` });
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Details process={processResult} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
   });
 

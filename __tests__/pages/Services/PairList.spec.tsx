@@ -10,7 +10,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import PairsList from '../../../src/pages/Services/components/PairsList';
 
 const servicesResults = servicesData.results;
@@ -31,11 +31,11 @@ describe('Begin testing the Http requests component', () => {
 
   it('should render the Requests view -> Requests after the data loading is complete', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <PairsList id={servicesResults[0].identity} name={servicesResults[0].name} />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {

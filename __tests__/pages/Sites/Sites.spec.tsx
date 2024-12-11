@@ -9,7 +9,7 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import ErrorConsole from '../../../src/pages/shared/Errors/Console';
 import Sites from '../../../src/pages/Sites/views/Sites';
 import { MockApiPaths } from '../../../mocks/server.config';
@@ -32,11 +32,11 @@ describe('Begin testing the Sites component', () => {
 
   it('should render a loading page when data is loading', () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Sites />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
@@ -44,11 +44,11 @@ describe('Begin testing the Sites component', () => {
 
   it('should render the sites view after the data loading is complete', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Sites />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     expect(screen.getByTestId(getTestsIds.loadingView())).toBeInTheDocument();
@@ -61,11 +61,11 @@ describe('Begin testing the Sites component', () => {
 
   it('should render a table with the site data after the data has loaded.', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Sites />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
@@ -77,11 +77,11 @@ describe('Begin testing the Sites component', () => {
 
   it('Should ensure the Sites component renders with correct link href after loading page', async () => {
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Sites />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
@@ -100,7 +100,7 @@ describe('Begin testing the Sites component', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
     render(
-      <Wrapper
+      <Providers
         config={{
           defaultOptions: {
             queries: {
@@ -115,7 +115,7 @@ describe('Begin testing the Sites component', () => {
             <Sites />
           </Suspense>
         </ErrorBoundary>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
@@ -131,7 +131,7 @@ describe('Begin testing the Sites component', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
     render(
-      <Wrapper
+      <Providers
         config={{
           defaultOptions: {
             queries: {
@@ -146,7 +146,7 @@ describe('Begin testing the Sites component', () => {
             <Sites />
           </Suspense>
         </ErrorBoundary>
-      </Wrapper>
+      </Providers>
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {

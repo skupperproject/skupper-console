@@ -1,14 +1,14 @@
+import { Suspense } from 'react';
+
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useRoutes, RouteObject } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom';
 
+import LoadingPage from './components/SkLoading';
 import ErrorConsole from '../pages/shared/Errors/Console';
+import { routes } from '../routes/index';
 
-interface RouteProps {
-  children: RouteObject[];
-}
-
-const RouteContainer = function ({ children: routes }: RouteProps) {
+const AppRouter = function () {
   const appRoutes = useRoutes([...routes, { path: '/', element: routes[0].element }]);
   if (!appRoutes) {
     return null;
@@ -18,11 +18,11 @@ const RouteContainer = function ({ children: routes }: RouteProps) {
     <QueryErrorResetBoundary>
       {({ reset }) => (
         <ErrorBoundary key={window.location.hash} onReset={reset} FallbackComponent={ErrorConsole}>
-          {appRoutes}
+          <Suspense fallback={<LoadingPage />}>{appRoutes}</Suspense>
         </ErrorBoundary>
       )}
     </QueryErrorResetBoundary>
   );
 };
 
-export default RouteContainer;
+export default AppRouter;

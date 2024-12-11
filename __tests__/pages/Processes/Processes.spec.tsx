@@ -8,9 +8,8 @@ import { loadMockServer } from '../../../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../../../src/config/app';
 import { getTestsIds } from '../../../src/config/testIds';
 import LoadingPage from '../../../src/core/components/SkLoading';
-import { Wrapper } from '../../../src/core/components/Wrapper';
+import { Providers } from '../../../src/providers';
 import Processes from '../../../src/pages/Processes/views/Processes';
-import { ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '../../../src/pages/Sites/Sites.enum';
 import { ComponentRoutesPaths } from '../../../src/pages/Components/Components.enum';
 
@@ -24,11 +23,11 @@ describe('Begin testing the Processes component', () => {
     server.logging = false;
 
     render(
-      <Wrapper>
+      <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Processes />
         </Suspense>
-      </Wrapper>
+      </Providers>
     );
   });
 

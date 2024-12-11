@@ -11,6 +11,7 @@ import Traffic from './components/Traffic';
 import { useMetricsState } from './hooks/useMetricsState';
 import { MetricsLabels } from './Metrics.enum';
 import { Protocols, Direction } from '../../../API/REST.enum';
+import { hexColors } from '../../../config/styles';
 import { ConfigMetricFilters, ExpandedMetricSections, QueryMetricsParams } from '../../../types/Metrics.interfaces';
 
 export interface MetricsProps {
@@ -51,8 +52,8 @@ const Metrics: FC<MetricsProps> = function (props) {
   const showHttp = !!availableProtocols?.includes(Protocols.Http) || !!availableProtocols?.includes(Protocols.Http2);
 
   return (
-    <Stack hasGutter>
-      <StackItem style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+    <>
+      <div style={{ position: 'sticky', top: 0, zIndex: 1, backgroundColor: hexColors.White }}>
         <MetricFilters
           configFilters={configFilters}
           defaultMetricFilterValues={defaultMetricFilterValues}
@@ -64,65 +65,70 @@ const Metrics: FC<MetricsProps> = function (props) {
           onRefetch={triggerMetricUpdate}
           onSelectFilters={handleFilterChange}
         />
-      </StackItem>
-      <StackItem>
-        <Traffic
-          selectedFilters={queryParams}
-          forceUpdate={shouldUpdateData}
-          openSections={defaultOpenSections?.byterate}
-          onGetIsSectionExpanded={handleSectionToggle}
-        />
-      </StackItem>
-      <StackItem>
-        <TcpConnection
-          selectedFilters={queryParams}
-          forceUpdate={shouldUpdateData}
-          openSections={defaultOpenSections?.connection}
-          onGetIsSectionExpanded={handleSectionToggle}
-        />
-      </StackItem>
+      </div>
 
-      <StackItem>
-        <Latency
-          title={MetricsLabels.LatencyTitleOut}
-          selectedFilters={{ ...queryParams, direction: Direction.Incoming }}
-          openSections={defaultOpenSections?.latency}
-          forceUpdate={shouldUpdateData}
-          onGetIsSectionExpanded={handleSectionToggle}
-        />
-      </StackItem>
+      <Stack hasGutter>
+        <StackItem>
+          <Traffic
+            selectedFilters={queryParams}
+            forceUpdate={shouldUpdateData}
+            openSections={defaultOpenSections?.byterate}
+            onGetIsSectionExpanded={handleSectionToggle}
+          />
+        </StackItem>
 
-      <StackItem>
-        <Latency
-          title={MetricsLabels.LatencyTitleIn}
-          selectedFilters={{ ...queryParams, direction: Direction.Outgoing }}
-          openSections={defaultOpenSections?.latency}
-          forceUpdate={shouldUpdateData}
-          onGetIsSectionExpanded={handleSectionToggle}
-        />
-      </StackItem>
+        <StackItem>
+          <TcpConnection
+            selectedFilters={queryParams}
+            forceUpdate={shouldUpdateData}
+            openSections={defaultOpenSections?.connection}
+            onGetIsSectionExpanded={handleSectionToggle}
+          />
+        </StackItem>
 
-      {showHttp && (
-        <>
-          <StackItem>
-            <Request
-              selectedFilters={queryParams}
-              openSections={defaultOpenSections?.request}
-              forceUpdate={shouldUpdateData}
-              onGetIsSectionExpanded={handleSectionToggle}
-            />
-          </StackItem>
-          <StackItem>
-            <Response
-              selectedFilters={queryParams}
-              openSections={defaultOpenSections?.response}
-              forceUpdate={shouldUpdateData}
-              onGetIsSectionExpanded={handleSectionToggle}
-            />
-          </StackItem>
-        </>
-      )}
-    </Stack>
+        <StackItem>
+          <Latency
+            title={MetricsLabels.LatencyTitleOut}
+            selectedFilters={{ ...queryParams, direction: Direction.Incoming }}
+            openSections={defaultOpenSections?.latency}
+            forceUpdate={shouldUpdateData}
+            onGetIsSectionExpanded={handleSectionToggle}
+          />
+        </StackItem>
+
+        <StackItem>
+          <Latency
+            title={MetricsLabels.LatencyTitleIn}
+            selectedFilters={{ ...queryParams, direction: Direction.Outgoing }}
+            openSections={defaultOpenSections?.latency}
+            forceUpdate={shouldUpdateData}
+            onGetIsSectionExpanded={handleSectionToggle}
+          />
+        </StackItem>
+
+        {showHttp && (
+          <>
+            <StackItem>
+              <Request
+                selectedFilters={queryParams}
+                openSections={defaultOpenSections?.request}
+                forceUpdate={shouldUpdateData}
+                onGetIsSectionExpanded={handleSectionToggle}
+              />
+            </StackItem>
+
+            <StackItem>
+              <Response
+                selectedFilters={queryParams}
+                openSections={defaultOpenSections?.response}
+                forceUpdate={shouldUpdateData}
+                onGetIsSectionExpanded={handleSectionToggle}
+              />
+            </StackItem>
+          </>
+        )}
+      </Stack>
+    </>
   );
 };
 

@@ -6,4 +6,3 @@ import { TopologyPaths } from '../pages/Topology/Topology.constants';
 
 // Navigation config
 export const ROUTES = [TopologyPaths, ServicesPaths, SitesPaths, ComponentsPaths, ProcessesPaths];
-export const DEFAULT_ROUTE = ROUTES[0].path;

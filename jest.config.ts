@@ -20,7 +20,14 @@ const config = {
   moduleNameMapper: {
     '\\.(css|svg)$': `${ROOT_PROJECT}/${FILE_MOCK}`
   },
-  coveragePathIgnorePatterns: ['API', './src/index.tsx', 'routes.tsx', './src/config', 'core/components/SkGraph']
+  coveragePathIgnorePatterns: [
+    './src/index.tsx',
+    './src/config',
+    'API',
+    'routes',
+    'providers',
+    'core/components/SkGraph'
+  ]
 };
 
 export default config;
