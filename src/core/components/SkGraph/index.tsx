@@ -30,7 +30,7 @@ const SkGraph: FC<SkGraphProps> = memo(
     savePositions = true
   }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
-    const topologyGraphRef = useRef<Graph>();
+    const topologyGraphRef = useRef<Graph>(null);
 
     const prevNodesRef = useRef<GraphNode[]>(nodesWithoutPosition);
     const prevEdgesRef = useRef<GraphEdge[]>(edges);
@@ -77,7 +77,7 @@ const SkGraph: FC<SkGraphProps> = memo(
     };
 
     /** Creates network topology instance */
-    const graphRef = useCallback(async ($node: HTMLDivElement) => {
+    const graphRef = useCallback(($node: HTMLDivElement) => {
       if (nodesWithoutPosition && !topologyGraphRef.current) {
         const nodes = savePositions ? GraphController.addPositionsToNodes(nodesWithoutPosition) : nodesWithoutPosition;
 
@@ -111,11 +111,13 @@ const SkGraph: FC<SkGraphProps> = memo(
           onClickEdge?.(target.id === (selected.length && selected[0].id) ? null : data);
         });
 
-        await graph.render();
-        graph.fitView();
+        graph.render().then(() => {
+          graph.fitView(); // Fit the view after render
 
-        topologyGraphRef.current = graph;
-        setIsGraphLoaded(true);
+          // Store the graph instance and set the state
+          topologyGraphRef.current = graph;
+          setIsGraphLoaded(true); // Mark the graph as loaded
+        });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

@@ -50,7 +50,7 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
   });
 
   const [placeholder, setPlaceholder] = useState(`${selected.length} routing keys selected`);
-  const textInputRef = useRef<HTMLInputElement>();
+  const textInputRef = useRef<HTMLInputElement>(null);
 
   const handleSelectService = (item: string) => {
     selectService(item);

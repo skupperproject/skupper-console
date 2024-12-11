@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactElement } from 'react';
 
 import {
   Card,
@@ -28,7 +28,7 @@ import { ProcessesLabels } from '../Processes.enum';
 
 interface DetailsProps {
   process: ProcessResponse;
-  title?: string | JSX.Element;
+  title?: string | ReactElement;
 }
 
 const Details: FC<DetailsProps> = function ({ process, title }) {

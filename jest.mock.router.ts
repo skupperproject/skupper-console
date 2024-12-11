@@ -22,7 +22,7 @@ jest.mock('react-router', () => ({
 
 // 4. Define mock functions for useNavigate and useParams
 export const mockNavigate = jest.fn();
-export const mockUseParams = jest.fn();
+const mockUseParams = jest.fn();
 
 // 5. Import hooks from 'react-router' to mock their implementations
 import { useNavigate, useParams } from 'react-router';

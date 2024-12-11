@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 import { Button, Icon, Popover, Content } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon, InfoCircleIcon } from '@patternfly/react-icons';
 
@@ -7,7 +9,7 @@ const WarningMessage =
 const statusMap: Record<
   string,
   {
-    icon: JSX.Element;
+    icon: ReactElement;
     status: 'success' | 'danger' | 'warning' | undefined;
     text: 'up' | 'down';
   }
