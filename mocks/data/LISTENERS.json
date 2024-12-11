@@ -1,5 +1,4 @@
 {
-  "count": 30,
   "results": [
     {
       "address": "adservice",
@@ -421,6 +420,5 @@
       "siteName": "london",
       "startTime": 1733493696546846
     }
-  ],
-  "timeRangeCount": 30
+  ]
 }

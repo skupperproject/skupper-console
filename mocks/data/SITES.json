@@ -1,5 +1,4 @@
 {
-  "count": 3,
   "results": [
     {
       "endTime": 0,
@@ -33,7 +32,17 @@
       "routerCount": 1,
       "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
       "startTime": 1733493473000000
+    },
+    {
+      "endTime": 0,
+      "identity": "12345678-abcd-4321-efgh-87654321abcd",
+      "name": "Sidney",
+      "nameSpace": "vb-boutique-d",
+      "platform": "podman",
+      "provider": "podman",
+      "routerCount": 2,
+      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "startTime": 1733493000000000
     }
-  ],
-  "timeRangeCount": 3
+  ]
 }

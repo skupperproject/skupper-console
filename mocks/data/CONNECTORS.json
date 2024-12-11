@@ -1,5 +1,4 @@
 {
-  "count": 11,
   "results": [
     {
       "address": "shippingservice",
@@ -178,6 +177,5 @@
       "startTime": 1733493802664920,
       "target": "paymentservice-69f99b8c87-kztsn"
     }
-  ],
-  "timeRangeCount": 11
+  ]
 }

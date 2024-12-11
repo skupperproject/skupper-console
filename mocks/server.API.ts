@@ -189,19 +189,34 @@ export const MockApi = {
   getSitePairs: (_: unknown, { queryParams }: ApiProps) => {
     const results = getMockData(sitePairs.results, ITEM_COUNT > 0);
     const filteredResults = filterResults(results, queryParams);
-    return { ...processPairs, results: filteredResults };
+
+    return {
+      results: filteredResults,
+      count: filteredResults.length,
+      timeRangeCount: filteredResults.length
+    };
   },
 
   getComponentPairs: (_: unknown, { queryParams }: ApiProps) => {
     const results = getMockData(componentPairs.results, ITEM_COUNT > 0);
     const filteredResults = filterResults(results, queryParams);
-    return { ...componentPairs, results: filteredResults };
+
+    return {
+      results: filteredResults,
+      count: filteredResults.length,
+      timeRangeCount: filteredResults.length
+    };
   },
 
   getProcessPairs: (_: unknown, { queryParams }: ApiProps) => {
     const results = getMockData(processPairs.results, ITEM_COUNT > 0);
     const filteredResults = filterResults(results, queryParams);
-    return { ...processPairs, results: filteredResults };
+
+    return {
+      results: filteredResults,
+      count: filteredResults.length,
+      timeRangeCount: filteredResults.length
+    };
   },
 
   getProcessPair: (_: unknown, { params: { id } }: ApiProps) => {

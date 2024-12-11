@@ -1,5 +1,4 @@
 {
-  "count": 23,
   "results": [
     {
       "connectorError": null,
@@ -810,6 +809,5 @@
       "traceRouters": ["0/london-skupper-router-758f596f49-tqw2g", "0/dallas-skupper-router-dbc7f7c78-rrrpk"],
       "traceSites": ["london", "dallas"]
     }
-  ],
-  "timeRangeCount": 23
+  ]
 }

@@ -1,5 +1,4 @@
 {
-  "count": 3,
   "results": [
     {
       "cost": 25,
@@ -9,7 +8,7 @@
       "destinationSiteName": "london",
       "endTime": 0,
       "identity": "rrrpk:16",
-      "name": "london-link",
+      "name": "dallas-london-link",
       "octets": 0,
       "octetsReverse": 0,
       "role": "inter-router",
@@ -29,7 +28,7 @@
       "destinationSiteName": "dallas",
       "endTime": 0,
       "identity": "s86xq:15",
-      "name": "dallas-link",
+      "name": "malaga-dallas-link",
       "octets": 0,
       "octetsReverse": 0,
       "role": "inter-router",
@@ -49,7 +48,7 @@
       "destinationSiteName": "london",
       "endTime": 0,
       "identity": "s86xq:16",
-      "name": "london-link",
+      "name": "malaga-london-link",
       "octets": 0,
       "octetsReverse": 0,
       "role": "inter-router",
@@ -60,7 +59,46 @@
       "sourceSiteName": "malaga",
       "startTime": 1733495315027314,
       "status": "up"
+    },
+    {
+      "cost": 30,
+      "destinationRouterId": "s86xq:0",
+      "destinationRouterName": "0/malaga-skupper-router-68665b86cd-s86xq",
+      "destinationSiteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
+      "destinationSiteName": "malaga",
+      "endTime": 0,
+      "identity": "sidney-link:01",
+      "name": "sidney-malaga-link",
+      "octets": 0,
+      "octetsReverse": 0,
+      "role": "inter-router",
+      "routerAccessId": "s86xq:1",
+      "routerId": "12345678-abcd-4321-efgh-87654321abcd",
+      "routerName": "0/sidney-skupper-router-12345678-abcd",
+      "sourceSiteId": "12345678-abcd-4321-efgh-87654321abcd",
+      "sourceSiteName": "sidney",
+      "startTime": 1733493000000000,
+      "status": "down"
+    },
+    {
+      "cost": 35,
+      "destinationRouterId": "tqw2g:0",
+      "destinationRouterName": "0/london-skupper-router-758f596f49-tqw2g",
+      "destinationSiteId": "49becd97-6e22-4645-a22f-b5b98c89d827",
+      "destinationSiteName": "london",
+      "endTime": 0,
+      "identity": "sidney-link:02",
+      "name": "sidney-london-link",
+      "octets": 0,
+      "octetsReverse": 0,
+      "role": "inter-router",
+      "routerAccessId": "tqw2g:1",
+      "routerId": "12345678-abcd-4321-efgh-87654321abcd",
+      "routerName": "0/sidney-skupper-router-12345678-abcd",
+      "sourceSiteId": "12345678-abcd-4321-efgh-87654321abcd",
+      "sourceSiteName": "sidney",
+      "startTime": 1733500000000000,
+      "status": "partially up"
     }
-  ],
-  "timeRangeCount": 3
+  ]
 }

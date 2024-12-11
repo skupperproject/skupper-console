@@ -1,5 +1,4 @@
 {
-  "count": 12,
   "results": [
     {
       "destinationId": "49becd97-6e22-4645-a22f-b5b98c89d827",
@@ -145,6 +144,5 @@
       "sourceName": "london",
       "startTime": 1733494410773087
     }
-  ],
-  "timeRangeCount": 12
+  ]
 }
