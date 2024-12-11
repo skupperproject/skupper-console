@@ -22,7 +22,7 @@ const TransitionPage: FC<{ children: ReactElement; delay?: number; style?: CSSPr
         initial="out"
         animate="in"
         exit="out"
-        transition={{ delay, duration: 0.3, ease: 'easeInOut' }}
+        transition={{ delay, duration: 0.25, ease: 'easeInOut' }}
         variants={transition}
         style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', ...props.style }}
       >

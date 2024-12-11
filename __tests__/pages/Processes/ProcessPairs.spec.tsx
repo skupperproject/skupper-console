@@ -2,8 +2,6 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
-import * as router from 'react-router';
-
 
 import processPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '../../../mocks/server';
@@ -14,10 +12,13 @@ import { Providers } from '../../../src/providers';
 import { ProcessesLabels } from '../../../src/pages/Processes/Processes.enum';
 import ProcessPair, { ProcessPairContent } from '../../../src/pages/Processes/views/ProcessPair';
 import { PairsResponse } from '../../../src/types/REST.interfaces';
+import { setMockUseParams } from '../../../jest.mock.router';
 
 const processPairsResultOpToCart = processPairsData.results[0] as PairsResponse; // HTTP2 flow
 const processPairsResultDatabaseToPayment = processPairsData.results[6] as PairsResponse; // old TCP flow and active TCP flow
 const processPairsResultPayment2toCatalog = processPairsData.results[18] as PairsResponse; // old TCP flow
+
+setMockUseParams({ id: `${'test'}@${processPairsResultOpToCart.identity}` });
 
 describe('Begin testing the Processes component', () => {
   let server: Server;
@@ -25,7 +26,6 @@ describe('Begin testing the Processes component', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
-    jest.spyOn(router, 'useParams').mockReturnValue({ id: `${'test'}@${processPairsResultOpToCart.identity}` });
   });
 
   afterEach(() => {

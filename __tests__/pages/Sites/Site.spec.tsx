@@ -2,8 +2,6 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved, waitFor } from '@testing-library/react';
 import { Server } from 'miragejs';
-import * as router from 'react-router';
-
 
 import processesData from '../../../mocks/data/PROCESSES.json';
 import sitesData from '../../../mocks/data/SITES.json';
@@ -16,9 +14,12 @@ import { ProcessesRoutesPaths } from '../../../src/pages/Processes/Processes.enu
 import { SiteLabels } from '../../../src/pages/Sites/Sites.enum';
 import Site from '../../../src/pages/Sites/views/Site';
 import { ProcessResponse, SiteResponse } from '../../../src/types/REST.interfaces';
+import { setMockUseParams } from '../../../jest.mock.router';
 
 const siteResults = sitesData.results as SiteResponse[];
 const processResults = processesData.results as ProcessResponse[];
+
+setMockUseParams({ id: `${siteResults[0].name}@${siteResults[0].identity}` });
 
 describe('Site component', () => {
   let server: Server;
@@ -26,9 +27,6 @@ describe('Site component', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
-    // Mock URL query parameters and inject them into the component
-    jest.spyOn(router, 'useParams').mockReturnValue({ id: `${siteResults[0].name}@${siteResults[0].identity}` });
-
     render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
