@@ -7,7 +7,7 @@ export const RouterProvider = function ({ children }: { children: ReactNode }) {
     <HashRouter
       future={{
         v7_relativeSplatPath: true,
-        v7_startTransition: false
+        v7_startTransition: true
       }}
     >
       {children}

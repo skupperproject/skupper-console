@@ -1,9 +1,7 @@
-import { Suspense, lazy } from 'react';
+import { lazy } from 'react';
 
 import { Page } from '@patternfly/react-core';
 import { AnimatePresence } from 'framer-motion';
-
-import LoadingPage from './core/components/SkLoading';
 
 const SkBreadcrumb = lazy(() => import('./core/components/SkBreadcrumb'));
 const SkHeader = lazy(() => import('./layout/Header'));
@@ -21,11 +19,9 @@ const App = function () {
       isContentFilled
       isManagedSidebar
     >
-      <Suspense fallback={<LoadingPage />}>
-        <AnimatePresence mode="wait">
-          <RouteContainer />
-        </AnimatePresence>
-      </Suspense>
+      <AnimatePresence mode="wait">
+        <RouteContainer />
+      </AnimatePresence>
     </Page>
   );
 };
