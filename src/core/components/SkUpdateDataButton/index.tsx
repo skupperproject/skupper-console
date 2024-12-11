@@ -55,7 +55,7 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
     getDataFromSession(REFRESH_INTERVAL_KEY) || refreshIntervalDefault || `${refreshDataIntervalMap[0].id}`
   );
 
-  const refreshIntervalId = useRef<number>();
+  const refreshIntervalId = useRef<number>(0);
 
   const revalidateLiveQueries = useCallback(() => {
     queryClient.invalidateQueries({

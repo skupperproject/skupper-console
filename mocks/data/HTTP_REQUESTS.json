@@ -1,5 +1,4 @@
 {
-  "count": 26,
   "results": [
     {
       "connectionId": "s86xq:20",
@@ -599,6 +598,5 @@
       "octets": 0,
       "octetsReverse": 0
     }
-  ],
-  "timeRangeCount": 26
+  ]
 }

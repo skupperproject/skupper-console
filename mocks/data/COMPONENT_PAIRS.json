@@ -1,5 +1,4 @@
 {
-  "count": 28,
   "results": [
     {
       "destinationId": "pg-f027f5b8c969c415",
@@ -337,6 +336,5 @@
       "sourceName": "frontend",
       "startTime": 1733494357355985
     }
-  ],
-  "timeRangeCount": 28
+  ]
 }

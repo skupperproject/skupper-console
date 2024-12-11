@@ -1,5 +1,4 @@
 {
-  "count": 10,
   "results": [
     {
       "connectorCount": 1,
@@ -121,6 +120,5 @@
       "protocol": "tcp",
       "startTime": 1733493694088604
     }
-  ],
-  "timeRangeCount": 10
+  ]
 }

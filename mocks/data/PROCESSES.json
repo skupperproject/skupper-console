@@ -1,5 +1,4 @@
 {
-  "count": 13,
   "results": [
     {
       "addresses": null,
@@ -209,6 +208,5 @@
       "sourceHost": "172.17.27.140",
       "startTime": 1728076312000000
     }
-  ],
-  "timeRangeCount": 13
+  ]
 }

@@ -63,7 +63,7 @@ const TopologySite: FC<{
 
   const handleShowLinkDetails = (data: GraphEdge | null) => {
     if (data) {
-      const type = data.type === 'SkSiteEdge' ? SiteLabels.Links : SiteLabels.Pairs;
+      const type = data.type.includes('SkSiteEdge') ? SiteLabels.Links : SiteLabels.Pairs;
       navigate(`${SitesRoutesPaths.Sites}/${data.sourceName}@${data.source}?type=${type}`);
     }
   };

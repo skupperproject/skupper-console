@@ -2,7 +2,6 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
-import * as router from 'react-router';
 
 import componentsData from '../../../mocks/data/COMPONENTS.json';
 import { loadMockServer } from '../../../mocks/server';
@@ -14,18 +13,17 @@ import { ComponentLabels } from '../../../src/pages/Components/Components.enum';
 import Component from '../../../src/pages/Components/views/Component';
 import { MetricsLabels } from '../../../src/pages/shared/Metrics/Metrics.enum';
 import { ComponentResponse } from '../../../src/types/REST.interfaces';
+import { setMockUseParams } from '../../../jest.mock.router';
 
 const componentResults = componentsData.results as ComponentResponse[];
+
+setMockUseParams({ id: `${componentResults[0].name}@${componentResults[0].identity}` });
 
 describe('Component component', () => {
   let server: Server;
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
-    // Mock URL query parameters and inject them into the component
-    jest
-      .spyOn(router, 'useParams')
-      .mockReturnValue({ id: `${componentResults[0].name}@${componentResults[0].identity}` });
 
     render(
       <Providers>

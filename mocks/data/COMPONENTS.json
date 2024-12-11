@@ -1,5 +1,4 @@
 {
-  "count": 12,
   "results": [
     {
       "endTime": 0,
@@ -97,6 +96,5 @@
       "processGroupRole": "external",
       "startTime": 1733495321535050
     }
-  ],
-  "timeRangeCount": 12
+  ]
 }

@@ -4,8 +4,7 @@ import { Button } from '@patternfly/react-core';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
-import * as router from 'react-router';
-
+import { mockNavigate } from '../../../jest.mock.router';
 import processesPairsData from '../../../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../../../mocks/data/PROCESSES.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
@@ -28,7 +27,6 @@ const processesResults = processesData.results as ProcessResponse[];
 const processesPairsResults = processesPairsData.results as ProcessPairsResponse[];
 const serviceResults = servicesData.results as ServiceResponse[];
 
-const mockNavigate = jest.fn();
 const mockHandleSelected = jest.fn();
 const mockHandleSearchText = jest.fn();
 const mockHandleShowOnlyNeighbours = jest.fn();
@@ -92,7 +90,6 @@ describe('Topology Process', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
-    jest.spyOn(router, 'useNavigate').mockImplementation(() => mockNavigate);
 
     render(
       <Providers>
