@@ -18,7 +18,7 @@
 
 ## Network console V2
 
-Skupper Console is a web-based graphical user interface (GUI) designed for easy observability and monitoring of your [Skupper](https://github.com/skupperproject/skupper) network resources. With Skupper Console, you can visualize your network topology, explore components and endpoints, and monitor traffic patterns to gain valuable insights into the health and performance of your Skupper infrastructure. Whether you are a developer or a network operator, Skupper Console makes it easy to stay on top of your Skupper network by providing an intuitive and user-friendly interface.
+The Network Console is a web-based graphical user interface (GUI) designed for easy observability and monitoring of your [Skupper](https://github.com/skupperproject/skupper) network resources. With the Network Console, you can visualize your network topology, explore components and endpoints, and monitor traffic patterns to gain valuable insights into the health and performance of your Skupper infrastructure. Whether you are a developer or a network operator, Network Console makes it easy to stay on top of your Skupper network by providing an intuitive and user-friendly interface.
 
 ## Status
 
@@ -28,7 +28,7 @@ This demo is synchronized with the latest version of the Skupper or a modified v
 
 ## Enable the console from Skupper
 
-To access the Web console in [Skupper](https://github.com/skupperproject/skupper) version 1.3 and above, please refer to the step-by-step instructions provided in this [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/index.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
+To access the Network console in [Skupper](https://github.com/skupperproject/skupper) version 2 and above, please refer to the step-by-step instructions provided in this [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/index.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
 
 ## Development
 
@@ -124,6 +124,7 @@ The project has the following directory structure:
 - `src`: Contains the source and test code of the application, including all the React components, utility functions, and data models.
   - `API`: Contains the Api, which is responsible for handling all the network requests and data fetching for the application.
   - `assets`: Contains images and other assets used in the application, such as icons, logos, and background images.
+  - `config`: Contains the configuration files for the application, such as the environment variables, constants, or settings used throughout the application.
   - `core/components`: Contains generic and reusable React components, such as Navbar, topology graph, and table, that can be used throughout the application.
   - `core/utils`: Contains generic app functionalities such as date and formatting utilities that are used throughout the application.
   - `layout`: Contains the components that form the foundation of the application's structure, such as the header, footer, and navigation menu.
@@ -131,9 +132,9 @@ The project has the following directory structure:
     - `<page>/components`: Contains the components of a particular view, such as the list and details.
     - `<page>/services`: Contains data utilities for a specific page, such as filtering or sorting the products on the product list page.
     - `<page>/views`: Contains a collection of views for a particular page, such as the list view or details view.
-  - `types`: Includes interfaces.
-  - `config`: Contains the configuration files for the application, such as the environment variables, constants, or settings used throughout the application.
-  - `routes`: Contains the aggregation of page routes, which define the mapping between URLs and components/views in the application.
+  - `providers`: Holds the context providers for the application.
+  - `routes`: Contains the aggregation of page routes, which define the mapping between URLs and components/views in the application..
+  - `types`: Defines TypeScript interfaces.
 
 ### Page sections
 
