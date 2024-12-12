@@ -2,7 +2,7 @@ import { FC, MouseEventHandler } from 'react';
 
 import { Button, Divider, List, ListItem, PageSection, Content, ContentVariants, Title } from '@patternfly/react-core';
 
-import { HttpErrorLabels } from './Http.enum';
+import { Labels } from '../../../../config/labels';
 
 const ErrorHttp: FC<{ code?: string; message?: string; onReset?: MouseEventHandler<HTMLButtonElement> }> = function ({
   code,
@@ -12,7 +12,7 @@ const ErrorHttp: FC<{ code?: string; message?: string; onReset?: MouseEventHandl
   return (
     <PageSection hasBodyWrapper={false}>
       <Content>
-        <Title headingLevel="h1">{message || HttpErrorLabels.ErrorTitle}</Title>
+        <Title headingLevel="h1">{message || Labels.HttpError}</Title>
         <Title headingLevel="h2">{code || ''}</Title>
         <Divider />
 

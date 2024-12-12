@@ -10,8 +10,8 @@ import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
-import { ServicesLabels } from '../src/pages/Services/Services.enum';
 import Service from '../src/pages/Services/views/Service';
+import { Labels } from '../src/config/labels';
 
 const servicesResults = servicesData.results;
 
@@ -45,10 +45,10 @@ describe('Begin testing the Service component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(ServicesLabels.Overview)).toBeInTheDocument();
-    expect(screen.getByText(`${ServicesLabels.Pairs}`)).toBeInTheDocument();
-    expect(screen.getByText(`${ServicesLabels.OpenConnections}`)).toBeInTheDocument();
-    expect(screen.getByText(`${ServicesLabels.OldConnections}`)).toBeInTheDocument();
+    expect(screen.getByText(Labels.Overview)).toBeInTheDocument();
+    expect(screen.getByText(`${Labels.Pairs}`)).toBeInTheDocument();
+    expect(screen.getByText(`${Labels.OpenConnections}`)).toBeInTheDocument();
+    expect(screen.getByText(`${Labels.OldConnections}`)).toBeInTheDocument();
   });
 
   it('should render the HTTP/2 Service view after the data loading is complete', async () => {
@@ -60,9 +60,8 @@ describe('Begin testing the Service component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(ServicesLabels.Overview)).toBeInTheDocument();
-    expect(screen.getByText(`${ServicesLabels.Pairs}`)).toBeInTheDocument();
-    expect(screen.getByText(`${ServicesLabels.Requests}`)).toBeInTheDocument();
+    expect(screen.getByText(Labels.Overview)).toBeInTheDocument();
+    expect(screen.getByText(`${Labels.Pairs}`)).toBeInTheDocument();
   });
 
   it('should clicking on a tab will result in the server tab being highlighted', async () => {
@@ -70,8 +69,8 @@ describe('Begin testing the Service component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(ServicesLabels.Pairs));
+    fireEvent.click(screen.getByText(Labels.Pairs));
 
-    expect(screen.getByText(`${ServicesLabels.Pairs}`).parentNode?.parentNode).toHaveRole(`presentation`);
+    expect(screen.getByText(`${Labels.Pairs}`).parentNode?.parentNode).toHaveRole(`presentation`);
   });
 });

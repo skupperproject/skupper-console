@@ -7,7 +7,7 @@ import { loadMockServer } from '../mocks/server';
 import { Protocols } from '../src/API/REST.enum';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import MetricFilters from '../src/pages/shared/Metrics/components/Filters';
-import { MetricsLabels } from '../src/pages/shared/Metrics/Metrics.enum';
+import { Labels } from '../src/config/labels';
 
 describe('Metrics component', () => {
   let server: Server;
@@ -38,9 +38,9 @@ describe('Metrics component', () => {
         ]}
         availableProtocols={[Protocols.Http, Protocols.Http2, Protocols.Tcp]}
         configFilters={{
-          destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
-          sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
-          protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
+          destinationProcesses: { disabled: false, placeholder: Labels.AllConnectedProcesses },
+          sourceProcesses: { disabled: false, placeholder: Labels.AllSourceProcesses },
+          protocols: { disabled: false, placeholder: Labels.AllProtocols }
         }}
         defaultMetricFilterValues={{ sourceProcess: undefined }}
         isRefetching={false}
@@ -49,37 +49,34 @@ describe('Metrics component', () => {
       />
     );
 
-    fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceProcesses));
+    fireEvent.click(screen.getByText(Labels.AllSourceProcesses));
     await waitFor(() => expect(screen.getByText(processesData.results[0].name)).toBeInTheDocument(), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
     fireEvent.click(screen.getByText(processesData.results[0].name));
-    await waitFor(() => expect(screen.queryByText(MetricsLabels.FilterAllSourceProcesses)).not.toBeInTheDocument(), {
+    await waitFor(() => expect(screen.queryByText(Labels.AllSourceProcesses)).not.toBeInTheDocument(), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationProcesses));
+    fireEvent.click(screen.getByText(Labels.AllConnectedProcesses));
     await waitFor(() => expect(screen.getByText(processesData.results[3].name)).toBeInTheDocument(), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
     fireEvent.click(screen.getByText(processesData.results[3].name));
-    await waitFor(
-      () => expect(screen.queryByText(MetricsLabels.FilterAllDestinationProcesses)).not.toBeInTheDocument(),
-      {
-        timeout: waitForElementToBeRemovedTimeout
-      }
-    );
+    await waitFor(() => expect(screen.queryByText(Labels.AllConnectedProcesses)).not.toBeInTheDocument(), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
-    fireEvent.click(screen.getByText(MetricsLabels.FilterAllSourceSites));
+    fireEvent.click(screen.getByText(Labels.AllSourceSites));
     await waitFor(() => expect(screen.getByText(siteData.results[0].name)).toBeInTheDocument()),
       {
         timeout: waitForElementToBeRemovedTimeout
       };
 
     fireEvent.click(screen.getByText(siteData.results[0].name));
-    await waitFor(() => expect(screen.queryByText(MetricsLabels.FilterAllSourceSites)).not.toBeInTheDocument(), {
+    await waitFor(() => expect(screen.queryByText(Labels.AllSourceSites)).not.toBeInTheDocument(), {
       timeout: waitForElementToBeRemovedTimeout
     });
   });
@@ -101,9 +98,9 @@ describe('Metrics component', () => {
         ]}
         availableProtocols={[Protocols.Http, Protocols.Http2, Protocols.Tcp]}
         configFilters={{
-          destinationProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllDestinationProcesses },
-          sourceProcesses: { disabled: false, placeholder: MetricsLabels.FilterAllSourceProcesses },
-          protocols: { disabled: false, placeholder: MetricsLabels.FilterProtocolsDefault }
+          destinationProcesses: { disabled: false, placeholder: Labels.AllConnectedProcesses },
+          sourceProcesses: { disabled: false, placeholder: Labels.AllSourceProcesses },
+          protocols: { disabled: false, placeholder: Labels.AllProtocols }
         }}
         defaultMetricFilterValues={{ sourceProcess: undefined }}
         isRefetching={false}
@@ -112,13 +109,13 @@ describe('Metrics component', () => {
       />
     );
 
-    fireEvent.click(screen.getByText(MetricsLabels.FilterAllDestinationSites));
+    fireEvent.click(screen.getByText(Labels.AllConnectedSites));
     await waitFor(() => expect(screen.getByText(siteData.results[2].name)).toBeInTheDocument(), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
     fireEvent.click(screen.getByText(siteData.results[2].name));
-    await waitFor(() => expect(screen.queryByText(MetricsLabels.FilterAllDestinationSites)).not.toBeInTheDocument(), {
+    await waitFor(() => expect(screen.queryByText(Labels.AllConnectedSites)).not.toBeInTheDocument(), {
       timeout: waitForElementToBeRemovedTimeout
     });
   });

@@ -4,12 +4,12 @@ import { Card, Stack, StackItem } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 
 import { SMALL_PAGINATION_SIZE } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import SKEmptyData from '../../../core/components/SkEmptyData';
 import SkTable from '../../../core/components/SkTable';
 import { SiteResponse } from '../../../types/REST.interfaces';
 import { useSiteLinksData } from '../hooks/useSiteLinksData';
 import { customSiteCells, linksColumns, linksRemoteColumns } from '../Sites.constants';
-import { SiteLabels } from '../Sites.enum';
 
 interface PairsListProps {
   site: SiteResponse;
@@ -33,7 +33,7 @@ const Links: FC<PairsListProps> = function ({ site: { identity: id } }) {
       {!!links.length && (
         <StackItem>
           <SkTable
-            title={SiteLabels.OutLinks}
+            title={Labels.OutLinks}
             columns={linksColumns}
             rows={links}
             pagination={true}
@@ -47,7 +47,7 @@ const Links: FC<PairsListProps> = function ({ site: { identity: id } }) {
       {!!remoteLinks.length && (
         <StackItem>
           <SkTable
-            title={SiteLabels.InLinks}
+            title={Labels.InLinks}
             columns={linksRemoteColumns}
             rows={remoteLinks}
             pagination={true}

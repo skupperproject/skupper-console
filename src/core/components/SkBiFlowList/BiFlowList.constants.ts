@@ -1,6 +1,6 @@
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
-import { BiFlowListLabels } from './BiFlowList.enum';
+import { Labels } from '../../../config/labels';
 import { ProcessesRoutesPaths } from '../../../pages/Processes/Processes.enum';
 import { SitesRoutesPaths } from '../../../pages/Sites/Sites.enum';
 import { BiFlowResponse, TransportFlowResponse } from '../../../types/REST.interfaces';
@@ -43,56 +43,56 @@ export const customCells = {
 // no wrap fix the column
 export const tcpBiFlowColumns: SKTableColumn<TransportFlowResponse>[] = [
   {
-    name: BiFlowListLabels.Closed,
+    name: Labels.Closed,
     prop: 'endTime',
     customCellName: 'TimestampCell'
   },
   {
-    name: BiFlowListLabels.Duration,
+    name: Labels.Duration,
     prop: 'duration',
     customCellName: 'DurationCell'
   },
   {
-    name: BiFlowListLabels.Client,
+    name: Labels.Client,
     prop: 'sourceProcessName',
     customCellName: 'ProcessNameLinkCell'
   },
   {
-    name: BiFlowListLabels.Site,
+    name: Labels.Site,
     prop: 'sourceSiteName',
     customCellName: 'SiteNameLinkCell'
   },
   {
-    name: BiFlowListLabels.Server,
+    name: Labels.Server,
     prop: 'destProcessName',
     customCellName: 'TargetProcessNameLinkCell'
   },
   {
-    name: BiFlowListLabels.ServerSite,
+    name: Labels.ServerSite,
     prop: 'destSiteName',
     customCellName: 'TargetSiteNameLinkCell'
   },
   {
-    name: BiFlowListLabels.Port,
+    name: Labels.Port,
     prop: 'sourcePort' as keyof BiFlowResponse
   },
   {
-    name: BiFlowListLabels.TxBytes,
+    name: Labels.BytesOut,
     prop: 'octets',
     format: formatBytes
   },
   {
-    name: BiFlowListLabels.RxBytes,
+    name: Labels.BytesIn,
     prop: 'octetsReverse',
     format: formatBytes
   },
   {
-    name: BiFlowListLabels.TxLatency,
+    name: Labels.LatencyOut,
     prop: 'latency',
     format: formatLatency
   },
   {
-    name: BiFlowListLabels.RxLatency,
+    name: Labels.LatencyIn,
     prop: 'latencyReverse',
     format: formatLatency
   },
@@ -105,49 +105,49 @@ export const tcpBiFlowColumns: SKTableColumn<TransportFlowResponse>[] = [
 
 export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   {
-    name: BiFlowListLabels.Completed,
+    name: Labels.Completed,
     prop: 'endTime',
     customCellName: 'TimestampCell'
   },
   {
-    name: BiFlowListLabels.From,
+    name: Labels.FromClient,
     prop: 'sourceProcessName',
     customCellName: 'ProcessNameLinkCell'
   },
   {
-    name: BiFlowListLabels.Site,
+    name: Labels.Site,
     prop: 'sourceSiteName',
     customCellName: 'SiteNameLinkCell'
   },
   {
-    name: BiFlowListLabels.To,
+    name: Labels.ToServer,
     prop: 'destProcessName',
     customCellName: 'TargetProcessNameLinkCell'
   },
   {
-    name: BiFlowListLabels.ServerSite,
+    name: Labels.ServerSite,
     prop: 'destSiteName',
     customCellName: 'TargetSiteNameLinkCell'
   },
   {
-    name: BiFlowListLabels.Protocol,
+    name: Labels.Protocol,
     prop: 'protocol'
   },
   {
-    name: BiFlowListLabels.StatusCode,
+    name: Labels.StatusCode,
     prop: 'status' as keyof BiFlowResponse
   },
   {
-    name: BiFlowListLabels.Method,
+    name: Labels.Method,
     prop: 'method' as keyof BiFlowResponse
   },
   {
-    name: BiFlowListLabels.TxBytes,
+    name: Labels.BytesOut,
     prop: 'octets',
     format: formatBytes
   },
   {
-    name: BiFlowListLabels.RxBytes,
+    name: Labels.BytesIn,
     prop: 'octetsReverse',
     format: formatBytes
   },
@@ -160,19 +160,19 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
 
 const defaultSelectOptions: SkSelectOption[] = [
   {
-    label: BiFlowListLabels.Client,
+    label: Labels.Client,
     id: 'sourceProcessName'
   },
   {
-    label: BiFlowListLabels.Server,
+    label: Labels.Server,
     id: 'destProcessName'
   },
   {
-    label: BiFlowListLabels.Site,
+    label: Labels.Site,
     id: 'sourceSiteName'
   },
   {
-    label: BiFlowListLabels.ServerSite,
+    label: Labels.ServerSite,
     id: 'destSiteName'
   }
 ];
@@ -180,15 +180,15 @@ const defaultSelectOptions: SkSelectOption[] = [
 export const httpSelectOptions: SkSelectOption[] = [
   ...defaultSelectOptions,
   {
-    label: BiFlowListLabels.Protocol,
+    label: Labels.Protocol,
     id: 'protocol'
   },
   {
-    label: BiFlowListLabels.StatusCode,
+    label: Labels.StatusCode,
     id: 'status'
   },
   {
-    label: BiFlowListLabels.Method,
+    label: Labels.Method,
     id: 'method'
   }
 ];

@@ -2,6 +2,7 @@ import { FC, useCallback, useState, startTransition } from 'react';
 
 import { Card, CardBody, CardHeader, Content, ContentVariants } from '@patternfly/react-core';
 
+import { Labels } from '../../../config/labels';
 import SkSankeyChart from '../../../core/components/SKSanckeyChart';
 import {
   ServiceClientResourceOptions,
@@ -9,7 +10,6 @@ import {
 } from '../../../core/components/SKSanckeyChart/SkSankey.constants';
 import { ServicesController } from '../services';
 import { defaultMetricOption as defaultMetric } from '../Services.constants';
-import { ServicesLabels } from '../Services.enum';
 
 interface Pairs {
   sourceName: string;
@@ -62,8 +62,8 @@ const PairsSankeyChart: FC<PairsSankeyChartProps> = function ({ pairs, showFilte
     <Card>
       <CardHeader>
         <Content>
-          <Content component={ContentVariants.h1}>{ServicesLabels.SankeyChartTitle}</Content>
-          <Content component="p">{ServicesLabels.SankeyChartDescription}</Content>
+          <Content component={ContentVariants.h1}>{Labels.SankeyChartTitle}</Content>
+          <Content component="p">{Labels.SankeyChartDescription}</Content>
         </Content>
       </CardHeader>
       <CardBody>

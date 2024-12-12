@@ -5,10 +5,10 @@ import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import LatencyCharts from './LatencyCharts';
+import { Labels } from '../../../../config/labels';
 import SKEmptyData from '../../../../core/components/SkEmptyData';
 import SkIsLoading from '../../../../core/components/SkIsLoading';
 import { QueryMetricsParams, QueriesMetrics } from '../../../../types/Metrics.interfaces';
-import { MetricsLabels } from '../Metrics.enum';
 import { MetricsController } from '../services';
 
 interface LatencyProps {
@@ -96,8 +96,8 @@ const Latency: FC<LatencyProps> = function ({
 
           {!isLoading && !isLoadingBuckets && (!data?.length || !bucketsData) && (
             <SKEmptyData
-              message={MetricsLabels.NoMetricFoundTitleMessage}
-              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              message={Labels.NoMetricFound}
+              description={Labels.NoMetricFoundDescription}
               icon={SearchIcon}
             />
           )}

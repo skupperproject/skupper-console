@@ -14,8 +14,8 @@ import {
 import { LaptopIcon, ServerIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
 
-import { BiFlowLabels } from './BiFlow.enum';
 import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import { ProcessesRoutesPaths } from '../../../pages/Processes/Processes.enum';
 import { formatBytes } from '../../utils/formatBytes';
 import { formatLatency } from '../../utils/formatLatency';
@@ -54,7 +54,7 @@ const FlowDetailsBase: FC<FlowDetailsBaseProps> = function ({
       <CardBody>
         <DescriptionList>
           <DescriptionListGroup>
-            <DescriptionListTerm>{BiFlowLabels.Process}</DescriptionListTerm>
+            <DescriptionListTerm>{Labels.Process}</DescriptionListTerm>
             <DescriptionListDescription>
               <>
                 <ResourceIcon type="process" />
@@ -62,10 +62,10 @@ const FlowDetailsBase: FC<FlowDetailsBaseProps> = function ({
               </>
             </DescriptionListDescription>
 
-            <DescriptionListTerm>{BiFlowLabels.BytesTransferred}</DescriptionListTerm>
+            <DescriptionListTerm>{Labels.BytesTransferred}</DescriptionListTerm>
             <DescriptionListDescription>{formatBytes(octets) || EMPTY_VALUE_SYMBOL}</DescriptionListDescription>
 
-            {latency !== undefined && <DescriptionListTerm>{BiFlowLabels.Latency}</DescriptionListTerm>}
+            {latency !== undefined && <DescriptionListTerm>{Labels.Latency}</DescriptionListTerm>}
             {latency !== undefined && (
               <DescriptionListDescription>{formatLatency(latency) || EMPTY_VALUE_SYMBOL}</DescriptionListDescription>
             )}

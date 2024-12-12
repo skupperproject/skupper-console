@@ -7,7 +7,7 @@ import SkSankeyChart, {
   valueFormat
 } from '../src/core/components/SKSanckeyChart/index';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../src/core/components/SKSanckeyChart/SkSankey.constants';
-import { MetricsLabels } from '../src/pages/shared/Metrics/Metrics.enum';
+import { Labels } from '../src/config/labels';
 
 describe('SkSankeyChart', () => {
   it('should return an empty string if the value is the default flow value', () => {
@@ -46,8 +46,8 @@ describe('SkSankeyChart', () => {
 
     render(<SkSankeyChart data={data} onSearch={jest.fn()} />);
 
-    expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.NoMetricFoundDescriptionMessage)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoMetricFound)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoMetricFoundDescription)).toBeInTheDocument();
   });
 
   it('should call the callback function when the class attribute changes', async () => {

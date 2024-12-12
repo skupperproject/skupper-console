@@ -12,8 +12,9 @@ import { SkEmptyDataLabels } from '../src/core/components/SkEmptyData';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
 import PairsList from '../src/pages/Processes/components/PairsList';
-import { ProcessesLabels, ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
+import { ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
 import { ProcessResponse, PairsResponse } from '../src/types/REST.interfaces';
+import { Labels } from '../src/config/labels';
 
 const data = processesData.results[0] as ProcessResponse;
 const dataNoPairs = {
@@ -50,9 +51,9 @@ describe('Process Pairs List component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByRole('link', { name: ProcessesLabels.GoToDetailsLink })[1]).toHaveAttribute(
+    expect(screen.getAllByRole('link', { name: Labels.ViewDetails })[1]).toHaveAttribute(
       'href',
-      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${ProcessesLabels.ProcessPairs}@${processPairsResult.identity}?type=${ProcessesLabels.ProcessPairs}`
+      `#${ProcessesRoutesPaths.Processes}/${processPairsResult.sourceName}@${processPairsResult.sourceId}/${Labels.Pairs}@${processPairsResult.identity}?type=${Labels.Pairs}`
     );
   });
 

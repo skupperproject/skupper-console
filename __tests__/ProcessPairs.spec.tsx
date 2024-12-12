@@ -9,10 +9,10 @@ import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
-import { ProcessesLabels } from '../src/pages/Processes/Processes.enum';
 import ProcessPair, { ProcessPairContent } from '../src/pages/Processes/views/ProcessPair';
 import { PairsResponse } from '../src/types/REST.interfaces';
 import { setMockUseParams } from '../jest.mock.router';
+import { Labels } from '../src/config/labels';
 
 const processPairsResultOpToCart = processPairsData.results[0] as PairsResponse; // HTTP2 flow
 const processPairsResultDatabaseToPayment = processPairsData.results[6] as PairsResponse; // old TCP flow and active TCP flow
@@ -63,7 +63,7 @@ describe('Begin testing the Processes component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByTestId(ProcessesLabels.Requests)).toBeInTheDocument();
+    expect(screen.getByTestId(Labels.Requests)).toBeInTheDocument();
   });
 
   it('should render render the TCP Process Pairs Content Component and the tab Open connection is active', async () => {
@@ -79,7 +79,7 @@ describe('Begin testing the Processes component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(getByTestId(ProcessesLabels.OpenConnections)).toBeInTheDocument();
+    expect(getByTestId(Labels.OpenConnections)).toBeInTheDocument();
   });
 
   it('should render render the TCP Process Pairs Content Component and the Tab connection history is active', async () => {
@@ -95,8 +95,8 @@ describe('Begin testing the Processes component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(getByText(ProcessesLabels.TerminatedConnections));
+    fireEvent.click(getByText(Labels.TerminatedConnections));
 
-    expect(getByTestId(ProcessesLabels.TerminatedConnections)).toBeInTheDocument();
+    expect(getByTestId(Labels.TerminatedConnections)).toBeInTheDocument();
   });
 });

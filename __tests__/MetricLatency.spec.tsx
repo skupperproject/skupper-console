@@ -11,7 +11,7 @@ import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
 import Latency from '../src/pages/shared/Metrics/components/Latency';
-import { MetricsLabels } from '../src/pages/shared/Metrics/Metrics.enum';
+import { Labels } from '../src/config/labels';
 import { ProcessResponse } from '../src/types/REST.interfaces';
 
 const processResult = processesData.results[0] as ProcessResponse;
@@ -35,7 +35,7 @@ describe('Latency component', () => {
       <Providers>
         <Suspense fallback={<LoadingPage />}>
           <Latency
-            title={MetricsLabels.LatencyTitleOut}
+            title={Labels.LatencyIn}
             selectedFilters={{
               sourceProcess: processResult.name
             }}
@@ -51,9 +51,9 @@ describe('Latency component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(MetricsLabels.LatencyTitleOut)).toBeInTheDocument();
+    expect(screen.getByText(Labels.LatencyIn)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByLabelText(MetricsLabels.LatencyTitleOut)?.querySelector('button')!);
+    fireEvent.click(screen.getByLabelText(Labels.LatencyIn)?.querySelector('button')!);
     expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 
@@ -79,7 +79,7 @@ describe('Latency component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.NoMetricFoundDescriptionMessage)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoMetricFound)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoMetricFoundDescription)).toBeInTheDocument();
   });
 });

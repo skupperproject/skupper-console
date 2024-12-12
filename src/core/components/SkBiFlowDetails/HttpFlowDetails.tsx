@@ -2,8 +2,8 @@ import { FC } from 'react';
 
 import { DescriptionListDescription, DescriptionListTerm } from '@patternfly/react-core';
 
-import { BiFlowLabels } from './BiFlow.enum';
 import FlowDetailsBase from './FlowDetailsBase';
+import { Labels } from '../../../config/labels';
 import { ApplicationFlowResponse } from '../../../types/REST.interfaces';
 
 interface HttpFlowDetailsProps {
@@ -34,13 +34,13 @@ const HttpFlowDetails: FC<HttpFlowDetailsProps> = function ({
         <>
           {methodResolved && (
             <>
-              <DescriptionListTerm>{BiFlowLabels.Method}</DescriptionListTerm>
+              <DescriptionListTerm>{Labels.Method}</DescriptionListTerm>
               <DescriptionListDescription>{methodResolved}</DescriptionListDescription>
             </>
           )}
           {resultResolved && (
             <>
-              <DescriptionListTerm>{BiFlowLabels.Status}</DescriptionListTerm>
+              <DescriptionListTerm>{Labels.Status}</DescriptionListTerm>
               <DescriptionListDescription>{resultResolved}</DescriptionListDescription>
             </>
           )}

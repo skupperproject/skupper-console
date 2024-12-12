@@ -17,7 +17,7 @@ import {
   SkSelectTypeHeadWithCheckboxUseDataUseDataProps
 } from './SkSelectTypeHeadWithCheckboxUseData';
 import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
-import { TopologyLabels } from '../../../pages/Topology/Topology.enum';
+import { Labels } from '../../../config/labels';
 
 interface SkSelectTypeHeadwithCheckboxProps extends SkSelectTypeHeadWithCheckboxUseDataUseDataProps {
   initIdsSelected: string[];
@@ -119,7 +119,7 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
       </SelectList>
       <MenuFooter>
         <Button variant="link" isInline onClick={selectAllServices}>
-          {TopologyLabels.DeselectAll}
+          {Labels.ClearAll}
         </Button>
       </MenuFooter>
     </Select>

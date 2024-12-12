@@ -11,7 +11,7 @@ import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
 import TcpConnection from '../src/pages/shared/Metrics/components/TcpConnection';
-import { MetricsLabels } from '../src/pages/shared/Metrics/Metrics.enum';
+import { Labels } from '../src/config/labels';
 import { ProcessResponse } from '../src/types/REST.interfaces';
 
 const processResult = processesData.results[0] as ProcessResponse;
@@ -50,9 +50,9 @@ describe('Tcp component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(MetricsLabels.ConnectionTitle)).toBeInTheDocument();
+    expect(screen.getByText(Labels.TcpConnections)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByLabelText(MetricsLabels.ConnectionTitle)?.querySelector('button')!);
+    fireEvent.click(screen.getByLabelText(Labels.TcpConnections)?.querySelector('button')!);
     expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 
@@ -83,8 +83,7 @@ describe('Tcp component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    //expect(screen.queryByText(MetricsLabels.ResposeTitle)).not.toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.NoMetricFoundDescriptionMessage)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoMetricFound)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoMetricFoundDescription)).toBeInTheDocument();
   });
 });

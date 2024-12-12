@@ -4,6 +4,7 @@ import { Card, Flex } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 
 import { SMALL_PAGINATION_SIZE } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import SKEmptyData from '../../../core/components/SkEmptyData';
 import SkTable from '../../../core/components/SkTable';
@@ -14,7 +15,6 @@ import { PairsWithInstantMetrics, ProcessResponse } from '../../../types/REST.in
 import { SKTableColumn } from '../../../types/SkTable.interfaces';
 import { useProcessPairsListData } from '../hooks/usePairsListData';
 import { CustomProcessPairCells, PairsListColumnsWithLinkDetails } from '../Processes.constants';
-import { ProcessesLabels } from '../Processes.enum';
 
 interface PairsListProps {
   process: ProcessResponse;
@@ -51,16 +51,8 @@ const PairsList: FC<PairsListProps> = function ({ process: { identity: id, name 
 
   return (
     <Flex direction={{ default: 'column' }}>
-      {renderTable(
-        ProcessesLabels.Clients,
-        clients,
-        setColumnVisibility(PairsListColumnsWithLinkDetails, { latency: false })
-      )}
-      {renderTable(
-        ProcessesLabels.Servers,
-        servers,
-        setColumnVisibility(PairsListColumnsWithLinkDetails, { latency: false })
-      )}
+      {renderTable(Labels.Clients, clients, setColumnVisibility(PairsListColumnsWithLinkDetails, { latency: false }))}
+      {renderTable(Labels.Servers, servers, setColumnVisibility(PairsListColumnsWithLinkDetails, { latency: false }))}
     </Flex>
   );
 };

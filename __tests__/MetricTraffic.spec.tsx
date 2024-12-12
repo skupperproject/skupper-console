@@ -10,7 +10,7 @@ import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
 import Traffic from '../src/pages/shared/Metrics/components/Traffic';
-import { MetricsLabels } from '../src/pages/shared/Metrics/Metrics.enum';
+import { Labels } from '../src/config/labels';
 import * as MetricsModule from '../src/pages/shared/Metrics/services/index';
 import { ProcessResponse } from '../src/types/REST.interfaces';
 
@@ -50,9 +50,9 @@ describe('Traffic component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
+    expect(screen.getByText(Labels.TcpTraffic)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByLabelText(MetricsLabels.DataTransferTitle)?.querySelector('button')!);
+    fireEvent.click(screen.getByLabelText(Labels.TcpTraffic)?.querySelector('button')!);
     expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 
@@ -81,7 +81,7 @@ describe('Traffic component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(MetricsLabels.NoMetricFoundTitleMessage)).toBeInTheDocument();
-    expect(screen.getByText(MetricsLabels.NoMetricFoundDescriptionMessage)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoMetricFound)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoMetricFoundDescription)).toBeInTheDocument();
   });
 });

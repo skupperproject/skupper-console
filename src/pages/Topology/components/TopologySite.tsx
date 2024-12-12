@@ -6,8 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { GraphEdge, GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';
+import { Labels } from '../../../config/labels';
 import SkGraph from '../../../core/components/SkGraph';
-import { SiteLabels, SitesRoutesPaths } from '../../Sites/Sites.enum';
+import { SitesRoutesPaths } from '../../Sites/Sites.enum';
 import useTopologySiteData from '../hooks/useTopologySiteData';
 import useTopologyState from '../hooks/useTopologyState';
 import { TopologySiteController } from '../services/topologySiteController';
@@ -22,7 +23,6 @@ import {
   SHOW_DEPLOYMENTS,
   SHOW_LINK_METRIC_DISTRIBUTION
 } from '../Topology.constants';
-import { TopologyLabels } from '../Topology.enum';
 
 const TopologySite: FC<{
   ids?: string[];
@@ -63,7 +63,7 @@ const TopologySite: FC<{
 
   const handleShowLinkDetails = (data: GraphEdge | null) => {
     if (data) {
-      const type = data.type.includes('SkSiteEdge') ? SiteLabels.Links : SiteLabels.Pairs;
+      const type = data.type.includes('SkSiteEdge') ? Labels.RouterLinks : Labels.Pairs;
       navigate(`${SitesRoutesPaths.Sites}/${data.sourceName}@${data.source}?type=${type}`);
     }
   };
@@ -92,7 +92,7 @@ const TopologySite: FC<{
           displayOptions={displayOptionsForSites}
           onDisplayOptionSelected={handleDisplaySelected}
           defaultDisplayOptionsSelected={displayOptionsSelected}
-          resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
+          resourcePlaceholder={Labels.FindSites}
           onResourceSelected={handleSearchText}
         />
       </StackItem>

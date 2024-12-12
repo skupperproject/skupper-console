@@ -9,9 +9,8 @@ import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
-import { ComponentLabels } from '../src/pages/Components/Components.enum';
 import Component from '../src/pages/Components/views/Component';
-import { MetricsLabels } from '../src/pages/shared/Metrics/Metrics.enum';
+import { Labels } from '../src/config/labels';
 import { ComponentResponse } from '../src/types/REST.interfaces';
 import { setMockUseParams } from '../jest.mock.router';
 
@@ -52,7 +51,7 @@ describe('Component component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(MetricsLabels.DataTransferTitle)).toBeInTheDocument();
+    expect(screen.getByText(Labels.TcpTraffic)).toBeInTheDocument();
   });
 
   it('should render the title, description data and processes associated the data loading is complete', async () => {
@@ -60,22 +59,8 @@ describe('Component component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getAllByText(ComponentLabels.Processes)[0]);
+    fireEvent.click(screen.getAllByText(Labels.Processes)[0]);
 
     expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(componentResults[0].name);
-    //expect(screen.getByText(processResults[8].name)).toBeInTheDocument();
   });
-
-  // it('Should ensure the Component details component renders with correct link href after loading page', async () => {
-  //   await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-  //     timeout: waitForElementToBeRemovedTimeout
-  //   });
-
-  //   fireEvent.click(screen.getAllByText(ComponentLabels.Processes)[0]);
-
-  //   expect(screen.getByRole('link', { name: processResults[8].name })).toHaveAttribute(
-  //     'href',
-  //     `#${ProcessesRoutesPaths.Processes}/${processResults[8].name}@${processResults[8].identity}`
-  //   );
-  // });
 });

@@ -5,10 +5,10 @@ import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import RequestCharts from './RequestCharts';
+import { Labels } from '../../../../config/labels';
 import SKEmptyData from '../../../../core/components/SkEmptyData';
 import SkIsLoading from '../../../../core/components/SkIsLoading';
 import { QueryMetricsParams, QueriesMetrics } from '../../../../types/Metrics.interfaces';
-import { MetricsLabels } from '../Metrics.enum';
 import { MetricsController } from '../services';
 
 interface RequestProps {
@@ -64,9 +64,9 @@ const Request: FC<RequestProps> = function ({
   }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
   return (
-    <Card isExpanded={isExpanded} aria-label={MetricsLabels.RequestsTitle}>
+    <Card isExpanded={isExpanded} aria-label={Labels.Requests}>
       <CardHeader onExpand={handleExpand}>
-        <CardTitle>{MetricsLabels.RequestsTitle}</CardTitle>
+        <CardTitle>{Labels.Requests}</CardTitle>
       </CardHeader>
       <CardExpandableContent>
         <CardBody style={{ minHeight: minChartHeight }}>
@@ -75,15 +75,15 @@ const Request: FC<RequestProps> = function ({
           {!isLoading && request?.requestRateData?.length && (
             <>
               {isRefetching && <SkIsLoading />}
-              <Title headingLevel="h4">{MetricsLabels.RequestRateTitle} </Title>
+              <Title headingLevel="h4">{Labels.RequestRate} </Title>
               <RequestCharts requestRateData={request.requestRateData} requestPerf={request.requestPerf} />
             </>
           )}
 
           {!isLoading && !request?.requestRateData?.length && (
             <SKEmptyData
-              message={MetricsLabels.NoMetricFoundTitleMessage}
-              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              message={Labels.NoMetricFound}
+              description={Labels.NoMetricFoundDescription}
               icon={SearchIcon}
             />
           )}

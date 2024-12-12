@@ -13,15 +13,15 @@ import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
-import { ProcessesLabels, ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
+import { ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
 import { TopoloyDetailsProps } from '../src/pages/Topology/components/TopologyDetails';
 import TopologyProcesses from '../src/pages/Topology/components/TopologyProcesses';
 import * as useTopologyState from '../src/pages/Topology/hooks/useTopologyState';
 import { TopologyController } from '../src/pages/Topology/services';
 import { convertProcessToNode } from '../src/pages/Topology/services/topologyProcessController';
-import { TopologyLabels } from '../src/pages/Topology/Topology.enum';
 import { SkGraphProps } from '../src/types/Graph.interfaces';
 import { ProcessPairsResponse, ProcessResponse, ServiceResponse } from '../src/types/REST.interfaces';
+import { Labels } from '../src/config/labels';
 
 const processesResults = processesData.results as ProcessResponse[];
 const processesPairsResults = processesPairsData.results as ProcessPairsResponse[];
@@ -76,7 +76,7 @@ const MockGraphComponent: FC<SkGraphProps> = memo(({ onClickEdge, onClickNode })
 const MockTopologyModalComponent: FC<TopoloyDetailsProps> = function ({ ids, items, modalType }) {
   return (
     <div data-testid="sk-topology-details">
-      <div>{TopologyLabels.TopologyModalTitle}</div>
+      <div>{Labels.Details}</div>
       <div>{`Modal type: ${modalType}`}</div>
       <div>{`Selected ids: ${ids}`}</div>
       <div>{`Selected items: ${items}`}</div>
@@ -137,7 +137,7 @@ describe('Topology Process', () => {
     await eventUser.click(mockClick);
 
     expect(mockNavigate).toHaveBeenCalledWith(
-      `${ProcessesRoutesPaths.Processes}/${pair.sourceName}@${pair.sourceId}/${ProcessesLabels.ProcessPairs}@${pair.identity}`
+      `${ProcessesRoutesPaths.Processes}/${pair.sourceName}@${pair.sourceId}/${Labels.Pairs}@${pair.identity}`
     );
   });
 

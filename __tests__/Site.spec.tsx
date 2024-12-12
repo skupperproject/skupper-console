@@ -11,10 +11,10 @@ import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
 import { ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
-import { SiteLabels } from '../src/pages/Sites/Sites.enum';
 import Site from '../src/pages/Sites/views/Site';
 import { ProcessResponse, SiteResponse } from '../src/types/REST.interfaces';
 import { setMockUseParams } from '../jest.mock.router';
+import { Labels } from '../src/config/labels';
 
 const siteResults = sitesData.results as SiteResponse[];
 const processResults = processesData.results as ProcessResponse[];
@@ -37,7 +37,7 @@ describe('Site component', () => {
   });
 
   afterEach(() => {
-    fireEvent.click(screen.getByText(SiteLabels.Overview));
+    fireEvent.click(screen.getByText(Labels.Overview));
 
     server.shutdown();
     jest.clearAllMocks();
@@ -59,7 +59,7 @@ describe('Site component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(SiteLabels.Details));
+    fireEvent.click(screen.getByText(Labels.Details));
 
     await waitFor(() => {
       expect(screen.getByText(siteResults[0].nameSpace)).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe('Site component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    fireEvent.click(screen.getByText(SiteLabels.Processes));
+    fireEvent.click(screen.getByText(Labels.Processes));
 
     await waitFor(() => {
       expect(screen.getByTestId(processResults[1].name)).toBeInTheDocument();

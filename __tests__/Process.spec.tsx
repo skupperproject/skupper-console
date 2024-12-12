@@ -10,9 +10,9 @@ import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
-import { ProcessesLabels } from '../src/pages/Processes/Processes.enum';
 import Process from '../src/pages/Processes/views/Process';
 import { ProcessResponse } from '../src/types/REST.interfaces';
+import { Labels } from '../src/config/labels';
 
 const processResult = processesData.results[0] as ProcessResponse;
 
@@ -47,10 +47,10 @@ describe('Process component', () => {
     expect(screen.getByTestId(getTestsIds.processView(processResult.identity))).toBeInTheDocument();
     expect(screen.getAllByRole('sk-heading')[0]).toHaveTextContent(processResult.name);
 
-    fireEvent.click(screen.getByText(ProcessesLabels.Details));
-    expect(screen.getByText(ProcessesLabels.Details).closest('li')?.classList.contains('pf-m-current'));
+    fireEvent.click(screen.getByText(Labels.Details));
+    expect(screen.getByText(Labels.Details).closest('li')?.classList.contains('pf-m-current'));
 
-    fireEvent.click(screen.getByText(ProcessesLabels.ProcessPairs));
-    expect(screen.getByText(ProcessesLabels.ProcessPairs).closest('li')?.classList.contains('pf-m-current'));
+    fireEvent.click(screen.getByText(Labels.Pairs));
+    expect(screen.getByText(Labels.Pairs).closest('li')?.classList.contains('pf-m-current'));
   });
 });

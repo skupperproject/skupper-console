@@ -2,8 +2,8 @@ import { FC } from 'react';
 
 import { DescriptionListDescription, DescriptionListTerm } from '@patternfly/react-core';
 
-import { BiFlowLabels } from './BiFlow.enum';
 import FlowDetailsBase from './FlowDetailsBase';
+import { Labels } from '../../../config/labels';
 import { TransportFlowResponse } from '../../../types/REST.interfaces';
 
 interface TcpFlowDetailsProps {
@@ -49,11 +49,11 @@ const TcpFlowDetails: FC<TcpFlowDetailsProps> = function ({
       isCounterflow={isCounterflow}
       additionalDetails={
         <>
-          <DescriptionListTerm>{BiFlowLabels.Host}</DescriptionListTerm>
+          <DescriptionListTerm>{Labels.Node}</DescriptionListTerm>
           <DescriptionListDescription>{host}</DescriptionListDescription>
           {!!resolvedProxyHost && (
             <>
-              <DescriptionListTerm>{BiFlowLabels.ProxyHost}</DescriptionListTerm>
+              <DescriptionListTerm>{Labels.ProxyNode}</DescriptionListTerm>
               <DescriptionListDescription>{resolvedProxyHost}</DescriptionListDescription>
             </>
           )}

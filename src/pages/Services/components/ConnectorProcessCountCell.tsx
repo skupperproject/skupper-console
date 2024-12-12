@@ -2,8 +2,9 @@ import { Button, List, ListItem, Popover } from '@patternfly/react-core';
 
 import { ConnectorResponse } from 'types/REST.interfaces';
 
+import { Labels } from '../../../config/labels';
 import SkLinkCell, { SkLinkCellProps } from '../../../core/components/SkLinkCell';
-import { ProcessesLabels, ProcessesRoutesPaths } from '../../Processes/Processes.enum';
+import { ProcessesRoutesPaths } from '../../Processes/Processes.enum';
 
 const ConnectorProcessCountCell = function (props: SkLinkCellProps<ConnectorResponse>) {
   return (
@@ -16,7 +17,7 @@ const ConnectorProcessCountCell = function (props: SkLinkCellProps<ConnectorResp
                 ...props,
                 value: process.target,
                 type: 'process',
-                link: `${ProcessesRoutesPaths.Processes}/${process.target}@${props.data.processId}?type=${ProcessesLabels.Details}`
+                link: `${ProcessesRoutesPaths.Processes}/${process.target}@${props.data.processId}?type=${Labels.Details}`
               })}
             </ListItem>
           ))}

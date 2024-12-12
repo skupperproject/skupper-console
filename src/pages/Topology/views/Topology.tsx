@@ -3,6 +3,7 @@ import { MouseEvent as ReactMouseEvent, useRef, useState } from 'react';
 import { Card, CardBody, Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useSearchParams } from 'react-router-dom';
 
+import { Labels } from '../../../config/labels';
 import { getTestsIds } from '../../../config/testIds';
 import useUpdateQueryStringValueWithoutNavigation from '../../../hooks/useUpdateQueryStringValueWithoutNavigation';
 import MainContainer from '../../../layout/MainContainer';
@@ -13,12 +14,12 @@ import TopologyComponent from '../components/TopologyComponent';
 import TopologyProcesses from '../components/TopologyProcesses';
 import TopologySite from '../components/TopologySite';
 import { TopologyController } from '../services';
-import { TopologyLabels, TopologyURLQueyParams, TopologyViews } from '../Topology.enum';
+import { TopologyURLQueyParams, TopologyViews } from '../Topology.enum';
 
 const links: Record<string, { linkToPage: string; linkLabel: string }> = {
-  [TopologyViews.Sites]: { linkToPage: SitesRoutesPaths.Sites, linkLabel: TopologyLabels.ListView },
-  [TopologyViews.Components]: { linkToPage: ComponentRoutesPaths.Components, linkLabel: TopologyLabels.ListView },
-  [TopologyViews.Processes]: { linkToPage: ProcessesRoutesPaths.Processes, linkLabel: TopologyLabels.ListView }
+  [TopologyViews.Sites]: { linkToPage: SitesRoutesPaths.Sites, linkLabel: Labels.ListView },
+  [TopologyViews.Components]: { linkToPage: ComponentRoutesPaths.Components, linkLabel: Labels.ListView },
+  [TopologyViews.Processes]: { linkToPage: ProcessesRoutesPaths.Processes, linkLabel: Labels.ListView }
 };
 const Topology = function () {
   const [searchParams] = useSearchParams();
@@ -44,8 +45,8 @@ const Topology = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.topologyView()}
-      title={TopologyLabels.Topology}
-      description={TopologyLabels.Description}
+      title={Labels.Topology}
+      description={Labels.TopologyDescription}
       hasMainContentPadding
       link={links[tabSelected].linkToPage}
       linkLabel={links[tabSelected].linkLabel}

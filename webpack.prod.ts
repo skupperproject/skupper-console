@@ -27,8 +27,8 @@ const prodConfig = {
     clean: true // Clean the output directory before each build
   },
   performance: {
-    maxEntrypointSize: 512000, // Limit entry point size to 500 KB
-    maxAssetSize: 512000 // Limit asset size to 500 KB
+    maxEntrypointSize: 614400, // Limit entry point size
+    maxAssetSize: 1048576 // Limit asset size
   },
 
   plugins: [

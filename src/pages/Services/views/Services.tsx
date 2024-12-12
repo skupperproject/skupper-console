@@ -1,11 +1,11 @@
 import { BIG_PAGINATION_SIZE } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import { getTestsIds } from '../../../config/testIds';
 import SkTable from '../../../core/components/SkTable';
 import SkSearchFilter from '../../../core/components/SkTable/SkSearchFilter';
 import MainContainer from '../../../layout/MainContainer';
 import useServicesData from '../hooks/useServicesData';
 import { ServiceColumns, customServiceCells, servicesSelectOptions } from '../Services.constants';
-import { ServicesLabels } from '../Services.enum';
 
 const Services = function () {
   const {
@@ -17,8 +17,8 @@ const Services = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.servicesView()}
-      title={ServicesLabels.Section}
-      description={ServicesLabels.Description}
+      title={Labels.Services}
+      description={Labels.ServicesDescription}
       mainContentChildren={
         <>
           <SkSearchFilter onSearch={handleSetServiceFilters} selectOptions={servicesSelectOptions} />

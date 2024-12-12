@@ -4,17 +4,7 @@ import SvgCircle from './Shapes/Circle';
 import SvgDiamond from './Shapes/Diamond';
 import SvgHorizontalLine from './Shapes/HorizontalLine';
 import SvgSquare from './Shapes/Square';
-
-enum Labels {
-  EntitiesTitle = ' Entities',
-  LinksTitle = ' Links',
-  Exposed = 'Bound',
-  NoExposed = 'Unbound',
-  SiteGroup = 'Grouping',
-  Remote = 'Remote resource',
-  DataLink = 'Data link',
-  SiteLink = 'Router link'
-}
+import { Labels } from '../../../../../config/labels';
 
 const ProcessLegend = function () {
   return (
@@ -74,7 +64,7 @@ const ProcessLegend = function () {
 
       <Panel>
         <PanelHeader>
-          <Title headingLevel="h4">{Labels.LinksTitle}</Title>
+          <Title headingLevel="h4">{Labels.Links}</Title>
         </PanelHeader>
 
         <PanelMainBody>

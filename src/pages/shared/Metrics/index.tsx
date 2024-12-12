@@ -9,8 +9,8 @@ import Response from './components/Response';
 import TcpConnection from './components/TcpConnection';
 import Traffic from './components/Traffic';
 import { useMetricsState } from './hooks/useMetricsState';
-import { MetricsLabels } from './Metrics.enum';
 import { Protocols, Direction } from '../../../API/REST.enum';
+import { Labels } from '../../../config/labels';
 import { hexColors } from '../../../config/styles';
 import { ConfigMetricFilters, ExpandedMetricSections, QueryMetricsParams } from '../../../types/Metrics.interfaces';
 
@@ -88,7 +88,7 @@ const Metrics: FC<MetricsProps> = function (props) {
 
         <StackItem>
           <Latency
-            title={MetricsLabels.LatencyTitleOut}
+            title={Labels.LatencyOut}
             selectedFilters={{ ...queryParams, direction: Direction.Incoming }}
             openSections={defaultOpenSections?.latency}
             forceUpdate={shouldUpdateData}
@@ -98,7 +98,7 @@ const Metrics: FC<MetricsProps> = function (props) {
 
         <StackItem>
           <Latency
-            title={MetricsLabels.LatencyTitleIn}
+            title={Labels.LatencyOut}
             selectedFilters={{ ...queryParams, direction: Direction.Outgoing }}
             openSections={defaultOpenSections?.latency}
             forceUpdate={shouldUpdateData}

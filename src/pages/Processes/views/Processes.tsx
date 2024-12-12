@@ -1,4 +1,5 @@
 import { BIG_PAGINATION_SIZE } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import { getTestsIds } from '../../../config/testIds';
 import SkTable from '../../../core/components/SkTable';
 import SkSearchFilter from '../../../core/components/SkTable/SkSearchFilter';
@@ -6,7 +7,6 @@ import MainContainer from '../../../layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '../../Topology/Topology.enum';
 import { useProcessesData } from '../hooks/useProcessesData';
 import { CustomProcessCells, processesSelectOptions, processesTableColumns } from '../Processes.constants';
-import { ProcessesLabels } from '../Processes.enum';
 
 const Processes = function () {
   const {
@@ -18,8 +18,8 @@ const Processes = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.processesView()}
-      title={ProcessesLabels.Section}
-      description={ProcessesLabels.Description}
+      title={Labels.Processes}
+      description={Labels.ProcessDescription}
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Processes}`}
       mainContentChildren={
         <>

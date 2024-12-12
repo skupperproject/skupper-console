@@ -19,8 +19,9 @@ import { GraphEdge, GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyDetails, { TopoloyDetailsProps } from './TopologyDetails';
 import TopologyToolbar from './TopologyToolbar';
+import { Labels } from '../../../config/labels';
 import SkGraph from '../../../core/components/SkGraph';
-import { ProcessesLabels, ProcessesRoutesPaths } from '../../Processes/Processes.enum';
+import { ProcessesRoutesPaths } from '../../Processes/Processes.enum';
 import useTopologyProcessData from '../hooks/useTopologyProcessData';
 import useServiceState from '../hooks/useTopologyServiceState';
 import useTopologyState from '../hooks/useTopologyState';
@@ -35,7 +36,6 @@ import {
   SHOW_INBOUND_METRICS,
   displayOptionsForProcesses
 } from '../Topology.constants';
-import { TopologyLabels } from '../Topology.enum';
 
 const MIN_DRAWER_WIDTH = 500;
 const MAX_DRAWER_WIDTH = 800;
@@ -94,9 +94,7 @@ const TopologyProcesses: FC<{
         return handleSelected(TopologyController.transformStringIdsToIds(id));
       }
 
-      navigate(
-        `${ProcessesRoutesPaths.Processes}/${data.sourceName}@${data.source}/${ProcessesLabels.ProcessPairs}@${id}`
-      );
+      navigate(`${ProcessesRoutesPaths.Processes}/${data.sourceName}@${data.source}/${Labels.Pairs}@${id}`);
     },
     [handleSelected, navigate]
   );
@@ -125,7 +123,7 @@ const TopologyProcesses: FC<{
   const panelContent = (
     <DrawerPanelContent isResizable minSize={`${MIN_DRAWER_WIDTH}px`} maxSize={`${MAX_DRAWER_WIDTH}px`}>
       <DrawerHead>
-        <Title headingLevel="h1">{TopologyLabels.TopologyModalTitle}</Title>
+        <Title headingLevel="h1">{Labels.Details}</Title>
         <DrawerActions>
           <DrawerCloseButton onClick={() => handleSelected()} />
         </DrawerActions>
@@ -150,7 +148,7 @@ const TopologyProcesses: FC<{
           defaultDisplayOptionsSelected={displayOptionsSelected}
           serviceIdsSelected={serviceIdsSelected}
           onServiceSelected={handleServiceSelected}
-          resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
+          resourcePlaceholder={Labels.FindProcesses}
           onResourceSelected={handleSearchText}
         />
       </StackItem>

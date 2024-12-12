@@ -3,6 +3,7 @@ import { useState, MouseEvent as ReactMouseEvent, FC } from 'react';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useParams, useSearchParams } from 'react-router-dom';
 
+import { Labels } from '../../../config/labels';
 import { getTestsIds } from '../../../config/testIds';
 import { getIdAndNameFromUrlParams } from '../../../core/utils/getIdAndNameFromUrlParams';
 import useUpdateQueryStringValueWithoutNavigation from '../../../hooks/useUpdateQueryStringValueWithoutNavigation';
@@ -11,7 +12,6 @@ import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '../..
 import Overview from '../components/Overview.';
 import PairsList from '../components/PairList';
 import ProcessList from '../components/ProcessList';
-import { ComponentLabels } from '../Components.enum';
 import { useComponentData } from '../hooks/useComponentData';
 
 interface ComponentProps {
@@ -30,17 +30,17 @@ const ComponentContent: FC<ComponentProps> = function ({ id, defaultTab }) {
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    setTabSelected(tabIndex as ComponentLabels);
+    setTabSelected(tabIndex as string);
   }
 
   const NavigationMenu = function () {
     return (
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
-        <Tab eventKey={ComponentLabels.Overview} title={<TabTitleText>{ComponentLabels.Overview}</TabTitleText>} />
-        <Tab eventKey={ComponentLabels.Pairs} title={<TabTitleText>{ComponentLabels.Pairs}</TabTitleText>} />
+        <Tab eventKey={Labels.Overview} title={<TabTitleText>{Labels.Overview}</TabTitleText>} />
+        <Tab eventKey={Labels.Pairs} title={<TabTitleText>{Labels.Pairs}</TabTitleText>} />
         <Tab
-          eventKey={ComponentLabels.Processes}
-          title={<TabTitleText>{ComponentLabels.Processes}</TabTitleText>}
+          eventKey={Labels.Processes}
+          title={<TabTitleText>{Labels.Processes}</TabTitleText>}
           disabled={!processCount}
         />
       </Tabs>
@@ -55,9 +55,9 @@ const ComponentContent: FC<ComponentProps> = function ({ id, defaultTab }) {
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <>
-          {tabSelected === ComponentLabels.Overview && <Overview component={component} processes={processes} />}
-          {tabSelected === ComponentLabels.Pairs && <PairsList component={component} />}
-          {tabSelected === ComponentLabels.Processes && <ProcessList processes={processes} />}
+          {tabSelected === Labels.Overview && <Overview component={component} processes={processes} />}
+          {tabSelected === Labels.Pairs && <PairsList component={component} />}
+          {tabSelected === Labels.Processes && <ProcessList processes={processes} />}
         </>
       }
     />
@@ -66,7 +66,7 @@ const ComponentContent: FC<ComponentProps> = function ({ id, defaultTab }) {
 
 const Component = function () {
   const [searchParams] = useSearchParams();
-  const type = searchParams.get('type') || ComponentLabels.Overview;
+  const type = searchParams.get('type') || Labels.Overview;
 
   const { id: paramId } = useParams();
   const { id } = getIdAndNameFromUrlParams(paramId as string);

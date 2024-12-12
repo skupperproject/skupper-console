@@ -3,6 +3,7 @@ import { useState, MouseEvent as ReactMouseEvent, FC } from 'react';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useParams, useSearchParams } from 'react-router-dom';
 
+import { Labels } from '../../../config/labels';
 import { getTestsIds } from '../../../config/testIds';
 import { getIdAndNameFromUrlParams } from '../../../core/utils/getIdAndNameFromUrlParams';
 import useUpdateQueryStringValueWithoutNavigation from '../../../hooks/useUpdateQueryStringValueWithoutNavigation';
@@ -12,7 +13,6 @@ import Details from '../components/Details';
 import Overview from '../components/Overview';
 import PairsList from '../components/PairsList';
 import { useProcessData } from '../hooks/useProcessData';
-import { ProcessesLabels } from '../Processes.enum';
 
 interface ProcessProps {
   id: string;
@@ -29,18 +29,18 @@ const ProcessContent: FC<ProcessProps> = function ({ id, defaultTab }) {
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    setTabSelected(tabIndex as ProcessesLabels);
+    setTabSelected(tabIndex as string);
   }
 
   const NavigationMenu = function () {
     return (
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
-        <Tab eventKey={ProcessesLabels.Overview} title={<TabTitleText>{ProcessesLabels.Overview}</TabTitleText>} />
-        <Tab eventKey={ProcessesLabels.Details} title={<TabTitleText>{ProcessesLabels.Details}</TabTitleText>} />
+        <Tab eventKey={Labels.Overview} title={<TabTitleText>{Labels.Overview}</TabTitleText>} />
+        <Tab eventKey={Labels.Details} title={<TabTitleText>{Labels.Details}</TabTitleText>} />
         <Tab
           disabled={!processPairsCount}
-          eventKey={ProcessesLabels.ProcessPairs}
-          title={<TabTitleText>{ProcessesLabels.ProcessPairs}</TabTitleText>}
+          eventKey={Labels.Pairs}
+          title={<TabTitleText>{Labels.Pairs}</TabTitleText>}
         />
       </Tabs>
     );
@@ -54,9 +54,9 @@ const ProcessContent: FC<ProcessProps> = function ({ id, defaultTab }) {
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <>
-          {tabSelected === ProcessesLabels.Overview && <Overview process={process} />}
-          {tabSelected === ProcessesLabels.Details && <Details process={process} />}
-          {tabSelected === ProcessesLabels.ProcessPairs && <PairsList process={process} />}
+          {tabSelected === Labels.Overview && <Overview process={process} />}
+          {tabSelected === Labels.Details && <Details process={process} />}
+          {tabSelected === Labels.Pairs && <PairsList process={process} />}
         </>
       }
     />
@@ -65,7 +65,7 @@ const ProcessContent: FC<ProcessProps> = function ({ id, defaultTab }) {
 
 const Process = function () {
   const [searchParams] = useSearchParams();
-  const type = searchParams.get('type') || ProcessesLabels.Overview;
+  const type = searchParams.get('type') || Labels.Overview;
 
   const { id: paramId } = useParams();
   const { id } = getIdAndNameFromUrlParams(paramId as string);

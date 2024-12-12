@@ -5,7 +5,7 @@ import { useDisplayOptionsState } from '../src/pages/Topology/hooks/useDisplayOp
 
 import DisplayOptions from '../src/pages/Topology/components/DisplayOptions';
 import { SHOW_DATA_LINKS, SHOW_ROUTER_LINKS } from '../src/pages/Topology/Topology.constants';
-import { TopologyLabels } from '../src/pages/Topology/Topology.enum';
+import { Labels } from '../src/config/labels';
 
 const mockOnSelected = jest.fn();
 const defaultSelected: string[] = [];
@@ -15,8 +15,8 @@ const options = {
     { id: '1', label: 'Option 1' },
     { id: '2', label: 'Option 2' },
     { id: '3', label: 'Option 3' },
-    { id: SHOW_DATA_LINKS, label: TopologyLabels.CheckboxShowDataLinks },
-    { id: SHOW_ROUTER_LINKS, label: TopologyLabels.CheckBoxShowRouterLinks }
+    { id: SHOW_DATA_LINKS, label: Labels.Pairs },
+    { id: SHOW_ROUTER_LINKS, label: Labels.RouterLinks }
   ]
 };
 
@@ -88,7 +88,7 @@ describe('DisplayOptions', () => {
     const selectElement = getByRole('button');
     expect(selectElement).toBeInTheDocument();
 
-    const placeholderTextElement = getByText(TopologyLabels.DisplayPlaceholderText);
+    const placeholderTextElement = getByText(Labels.Display);
     expect(placeholderTextElement).toBeInTheDocument();
   });
 

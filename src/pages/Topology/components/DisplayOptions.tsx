@@ -1,8 +1,8 @@
 import { FC } from 'react';
 
+import { Labels } from '../../../config/labels';
 import SkSelect, { SkSelectGroupedOptions } from '../../../core/components/SkSelect';
 import { DisplayUseOptionsStateProps, useDisplayOptionsState } from '../hooks/useDisplayOptionsState';
-import { TopologyLabels } from '../Topology.enum';
 
 interface DisplayOptionsProps extends DisplayUseOptionsStateProps {
   options: SkSelectGroupedOptions[];
@@ -27,7 +27,7 @@ const DisplayOptions: FC<DisplayOptionsProps> = function ({
       isGrouped={true}
       onSelect={selectDisplayOptions}
       optionsDisabled={optionsDisabled}
-      placeholder={TopologyLabels.DisplayPlaceholderText}
+      placeholder={Labels.Display}
       hasCheckbox={true}
       forceClose={false}
       forcePlaceholder={true}
