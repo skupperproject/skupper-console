@@ -86,8 +86,7 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   {
     name: ServicesLabels.RoutingKey,
     prop: 'name',
-    customCellName: 'ServiceNameLinkCell',
-    modifier: 'nowrap'
+    customCellName: 'ServiceNameLinkCell'
   },
   {
     name: ServicesLabels.TransportProtocol,
@@ -114,8 +113,7 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
 export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
   {
     name: ServicesLabels.Name,
-    prop: 'name',
-    modifier: 'nowrap'
+    prop: 'name'
   },
   {
     name: ServicesLabels.Site,
@@ -134,8 +132,7 @@ export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
 export const ConnectorColumns: SKTableColumn<ConnectorResponse>[] = [
   {
     name: ServicesLabels.Name,
-    prop: 'name',
-    modifier: 'nowrap'
+    prop: 'name'
   },
   {
     name: ServicesLabels.DestHost,
@@ -167,8 +164,7 @@ export const PairColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
   {
     name: BiFlowListLabels.Client,
     prop: 'sourceName',
-    customCellName: 'SourceProcessNameLinkCell',
-    modifier: 'nowrap'
+    customCellName: 'SourceProcessNameLinkCell'
   },
   {
     name: BiFlowListLabels.Site,
@@ -188,14 +184,12 @@ export const PairColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
   {
     name: ProcessesLabels.Bytes,
     prop: 'bytes',
-    format: formatBytes,
-    modifier: 'fitContent'
+    format: formatBytes
   },
   {
     name: ProcessesLabels.ByteRate,
     prop: 'byteRate',
-    format: formatByteRate,
-    modifier: 'fitContent'
+    format: formatByteRate
   }
 ];
 

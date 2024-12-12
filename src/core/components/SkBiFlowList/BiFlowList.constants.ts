@@ -45,38 +45,32 @@ export const tcpBiFlowColumns: SKTableColumn<TransportFlowResponse>[] = [
   {
     name: BiFlowListLabels.Closed,
     prop: 'endTime',
-    customCellName: 'TimestampCell',
-    modifier: 'nowrap'
+    customCellName: 'TimestampCell'
   },
   {
     name: BiFlowListLabels.Duration,
     prop: 'duration',
-    customCellName: 'DurationCell',
-    modifier: 'nowrap'
+    customCellName: 'DurationCell'
   },
   {
     name: BiFlowListLabels.Client,
     prop: 'sourceProcessName',
-    customCellName: 'ProcessNameLinkCell',
-    modifier: 'fitContent'
+    customCellName: 'ProcessNameLinkCell'
   },
   {
     name: BiFlowListLabels.Site,
     prop: 'sourceSiteName',
-    customCellName: 'SiteNameLinkCell',
-    modifier: 'fitContent'
+    customCellName: 'SiteNameLinkCell'
   },
   {
     name: BiFlowListLabels.Server,
     prop: 'destProcessName',
-    customCellName: 'TargetProcessNameLinkCell',
-    modifier: 'fitContent'
+    customCellName: 'TargetProcessNameLinkCell'
   },
   {
     name: BiFlowListLabels.ServerSite,
     prop: 'destSiteName',
-    customCellName: 'TargetSiteNameLinkCell',
-    modifier: 'fitContent'
+    customCellName: 'TargetSiteNameLinkCell'
   },
   {
     name: BiFlowListLabels.Port,
@@ -113,14 +107,12 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   {
     name: BiFlowListLabels.Completed,
     prop: 'endTime',
-    customCellName: 'TimestampCell',
-    modifier: 'nowrap'
+    customCellName: 'TimestampCell'
   },
   {
     name: BiFlowListLabels.From,
     prop: 'sourceProcessName',
-    customCellName: 'ProcessNameLinkCell',
-    modifier: 'nowrap'
+    customCellName: 'ProcessNameLinkCell'
   },
   {
     name: BiFlowListLabels.Site,
@@ -139,13 +131,11 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   },
   {
     name: BiFlowListLabels.Protocol,
-    prop: 'protocol',
-    modifier: 'fitContent'
+    prop: 'protocol'
   },
   {
     name: BiFlowListLabels.StatusCode,
-    prop: 'status' as keyof BiFlowResponse,
-    modifier: 'fitContent'
+    prop: 'status' as keyof BiFlowResponse
   },
   {
     name: BiFlowListLabels.Method,

@@ -1,14 +1,11 @@
 import { lazy } from 'react';
 
 import { Page } from '@patternfly/react-core';
-import { AnimatePresence } from 'framer-motion';
 
 const SkBreadcrumb = lazy(() => import('./core/components/SkBreadcrumb'));
 const SkHeader = lazy(() => import('./layout/Header'));
 const SkSidebar = lazy(() => import('./layout/SideBar'));
-const RouteContainer = lazy(() => import('./core/AppRouter'));
-
-import '@patternfly/react-core/dist/styles/base.css';
+const AppRouter = lazy(() => import('./core/AppRouter'));
 
 const App = function () {
   return (
@@ -19,9 +16,7 @@ const App = function () {
       isContentFilled
       isManagedSidebar
     >
-      <AnimatePresence mode="wait">
-        <RouteContainer />
-      </AnimatePresence>
+      <AppRouter />
     </Page>
   );
 };

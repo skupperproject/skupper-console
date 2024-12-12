@@ -48,7 +48,6 @@ interface CustomCellProps<T> {
   callback?: Function;
   isDisabled?: boolean;
   format?: Function;
-  fitContent?: boolean;
 }
 
 const SkTable = function <T>({
@@ -194,7 +193,7 @@ const SkTable = function <T>({
                     aria-label={!name ? 'Action Column' : undefined}
                     colSpan={1}
                     key={name}
-                    modifier={modifier}
+                    modifier={modifier || 'nowrap'}
                     isStickyColumn={isStickyColumn}
                     sort={(prop && shouldSort && getSortParams(index)) || undefined}
                     info={
@@ -249,12 +248,11 @@ const SkTable = function <T>({
                                 data={data}
                                 callback={callback}
                                 format={format && format(value)}
-                                fitContent={modifier === 'nowrap'}
                               />
                             )}
 
                             {!Component && (
-                              <TableText wrapModifier={modifier === 'nowrap' ? 'fitContent' : 'truncate'}>
+                              <TableText>
                                 {format
                                   ? format(value)
                                   : value === '' || value === undefined || value === null

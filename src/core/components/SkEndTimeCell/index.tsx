@@ -4,14 +4,14 @@ import { Icon, Content, Tooltip } from '@patternfly/react-core';
 import { GlobeAmericasIcon } from '@patternfly/react-icons';
 
 import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
-import { timeAgo } from '../../utils/timeAgo';
+import { formatLocalizedDateTime } from '../../utils/formatLocalizedDateTime';
 
-interface EndTimeProps<T> {
+interface EndTimeCellProps<T> {
   data: T;
   value: ReactNode;
 }
 
-const SkEndTimeCell = function <T>({ value }: EndTimeProps<T>) {
+const SkEndTimeCell = function <T>({ value }: EndTimeCellProps<T>) {
   if (!value || !Number(value)) {
     return EMPTY_VALUE_SYMBOL;
   }
@@ -19,12 +19,12 @@ const SkEndTimeCell = function <T>({ value }: EndTimeProps<T>) {
   typeof value;
 
   return (
-    <Tooltip content={timeAgo(value as number)}>
+    <Tooltip content={formatLocalizedDateTime(value as number)}>
       <Content>
         <Icon size="md" isInline>
           <GlobeAmericasIcon />
         </Icon>{' '}
-        {timeAgo(value as number)}
+        {formatLocalizedDateTime(value as number)}
       </Content>
     </Tooltip>
   );

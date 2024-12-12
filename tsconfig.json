@@ -1,5 +1,44 @@
 {
   "compilerOptions": {
+    // Base URL for module imports (makes it easier to import from 'src' rather than relative paths)
+    "baseUrl": "src",
+
+    // Enable compatibility with CommonJS-style imports and exports
+    "esModuleInterop": true,
+
+    // Allow default imports for non-ESModule files (like CommonJS)
+    "allowSyntheticDefaultImports": true,
+
+    // Allow JavaScript files to be imported alongside TypeScript files
+    "allowJs": true,
+
+    // Enable source map generation to facilitate debugging
+    "sourceMap": true,
+
+    // Enable strict type checking options for better type safety
+    "strict": true,
+
+    // Enable strict null checks to ensure null and undefined are properly handled
+    "strictNullChecks": true,
+
+    // Force consistent casing in file names
+    "forceConsistentCasingInFileNames": true,
+
+    // Ensure strict function type checking
+    "strictFunctionTypes": true,
+
+    // Enforce explicit returns in functions to avoid accidental undefined returns
+    "noImplicitReturns": true,
+
+    // Disallow unused function parameters to avoid unnecessary code
+    "noUnusedParameters": true,
+
+    // Disallow unused local variables to keep the codebase clean
+    "noUnusedLocals": true,
+
+    // Ensure that all properties are initialized in the constructor
+    "strictPropertyInitialization": true,
+
     // Target the latest ECMAScript version for compatibility with modern JavaScript features
     "target": "ESNext",
 
@@ -18,27 +57,6 @@
     // Specify where to look for type declarations for packages
     "typeRoots": ["node_modules/@types"],
 
-    // Base URL for module imports (makes it easier to import from 'src' rather than relative paths)
-    "baseUrl": "src",
-
-    // Enable source map generation to facilitate debugging
-    "sourceMap": true,
-
-    // Allow JavaScript files to be imported alongside TypeScript files
-    "allowJs": true,
-
-    // Enable compatibility with CommonJS-style imports and exports
-    "esModuleInterop": true,
-
-    // Allow default imports for non-ESModule files (like CommonJS)
-    "allowSyntheticDefaultImports": true,
-
-    // Enable strict type checking options for better type safety
-    "strict": true,
-
-    // Force consistent casing in file names
-    "forceConsistentCasingInFileNames": true,
-
     // Allow importing JSON modules directly
     "resolveJsonModule": true,
 
@@ -49,25 +67,7 @@
     "skipLibCheck": true,
 
     // Enable support for iteration over iterable types like arrays and maps
-    "downlevelIteration": true,
-
-    // Enable strict null checks to ensure null and undefined are properly handled
-    "strictNullChecks": true,
-
-    // Enforce explicit returns in functions to avoid accidental undefined returns
-    "noImplicitReturns": true,
-
-    // Ensure strict function type checking
-    "strictFunctionTypes": true,
-
-    // Disallow unused function parameters to avoid unnecessary code
-    "noUnusedParameters": true,
-
-    // Disallow unused local variables to keep the codebase clean
-    "noUnusedLocals": true,
-
-    // Ensure that all properties are initialized in the constructor
-    "strictPropertyInitialization": true
+    "downlevelIteration": true
   },
 
   // Include the following directories for type-checking and compiling

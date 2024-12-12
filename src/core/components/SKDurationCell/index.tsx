@@ -1,8 +1,5 @@
 import { ReactNode } from 'react';
 
-import { Tooltip } from '@patternfly/react-core';
-import { TableText } from '@patternfly/react-table';
-
 import { formatLatency } from '../../utils/formatLatency';
 
 interface SKDurationCellProps<T> {
@@ -18,13 +15,7 @@ const SkDurationCell = function <T>({ value }: SKDurationCellProps<T>) {
     return null;
   }
 
-  const duration = formatLatency(value as number);
-
-  return (
-    <Tooltip content={duration}>
-      <TableText wrapModifier="truncate">{duration}</TableText>
-    </Tooltip>
-  );
+  return formatLatency(value as number);
 };
 
 export default SkDurationCell;

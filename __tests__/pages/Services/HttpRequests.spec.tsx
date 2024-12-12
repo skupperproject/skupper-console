@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
 
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
-
 
 import httpRequests from '../../../mocks/data/HTTP_REQUESTS.json';
 import servicesData from '../../../mocks/data/SERVICES.json';
@@ -30,7 +29,7 @@ describe('Begin testing the Http requests component', () => {
   });
 
   it('should render the Requests view -> Requests after the data loading is complete', async () => {
-    render(
+    const { getAllByTestId, queryByTestId } = render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
           <HttpRequests routingKey={servicesResults[1].name} />
@@ -38,10 +37,10 @@ describe('Begin testing the Http requests component', () => {
       </Providers>
     );
 
-    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+    await waitForElementToBeRemoved(() => queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByText(httpRequestResults[0].sourceProcessName)[0]).toBeInTheDocument();
+    expect(getAllByTestId(httpRequestResults[0].sourceProcessName)[0]).toBeInTheDocument();
   });
 });
