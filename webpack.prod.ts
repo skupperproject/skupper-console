@@ -1,5 +1,5 @@
-const pathProd = require('path'); // Path module to handle file system paths
-const ROOT_PROD = process.cwd(); // Root directory of the project
+const pathProd = require('path');
+const ROOT_PROD = process.cwd();
 
 // Import necessary Webpack plugins and utilities
 const { merge: mergeProd } = require('webpack-merge'); // Merge production config with common config

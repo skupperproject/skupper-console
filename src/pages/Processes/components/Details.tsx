@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 
 import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
 import ResourceIcon from '../../../core/components/ResourceIcon';
-import { timeAgo } from '../../../core/utils/timeAgo';
+import { formatLocalizedDateTime } from '../../../core/utils/formatLocalizedDateTime';
 import { ProcessResponse } from '../../../types/REST.interfaces';
 import { ComponentRoutesPaths } from '../../Components/Components.enum';
 import { ServicesRoutesPaths } from '../../Services/Services.enum';
@@ -91,7 +91,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
             <GridItem span={6}>
               <DescriptionListGroup>
                 <DescriptionListTerm>{ProcessesLabels.Created}</DescriptionListTerm>
-                <DescriptionListDescription>{timeAgo(startTime)}</DescriptionListDescription>
+                <DescriptionListDescription>{formatLocalizedDateTime(startTime)}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 

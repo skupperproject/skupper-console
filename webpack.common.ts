@@ -1,7 +1,8 @@
-const path = require('path'); // Path module to handle file system paths
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const ROOT = process.cwd(); // Root directory of the project
-const webpack = require('webpack'); // Webpack core library
-const HtmlWebpackPlugin = require('html-webpack-plugin'); // Plugin to generate an HTML file
 
 module.exports = {
   entry: path.join(ROOT, 'src/index.tsx'), // Entry point for the application (main TypeScript file)
