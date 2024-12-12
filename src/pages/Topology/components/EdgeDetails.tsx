@@ -23,13 +23,13 @@ import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
 import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import ResourceIcon from '../../../core/components/ResourceIcon';
 import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
 import { ProcessPairsResponse } from '../../../types/REST.interfaces';
 import { TopologyMetrics } from '../../../types/Topology.interfaces';
-import { ProcessesLabels, ProcessesRoutesPaths } from '../../Processes/Processes.enum';
-import { TopologyLabels } from '../Topology.enum';
+import { ProcessesRoutesPaths } from '../../Processes/Processes.enum';
 
 const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }> = function ({ data, metrics }) {
   const sourceNames = data.map((itemSelected) => itemSelected.sourceName);
@@ -74,21 +74,21 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
     <>
       <Card isPlain>
         <CardHeader>
-          <CardTitle>{TopologyLabels.Summary}</CardTitle>
+          <CardTitle>{Labels.Summary}</CardTitle>
         </CardHeader>
         <CardBody>
           <Table borders={false} variant="compact">
             <Tbody>
               <Tr>
                 <Td>
-                  <b>{ProcessesLabels.ByteRate}</b>
+                  <b>{Labels.ByteRate}</b>
                 </Td>
                 <Td>{formatByteRate(totalByteRateSum)}</Td>
               </Tr>
 
               <Tr>
                 <Td>
-                  <b>{ProcessesLabels.Bytes}</b>
+                  <b>{Labels.Bytes}</b>
                 </Td>
                 <Td>{formatBytes(totalBytesSum)}</Td>
               </Tr>
@@ -106,7 +106,7 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
                   <DataListCell key="primary-content">
                     <DescriptionList>
                       <DescriptionListGroup>
-                        <DescriptionListTerm>{TopologyLabels.Source}</DescriptionListTerm>
+                        <DescriptionListTerm>{Labels.Source}</DescriptionListTerm>
                         <DescriptionListDescription>
                           <ResourceIcon type="process" />
                           <Link
@@ -118,7 +118,7 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
                       </DescriptionListGroup>
 
                       <DescriptionListGroup>
-                        <DescriptionListTerm>{TopologyLabels.Destination}</DescriptionListTerm>
+                        <DescriptionListTerm>{Labels.Destination}</DescriptionListTerm>
                         <DescriptionListDescription>
                           <ResourceIcon type="process" />
                           <Link
@@ -130,14 +130,14 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
                       </DescriptionListGroup>
 
                       <DescriptionListGroup>
-                        <DescriptionListTerm>{TopologyLabels.TransportProtocol}</DescriptionListTerm>
+                        <DescriptionListTerm>{Labels.TCP}</DescriptionListTerm>
                         <DescriptionListDescription>
                           {itemSelected.protocol || EMPTY_VALUE_SYMBOL}
                         </DescriptionListDescription>
                       </DescriptionListGroup>
 
                       <DescriptionListGroup>
-                        <DescriptionListTerm>{TopologyLabels.ApplicationProtocol}</DescriptionListTerm>
+                        <DescriptionListTerm>{Labels.HTTP}</DescriptionListTerm>
                         <DescriptionListDescription>
                           {itemSelected.observedApplicationProtocols || EMPTY_VALUE_SYMBOL}
                         </DescriptionListDescription>
@@ -146,14 +146,14 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
                       <Flex>
                         {!!bytes && (
                           <DescriptionListGroup>
-                            <DescriptionListTerm>{TopologyLabels.CheckboxShowTotalBytes}</DescriptionListTerm>
+                            <DescriptionListTerm>{Labels.Bytes}</DescriptionListTerm>
                             <DescriptionListDescription>{`${formatBytes(bytes[`${itemSelected.sourceName}-to-${itemSelected.destinationName}`] || 0)}`}</DescriptionListDescription>
                           </DescriptionListGroup>
                         )}
 
                         {!!byteRate && (
                           <DescriptionListGroup>
-                            <DescriptionListTerm>{TopologyLabels.CheckboxShowCurrentByteRate}</DescriptionListTerm>
+                            <DescriptionListTerm>{Labels.ByteRate}</DescriptionListTerm>
                             <DescriptionListDescription>{`${formatByteRate(byteRate[`${itemSelected.sourceName}-to-${itemSelected.destinationName}`] || 0)}`}</DescriptionListDescription>
                           </DescriptionListGroup>
                         )}
@@ -169,9 +169,9 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
                     <Stack>
                       <StackItem>
                         <Link
-                          to={`${ProcessesRoutesPaths.Processes}/${itemSelected.sourceName}@${itemSelected.sourceId}/${ProcessesLabels.ProcessPairs}@${itemSelected.identity}`}
+                          to={`${ProcessesRoutesPaths.Processes}/${itemSelected.sourceName}@${itemSelected.sourceId}/${Labels.Pairs}@${itemSelected.identity}`}
                         >
-                          {TopologyLabels.TopologyModalAction2}
+                          {Labels.ViewFlows}
                         </Link>
                       </StackItem>
                     </Stack>

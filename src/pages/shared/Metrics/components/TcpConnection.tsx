@@ -15,12 +15,12 @@ import {
 import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
+import { Labels } from '../../../../config/labels';
 import SkChartArea from '../../../../core/components/SkChartArea';
 import SKEmptyData from '../../../../core/components/SkEmptyData';
 import SkIsLoading from '../../../../core/components/SkIsLoading';
 import { formatNumber } from '../../../../core/utils/formatNumber';
 import { QueryMetricsParams, QueriesMetrics } from '../../../../types/Metrics.interfaces';
-import { MetricsLabels } from '../Metrics.enum';
 import { MetricsController } from '../services';
 
 interface TcpConnectionProps {
@@ -74,9 +74,9 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
   }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
   return (
-    <Card isExpanded={isExpanded} aria-label={MetricsLabels.ConnectionTitle}>
+    <Card isExpanded={isExpanded} aria-label={Labels.TcpConnections}>
       <CardHeader onExpand={handleExpand}>
-        <CardTitle>{MetricsLabels.ConnectionTitle}</CardTitle>
+        <CardTitle>{Labels.TcpConnections}</CardTitle>
       </CardHeader>
 
       <CardExpandableContent>
@@ -89,10 +89,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
               <Flex direction={{ xl: 'row', md: 'column' }}>
                 <FlexItem flex={{ default: 'flex_2' }}>
                   {connections.liveConnectionsSerie && (
-                    <>
-                      <Title headingLevel="h4">{MetricsLabels.LiveConnectionsChartLabel} </Title>
-                      <SkChartArea data={connections.liveConnectionsSerie} legendLabels={['open connections']} />
-                    </>
+                    <SkChartArea data={connections.liveConnectionsSerie} legendLabels={[`${Labels.OpenConnections}`]} />
                   )}
                 </FlexItem>
 
@@ -106,7 +103,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
                 >
                   <FlexItem flex={{ default: 'flex_1' }}>
                     <Bullseye>
-                      <Title headingLevel="h1">{`${MetricsLabels.LiveConnections}: ${formatNumber(
+                      <Title headingLevel="h1">{`${Labels.OpenConnections}: ${formatNumber(
                         connections.liveConnectionsCount
                       )}`}</Title>
                     </Bullseye>
@@ -118,8 +115,8 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
 
           {!isLoading && !connections && (
             <SKEmptyData
-              message={MetricsLabels.NoMetricFoundTitleMessage}
-              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              message={Labels.NoMetricFound}
+              description={Labels.NoMetricFoundDescription}
               icon={SearchIcon}
             />
           )}

@@ -2,7 +2,7 @@ import { CSSProperties, FC } from 'react';
 
 import { Spinner } from '@patternfly/react-core';
 
-import { LoadingLabels } from './Loading.enum';
+import { Labels } from '../../../config/labels';
 import { getTestsIds } from '../../../config/testIds';
 import SKEmptyData from '../SkEmptyData';
 import TransitionPage from '../TransitionPages/Fade';
@@ -26,7 +26,7 @@ const LoadingPage: FC<LoadingPageProps> = function ({ isFLoating = false }) {
       <SKEmptyData
         icon={Spinner}
         message=""
-        description={LoadingLabels.LoadingMessage}
+        description={Labels.fetchDataDescription}
         dataTestid={getTestsIds.loadingView()}
       />
     </TransitionPage>

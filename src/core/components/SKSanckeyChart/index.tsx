@@ -4,8 +4,8 @@ import { ResponsiveSankey } from '@nivo/sankey';
 
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE, DEFAULT_SANKEY_CHART_HEIGHT } from './SkSankey.constants';
 import SankeyFilter from './SkSankeyFilter';
+import { Labels } from '../../../config/labels';
 import { styles } from '../../../config/styles';
-import { MetricsLabels } from '../../../pages/shared/Metrics/Metrics.enum';
 import { SkSankeyChartLink, SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
 import { formatByteRate } from '../../utils/formatBytes';
 import SKEmptyData from '../SkEmptyData';
@@ -44,10 +44,7 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps; onSearch?: Function }> = fun
       {!!onSearch && <SankeyFilter onSearch={onSearch} />}
 
       {!data.links.length && (
-        <SKEmptyData
-          message={MetricsLabels.NoMetricFoundTitleMessage}
-          description={MetricsLabels.NoMetricFoundDescriptionMessage}
-        />
+        <SKEmptyData message={Labels.NoMetricFound} description={Labels.NoMetricFoundDescription} />
       )}
 
       {!!data.links.length && (

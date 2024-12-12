@@ -13,8 +13,8 @@ import {
   Title
 } from '@patternfly/react-core';
 
+import { Labels } from '../../../config/labels';
 import { SiteResponse } from '../../../types/REST.interfaces';
-import { SiteLabels } from '../Sites.enum';
 
 interface DetailsProps {
   site: SiteResponse;
@@ -26,21 +26,19 @@ const Details: FC<DetailsProps> = function ({ site: { nameSpace, siteVersion, pl
       <GridItem>
         <Card>
           <CardTitle>
-            <Title headingLevel="h2">{SiteLabels.Details}</Title>
+            <Title headingLevel="h2">{Labels.Details}</Title>
           </CardTitle>
           <CardBody>
             <DescriptionList>
               <DescriptionListGroup>
-                <DescriptionListTerm>{SiteLabels.Namespace}</DescriptionListTerm>
+                <DescriptionListTerm>{Labels.Namespace}</DescriptionListTerm>
                 <DescriptionListDescription>{nameSpace}</DescriptionListDescription>
-                <DescriptionListTerm>{SiteLabels.Platform}</DescriptionListTerm>
+                <DescriptionListTerm>{Labels.Platform}</DescriptionListTerm>
                 <DescriptionListDescription>{platform}</DescriptionListDescription>
-                <DescriptionListTerm>{SiteLabels.SiteVersion}</DescriptionListTerm>
+                <DescriptionListTerm>{Labels.SiteVersion}</DescriptionListTerm>
                 <DescriptionListDescription>{siteVersion}</DescriptionListDescription>
-                <DescriptionListTerm>{SiteLabels.HA}</DescriptionListTerm>
-                <DescriptionListDescription>
-                  {routerCount > 1 ? SiteLabels.YES : SiteLabels.NO}
-                </DescriptionListDescription>
+                <DescriptionListTerm>{Labels.HA}</DescriptionListTerm>
+                <DescriptionListDescription>{routerCount > 1 ? Labels.YES : Labels.NO}</DescriptionListDescription>
               </DescriptionListGroup>
             </DescriptionList>
           </CardBody>

@@ -4,6 +4,7 @@ import { Card, Flex } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 
 import { SMALL_PAGINATION_SIZE } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import SKEmptyData from '../../../core/components/SkEmptyData';
 import SkTable from '../../../core/components/SkTable';
@@ -15,7 +16,6 @@ import { SKTableColumn } from '../../../types/SkTable.interfaces';
 import { PairsListColumns } from '../../Processes/Processes.constants';
 import { useSitePairsListData } from '../hooks/useSitePairsData';
 import { CustomSitePairCells } from '../Sites.constants';
-import { SiteLabels } from '../Sites.enum';
 
 interface PairsListProps {
   site: SiteResponse;
@@ -53,12 +53,12 @@ const PairsList: FC<PairsListProps> = function ({ site: { identity: id, name } }
   return (
     <Flex direction={{ default: 'column' }}>
       {renderTable(
-        SiteLabels.Clients,
+        Labels.Clients,
         clients,
         setColumnVisibility(PairsListColumns, { protocol: false, observedApplicationProtocols: false, latency: false })
       )}
       {renderTable(
-        SiteLabels.Servers,
+        Labels.Servers,
         servers,
         setColumnVisibility(PairsListColumns, { protocol: false, observedApplicationProtocols: false, latency: false })
       )}

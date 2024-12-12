@@ -1,11 +1,12 @@
 import { GraphElementNames } from 'types/Graph.interfaces';
 
-import { TopologyLabels, TopologyRoutesPaths } from './Topology.enum';
+import { TopologyRoutesPaths } from './Topology.enum';
+import { Labels } from '../../config/labels';
 import { SkSelectGroupedOptions } from '../../core/components/SkSelect';
 
 export const TopologyPaths = {
   path: TopologyRoutesPaths.Topology,
-  name: TopologyLabels.Topology
+  name: Labels.Topology
 };
 
 export const SHOW_LINK_BYTES = 'show-link-bytes';
@@ -17,38 +18,39 @@ export const SHOW_LINK_METRIC_VALUE = 'show-metric-value';
 
 export const displayOptionsForProcesses: SkSelectGroupedOptions[] = [
   {
-    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetricVisualization,
-    items: [
-      {
-        id: SHOW_LINK_METRIC_DISTRIBUTION,
-        label: TopologyLabels.CheckboxShowMetricDistribution
-      },
-      {
-        id: SHOW_LINK_METRIC_VALUE,
-        label: TopologyLabels.CheckboxShowMetricValue
-      }
-    ]
-  },
-  {
-    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetrics,
+    title: Labels.Metrics,
     items: [
       {
         id: SHOW_LINK_BYTES,
-        label: TopologyLabels.CheckboxShowTotalBytes
+        label: Labels.Bytes
       },
       {
         id: SHOW_LINK_BYTERATE,
-        label: TopologyLabels.CheckboxShowCurrentByteRate
+        label: Labels.ByteRate
       }
     ]
   },
 
   {
-    title: TopologyLabels.TitleGroupDisplayOptionsMenuOther,
+    title: Labels.MetricVisualization,
+    items: [
+      {
+        id: SHOW_LINK_METRIC_DISTRIBUTION,
+        label: Labels.MetricDistribution
+      },
+      {
+        id: SHOW_LINK_METRIC_VALUE,
+        label: Labels.MetricValue
+      }
+    ]
+  },
+
+  {
+    title: Labels.Other,
     items: [
       {
         id: SHOW_DEPLOYMENTS,
-        label: TopologyLabels.ShowDeployments
+        label: Labels.DeploymentGroups
       }
     ]
   }
@@ -59,41 +61,43 @@ export const SHOW_DATA_LINKS = 'show-site-data-links';
 
 export const displayOptionsForSites: SkSelectGroupedOptions[] = [
   {
-    title: TopologyLabels.TitleGroupDisplayOptionsLinkType,
+    title: Labels.LinkType,
     items: [
       {
         id: SHOW_ROUTER_LINKS,
-        label: TopologyLabels.CheckBoxShowRouterLinks
+        label: Labels.RouterLinks
       },
       {
         id: SHOW_DATA_LINKS,
-        label: TopologyLabels.CheckboxShowDataLinks
+        label: Labels.Pairs
       }
     ]
   },
+
   {
-    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetricVisualization,
-    items: [
-      {
-        id: SHOW_LINK_METRIC_DISTRIBUTION,
-        label: TopologyLabels.CheckboxShowMetricDistribution
-      },
-      {
-        id: SHOW_LINK_METRIC_VALUE,
-        label: TopologyLabels.CheckboxShowMetricValue
-      }
-    ]
-  },
-  {
-    title: TopologyLabels.TitleGroupDisplayOptionsMenuMetrics,
+    title: Labels.Metrics,
     items: [
       {
         id: SHOW_LINK_BYTES,
-        label: TopologyLabels.CheckboxShowTotalBytes
+        label: Labels.Bytes
       },
       {
         id: SHOW_LINK_BYTERATE,
-        label: TopologyLabels.CheckboxShowCurrentByteRate
+        label: Labels.ByteRate
+      }
+    ]
+  },
+
+  {
+    title: Labels.MetricVisualization,
+    items: [
+      {
+        id: SHOW_LINK_METRIC_DISTRIBUTION,
+        label: Labels.MetricDistribution
+      },
+      {
+        id: SHOW_LINK_METRIC_VALUE,
+        label: Labels.MetricValue
       }
     ]
   }

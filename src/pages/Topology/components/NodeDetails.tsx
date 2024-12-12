@@ -22,6 +22,7 @@ import {
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
+import { Labels } from '../../../config/labels';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import ResourceIcon from '../../../core/components/ResourceIcon';
 import { ellipsisInTheMiddle } from '../../../core/utils/EllipsisInTheMiddle';
@@ -29,10 +30,8 @@ import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
 import { ProcessResponse } from '../../../types/REST.interfaces';
 import { TopologyMetrics } from '../../../types/Topology.interfaces';
 import { ComponentRoutesPaths } from '../../Components/Components.enum';
-import { ProcessesLabels, ProcessesRoutesPaths } from '../../Processes/Processes.enum';
-import { MetricsLabels } from '../../shared/Metrics/Metrics.enum';
+import { ProcessesRoutesPaths } from '../../Processes/Processes.enum';
 import { SitesRoutesPaths } from '../../Sites/Sites.enum';
-import { TopologyLabels } from '../Topology.enum';
 
 type Totals = {
   totalBytesIn: Record<string, number>;
@@ -94,21 +93,21 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
     <>
       <Card isPlain>
         <CardHeader>
-          <CardTitle>{TopologyLabels.Summary}</CardTitle>
+          <CardTitle>{Labels.Summary}</CardTitle>
         </CardHeader>
         <CardBody>
           <Table borders={false} variant="compact">
             <Thead noWrap>
               <Tr>
                 <Th aria-label="metric" />
-                <Th>{MetricsLabels.TrafficReceived}</Th>
-                <Th>{MetricsLabels.TrafficSent}</Th>
+                <Th>{Labels.BytesIn}</Th>
+                <Th>{Labels.BytesOut}</Th>
               </Tr>
             </Thead>
             <Tbody>
               <Tr>
                 <Td>
-                  <b>{ProcessesLabels.ByteRate}</b>
+                  <b>{Labels.ByteRate}</b>
                 </Td>
                 <Td>{formatByteRate(totalByteRateInSum)}</Td>
                 <Td>{formatByteRate(totalByteRateOutSum)}</Td>
@@ -116,7 +115,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
 
               <Tr>
                 <Td>
-                  <b>Avg. {ProcessesLabels.ByteRate}</b>
+                  <b>Avg. {Labels.ByteRate}</b>
                 </Td>
                 <Td>{formatByteRate(avgByteRateInSum)}</Td>
                 <Td>{formatByteRate(avgByteRateOutSum)}</Td>
@@ -124,7 +123,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
 
               <Tr>
                 <Td>
-                  <b>{ProcessesLabels.Bytes}</b>
+                  <b>{Labels.Bytes}</b>
                 </Td>
                 <Td>{formatBytes(totalBytesInSum)}</Td>
                 <Td>{formatBytes(totalBytesOutSum)}</Td>
@@ -164,21 +163,21 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                         <Thead noWrap>
                           <Tr>
                             <Th aria-label="metric" />
-                            <Th>{MetricsLabels.TrafficReceived}</Th>
-                            <Th>{MetricsLabels.TrafficSent}</Th>
+                            <Th>{Labels.BytesIn}</Th>
+                            <Th>{Labels.BytesOut}</Th>
                           </Tr>
                         </Thead>
                         <Tbody>
                           <Tr>
                             <Th>
-                              <b>{ProcessesLabels.ByteRate}</b>
+                              <b>{Labels.ByteRate}</b>
                             </Th>
                             <Td>{formatBytes(byteRate?.totalByteRateIn[itemSelected.name] || 0)}</Td>
                             <Td>{formatBytes(byteRate?.totalByteRateOut[itemSelected.name] || 0)}</Td>
                           </Tr>
                           <Tr>
                             <Th>
-                              <b>{ProcessesLabels.Bytes}</b>
+                              <b>{Labels.Bytes}</b>
                             </Th>
                             <Td>{formatBytes(bytes?.totalBytesIn[itemSelected.name] || 0)}</Td>
                             <Td>{formatBytes(bytes?.totalBytesOut[itemSelected.name] || 0)}</Td>
@@ -234,21 +233,15 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                     <CardFooter>
                       <Split hasGutter>
                         <SplitItem>
-                          <Link to={`${goToLink}?type=${ProcessesLabels.Details}`}>
-                            {TopologyLabels.TopologyModalAction1}
-                          </Link>
+                          <Link to={`${goToLink}?type=${Labels.Details}`}>{Labels.ViewDetails}</Link>
                         </SplitItem>
 
                         <SplitItem>
-                          <Link to={`${goToLink}?type=${ProcessesLabels.ProcessPairs}`}>
-                            {TopologyLabels.TopologyModalAction2}
-                          </Link>
+                          <Link to={`${goToLink}?type=${Labels.Pairs}`}>{Labels.ViewFlows}</Link>
                         </SplitItem>
 
                         <SplitItem>
-                          <Link to={`${goToLink}?type=${ProcessesLabels.Overview}`}>
-                            {TopologyLabels.TopologyModalAction3}
-                          </Link>
+                          <Link to={`${goToLink}?type=${Labels.Overview}`}>{Labels.ViewMetrics}</Link>
                         </SplitItem>
                       </Split>
                     </CardFooter>

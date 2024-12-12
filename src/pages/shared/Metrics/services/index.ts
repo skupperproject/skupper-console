@@ -5,6 +5,7 @@ import {
   getTimeSeriesFromPrometheusData
 } from '../../../../API/Prometheus.utils';
 import { Quantiles } from '../../../../API/REST.enum';
+import { Labels } from '../../../../config/labels';
 import { calculateStep, defaultTimeInterval } from '../../../../config/prometheus';
 import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDecimalPlacesIfCents';
 import { getCurrentAndPastTimestamps } from '../../../../core/utils/getCurrentAndPastTimestamps';
@@ -21,7 +22,6 @@ import {
 } from '../../../../types/Metrics.interfaces';
 import { PrometheusMetric, PrometheusQueryParams } from '../../../../types/Prometheus.interfaces';
 import { skAxisXY } from '../../../../types/SkChartArea.interfaces';
-import { MetricsLabels } from '../Metrics.enum';
 
 export const MetricsController = {
   getLatencyPercentiles: async ({
@@ -473,19 +473,19 @@ function normalizeLatencies({
   const latenciesNormalized: LatencyMetrics[] = [];
 
   if (quantile50latencyNormalized) {
-    latenciesNormalized.push({ data: quantile50latencyNormalized[0], label: MetricsLabels.LatencyMetric50quantile });
+    latenciesNormalized.push({ data: quantile50latencyNormalized[0], label: Labels.LatencyMetric50quantile });
   }
 
   if (quantile90latencyNormalized) {
-    latenciesNormalized.push({ data: quantile90latencyNormalized[0], label: MetricsLabels.LatencyMetric90quantile });
+    latenciesNormalized.push({ data: quantile90latencyNormalized[0], label: Labels.LatencyMetric90quantile });
   }
 
   if (quantile95latencyNormalized) {
-    latenciesNormalized.push({ data: quantile95latencyNormalized[0], label: MetricsLabels.LatencyMetric95quantile });
+    latenciesNormalized.push({ data: quantile95latencyNormalized[0], label: Labels.LatencyMetric95quantile });
   }
 
   if (quantile99latencyNormalized) {
-    latenciesNormalized.push({ data: quantile99latencyNormalized[0], label: MetricsLabels.LatencyMetric99quantile });
+    latenciesNormalized.push({ data: quantile99latencyNormalized[0], label: Labels.LatencyMetric99quantile });
   }
 
   return latenciesNormalized;

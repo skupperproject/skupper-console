@@ -2,12 +2,12 @@ import { FC } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 
+import { Labels } from '../../../config/labels';
 import SkGraph from '../../../core/components/SkGraph';
 import SkTable from '../../../core/components/SkTable';
 import useListenersAndConnectorsData from '../hooks/useListenersAndConnectorsData';
 import { aggregateConnectorResponses, ServicesController } from '../services';
 import { ConnectorColumns, customServiceCells, ListenerColumns } from '../Services.constants';
-import { ServicesLabels } from '../Services.enum';
 
 interface ListenerAndConnectorListProps {
   id: string;
@@ -40,7 +40,7 @@ const ListenerAndConnectorList: FC<ListenerAndConnectorListProps> = function ({ 
 
       <StackItem>
         <SkTable
-          title={ServicesLabels.Connectors}
+          title={Labels.Connectors}
           columns={ConnectorColumns}
           rows={aggregatedConnectors}
           customCells={customServiceCells}
@@ -51,7 +51,7 @@ const ListenerAndConnectorList: FC<ListenerAndConnectorListProps> = function ({ 
 
       <StackItem>
         <SkTable
-          title={ServicesLabels.Listeners}
+          title={Labels.Listeners}
           columns={ListenerColumns}
           rows={listeners}
           customCells={customServiceCells}

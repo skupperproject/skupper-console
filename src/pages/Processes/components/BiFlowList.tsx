@@ -4,6 +4,7 @@ import { Card, CardBody, Tab, Tabs, TabTitleText } from '@patternfly/react-core'
 import { ResourcesEmptyIcon } from '@patternfly/react-icons';
 
 import { SMALL_PAGINATION_SIZE } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import { httpBiFlowColumns, tcpBiFlowColumns } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
 import SKEmptyData from '../../../core/components/SkEmptyData';
 import { setColumnVisibility } from '../../../core/components/SkTable/SkTable.utils';
@@ -16,12 +17,11 @@ import {
 import BiFlowLogs from '../../shared/BiFlowLogs';
 import { TopologyURLQueyParams } from '../../Topology/Topology.enum';
 import { useBiflowListData } from '../hooks/useBiflowListData';
-import { ProcessesLabels } from '../Processes.enum';
 
 const TAB_KEYS = {
-  LIVE: ProcessesLabels.OpenConnections,
-  TERMINATED: ProcessesLabels.TerminatedConnections,
-  REQUESTS: ProcessesLabels.Requests
+  LIVE: Labels.OpenConnections,
+  TERMINATED: Labels.TerminatedConnections,
+  REQUESTS: Labels.Requests
 };
 
 interface ProcessBiFlowListProps {
@@ -61,7 +61,7 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
   const tabConfigs = [
     {
       key: TAB_KEYS.LIVE,
-      label: ProcessesLabels.OpenConnections,
+      label: Labels.OpenConnections,
       isDisabled: !activeConnectionCount,
       columns: setColumnVisibility(tcpBiFlowColumns, {
         duration: false,
@@ -75,7 +75,7 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
     },
     {
       key: TAB_KEYS.TERMINATED,
-      label: ProcessesLabels.TerminatedConnections,
+      label: Labels.TerminatedConnections,
       isDisabled: !terminatedConnectionCount,
       columns: setColumnVisibility(tcpBiFlowColumns, {
         sourceProcessName: false,
@@ -87,7 +87,7 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
     },
     {
       key: TAB_KEYS.REQUESTS,
-      label: ProcessesLabels.Requests,
+      label: Labels.Requests,
       isDisabled: !requestCount,
       columns: setColumnVisibility(httpBiFlowColumns, {
         sourceProcessName: false,
@@ -105,8 +105,8 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
       <Card isFullHeight>
         <CardBody>
           <SKEmptyData
-            message={ProcessesLabels.ProcessPairsEmptyTitle}
-            description={ProcessesLabels.ProcessPairsEmptyMessage}
+            message={Labels.NoBiflowFound}
+            description={Labels.NoBiflowFoundDescription}
             icon={ResourcesEmptyIcon}
           />
         </CardBody>

@@ -1,8 +1,8 @@
 import ConnectorProcessCountCell from './components/ConnectorProcessCountCell';
-import { ServicesRoutesPaths, ServicesLabels } from './Services.enum';
+import { ServicesRoutesPaths } from './Services.enum';
 import { SortDirection, TcpStatus } from '../../API/REST.enum';
 import { BIG_PAGINATION_SIZE, EMPTY_VALUE_SYMBOL } from '../../config/app';
-import { BiFlowListLabels } from '../../core/components/SkBiFlowList/BiFlowList.enum';
+import { Labels } from '../../config/labels';
 import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { SankeyMetricOptions } from '../../core/components/SKSanckeyChart/SkSankey.constants';
@@ -17,20 +17,20 @@ import {
   PairsWithInstantMetrics
 } from '../../types/REST.interfaces';
 import { SKTableColumn } from '../../types/SkTable.interfaces';
-import { ProcessesLabels, ProcessesRoutesPaths } from '../Processes/Processes.enum';
+import { ProcessesRoutesPaths } from '../Processes/Processes.enum';
 import { SitesRoutesPaths } from '../Sites/Sites.enum';
 
 export const ServicesPaths = {
   path: ServicesRoutesPaths.Services,
-  name: ServicesLabels.Section
+  name: Labels.Services
 };
 
-export const TAB_0_KEY = ServicesLabels.Overview;
-export const TAB_1_KEY = ServicesLabels.Pairs;
-export const TAB_2_KEY = ServicesLabels.Requests;
-export const TAB_3_KEY = ServicesLabels.OpenConnections;
-export const TAB_4_KEY = ServicesLabels.OldConnections;
-export const TAB_5_KEY = ServicesLabels.ListenersAndConnectors;
+export const TAB_0_KEY = Labels.Overview;
+export const TAB_1_KEY = Labels.Pairs;
+export const TAB_2_KEY = Labels.Requests;
+export const TAB_3_KEY = Labels.OpenConnections;
+export const TAB_4_KEY = Labels.OldConnections;
+export const TAB_5_KEY = Labels.ListenersAndConnectors;
 
 export const customServiceCells = {
   ServiceNameLinkCell: (props: SkLinkCellProps<ServiceResponse>) =>
@@ -84,25 +84,25 @@ export const customServiceCells = {
 // Services Table
 export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   {
-    name: ServicesLabels.RoutingKey,
+    name: Labels.RoutingKey,
     prop: 'name',
     customCellName: 'ServiceNameLinkCell'
   },
   {
-    name: ServicesLabels.TransportProtocol,
+    name: Labels.TCP,
     prop: 'protocol'
   },
   {
-    name: ServicesLabels.ApplicationProtocols,
+    name: Labels.HTTP,
     prop: 'observedApplicationProtocols',
     customCellName: 'ApplicationProtocolCell'
   },
   {
-    name: ServicesLabels.IsBound,
+    name: Labels.IsBound,
     prop: 'isBound'
   },
   {
-    name: ProcessesLabels.Created,
+    name: Labels.Created,
     prop: 'startTime',
     customCellName: 'TimestampCell',
     modifier: 'fitContent'
@@ -112,16 +112,16 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
 // Listeners Table
 export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
   {
-    name: ServicesLabels.Name,
+    name: Labels.Name,
     prop: 'name'
   },
   {
-    name: ServicesLabels.Site,
+    name: Labels.Site,
     prop: 'siteName',
     customCellName: 'SiteNameLinkCell'
   },
   {
-    name: ProcessesLabels.Created,
+    name: Labels.Created,
     prop: 'startTime',
     customCellName: 'TimestampCell',
     modifier: 'fitContent'
@@ -131,29 +131,29 @@ export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
 // Connectors Table
 export const ConnectorColumns: SKTableColumn<ConnectorResponse>[] = [
   {
-    name: ServicesLabels.Name,
+    name: Labels.Name,
     prop: 'name'
   },
   {
-    name: ServicesLabels.DestHost,
+    name: Labels.DestHost,
     prop: 'destHost'
   },
   {
-    name: ServicesLabels.DestPort,
+    name: Labels.DestPort,
     prop: 'destPort'
   },
   {
-    name: ServicesLabels.Processes,
+    name: Labels.Processes,
     prop: 'count',
     customCellName: 'ConnectorProcessCountCell'
   },
   {
-    name: ServicesLabels.Site,
+    name: Labels.Site,
     prop: 'siteName',
     customCellName: 'SiteNameLinkCell'
   },
   {
-    name: ProcessesLabels.Created,
+    name: Labels.Created,
     prop: 'startTime',
     customCellName: 'TimestampCell',
     modifier: 'fitContent'
@@ -162,32 +162,32 @@ export const ConnectorColumns: SKTableColumn<ConnectorResponse>[] = [
 
 export const PairColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
   {
-    name: BiFlowListLabels.Client,
+    name: Labels.Client,
     prop: 'sourceName',
     customCellName: 'SourceProcessNameLinkCell'
   },
   {
-    name: BiFlowListLabels.Site,
+    name: Labels.Site,
     prop: 'sourceSiteName' as keyof PairsWithInstantMetrics,
     customCellName: 'SourceSiteNameLinkCell'
   },
   {
-    name: BiFlowListLabels.Server,
+    name: Labels.Server,
     prop: 'destinationName',
     customCellName: 'DestProcessNameLinkCell'
   },
   {
-    name: BiFlowListLabels.ServerSite,
+    name: Labels.ServerSite,
     prop: 'destinationSiteName' as keyof PairsWithInstantMetrics,
     customCellName: 'DestSiteNameLinkCell'
   },
   {
-    name: ProcessesLabels.Bytes,
+    name: Labels.Bytes,
     prop: 'bytes',
     format: formatBytes
   },
   {
-    name: ProcessesLabels.ByteRate,
+    name: Labels.ByteRate,
     prop: 'byteRate',
     format: formatByteRate
   }
@@ -195,7 +195,7 @@ export const PairColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
 
 export const servicesSelectOptions: SkSelectOption[] = [
   {
-    label: ServicesLabels.Name,
+    label: Labels.Name,
     id: 'name'
   }
 ];

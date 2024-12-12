@@ -18,13 +18,13 @@ import {
 import { Link } from 'react-router-dom';
 
 import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import ResourceIcon from '../../../core/components/ResourceIcon';
 import { formatLocalizedDateTime } from '../../../core/utils/formatLocalizedDateTime';
 import { ProcessResponse } from '../../../types/REST.interfaces';
 import { ComponentRoutesPaths } from '../../Components/Components.enum';
 import { ServicesRoutesPaths } from '../../Services/Services.enum';
 import { SitesRoutesPaths } from '../../Sites/Sites.enum';
-import { ProcessesLabels } from '../Processes.enum';
 
 interface DetailsProps {
   process: ProcessResponse;
@@ -57,7 +57,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
           <Grid hasGutter>
             <GridItem span={6}>
               <DescriptionListGroup>
-                <DescriptionListTerm>{ProcessesLabels.Site}</DescriptionListTerm>
+                <DescriptionListTerm>{Labels.Site}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <ResourceIcon type="site" />
                   <Link to={`${SitesRoutesPaths.Sites}/${parentName}@${parent}`}>{parentName}</Link>
@@ -66,7 +66,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
             </GridItem>
             <GridItem span={6}>
               <DescriptionListGroup>
-                <DescriptionListTerm>{ProcessesLabels.Component}</DescriptionListTerm>
+                <DescriptionListTerm>{Labels.Component}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <ResourceIcon type="component" />
                   <Link to={`${ComponentRoutesPaths.Components}/${groupName}@${groupIdentity}`}>{groupName}</Link>
@@ -76,28 +76,28 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
 
             <GridItem span={6}>
               <DescriptionListGroup>
-                <DescriptionListTerm>{ProcessesLabels.SourceIP}</DescriptionListTerm>
+                <DescriptionListTerm>{Labels.SourceIP}</DescriptionListTerm>
                 <DescriptionListDescription>{sourceHost}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 
             <GridItem span={6}>
               <DescriptionListGroup>
-                <DescriptionListTerm>{ProcessesLabels.Host}</DescriptionListTerm>
+                <DescriptionListTerm>{Labels.Node}</DescriptionListTerm>
                 <DescriptionListDescription>{hostName || EMPTY_VALUE_SYMBOL}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 
             <GridItem span={6}>
               <DescriptionListGroup>
-                <DescriptionListTerm>{ProcessesLabels.Created}</DescriptionListTerm>
+                <DescriptionListTerm>{Labels.Created}</DescriptionListTerm>
                 <DescriptionListDescription>{formatLocalizedDateTime(startTime)}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 
             <GridItem span={6}>
               <DescriptionListGroup>
-                <DescriptionListTerm>{ProcessesLabels.Image}</DescriptionListTerm>
+                <DescriptionListTerm>{Labels.Image}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <Tooltip content={imageName}>
                     <Truncate content={imageName || EMPTY_VALUE_SYMBOL} trailingNumChars={10} position={'middle'} />
@@ -108,7 +108,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
 
             <GridItem span={6}>
               <DescriptionListGroup>
-                <DescriptionListTerm>{ProcessesLabels.BindingState}</DescriptionListTerm>
+                <DescriptionListTerm>{Labels.BindingState}</DescriptionListTerm>
                 <DescriptionListDescription>{processBinding}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
@@ -116,7 +116,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
             {!!addresses?.length && (
               <GridItem span={6}>
                 <DescriptionListGroup>
-                  <DescriptionListTerm>{ProcessesLabels.Services}</DescriptionListTerm>
+                  <DescriptionListTerm>{Labels.RoutingKeys}</DescriptionListTerm>
                   <DescriptionListDescription>
                     <Flex>
                       {addresses.map((service) => (

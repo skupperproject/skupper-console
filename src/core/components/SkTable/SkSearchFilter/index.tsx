@@ -16,8 +16,8 @@ import { FilterIcon } from '@patternfly/react-icons';
 
 import { SkSearchFilterController } from './services';
 import { DEBOUNCE_TIME_MS } from './SkSearchFilter.constants';
-import { SkSearchFilterLabels } from './SkSearchFilter.enum';
 import { testIds } from './SkSearchFilter.testIds';
+import { Labels } from '../../../../config/labels';
 import useDebounce from '../../../../hooks/useDebounce';
 import { FilterSelected, FilterTypeWithSearchText } from '../../../../types/SkFilter.interfaces';
 import SkSelect, { SkSelectOption } from '../../SkSelect';
@@ -95,7 +95,7 @@ const SkSearchFilter: FC<SkSearchFilterProps> = memo(({ text = '', onSearch, sel
             <ToolbarItem data-testid={testIds.searchBox}>
               <SearchInput
                 className="sk-search-filter"
-                placeholder={`${SkSearchFilterLabels.PlaceHolderInputSearchPrefix} ${selectedFilter?.toString().toLocaleLowerCase()}`}
+                placeholder={`${Labels.SearchBy} ${selectedFilter?.toString().toLocaleLowerCase()}`}
                 onChange={handleChangeSearchText}
                 value={searchText}
                 onClear={handleClearSearchText}
@@ -160,7 +160,7 @@ const ActiveFilters: FC<ActiveFiltersProps> = function ({ filterSelected, onDele
 
       <ToolbarItem>
         <Button data-testid={testIds.groupFilterLabelsBtn} variant="link" onClick={() => onDeleteAll()}>
-          {SkSearchFilterLabels.ClearAllLabelsBtn}
+          {Labels.ClearAll}
         </Button>
       </ToolbarItem>
     </ToolbarGroup>

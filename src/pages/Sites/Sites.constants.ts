@@ -1,6 +1,7 @@
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
-import { SiteLabels, SitesRoutesPaths } from './Sites.enum';
+import { SitesRoutesPaths } from './Sites.enum';
+import { Labels } from '../../config/labels';
 import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import SkLinkStatusCell from '../../core/components/SkLinkStatusCell';
@@ -8,7 +9,7 @@ import { PairsResponse, RouterLinkResponse, SiteResponse } from '../../types/RES
 
 export const SitesPaths = {
   path: SitesRoutesPaths.Sites,
-  name: SiteLabels.Section
+  name: Labels.Sites
 };
 
 export const customSiteCells = {
@@ -31,7 +32,7 @@ export const customSiteCells = {
       type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.name}@${props.data.sourceSiteId}`
     }),
-  isHACell: (props: SkLinkCellProps<RouterLinkResponse>) => (Number(props.value) > 1 ? SiteLabels.YES : SiteLabels.NO),
+  isHACell: (props: SkLinkCellProps<RouterLinkResponse>) => (Number(props.value) > 1 ? Labels.YES : Labels.NO),
   SkStatusLinkCell: SkLinkStatusCell
 };
 
@@ -40,37 +41,37 @@ export const CustomSitePairCells = {
     SkLinkCell({
       ...props,
       type: 'site',
-      link: `${SitesRoutesPaths.Sites}/${props.data.destinationName}@${props.data.destinationId}?type=${SiteLabels.Pairs}`
+      link: `${SitesRoutesPaths.Sites}/${props.data.destinationName}@${props.data.destinationId}?type=${Labels.Pairs}`
     })
 };
 
 export const siteColumns: SKTableColumn<SiteResponse>[] = [
   {
-    name: SiteLabels.Name,
+    name: Labels.Name,
     prop: 'name',
     customCellName: 'LinkCell'
   },
 
   {
-    name: SiteLabels.Namespace,
+    name: Labels.Namespace,
     prop: 'nameSpace'
   },
   {
-    name: SiteLabels.Platform,
+    name: Labels.Platform,
     prop: 'platform'
   },
 
   {
-    name: SiteLabels.SiteVersion,
+    name: Labels.SiteVersion,
     prop: 'siteVersion'
   },
   {
-    name: SiteLabels.HA,
+    name: Labels.HA,
     prop: 'routerCount',
     customCellName: 'isHACell'
   },
   {
-    name: SiteLabels.Created,
+    name: Labels.Created,
     prop: 'startTime',
     customCellName: 'TimestampCell',
     modifier: 'fitContent'
@@ -79,26 +80,26 @@ export const siteColumns: SKTableColumn<SiteResponse>[] = [
 
 export const linksColumns: SKTableColumn<RouterLinkResponse>[] = [
   {
-    name: SiteLabels.Name,
+    name: Labels.Name,
     prop: 'name'
   },
   {
-    name: SiteLabels.TargetSite,
+    name: Labels.To,
     prop: 'destinationSiteName',
     customCellName: 'LinkToCell'
   },
   {
-    name: SiteLabels.Cost,
+    name: Labels.Cost,
     prop: 'cost'
   },
   {
-    name: SiteLabels.LinkStatus,
+    name: Labels.LinkStatus,
     prop: 'status',
     customCellName: 'SkStatusLinkCell'
   },
 
   {
-    name: SiteLabels.Created,
+    name: Labels.Created,
     prop: 'startTime',
     customCellName: 'TimestampCell',
     modifier: 'fitContent'
@@ -108,7 +109,7 @@ export const linksColumns: SKTableColumn<RouterLinkResponse>[] = [
 export const linksRemoteColumns: SKTableColumn<RouterLinkResponse>[] = [
   linksColumns[0],
   {
-    name: SiteLabels.SourceSite,
+    name: Labels.From,
     prop: 'sourceSiteName',
     customCellName: 'LinkFromCell'
   },

@@ -1,13 +1,13 @@
 import { Bullseye, PageSection, Content, ContentVariants } from '@patternfly/react-core';
 
-import { NotFoundLabels } from './NotFound.enum';
+import { Labels } from '../../../../config/labels';
 
 const NotFound = function () {
   return (
     <PageSection hasBodyWrapper={false}>
       <Bullseye data-testid="sk-not-found-view">
         <Content>
-          <Content component={ContentVariants.h1}>{NotFoundLabels.ErrorTitle}</Content>
+          <Content component={ContentVariants.h1}>{Labels.NoFoundError}</Content>
         </Content>
       </Bullseye>
     </PageSection>

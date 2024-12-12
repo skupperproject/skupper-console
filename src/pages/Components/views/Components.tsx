@@ -1,10 +1,10 @@
 import { BIG_PAGINATION_SIZE } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import { getTestsIds } from '../../../config/testIds';
 import SkTable from '../../../core/components/SkTable';
 import MainContainer from '../../../layout/MainContainer';
 import { TopologyRoutesPaths, TopologyViews } from '../../Topology/Topology.enum';
 import { CustomComponentCells, ComponentColumns } from '../Components.constants';
-import { ComponentLabels } from '../Components.enum';
 import { useComponentsData } from '../hooks/useComponentsData';
 
 const Components = function () {
@@ -17,8 +17,8 @@ const Components = function () {
   return (
     <MainContainer
       dataTestId={getTestsIds.componentsView()}
-      title={ComponentLabels.Section}
-      description={ComponentLabels.Description}
+      title={Labels.Components}
+      description={Labels.ComponentsDescription}
       link={`${TopologyRoutesPaths.Topology}?type=${TopologyViews.Components}`}
       mainContentChildren={
         <SkTable

@@ -5,11 +5,11 @@ import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import TrafficCharts from './TrafficCharts';
+import { Labels } from '../../../../config/labels';
 import { hexColors, styles } from '../../../../config/styles';
 import SKEmptyData from '../../../../core/components/SkEmptyData';
 import SkIsLoading from '../../../../core/components/SkIsLoading';
 import { QueriesMetrics, QueryMetricsParams } from '../../../../types/Metrics.interfaces';
-import { MetricsLabels } from '../Metrics.enum';
 import { MetricsController } from '../services';
 
 interface TrafficProps {
@@ -65,9 +65,9 @@ const Traffic: FC<TrafficProps> = function ({
   const isOnlyClientOrServer = dataSeverAvailable && dataClientAvailable;
 
   return (
-    <Card isExpanded={isExpanded} aria-label={MetricsLabels.DataTransferTitle}>
+    <Card isExpanded={isExpanded} aria-label={Labels.TcpTraffic}>
       <CardHeader onExpand={handleExpand}>
-        <CardTitle>{MetricsLabels.DataTransferTitle}</CardTitle>
+        <CardTitle>{Labels.TcpTraffic}</CardTitle>
       </CardHeader>
 
       <CardExpandableContent>
@@ -77,7 +77,7 @@ const Traffic: FC<TrafficProps> = function ({
           {(!!data?.traffic.txTimeSerie?.data.length || !!data?.traffic.rxTimeSerie?.data.length) && (
             <>
               {!isLoading && isRefetching && <SkIsLoading />}
-              <Title headingLevel="h4">{`${MetricsLabels.ByteRateTitle}`} </Title>
+              <Title headingLevel="h4">{`${Labels.ByteRate}`} </Title>
               <TrafficCharts byteRateData={data.traffic} />
             </>
           )}
@@ -86,8 +86,8 @@ const Traffic: FC<TrafficProps> = function ({
             (!!data?.trafficClient.txTimeSerie?.data.length || !!data?.trafficClient.rxTimeSerie?.data.length) && (
               <>
                 {!isLoading && isRefetching && <SkIsLoading />}
-                <Title headingLevel="h4">{`${MetricsLabels.ByteRateTitle} as Client`} </Title>
-                <small>{MetricsLabels.ByteRateDataSentDescription} </small>
+                <Title headingLevel="h4">{`${Labels.ByteRate} as Client`} </Title>
+                <small>{Labels.ByteRateDataOutDescription} </small>
                 <TrafficCharts
                   byteRateData={data.trafficClient}
                   colorScale={[hexColors.Orange100, styles.default.warningColor]}
@@ -99,8 +99,8 @@ const Traffic: FC<TrafficProps> = function ({
             (!!data?.trafficServer.txTimeSerie?.data.length || !!data?.trafficServer.rxTimeSerie?.data.length) && (
               <>
                 {!isLoading && isRefetching && <SkIsLoading />}
-                <Title headingLevel="h4">{`${MetricsLabels.ByteRateTitle} as Server`} </Title>
-                <small>{MetricsLabels.ByteRateDataReceivedDescription} </small>
+                <Title headingLevel="h4">{`${Labels.ByteRate} as Server`} </Title>
+                <small>{Labels.ByteRateDataInDescription} </small>
                 <TrafficCharts
                   byteRateData={data.trafficServer}
                   colorScale={[hexColors.Purple100, hexColors.Purple500]}
@@ -110,8 +110,8 @@ const Traffic: FC<TrafficProps> = function ({
 
           {!isLoading && !data?.traffic.txTimeSerie?.data.length && !data?.traffic.rxTimeSerie?.data.length && (
             <SKEmptyData
-              message={MetricsLabels.NoMetricFoundTitleMessage}
-              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              message={Labels.NoMetricFound}
+              description={Labels.NoMetricFoundDescription}
               icon={SearchIcon}
             />
           )}

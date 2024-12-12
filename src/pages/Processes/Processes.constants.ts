@@ -1,6 +1,7 @@
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
-import { ProcessesLabels, ProcessesRoutesPaths } from './Processes.enum';
+import { ProcessesRoutesPaths } from './Processes.enum';
+import { Labels } from '../../config/labels';
 import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { SkSelectOption } from '../../core/components/SkSelect';
@@ -11,7 +12,7 @@ import { SitesRoutesPaths } from '../Sites/Sites.enum';
 
 export const ProcessesPaths = {
   path: ProcessesRoutesPaths.Processes,
-  name: ProcessesLabels.Section
+  name: Labels.Processes
 };
 
 export const CustomProcessCells = {
@@ -41,38 +42,38 @@ export const CustomProcessPairCells = {
     SkLinkCell({
       ...props,
       type: 'process',
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationName}@${props.data.destinationId}?type=${ProcessesLabels.ProcessPairs}`
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationName}@${props.data.destinationId}?type=${Labels.Pairs}`
     }),
   viewDetailsLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
     SkLinkCell({
       ...props,
-      value: ProcessesLabels.GoToDetailsLink,
-      link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}/${ProcessesLabels.ProcessPairs}@${props.data.identity}?type=${ProcessesLabels.ProcessPairs}`
+      value: Labels.ViewDetails,
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}/${Labels.Pairs}@${props.data.identity}?type=${Labels.Pairs}`
     })
 };
 
 export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
   {
-    name: ProcessesLabels.Name,
+    name: Labels.Name,
     prop: 'name' as keyof ProcessResponse,
     customCellName: 'linkCell'
   },
   {
-    name: ProcessesLabels.Component,
+    name: Labels.Component,
     prop: 'groupName' as keyof ProcessResponse,
     customCellName: 'linkComponentCell'
   },
   {
-    name: ProcessesLabels.Site,
+    name: Labels.Site,
     prop: 'parentName' as keyof ProcessResponse,
     customCellName: 'linkCellSite'
   },
   {
-    name: ProcessesLabels.BindingState,
+    name: Labels.BindingState,
     prop: 'processBinding' as keyof ProcessResponse
   },
   {
-    name: ProcessesLabels.Created,
+    name: Labels.Created,
     prop: 'startTime' as keyof ProcessResponse,
     customCellName: 'TimestampCell',
     modifier: 'fitContent'
@@ -81,25 +82,25 @@ export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
 
 export const PairsListColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
   {
-    name: ProcessesLabels.Name,
+    name: Labels.Name,
     prop: 'destinationName',
     customCellName: 'ConnectedLinkCell'
   },
   {
-    name: ProcessesLabels.TransportProtocol,
+    name: Labels.TCP,
     prop: 'protocol'
   },
   {
-    name: ProcessesLabels.ApplicationProtocols,
+    name: Labels.HTTP,
     prop: 'observedApplicationProtocols'
   },
   {
-    name: ProcessesLabels.Bytes,
+    name: Labels.Bytes,
     prop: 'bytes',
     format: formatBytes
   },
   {
-    name: ProcessesLabels.ByteRate,
+    name: Labels.ByteRate,
     prop: 'byteRate',
     format: formatByteRate
   }

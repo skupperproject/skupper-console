@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { useParams } from 'react-router-dom';
 
+import { Labels } from '../../../config/labels';
 import { getTestsIds } from '../../../config/testIds';
 import { getIdAndNameFromUrlParams } from '../../../core/utils/getIdAndNameFromUrlParams';
 import MainContainer from '../../../layout/MainContainer';
@@ -10,7 +11,6 @@ import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '../..
 import BiFlowList from '../components/BiFlowList';
 import ProcessPairDetails from '../components/ProcessPairDetails';
 import { useProcessPairData } from '../hooks/useProcessPairData';
-import { ProcessesLabels } from '../Processes.enum';
 
 export interface ProcessPairProps {
   id: string;
@@ -22,7 +22,7 @@ export const ProcessPairContent: FC<ProcessPairProps> = function ({ id }) {
   return (
     <MainContainer
       dataTestId={getTestsIds.processPairsView(id)}
-      title={ProcessesLabels.Title}
+      title={Labels.Details}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.IdSelected}=${id}`}
       mainContentChildren={
         <Stack hasGutter>

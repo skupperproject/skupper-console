@@ -4,10 +4,10 @@ import { ChartThemeColor } from '@patternfly/react-charts/victory';
 import { Divider, Flex, FlexItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
+import { Labels } from '../../../../config/labels';
 import SkChartArea from '../../../../core/components/SkChartArea';
 import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDecimalPlacesIfCents';
 import { RequestMetrics } from '../../../../types/Metrics.interfaces';
-import { MetricsLabels } from '../Metrics.enum';
 
 const RequestCharts: FC<{
   requestRateData: RequestMetrics[];
@@ -28,10 +28,10 @@ const RequestCharts: FC<{
       <Table borders={false} variant="compact">
         <Thead noWrap>
           <Tr>
-            <Th>{MetricsLabels.Method}</Th>
-            <Th>{MetricsLabels.MaxRequestRate}</Th>
-            <Th>{MetricsLabels.RequestRateAvgTitle}</Th>
-            <Th>{MetricsLabels.RequestRateCurrentTitle}</Th>
+            <Th>{Labels.Method}</Th>
+            <Th>{Labels.MaxRequestRate}</Th>
+            <Th>{Labels.RequestRateAvgTitle}</Th>
+            <Th>{Labels.RequestRateCurrentTitle}</Th>
           </Tr>
         </Thead>
         <Tbody>

@@ -4,6 +4,7 @@ import { Card, Flex } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 
 import { SMALL_PAGINATION_SIZE } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import SKEmptyData from '../../../core/components/SkEmptyData';
 import SkTable from '../../../core/components/SkTable';
@@ -14,7 +15,6 @@ import { ComponentResponse, PairsWithInstantMetrics } from '../../../types/REST.
 import { SKTableColumn } from '../../../types/SkTable.interfaces';
 import { PairsListColumns } from '../../Processes/Processes.constants';
 import { CustomComponentPairCells } from '../Components.constants';
-import { ComponentLabels } from '../Components.enum';
 import { useComponensPairsListData } from '../hooks/useComponentPairsData';
 
 interface PairsListProps {
@@ -52,12 +52,12 @@ const PairsList: FC<PairsListProps> = function ({ component: { identity: id, nam
   return (
     <Flex direction={{ default: 'column' }}>
       {renderTable(
-        ComponentLabels.Clients,
+        Labels.Clients,
         clients,
         setColumnVisibility(PairsListColumns, { protocol: false, observedApplicationProtocols: false, latency: false })
       )}
       {renderTable(
-        ComponentLabels.Servers,
+        Labels.Servers,
         servers,
         setColumnVisibility(PairsListColumns, { protocol: false, observedApplicationProtocols: false, latency: false })
       )}

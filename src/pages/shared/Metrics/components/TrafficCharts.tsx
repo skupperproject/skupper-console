@@ -4,11 +4,11 @@ import { ChartThemeColor } from '@patternfly/react-charts/victory';
 import { Divider, Flex } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
+import { Labels } from '../../../../config/labels';
 import SkChartArea from '../../../../core/components/SkChartArea';
 import SkChartPie from '../../../../core/components/SkChartPie';
 import { formatByteRate, formatBytes } from '../../../../core/utils/formatBytes';
 import { ByteRateMetrics } from '../../../../types/Metrics.interfaces';
-import { MetricsLabels } from '../Metrics.enum';
 import { MetricsController } from '../services';
 
 const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }> = memo(
@@ -18,7 +18,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }
         <SkChartArea
           colorScale={colorScale && [colorScale[0]]}
           formatY={formatByteRate}
-          legendLabels={[MetricsLabels.TrafficReceived]}
+          legendLabels={[Labels.BytesIn]}
           height={250}
           data={MetricsController.fillMissingDataWithZeros(byteRateData.rxTimeSerie?.data)}
         />
@@ -27,7 +27,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }
           colorScale={colorScale && [colorScale[1]]}
           themeColor={ChartThemeColor.green}
           formatY={formatByteRate}
-          legendLabels={[MetricsLabels.TrafficSent]}
+          legendLabels={[Labels.BytesOut]}
           height={250}
           data={MetricsController.fillMissingDataWithZeros(byteRateData.txTimeSerie?.data)}
         />
@@ -40,20 +40,20 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }
           <Thead noWrap>
             <Tr>
               <Th aria-label="metric" />
-              <Th>{MetricsLabels.ByteRateMaxCol}</Th>
-              <Th>{MetricsLabels.ByteRateAvgCol}</Th>
-              <Th>{MetricsLabels.ByteRateCurrentCol}</Th>
+              <Th>{Labels.ByteRateMaxCol}</Th>
+              <Th>{Labels.ByteRateAvgCol}</Th>
+              <Th>{Labels.ByteRateCurrentCol}</Th>
             </Tr>
           </Thead>
           <Tbody>
             <Tr>
-              <Td>{MetricsLabels.TrafficReceived}</Td>
+              <Td>{Labels.BytesIn}</Td>
               <Td>{formatByteRate(byteRateData?.maxRxValue || 0)}</Td>
               <Td>{formatByteRate(byteRateData?.avgRxValue || 0)}</Td>
               <Td>{formatByteRate(byteRateData?.currentRxValue || 0)}</Td>
             </Tr>
             <Tr>
-              <Td>{MetricsLabels.TrafficSent}</Td>
+              <Td>{Labels.BytesOut}</Td>
               <Td>{formatByteRate(byteRateData?.maxTxValue || 0)}</Td>
               <Td>{formatByteRate(byteRateData?.avgTxValue || 0)}</Td>
               <Td>{formatByteRate(byteRateData?.currentTxValue || 0)}</Td>
@@ -69,11 +69,11 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }
           themeColor={ChartThemeColor.multi}
           data={[
             {
-              x: MetricsLabels.TrafficReceived,
+              x: Labels.BytesIn,
               y: byteRateData?.totalRxValue || 0
             },
             {
-              x: MetricsLabels.TrafficSent,
+              x: Labels.BytesOut,
               y: byteRateData?.totalTxValue || 0
             }
           ]}

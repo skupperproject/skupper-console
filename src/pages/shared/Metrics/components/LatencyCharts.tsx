@@ -4,6 +4,7 @@ import { ChartThemeColor } from '@patternfly/react-charts/victory';
 import { Grid, GridItem, Title } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
+import { Labels } from '../../../../config/labels';
 import SkChartArea from '../../../../core/components/SkChartArea';
 import SkChartBar from '../../../../core/components/SkChartBar';
 import { formatLatency } from '../../../../core/utils/formatLatency';
@@ -13,7 +14,6 @@ import {
   LatencyBucketSummary,
   LatencyMetrics
 } from '../../../../types/Metrics.interfaces';
-import { MetricsLabels } from '../Metrics.enum';
 
 const LatencyCharts: FC<{
   latenciesData: LatencyMetrics[];
@@ -22,7 +22,7 @@ const LatencyCharts: FC<{
 }> = memo(({ latenciesData, bucketsData, summary }) => (
   <Grid>
     <GridItem md={12} xl={12}>
-      <Title headingLevel="h4">{MetricsLabels.LatencyPercentileTitle}</Title>
+      <Title headingLevel="h4">{Labels.PercentileOverTime}</Title>
       <SkChartArea
         formatY={formatLatency}
         themeColor={ChartThemeColor.multi}
@@ -32,7 +32,7 @@ const LatencyCharts: FC<{
     </GridItem>
 
     <GridItem rowSpan={2} md={12} xl={8}>
-      <Title headingLevel="h4">{MetricsLabels.LatencyBucketsTitle}</Title>
+      <Title headingLevel="h4">{Labels.Buckets}</Title>
       <SkChartBar
         themeColor={ChartThemeColor.multi}
         legendLabels={bucketsData.map(({ label }) => label)}

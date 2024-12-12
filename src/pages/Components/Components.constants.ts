@@ -1,13 +1,14 @@
 import { SKTableColumn } from 'types/SkTable.interfaces';
 
-import { ComponentLabels, ComponentRoutesPaths } from './Components.enum';
+import { ComponentRoutesPaths } from './Components.enum';
+import { Labels } from '../../config/labels';
 import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { ComponentResponse, PairsResponse } from '../../types/REST.interfaces';
 
 export const ComponentsPaths = {
   path: ComponentRoutesPaths.Components,
-  name: ComponentLabels.Section
+  name: Labels.Components
 };
 
 export const CustomComponentCells = {
@@ -21,7 +22,7 @@ export const CustomComponentCells = {
   ProcessCountCell: (props: SkLinkCellProps<ComponentResponse>) =>
     SkLinkCell({
       ...props,
-      link: `${ComponentRoutesPaths.Components}/${props.data.name}@${props.data.identity}?type=${ComponentLabels.Processes}`
+      link: `${ComponentRoutesPaths.Components}/${props.data.name}@${props.data.identity}?type=${Labels.Processes}`
     })
 };
 
@@ -30,24 +31,24 @@ export const CustomComponentPairCells = {
     SkLinkCell({
       ...props,
       type: 'component',
-      link: `${ComponentRoutesPaths.Components}/${props.data.destinationName}@${props.data.destinationId}?type=${ComponentLabels.Pairs}`
+      link: `${ComponentRoutesPaths.Components}/${props.data.destinationName}@${props.data.destinationId}?type=${Labels.Pairs}`
     })
 };
 
 export const ComponentColumns: SKTableColumn<ComponentResponse>[] = [
   {
-    name: ComponentLabels.Name,
+    name: Labels.Name,
     prop: 'name' as keyof ComponentResponse,
     customCellName: 'ComponentNameLinkCell'
   },
   {
-    name: ComponentLabels.Count,
+    name: Labels.Processes,
     prop: 'processCount' as keyof ComponentResponse,
     customCellName: 'ProcessCountCell',
     modifier: 'fitContent'
   },
   {
-    name: ComponentLabels.Created,
+    name: Labels.Created,
     prop: 'startTime' as keyof ComponentResponse,
     customCellName: 'TimestampCell',
     modifier: 'fitContent'

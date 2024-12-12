@@ -3,7 +3,7 @@ import { FC, useCallback, useState } from 'react';
 import { Button, Icon, Popover, SearchInput } from '@patternfly/react-core';
 import { ExpandArrowsAltIcon, InfoCircleIcon } from '@patternfly/react-icons';
 
-import { TopologyLabels } from '../Topology.enum';
+import { Labels } from '../../../config/labels';
 
 enum DisplayResourcesLabels {
   SearchInfo1 = 'Search results may appear outside of the visible area. Click to the',
@@ -14,10 +14,7 @@ interface DisplayResourcesProps {
   placeholder?: string;
 }
 
-const DisplayResources: FC<DisplayResourcesProps> = function ({
-  placeholder = TopologyLabels.DisplayResourcesDefaultLabel,
-  onSelect
-}) {
+const DisplayResources: FC<DisplayResourcesProps> = function ({ placeholder = Labels.FindResource, onSelect }) {
   const [searchText, setSearchText] = useState('');
 
   const handleClear = useCallback(() => {
