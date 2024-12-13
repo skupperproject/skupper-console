@@ -22,6 +22,7 @@ import {
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/app';
 import { Labels } from '../../../config/labels';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import ResourceIcon from '../../../core/components/ResourceIcon';
@@ -217,7 +218,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                                     <Link
                                       to={`${ComponentRoutesPaths.Components}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
                                     >
-                                      {service.split('@')[0]}
+                                      {service.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[0]}
                                     </Link>
                                   </Fragment>
                                 ))}

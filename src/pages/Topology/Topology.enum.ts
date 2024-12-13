@@ -4,8 +4,6 @@ export enum TopologyRoutesPaths {
 }
 
 export enum QueriesPairs {
-  GetSitesPairs = 'get-sites-pairs-query',
-  GetProcessesPairs = 'get-processes-pairs-query',
   GetComponentsPairs = 'get-components-pairs-query',
   GetMetricsByPairs = 'get-metrics-by-pairs-query'
 }

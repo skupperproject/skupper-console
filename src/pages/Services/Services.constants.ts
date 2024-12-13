@@ -5,7 +5,6 @@ import { BIG_PAGINATION_SIZE, EMPTY_VALUE_SYMBOL } from '../../config/app';
 import { Labels } from '../../config/labels';
 import SkEndTimeCell from '../../core/components/SkEndTimeCell';
 import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
-import { SankeyMetricOptions } from '../../core/components/SKSanckeyChart/SkSankey.constants';
 import { SkSelectOption } from '../../core/components/SkSelect';
 import { formatByteRate, formatBytes } from '../../core/utils/formatBytes';
 import {
@@ -220,5 +219,3 @@ export const initRequestsQueryParams: QueryFilters = {
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
-
-export const defaultMetricOption = SankeyMetricOptions[0].id;

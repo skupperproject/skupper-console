@@ -7,7 +7,7 @@ import { getIdAndNameFromUrlParams } from '../../../core/utils/getIdAndNameFromU
 import MainContainer from '../../../layout/MainContainer';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '../../Topology/Topology.enum';
 import HttpRequests from '../components/HttpRequests';
-import ListenerAndConnectorList from '../components/ListenerAndConnectorList';
+import ListenerAndConnector from '../components/ListenerAndConnector';
 import NavigationMenu from '../components/NavigationMenu';
 import Overview from '../components/Overview';
 import PairsList from '../components/PairsList';
@@ -56,7 +56,7 @@ const ServiceComponent: FC<ServiceProps> = function ({ id, defaultTab }) {
       mainContentChildren={
         <>
           {menuSelected === TAB_0_KEY && <Overview id={id} name={name} />}
-          {menuSelected === TAB_5_KEY && <ListenerAndConnectorList id={id} name={name} />}
+          {menuSelected === TAB_5_KEY && <ListenerAndConnector id={id} name={name} />}
           {menuSelected === TAB_1_KEY && <PairsList id={id} name={name} />}
           {menuSelected === TAB_3_KEY && <TcpConnections routingKey={name} />}
           {menuSelected === TAB_4_KEY && <TcpTerminatedConnections routingKey={name} />}

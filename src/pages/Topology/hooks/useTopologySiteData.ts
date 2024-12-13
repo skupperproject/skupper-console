@@ -35,7 +35,7 @@ const useTopologySiteData = ({ showDataLink, showBytes, showByteRate }: UseTopol
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesPairs.GetSitesPairs, showDataLink],
+        queryKey: [QueriesSites.GetSitesPairs, showDataLink],
         queryFn: () => (showDataLink ? RESTApi.fetchSitesPairs() : null),
         refetchInterval: UPDATE_INTERVAL
       },

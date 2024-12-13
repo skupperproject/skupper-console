@@ -1,3 +1,5 @@
+export type MetricKeys = 'bytes' | 'byteRate';
+
 export interface SkSankeyChartNode {
   id: string;
   nodeColor?: string;

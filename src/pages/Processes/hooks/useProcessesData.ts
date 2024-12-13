@@ -19,7 +19,7 @@ export const useProcessesData = () => {
   const [queryParams, setQueryParams] = useState<QueryFilters>(defaultQueryParams);
 
   const { data } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetProcessesPaginated, queryParams],
+    queryKey: [QueriesProcesses.GetProcesses, queryParams],
     queryFn: () => RESTApi.fetchProcesses(queryParams),
     refetchInterval: UPDATE_INTERVAL
   });

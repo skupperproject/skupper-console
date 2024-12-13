@@ -1,4 +1,4 @@
-import { ComboOptions, EdgeOptions, GraphOptions, NodeOptions } from '@antv/g6';
+import { ComboOptions, CustomBehaviorOption, EdgeOptions, GraphOptions, NodeOptions } from '@antv/g6';
 
 import { behaviors } from './behaviours';
 import { GraphLabels } from './enum';
@@ -222,7 +222,7 @@ const DEFAULT_COMBO_CONFIG: ComboOptions = {
   }
 };
 
-export const options: GraphOptions = {
+export const options: Omit<GraphOptions, 'behaviors'> & { behaviors: CustomBehaviorOption[] } = {
   behaviors,
   autoResize: false,
   animation: false,

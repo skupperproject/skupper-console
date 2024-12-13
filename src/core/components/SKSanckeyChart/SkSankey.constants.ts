@@ -1,12 +1,17 @@
+import { Labels } from '../../../config/labels';
+import { MetricKeys } from '../../../types/SkSankeyChart.interfaces';
+
 export const DEFAULT_SANKEY_CHART_FLOW_VALUE = 0.000001;
 export const DEFAULT_SANKEY_CHART_HEIGHT = '350px';
 
-// Themes
-
 //Filters
-export const SankeyMetricOptions = [
-  { id: 'none', label: 'Display only pairs' },
-  { id: 'byterate', label: 'Display byterate' }
+export const SankeyMetricOptions: {
+  id: MetricKeys | ''; // 'id' può essere un MetricKeys o una stringa vuota
+  label: string;
+}[] = [
+  { id: '', label: 'No Metrics' },
+  { id: 'byteRate', label: Labels.ByteRate },
+  { id: 'bytes', label: Labels.Bytes }
 ];
 
 export const ServiceClientResourceOptions: { label: string; id: 'client' | 'clientSite' }[] = [

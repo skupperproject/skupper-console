@@ -1,4 +1,4 @@
-import { BehaviorOptions, IPointerEvent } from '@antv/g6';
+import { CustomBehaviorOption, IPointerEvent } from '@antv/g6';
 
 import { GraphLabels } from './enum';
 
@@ -42,10 +42,10 @@ const HOVER_ACTIVATE_BEHAVIOR = {
   }
 };
 
-export const behaviors: BehaviorOptions = [
-  'drag-canvas',
-  'zoom-canvas',
-  'drag-element',
+export const behaviors: CustomBehaviorOption[] = [
+  { key: 'drag-canvas', type: 'drag-canvas' },
+  { key: 'zoom-canvas', type: 'zoom-canvas' },
+  { key: 'drag-element', type: 'drag-element' },
   CLICK_SELECT_BEHAVIOR,
   HOVER_ACTIVATE_BEHAVIOR.HOVER_DEGREE_0_NODE,
   HOVER_ACTIVATE_BEHAVIOR.HOVER_DEGREE_0_EDGE,

@@ -9,12 +9,12 @@ import useListenersAndConnectorsData from '../hooks/useListenersAndConnectorsDat
 import { aggregateConnectorResponses, ServicesController } from '../services';
 import { ConnectorColumns, customServiceCells, ListenerColumns } from '../Services.constants';
 
-interface ListenerAndConnectorListProps {
+interface ListenerAndConnectorProps {
   id: string;
   name: string;
 }
 
-const ListenerAndConnectorList: FC<ListenerAndConnectorListProps> = function ({ id, name }) {
+const ListenerAndConnector: FC<ListenerAndConnectorProps> = function ({ id, name }) {
   const { listeners, connectors } = useListenersAndConnectorsData(id);
 
   // Group connectors that belong to the same site and share the same base name.
@@ -35,7 +35,14 @@ const ListenerAndConnectorList: FC<ListenerAndConnectorListProps> = function ({ 
   return (
     <Stack hasGutter>
       <StackItem style={{ height: 700 }}>
-        <SkGraph nodes={nodes} edges={edges} combos={combos} layout="dagre" savePositions={false} />
+        <SkGraph
+          nodes={nodes}
+          edges={edges}
+          combos={combos}
+          layout="dagre"
+          savePositions={false}
+          excludeBehaviors={['zoom-canvas', 'hover-activate', 'hover-activate-single-edge', 'click-select']}
+        />
       </StackItem>
 
       <StackItem>
@@ -63,4 +70,4 @@ const ListenerAndConnectorList: FC<ListenerAndConnectorListProps> = function ({ 
   );
 };
 
-export default ListenerAndConnectorList;
+export default ListenerAndConnector;

@@ -22,7 +22,7 @@ The Network Console is a web-based graphical user interface (GUI) designed for e
 
 ## Status
 
-Please access the Web console demo by clicking [here](https://skupper-console-vry5.vercel.app/#/topology).
+Please access the Web console demo by clicking [here](https://skupper-console-v2.vercel.app).
 
 This demo is synchronized with the latest version of the Skupper or a modified version of it, using the current main branch.
 

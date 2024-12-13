@@ -9,7 +9,7 @@ import { getIdAndNameFromUrlParams } from '../../../core/utils/getIdAndNameFromU
 import MainContainer from '../../../layout/MainContainer';
 import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '../../Topology/Topology.enum';
 import BiFlowList from '../components/BiFlowList';
-import ProcessPairDetails from '../components/ProcessPairDetails';
+import PairDetails from '../components/PairDetails';
 import { useProcessPairData } from '../hooks/useProcessPairData';
 
 export interface ProcessPairProps {
@@ -27,7 +27,7 @@ export const ProcessPairContent: FC<ProcessPairProps> = function ({ id }) {
       mainContentChildren={
         <Stack hasGutter>
           <StackItem>
-            <ProcessPairDetails source={source} destination={destination} />
+            <PairDetails source={source} destination={destination} />
           </StackItem>
 
           <StackItem isFilled>

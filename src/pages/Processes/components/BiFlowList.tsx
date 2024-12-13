@@ -19,7 +19,7 @@ import { TopologyURLQueyParams } from '../../Topology/Topology.enum';
 import { useBiflowListData } from '../hooks/useBiflowListData';
 
 const TAB_KEYS = {
-  LIVE: Labels.OpenConnections,
+  OPEN: Labels.OpenConnections,
   TERMINATED: Labels.TerminatedConnections,
   REQUESTS: Labels.Requests
 };
@@ -47,20 +47,19 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
     }
 
     if (activeConnectionCount) {
-      return TAB_KEYS.LIVE;
+      return TAB_KEYS.OPEN;
     }
+
     if (terminatedConnectionCount) {
       return TAB_KEYS.TERMINATED;
-    }
-    if (requestCount) {
-      return TAB_KEYS.REQUESTS;
     }
 
     return '';
   };
+
   const tabConfigs = [
     {
-      key: TAB_KEYS.LIVE,
+      key: TAB_KEYS.OPEN,
       label: Labels.OpenConnections,
       isDisabled: !activeConnectionCount,
       columns: setColumnVisibility(tcpBiFlowColumns, {
@@ -117,7 +116,13 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
   return (
     <Tabs activeKey={determineActiveTab()} onSelect={handleTabClick} component="nav">
       {tabConfigs.map(({ key, label, isDisabled, columns, filters, additionalProps }) => (
-        <Tab key={key} eventKey={key} title={<TabTitleText>{label}</TabTitleText>} isDisabled={isDisabled}>
+        <Tab
+          key={key}
+          eventKey={key}
+          title={<TabTitleText>{label}</TabTitleText>}
+          isDisabled={isDisabled}
+          isHidden={key === TAB_KEYS.REQUESTS && isDisabled}
+        >
           {!isDisabled && (
             <Card isFullHeight isPlain data-testid={key}>
               <CardBody>
