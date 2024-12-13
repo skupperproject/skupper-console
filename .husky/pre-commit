@@ -1,11 +1,17 @@
 #!/bin/sh
-# .husky/pre-commit
 
+# Check if the "node_modules" directory exists, otherwise run yarn install
 if [ ! -d "node_modules" ]; then
   echo "node_modules directory not found. Running yarn install..."
-  yarn install
+  if ! yarn install; then
+    echo "Error: yarn install failed!"
+    exit 1
+  fi
 fi
 
-# prettier
-yarn format
-
+# Run code formatting with Prettier
+echo "Running Prettier formatting..."
+if ! yarn format; then
+  echo "Error: Code formatting failed!"
+  exit 1
+fi

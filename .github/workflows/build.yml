@@ -1,14 +1,16 @@
-name: network-console
+name: Build 🏗️
+
 on:
   push:
     branches: [main, v2]
   pull_request:
     branches: [main, v2]
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout code 📥
         uses: actions/checkout@v4
 
       - name: Set up Node.js ⚙️
@@ -18,15 +20,19 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: yarn.lock
 
-      - name: Install 📦
+      - name: Install dependencies 📦
         run: |
-          HUSKY=0 yarn install --prefer-offline --immutable --immutable-cache --check-cache
+          HUSKY=0 yarn install --prefer-offline --immutable --check-cache
 
-      - name: Lint 🎨
+      - name: Check for cyclic dependencies 🔄
+        run: |
+          yarn check-cycles
+
+      - name: Lint code 🎨
         run: |
           yarn lint
 
-      - name: Build 🚧
+      - name: Build project 🏗️
         run: |
           yarn build
 
@@ -34,15 +40,15 @@ jobs:
         id: cpu-cores
         uses: SimenB/github-actions-cpu-cores@v2
 
-      - name: Unit tests 🔧
+      - name: Run Unit tests 🧪
         run: |
           yarn coverage --max-workers ${{ steps.cpu-cores.outputs.count }}
 
-      - name: Upload coverage reports to Codecov
+      - name: Upload coverage to Codecov 📊
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Integration tests 🚨
+      - name: Run Integration tests 🚨
         run: |
           yarn ci
