@@ -28,7 +28,7 @@ const SkGraph: FC<SkGraphProps> = memo(
     itemSelected,
     layout = 'default',
     savePositions = true,
-    excludeBehaviors
+    excludeBehaviors = []
   }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
     const topologyGraphRef = useRef<Graph>(null);
