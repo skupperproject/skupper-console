@@ -21,8 +21,8 @@ const prodConfig = {
   },
   output: {
     path: pathProd.join(ROOT_PROD, '/build'), // Output directory for production build
-    filename: '[name]-[contenthash].min.js', // Use content hash in filenames for cache busting
-    chunkFilename: 'js/[name]-[chunkhash].min.js', // Chunk filenames with a hash
+    filename: '[name].[contenthash].min.js', // Use content hash in filenames for cache busting
+    chunkFilename: 'js/[name].[chunkhash].min.js', // Chunk filenames with a hash
     publicPath: '/', // Public URL of the output directory
     clean: true // Clean the output directory before each build
   },
@@ -77,7 +77,7 @@ const prodConfig = {
       new TerserJSPlugin({
         test: /\.js$/, // Apply TerserJS for minifying JavaScript
         terserOptions: {
-          compress: false, // Do not apply compression (optional)
+          compress: true,
           mangle: true, // Mangle variable names to reduce file size
           format: {
             comments: false // Remove comments from the minified code

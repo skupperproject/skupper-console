@@ -90,80 +90,43 @@ export default [
     },
 
     rules: {
-      'arrow-body-style': ['error', 'as-needed'],
-      'padding-line-between-statements': 'off',
-      'import/prefer-default-export': 'off',
-
-      'import/no-cycle': [
+      '@typescript-eslint/ban-ts-comment': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/naming-convention': [
         'error',
         {
-          maxDepth: 3,
-          ignoreExternal: true
+          selector: ['enum', 'enumMember'],
+          format: ['PascalCase']
         }
       ],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-shadow': [
+        'error',
+        {
+          ignoreTypeValueShadow: true
+        }
+      ],
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-use-before-define': 0,
 
-      'no-console': 1,
-      semi: [1, 'always'],
-      'eol-last': 2,
+      'arrow-body-style': ['error', 'as-needed'],
       'consistent-return': 0,
       'consistent-this': [1, 'that'],
       curly: [2, 'all'],
-      'default-case': [2],
-      'dot-notation': [2],
-
-      'no-multiple-empty-lines': [
-        2,
-        {
-          max: 2,
-          maxEOF: 0
-        }
-      ],
-
+      'default-case': 2,
+      'dot-notation': 2,
+      'eol-last': 2,
       eqeqeq: [2, 'allow-null'],
       'guard-for-in': 2,
-      'import/no-unresolved': ['error'],
+      'import/no-cycle': 'off',
       'import/no-duplicates': ['error'],
-      'max-nested-callbacks': [1, 4],
-      'newline-before-return': 'error',
-      'no-alert': 2,
-      'no-caller': 2,
-      'no-constant-condition': 2,
-      'no-debugger': 2,
-      'no-else-return': ['error'],
-      'no-global-strict': 0,
-      'no-irregular-whitespace': ['error'],
-
-      'no-param-reassign': [
-        'warn',
-        {
-          props: true,
-          ignorePropertyModificationsFor: ['acc', 'node']
-        }
-      ],
-
-      'no-shadow': 'off',
-      'no-underscore-dangle': 0,
-      'no-var': 2,
-      'no-unused-vars': 'off',
-      'object-shorthand': ['error', 'properties'],
-
-      'prefer-const': [
-        'error',
-        {
-          destructuring: 'all'
-        }
-      ],
-
-      'prefer-template': 2,
-      radix: 2,
-
+      'import/no-unresolved': ['error'],
       'import/newline-after-import': [
         'error',
         {
           count: 1
         }
       ],
-
       'import/order': [
         'warn',
         {
@@ -186,20 +149,47 @@ export default [
           ]
         }
       ],
-
-      'react/jsx-filename-extension': [
-        1,
+      'import/prefer-default-export': 'off',
+      'max-nested-callbacks': [1, 4],
+      'newline-before-return': 'error',
+      'no-alert': 2,
+      'no-caller': 2,
+      'no-constant-condition': 2,
+      'no-console': 1,
+      'no-debugger': 2,
+      'no-else-return': ['error'],
+      'no-global-strict': 0,
+      'no-irregular-whitespace': ['error'],
+      'no-multiple-empty-lines': [
+        2,
         {
-          extensions: ['.ts', '.tsx']
+          max: 2,
+          maxEOF: 0
         }
       ],
+      'no-param-reassign': [
+        'warn',
+        {
+          props: true,
+          ignorePropertyModificationsFor: ['acc', 'node']
+        }
+      ],
+      'no-shadow': 'off',
+      'no-underscore-dangle': 0,
+      'no-unused-vars': 'off',
+      'no-var': 2,
+      'object-shorthand': ['error', 'properties'],
+      'padding-line-between-statements': 'off',
+      'prefer-const': [
+        'error',
+        {
+          destructuring: 'all'
+        }
+      ],
+      'prefer-template': 2,
+      radix: 2,
 
-      'react/jsx-fragments': 'error',
-      'react/react-in-jsx-scope': 'off',
-      'react/jsx-no-duplicate-props': 2,
-      'react/jsx-uses-react': 'error',
-      'react/jsx-uses-vars': 'error',
-
+      'react/display-name': 0,
       'react/function-component-definition': [
         'error',
         {
@@ -207,15 +197,12 @@ export default [
           unnamedComponents: 'function-expression'
         }
       ],
-
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-      'react/no-string-refs': 1,
-      'react/no-unknown-property': 'error',
+      'react/jsx-fragments': 'error',
+      'react/jsx-no-duplicate-props': 2,
+      'react/jsx-uses-vars': 'error',
       'react/jsx-no-useless-fragment': 'error',
+      'react/no-unknown-property': 'error',
       'react/no-unescaped-entities': 0,
-      'react/prop-types': 0,
-
       'react/self-closing-comp': [
         'error',
         {
@@ -223,31 +210,9 @@ export default [
           html: false
         }
       ],
-
-      'react/display-name': 0,
-      'require-atomic-updates': 0,
-
-      '@typescript-eslint/no-shadow': [
-        'error',
-        {
-          ignoreTypeValueShadow: true
-        }
-      ],
-
-      '@typescript-eslint/ban-ts-comment': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-
-      '@typescript-eslint/naming-convention': [
-        'error',
-        {
-          selector: ['enum', 'enumMember'],
-          format: ['PascalCase']
-        }
-      ],
-
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-use-before-define': 0,
-      '@typescript-eslint/no-unused-vars': 'error'
+      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/rules-of-hooks': 'error',
+      'require-atomic-updates': 0
     }
   }
 ];
