@@ -3,6 +3,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { TcpStatus } from '../../../API/REST.enum';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
+import { QueriesProcesses } from '../../Processes/Processes.enum';
 import { QueriesBiFlowLogs } from '../../shared/BiFlowLogs/BiFlowLogs.enum';
 import { QueriesServices } from '../Services.enum';
 
@@ -22,16 +23,13 @@ const terminatedConnectionsQueryParams = {
 
 const useServiceData = (serviceId: string) => {
   const { data: service } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetService, serviceId],
+    queryKey: [QueriesServices.GetServices, serviceId],
     queryFn: () => RESTApi.fetchService(serviceId),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: serversData } = useQuery({
-    queryKey: [
-      QueriesServices.GetProcessesByService,
-      { ...initServersQueryParams, addresses: [service.results.identity] }
-    ],
+    queryKey: [QueriesProcesses.GetProcesses, { ...initServersQueryParams, addresses: [service.results.identity] }],
     queryFn: () => RESTApi.fetchProcesses({ ...initServersQueryParams, addresses: [service.results.identity] }),
     refetchInterval: UPDATE_INTERVAL
   });

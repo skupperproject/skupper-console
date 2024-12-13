@@ -16,7 +16,7 @@ export const useProcessData = (id: string) => {
   };
 
   const { data: process } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetProcess, id],
+    queryKey: [QueriesProcesses.GetProcesses, id],
     queryFn: () => RESTApi.fetchProcess(id)
   });
 

@@ -9,7 +9,7 @@ interface useProcessPairDataProps {
 
 export const useProcessPairData = ({ id }: useProcessPairDataProps) => {
   const { data } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetProcessPair, id],
+    queryKey: [QueriesProcesses.GetProcessPairs, id],
     queryFn: () => RESTApi.fetchProcessesPair(id)
   });
 
@@ -19,11 +19,11 @@ export const useProcessPairData = ({ id }: useProcessPairDataProps) => {
   const [{ data: source }, { data: destination }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcesses.GetProcess, sourceId],
+        queryKey: [QueriesProcesses.GetProcesses, sourceId],
         queryFn: () => RESTApi.fetchProcess(sourceId)
       },
       {
-        queryKey: [QueriesProcesses.GetProcess, destId],
+        queryKey: [QueriesProcesses.GetProcesses, destId],
         queryFn: () => RESTApi.fetchProcess(destId)
       }
     ]

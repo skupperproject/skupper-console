@@ -4,23 +4,21 @@ import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../../../core/components/SKSanc
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
 import { GraphCombo, GraphEdge, GraphElementNames, GraphIconKeys, GraphNode } from '../../../types/Graph.interfaces';
 import { ConnectorResponse, ListenerResponse } from '../../../types/REST.interfaces';
-import { SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
+import { MetricKeys, SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
 
 export const ServicesController = {
   convertPairsToSankeyChartData: (
     servicePairs: {
       sourceName: string;
-      sourceSiteName?: string;
       destinationName: string;
-      destinationSiteName?: string;
-      byteRate?: number;
-      color?: string;
+      bytes: number;
+      byteRate: number;
     }[],
-    showMetrics: boolean
+    metricSelected?: MetricKeys | ''
   ) => {
     // Generate nodes and links
     const nodes = generateSankeyNodes(servicePairs);
-    const links = generateSankeyLinks(servicePairs, showMetrics);
+    const links = generateSankeyLinks(servicePairs, metricSelected);
 
     return { nodes, links };
   },
@@ -39,8 +37,8 @@ export const ServicesController = {
 
   mapConnectorsToProcesses: (connectors: ConnectorResponse[]) =>
     connectors.map((item) => ({
-      sourceId: `${getBaseName(item.name)}-${item.siteId}-${item.destPort}`,
-      sourceName: `${getBaseName(item.name)}:${item.destPort}`,
+      sourceId: `${getConnectorBaseName(item.name)}-${item.siteId}-${item.destPort}`,
+      sourceName: `${getConnectorBaseName(item.name)}:${item.destPort}`,
       siteId: item.siteId,
       siteName: item.siteName,
       destinationId: item.processId,
@@ -180,26 +178,27 @@ const generateSankeyLinks = (
   servicePairs: {
     sourceName: string;
     destinationName: string;
-    byteRate?: number;
+    bytes: number;
+    byteRate: number;
   }[],
-  showMetrics: boolean
+  metricSelected?: MetricKeys | ''
 ) =>
   removeDuplicatesFromArrayOfObjects(
     servicePairs
-      .map(({ sourceName, destinationName, byteRate }) => ({
+      .map(({ sourceName, destinationName, ...rest }) => ({
         source: `${sourceName}.`,
         target: destinationName,
-        value: showMetrics ? byteRate || DEFAULT_SANKEY_CHART_FLOW_VALUE : DEFAULT_SANKEY_CHART_FLOW_VALUE
+        value: metricSelected ? (rest[metricSelected] as number) : DEFAULT_SANKEY_CHART_FLOW_VALUE
       }))
       .filter(({ source, target }) => source && target)
   );
 
-function getBaseName(name: string): string {
-  const partialName = name.split('@');
+function getConnectorBaseName(name: string): string {
+  // the name of a connector as this format name@IP
+  const partialName = name.split(DEFAULT_COMPLEX_STRING_SEPARATOR);
 
   if (partialName.length) {
-    // the name of a connector as this format name@IP
-    return name.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[0];
+    return partialName[0];
   }
 
   return name;
@@ -210,7 +209,7 @@ export function aggregateConnectorResponses(connectors: ConnectorResponse[]) {
   const aggregatedResults: Record<string, ConnectorResponse> = {};
 
   connectors.forEach((connector) => {
-    const baseName = getBaseName(connector.name);
+    const baseName = getConnectorBaseName(connector.name);
     const key = `${connector.parent}-${baseName}`;
 
     if (!aggregatedResults[key]) {

@@ -55,7 +55,7 @@ export const Labels = {
   DataLink: 'Data link',
   SiteLink: 'Router link',
 
-  NoMetricSourceProcessFilter: 'No Clients',
+  NoClients: 'No Clients',
   OpenConnections: 'Open connections',
   OldConnections: 'Connection history',
   TcpTrafficTx: 'Outbound traffic ',
@@ -81,15 +81,15 @@ export const Labels = {
   FindProcesses: `Find processes`,
   FindSites: `Find sites`,
   FindComponents: `Find components`,
-  MetricValue: 'Metric value',
-  MetricDistribution: 'Metric distribution',
+  MetricValue: 'Text',
+  MetricDistribution: 'Proportional flow',
   Display: 'Display',
   DeploymentGroups: 'Deployment groups',
 
   Source: 'Source',
   Destination: 'Destination',
   Summary: 'Summary',
-  MetricVisualization: 'Metric Visualization',
+  MetricVisualizationType: 'Metric visualization type',
   LinkType: 'Link type',
   Other: 'Other',
 

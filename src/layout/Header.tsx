@@ -28,9 +28,6 @@ import { brandLogo } from '../config/app';
 
 export enum HeaderLabels {
   Logout = 'Logout',
-  DarkMode = ' Dark mode',
-  LightModeTestId = 'light-mode-btn-testId',
-  DarkModeTestId = 'dark-mode-btn-testId',
   UserDropdownTestId = 'user-dropdown-testId',
   OpenShiftAuth = 'openshift'
 }

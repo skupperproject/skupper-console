@@ -12,6 +12,7 @@ import {
   t_color_red_50,
   t_color_teal_50,
   t_color_white,
+  t_global_font_size_body_default,
   t_global_font_family_100,
   t_global_border_width_100,
   t_global_border_radius_large
@@ -35,6 +36,7 @@ export const hexColors = {
 
 export const styles = {
   default: {
+    fontSize: t_global_font_size_body_default,
     fontFamily: t_global_font_family_100.value,
     borderWidth: t_global_border_width_100.value,
     borderRadius: t_global_border_radius_large.value,

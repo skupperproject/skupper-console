@@ -32,7 +32,7 @@ export const displayOptionsForProcesses: SkSelectGroupedOptions[] = [
   },
 
   {
-    title: Labels.MetricVisualization,
+    title: Labels.MetricVisualizationType,
     items: [
       {
         id: SHOW_LINK_METRIC_DISTRIBUTION,
@@ -89,7 +89,7 @@ export const displayOptionsForSites: SkSelectGroupedOptions[] = [
   },
 
   {
-    title: Labels.MetricVisualization,
+    title: Labels.MetricVisualizationType,
     items: [
       {
         id: SHOW_LINK_METRIC_DISTRIBUTION,

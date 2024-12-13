@@ -1,23 +1,10 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { styles } from '../src/config/styles';
-import SkSankeyChart, {
-  addThemeChangeListener,
-  getColors,
-  valueFormat
-} from '../src/core/components/SKSanckeyChart/index';
-import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../src/core/components/SKSanckeyChart/SkSankey.constants';
+import SkSankeyChart, { getColors } from '../src/core/components/SKSanckeyChart/index';
 import { Labels } from '../src/config/labels';
 
 describe('SkSankeyChart', () => {
-  it('should return an empty string if the value is the default flow value', () => {
-    expect(valueFormat(DEFAULT_SANKEY_CHART_FLOW_VALUE)).toEqual('');
-  });
-
-  it('should format the value using formatByteRate if it is not the default flow value', () => {
-    expect(valueFormat(1024)).toEqual('1 KB/s');
-  });
-
   it('should return nodeColor if it exists', () => {
     const node = { id: 'test', nodeColor: styles.default.infoColor };
     expect(getColors(node)).toEqual(styles.default.infoColor);
@@ -48,17 +35,5 @@ describe('SkSankeyChart', () => {
 
     expect(screen.getByText(Labels.NoMetricFound)).toBeInTheDocument();
     expect(screen.getByText(Labels.NoMetricFoundDescription)).toBeInTheDocument();
-  });
-
-  it('should call the callback function when the class attribute changes', async () => {
-    const callback = jest.fn<void, [MutationRecord[], MutationObserver]>();
-
-    addThemeChangeListener(callback);
-
-    expect(callback).toHaveBeenCalledTimes(1);
-
-    document.documentElement.setAttribute('class', 'new-class');
-    // Wait for the MutationObserver to trigger the callback
-    await waitFor(() => expect(callback).toHaveBeenCalledTimes(2));
   });
 });

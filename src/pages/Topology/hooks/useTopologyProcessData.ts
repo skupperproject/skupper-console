@@ -25,13 +25,13 @@ const useTopologyProcessData = () => {
   const [{ data: processes }, { data: processesPairs }, { data: metrics }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcesses.GetProcessResult, processesQueryParams],
+        queryKey: [QueriesProcesses.GetProcesses, processesQueryParams],
         queryFn: () => RESTApi.fetchProcesses(processesQueryParams),
         refetchInterval: UPDATE_INTERVAL
       },
 
       {
-        queryKey: [QueriesPairs.GetProcessesPairs],
+        queryKey: [QueriesProcesses.GetProcessPairs],
         queryFn: () => RESTApi.fetchProcessesPairs(),
         refetchInterval: UPDATE_INTERVAL
       },

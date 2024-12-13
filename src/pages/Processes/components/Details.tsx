@@ -17,7 +17,7 @@ import {
 } from '@patternfly/react-core';
 import { Link } from 'react-router-dom';
 
-import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR, EMPTY_VALUE_SYMBOL } from '../../../config/app';
 import { Labels } from '../../../config/labels';
 import ResourceIcon from '../../../core/components/ResourceIcon';
 import { formatLocalizedDateTime } from '../../../core/utils/formatLocalizedDateTime';
@@ -122,7 +122,9 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
                       {addresses.map((service) => (
                         <div key={service}>
                           <ResourceIcon type="service" />
-                          <Link to={`${ServicesRoutesPaths.Services}/${service}`}>{service.split('@')[0]}</Link>
+                          <Link to={`${ServicesRoutesPaths.Services}/${service}`}>
+                            {service.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[0]}
+                          </Link>
                         </div>
                       ))}
                     </Flex>

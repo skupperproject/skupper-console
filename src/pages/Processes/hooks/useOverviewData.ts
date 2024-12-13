@@ -11,12 +11,12 @@ export const useProcessOverviewData = (id: string) => {
   const [{ data: pairsTx }, { data: pairsRx }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcesses.GetProcessPairsResult, queryParams('sourceId')],
+        queryKey: [QueriesProcesses.GetProcessPairs, queryParams('sourceId')],
         queryFn: () => RESTApi.fetchProcessesPairs(queryParams('sourceId')),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesProcesses.GetProcessPairsResult, queryParams('destinationId')],
+        queryKey: [QueriesProcesses.GetProcessPairs, queryParams('destinationId')],
         queryFn: () => RESTApi.fetchProcessesPairs(queryParams('destinationId')),
         refetchInterval: UPDATE_INTERVAL
       }

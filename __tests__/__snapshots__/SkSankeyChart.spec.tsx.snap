@@ -150,7 +150,7 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
                   <span
                     class="pf-v6-c-menu-toggle__text"
                   >
-                    Display only pairs
+                    No Metrics
                   </span>
                   <span
                     class="pf-v6-c-menu-toggle__controls"
@@ -344,7 +344,7 @@ exports[`SkSankeyChart should render the SkSankeyChart component 1`] = `
                 <span
                   class="pf-v6-c-menu-toggle__text"
                 >
-                  Display only pairs
+                  No Metrics
                 </span>
                 <span
                   class="pf-v6-c-menu-toggle__controls"
