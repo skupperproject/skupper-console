@@ -74,7 +74,7 @@ const PairsSankeyChart: FC<PairsSankeyChartProps> = function ({ pairs, showFilte
         <SkSankeyChart
           data={{ nodes, links }}
           onSearch={showFilter ? handleFindPairType : undefined}
-          formatter={metricSelected && mapFormatter[metricSelected]}
+          formatter={metricSelected ? mapFormatter[metricSelected] : undefined}
         />
       </CardBody>
     </Card>

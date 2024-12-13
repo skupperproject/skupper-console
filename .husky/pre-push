@@ -1,3 +1,22 @@
 #!/bin/sh
-yarn lint-fix
-yarn tsc
+
+# Run ESLint fix to automatically address any issues identified by ESLint
+echo "Running ESLint fix..."
+if ! yarn lint-fix; then
+  echo "Error: ESLint fix failed!"
+  exit 1
+fi
+
+# Run TypeScript type check using tsc to verify the code compiles without errors
+echo "Running TypeScript type check..."
+if ! yarn tsc; then
+  echo "Error: TypeScript check failed!"
+  exit 1
+fi
+
+# Run TypeScript type check using tsc to verify the code compiles without errors
+echo "Running TypeScript type dep. cycles..."
+if ! yarn check-cycles; then
+  echo "Error: TypeScript dep. cycles failed!"
+  exit 1
+fi

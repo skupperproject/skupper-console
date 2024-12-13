@@ -94,13 +94,7 @@ export default [
       'padding-line-between-statements': 'off',
       'import/prefer-default-export': 'off',
 
-      'import/no-cycle': [
-        'error',
-        {
-          maxDepth: 3,
-          ignoreExternal: true
-        }
-      ],
+      'import/no-cycle': 'off',
 
       'no-console': 1,
       semi: [1, 'always'],

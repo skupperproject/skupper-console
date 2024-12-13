@@ -1,2 +1,4 @@
 #!/usr/bin/env sh
+
+# Run the commitlint tool to check the commit message format during the commit-msg hook
 npx --no -- commitlint --edit ${1}

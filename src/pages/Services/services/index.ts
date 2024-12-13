@@ -188,7 +188,8 @@ const generateSankeyLinks = (
       .map(({ sourceName, destinationName, ...rest }) => ({
         source: `${sourceName}.`,
         target: destinationName,
-        value: metricSelected ? (rest[metricSelected] as number) : DEFAULT_SANKEY_CHART_FLOW_VALUE
+        value:
+          metricSelected && rest[metricSelected] ? (rest[metricSelected] as number) : DEFAULT_SANKEY_CHART_FLOW_VALUE
       }))
       .filter(({ source, target }) => source && target)
   );
