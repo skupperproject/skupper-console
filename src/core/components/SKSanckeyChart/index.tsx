@@ -58,7 +58,7 @@ const SkSankeyChart: FC<{ data: SkSankeyChartProps; onSearch?: Function; formatt
               tooltip: { container: { color: styles.default.darkTextColor } }
             }}
             labelTextColor={styles.default.darkTextColor}
-            valueFormat={formatter ? (value: number) => formatter?.(value) : ''}
+            valueFormat={(value: number) => formatter?.(value)}
             colors={getColors}
           />
         </div>
