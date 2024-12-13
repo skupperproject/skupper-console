@@ -9,12 +9,12 @@ import SkLinkCell from '../../../core/components/SkLinkCell';
 import { ProcessResponse } from '../../../types/REST.interfaces';
 import { ProcessesRoutesPaths } from '../Processes.enum';
 
-interface ProcessPairDetailsProps {
+interface PairDetailsProps {
   source: ProcessResponse;
   destination: ProcessResponse;
 }
 
-const ProcessPairDetails: FC<ProcessPairDetailsProps> = function ({ source, destination }) {
+const PairDetails: FC<PairDetailsProps> = function ({ source, destination }) {
   return (
     <Grid hasGutter>
       <GridItem sm={12} md={5}>
@@ -50,4 +50,4 @@ const ProcessPairDetails: FC<ProcessPairDetailsProps> = function ({ source, dest
   );
 };
 
-export default ProcessPairDetails;
+export default PairDetails;

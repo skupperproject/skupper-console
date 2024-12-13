@@ -1,4 +1,13 @@
-import { LayoutOptions } from '@antv/g6';
+import { CustomBehaviorOption, LayoutOptions } from '@antv/g6';
+
+type BehaviorKey =
+  | 'drag-canvas'
+  | 'zoom-canvas'
+  | 'drag-element'
+  | 'click-select'
+  | 'hover-activate-single-node'
+  | 'hover-activate'
+  | 'hover-activate-single-edge';
 
 export type GraphIconKeys =
   | 'component'
@@ -88,6 +97,11 @@ export interface SkGraphProps {
   onClickEdge?: (data: GraphEdge | null) => void;
   layout?: keyof GraphLayouts;
   savePositions?: boolean;
+  excludeBehaviors?: BehaviorKey[];
+}
+
+export interface CustomBehaviorOptionWithKey extends Omit<CustomBehaviorOption, 'key'> {
+  key: BehaviorKey;
 }
 
 export interface LocalStorageDataSavedPayload {

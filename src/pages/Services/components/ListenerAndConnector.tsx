@@ -35,7 +35,14 @@ const ListenerAndConnector: FC<ListenerAndConnectorProps> = function ({ id, name
   return (
     <Stack hasGutter>
       <StackItem style={{ height: 700 }}>
-        <SkGraph nodes={nodes} edges={edges} combos={combos} layout="dagre" savePositions={false} />
+        <SkGraph
+          nodes={nodes}
+          edges={edges}
+          combos={combos}
+          layout="dagre"
+          savePositions={false}
+          excludeBehaviors={['zoom-canvas', 'hover-activate', 'hover-activate-single-edge', 'click-select']}
+        />
       </StackItem>
 
       <StackItem>
