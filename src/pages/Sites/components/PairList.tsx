@@ -21,23 +21,23 @@ interface PairsListProps {
   site: SiteResponse;
 }
 
-const PairsList: FC<PairsListProps> = function ({ site: { identity: id, name } }) {
-  const { pairsTx, pairsRx, metricsTx, metricsRx } = useSitePairsListData(id, name);
+const PairsList: FC<PairsListProps> = function ({ site: { identity: id } }) {
+  const { pairsTx, pairsRx, metricsTx, metricsRx } = useSitePairsListData(id);
 
   const clients = invertPairs(
     combineInstantMetricsToPairs({
       processesPairs: pairsRx,
       metrics: metricsRx,
-      prometheusKey: PrometheusLabelsV2.SourceSiteName,
-      processPairsKey: 'sourceName'
+      prometheusKey: PrometheusLabelsV2.SourceSiteId,
+      processPairsKey: 'sourceId'
     })
   );
 
   const servers = combineInstantMetricsToPairs({
     processesPairs: pairsTx,
     metrics: metricsTx,
-    prometheusKey: PrometheusLabelsV2.DestSiteName,
-    processPairsKey: 'destinationName'
+    prometheusKey: PrometheusLabelsV2.DestSiteId,
+    processPairsKey: 'destinationId'
   });
 
   const isEmpty = !servers.length && !clients.length;

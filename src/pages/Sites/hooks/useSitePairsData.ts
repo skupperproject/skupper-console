@@ -9,18 +9,18 @@ import { PairsResponse } from '../../../types/REST.interfaces';
 import { TopologyController } from '../../Topology/services';
 
 const metricQueryParams = {
-  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName}` },
-  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName}` },
-  fetchLatency: { groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName}` }
+  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId}` },
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId}` },
+  fetchLatency: { groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId}` }
 };
 
-export const useSitePairsListData = (id: string, name: string) => {
+export const useSitePairsListData = (id: string) => {
   const queryParams = (idKey: keyof PairsResponse) => ({ [idKey]: id });
 
   const [{ data: metricsTx }, { data: metricsRx }] = useQueries({
     queries: [
       {
-        queryKey: [gePrometheusQueryPATH('single'), id, { sourceSite: name }],
+        queryKey: [gePrometheusQueryPATH('single'), id, { sourceSite: id }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
@@ -28,13 +28,13 @@ export const useSitePairsListData = (id: string, name: string) => {
             showLatency: true,
             metricQueryParams: {
               ...metricQueryParams,
-              filterBy: { sourceSite: name }
+              filterBy: { sourceSite: id }
             }
           }),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [gePrometheusQueryPATH('single'), id, { destSite: name }],
+        queryKey: [gePrometheusQueryPATH('single'), id, { destSite: id }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
@@ -42,7 +42,7 @@ export const useSitePairsListData = (id: string, name: string) => {
             showLatency: true,
             metricQueryParams: {
               ...metricQueryParams,
-              filterBy: { destSite: name }
+              filterBy: { destSite: id }
             }
           }),
         refetchInterval: UPDATE_INTERVAL

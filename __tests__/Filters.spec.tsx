@@ -25,15 +25,21 @@ describe('Metrics component', () => {
 
     render(
       <MetricFilters
-        sourceSites={[{ destinationName: siteData.results[0].name }, { destinationName: siteData.results[1].name }]}
-        destSites={[{ destinationName: siteData.results[2].name }, { destinationName: siteData.results[1].name }]}
+        sourceSites={[
+          { id: siteData.results[0].identity, destinationName: siteData.results[0].name },
+          { id: siteData.results[1].identity, destinationName: siteData.results[1].name }
+        ]}
+        destSites={[
+          { id: siteData.results[2].identity, destinationName: siteData.results[2].name },
+          { id: siteData.results[1].identity, destinationName: siteData.results[1].name }
+        ]}
         sourceProcesses={[
-          { destinationName: processesData.results[0].name },
-          { destinationName: processesData.results[1].name }
+          { id: processesData.results[0].name, destinationName: processesData.results[0].name },
+          { id: processesData.results[1].name, destinationName: processesData.results[1].name }
         ]}
         destProcesses={[
-          { destinationName: processesData.results[2].name },
-          { destinationName: processesData.results[3].name }
+          { id: processesData.results[2].name, destinationName: processesData.results[2].name },
+          { id: processesData.results[3].name, destinationName: processesData.results[3].name }
         ]}
         configFilters={{
           destinationProcesses: { disabled: false, placeholder: Labels.AllConnectedProcesses },
@@ -84,15 +90,21 @@ describe('Metrics component', () => {
 
     render(
       <MetricFilters
-        sourceSites={[{ destinationName: siteData.results[0].name }, { destinationName: siteData.results[1].name }]}
-        destSites={[{ destinationName: siteData.results[2].name }, { destinationName: siteData.results[1].name }]}
+        sourceSites={[
+          { id: siteData.results[0].identity, destinationName: siteData.results[0].name },
+          { id: siteData.results[1].identity, destinationName: siteData.results[1].name }
+        ]}
+        destSites={[
+          { id: siteData.results[2].identity, destinationName: siteData.results[2].name },
+          { id: siteData.results[1].identity, destinationName: siteData.results[1].name }
+        ]}
         sourceProcesses={[
-          { destinationName: processesData.results[0].name },
-          { destinationName: processesData.results[1].name }
+          { id: processesData.results[0].name, destinationName: processesData.results[0].name },
+          { id: processesData.results[1].name, destinationName: processesData.results[1].name }
         ]}
         destProcesses={[
-          { destinationName: processesData.results[2].name },
-          { destinationName: processesData.results[3].name }
+          { id: processesData.results[2].name, destinationName: processesData.results[2].name },
+          { id: processesData.results[3].name, destinationName: processesData.results[3].name }
         ]}
         configFilters={{
           destinationProcesses: { disabled: false, placeholder: Labels.AllConnectedProcesses },

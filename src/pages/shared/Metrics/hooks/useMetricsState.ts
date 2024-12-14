@@ -3,22 +3,22 @@ import { useCallback, useRef, useState, startTransition } from 'react';
 import { ExpandedMetricSections, QueryMetricsParams } from '../../../../types/Metrics.interfaces';
 
 interface UseMetricsProps {
-  defaultMetricFilterValues: QueryMetricsParams;
-  defaultOpenSections?: ExpandedMetricSections;
-  onGetMetricFiltersConfig?: Function;
-  onGetExpandedSectionsConfig?: Function;
+  selectedFilters: QueryMetricsParams;
+  openSections?: ExpandedMetricSections;
+  setSelectedFilters: Function;
+  setOpenSections?: Function;
 }
 
 export const useMetricsState = ({
-  defaultMetricFilterValues,
-  defaultOpenSections,
-  onGetMetricFiltersConfig,
-  onGetExpandedSectionsConfig
+  selectedFilters,
+  openSections,
+  setSelectedFilters,
+  setOpenSections
 }: UseMetricsProps) => {
-  const { ...filters } = defaultMetricFilterValues;
+  const { ...filters } = selectedFilters;
   const [queryParams, setQueryParams] = useState<QueryMetricsParams>(filters);
   const [shouldUpdateData, setShouldUpdateData] = useState(0);
-  const expandedSectionsConfigRef = useRef(defaultOpenSections);
+  const expandedSectionsConfigRef = useRef(openSections);
 
   const triggerMetricUpdate = () => {
     setShouldUpdateData(new Date().getTime());
@@ -28,24 +28,21 @@ export const useMetricsState = ({
     (updatedFilters: QueryMetricsParams) => {
       startTransition(() => {
         setQueryParams(updatedFilters);
+        setSelectedFilters(updatedFilters);
       });
-
-      if (onGetMetricFiltersConfig) {
-        onGetMetricFiltersConfig({ ...updatedFilters });
-      }
     },
-    [onGetMetricFiltersConfig]
+    [setSelectedFilters]
   );
 
   const handleSectionToggle = useCallback(
     (section: Record<string, boolean>) => {
-      if (onGetExpandedSectionsConfig) {
+      if (setOpenSections) {
         const config = { ...expandedSectionsConfigRef.current, ...section };
-        onGetExpandedSectionsConfig(config);
+        setOpenSections(config);
         expandedSectionsConfigRef.current = config;
       }
     },
-    [onGetExpandedSectionsConfig]
+    [setOpenSections]
   );
 
   return {

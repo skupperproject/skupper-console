@@ -4,7 +4,6 @@ import { Protocols } from '../../../API/REST.enum';
 import { extractUniqueValues } from '../../../core/utils/extractUniqueValues';
 import { mapDataToMetricFilterOptions } from '../../../core/utils/getResourcesFromPairs';
 import Metrics from '../../shared/Metrics';
-import { useMetricSessionHandlers } from '../../shared/Metrics/hooks/useMetricsSessionHandler';
 import { useServiceOverviewData } from '../hooks/useOverviewData';
 
 interface OverviewProps {
@@ -14,30 +13,50 @@ interface OverviewProps {
 
 const Overview: FC<OverviewProps> = function ({ id, name }) {
   const { pairs } = useServiceOverviewData(id);
-  const { selectedFilters, visibleMetrics, setSelectedFilters, setVisibleMetrics } = useMetricSessionHandlers(name);
 
-  const sourceProcesses = mapDataToMetricFilterOptions(pairs, 'sourceName', 'sourceSiteName');
-  const destProcesses = mapDataToMetricFilterOptions(pairs, 'destinationName', 'destinationSiteName');
-  const sourceSites = mapDataToMetricFilterOptions(pairs, 'sourceSiteName');
-  const destSites = mapDataToMetricFilterOptions(pairs, 'destinationSiteName');
+  // prometheus read a process name as id
+  const sourceProcesses = mapDataToMetricFilterOptions(
+    pairs,
+    'sourceName',
+    'sourceName',
+    'sourceSiteId',
+    'sourceSiteName'
+  );
+  const destProcesses = mapDataToMetricFilterOptions(
+    pairs,
+    'destinationName',
+    'destinationName',
+    'destinationSiteId',
+    'destinationSiteName'
+  );
+  const sourceSites = mapDataToMetricFilterOptions(pairs, 'sourceSiteId', 'sourceSiteName');
+  const destSites = mapDataToMetricFilterOptions(pairs, 'destinationSiteId', 'destinationSiteName');
 
   const uniqueProtocols = extractUniqueValues(pairs, 'observedApplicationProtocols').join();
   const uniqueProtocolsAarray = (
     uniqueProtocols.length && uniqueProtocols.includes(',') ? uniqueProtocols.split(',') : uniqueProtocols
   ) as Protocols[];
 
+  const sourceSite = sourceSites.map((site) => site.id).join('|');
+  const destSite = destSites.map((site) => site.id).join('|');
+  const sourceProcess = sourceProcesses.map((process) => process.id).join('|');
+  const destProcess = destProcesses.map((process) => process.id).join('|');
+
   return (
     <Metrics
       key={id}
+      sessionKey={id}
       sourceSites={sourceSites}
       destSites={destSites}
       sourceProcesses={sourceProcesses}
       destProcesses={destProcesses}
       availableProtocols={uniqueProtocolsAarray}
-      defaultOpenSections={visibleMetrics}
       defaultMetricFilterValues={{
-        service: name,
-        ...selectedFilters
+        service: name, // prometheus use a service name as id
+        sourceSite,
+        sourceProcess,
+        destSite,
+        destProcess
       }}
       configFilters={{
         sourceSites: {
@@ -53,8 +72,6 @@ const Overview: FC<OverviewProps> = function ({ id, name }) {
           hide: destProcesses.length === 0
         }
       }}
-      onGetMetricFiltersConfig={setSelectedFilters}
-      onGetExpandedSectionsConfig={setVisibleMetrics}
     />
   );
 };

@@ -313,8 +313,8 @@ export const MetricsController = {
           sumValuesByTimestamp(destToSourceByteRateRx)
         ),
         trafficServer: normalizeByteRateFromSeries(
-          sumValuesByTimestamp(destToSourceByteRateTx),
-          sumValuesByTimestamp(sourceToDestByteRateRx)
+          sumValuesByTimestamp(sourceToDestByteRateRx),
+          sumValuesByTimestamp(destToSourceByteRateTx)
         )
       };
     } catch (e: unknown) {
@@ -616,15 +616,16 @@ export const generateFilterItems = ({
   data,
   parentSelected
 }: {
-  data?: { destinationName: string; siteName?: string }[];
+  data?: { id: string; destinationName: string; parentId?: string; parentName?: string }[];
   parentSelected?: string;
 }): {
   id: string;
   label: string;
 }[] =>
   data
-    ?.filter(({ siteName }) => (parentSelected ? siteName === parentSelected : true))
-    .map(({ destinationName }) => ({
-      id: destinationName,
+    // parentSelected can be id`|id2 => we need to use includes instead === to check the presence of parentId
+    ?.filter(({ parentId }) => (parentSelected ? parentSelected.includes(parentId || '') : true))
+    .map(({ id, destinationName }) => ({
+      id,
       label: destinationName
     })) || [];

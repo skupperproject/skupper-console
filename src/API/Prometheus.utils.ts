@@ -23,8 +23,8 @@ export function convertToPrometheusQueryParams({
   code
 }: PrometheusLabels): string {
   const uiFilterValueToPrometheusLabelMapper = {
-    [PrometheusLabelsV2.SourceSiteName]: sourceSite,
-    [PrometheusLabelsV2.DestSiteName]: destSite,
+    [PrometheusLabelsV2.SourceSiteId]: sourceSite,
+    [PrometheusLabelsV2.DestSiteId]: destSite,
     [PrometheusLabelsV2.SourceProcessName]: sourceProcess,
     [PrometheusLabelsV2.DestProcessName]: destProcess,
     [PrometheusLabelsV2.SourceComponentName]: sourceComponent,

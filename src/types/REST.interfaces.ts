@@ -199,7 +199,7 @@ export type BiFlowResponse = TransportFlowResponse | ApplicationFlowResponse;
 export interface PairsWithMetrics<T> {
   processesPairs: T[];
   prometheusKey: PrometheusLabelsV2;
-  processPairsKey: 'sourceName' | 'destinationName';
+  processPairsKey: 'sourceId' | 'sourceName' | 'destinationId' | 'destinationName';
   metrics?: TopologyMetrics;
 }
 

@@ -1,4 +1,4 @@
-import { CustomBehaviorOption, LayoutOptions } from '@antv/g6';
+import { LayoutOptions } from '@antv/g6';
 
 type BehaviorKey =
   | 'drag-canvas'
@@ -98,10 +98,6 @@ export interface SkGraphProps {
   layout?: keyof GraphLayouts;
   savePositions?: boolean;
   excludeBehaviors?: BehaviorKey[];
-}
-
-export interface CustomBehaviorOptionWithKey extends Omit<CustomBehaviorOption, 'key'> {
-  key: BehaviorKey;
 }
 
 export interface LocalStorageDataSavedPayload {

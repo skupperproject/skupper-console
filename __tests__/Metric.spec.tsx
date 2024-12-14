@@ -11,10 +11,10 @@ import { configDefaultFilters } from '../src/pages/shared/Metrics/Metrics.consta
 
 describe('useMetrics', () => {
   const initialProps = {
-    defaultMetricFilterValues: { protocol: Protocols.Http },
-    defaultOpenSections: { byterate: true },
-    onGetMetricFiltersConfig: jest.fn(),
-    onGetExpandedSectionsConfig: jest.fn()
+    selectedFilters: { protocol: Protocols.Http },
+    openSections: { byterate: true },
+    setSelectedFilters: jest.fn(),
+    setOpenSections: jest.fn()
   };
 
   it('initializes with the correct state from props', () => {
@@ -38,7 +38,7 @@ describe('useMetrics', () => {
       result.current.handleFilterChange(newFilters);
     });
     expect(result.current.queryParams).toEqual(newFilters);
-    expect(initialProps.onGetMetricFiltersConfig).toHaveBeenCalledWith(newFilters);
+    expect(initialProps.setSelectedFilters).toHaveBeenCalledWith(newFilters);
   });
 
   it('updates expanded sections and calls onGetExpandedSectionsConfig when handleSectionToggle is invoked', () => {
@@ -47,8 +47,8 @@ describe('useMetrics', () => {
     act(() => {
       result.current.handleSectionToggle(newSections);
     });
-    expect(initialProps.onGetExpandedSectionsConfig).toHaveBeenCalledWith({
-      ...initialProps.defaultOpenSections,
+    expect(initialProps.setOpenSections).toHaveBeenCalledWith({
+      ...initialProps.openSections,
       ...newSections
     });
   });

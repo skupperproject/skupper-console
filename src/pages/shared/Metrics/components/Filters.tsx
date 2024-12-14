@@ -14,10 +14,10 @@ import { generateFilterItems } from '../services';
 
 interface MetricFiltersProps {
   defaultMetricFilterValues: QueryMetricsParams;
-  sourceSites?: { destinationName: string }[];
-  destSites?: { destinationName: string }[];
-  sourceProcesses?: { destinationName: string; siteName?: string }[];
-  destProcesses?: { destinationName: string; siteName?: string }[];
+  sourceSites?: { id: string; destinationName: string }[];
+  destSites?: { id: string; destinationName: string }[];
+  sourceProcesses?: { id: string; destinationName: string; parentId?: string; parentName?: string }[];
+  destProcesses?: { id: string; destinationName: string; parentId?: string; parentName?: string }[];
   configFilters?: ConfigMetricFilters;
   isRefetching?: boolean;
   onRefetch?: Function;
