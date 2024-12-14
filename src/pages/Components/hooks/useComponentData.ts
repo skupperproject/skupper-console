@@ -1,20 +1,19 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
+import { getAllComponents, getAllProcesses } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
-import { QueriesProcesses } from '../../Processes/Processes.enum';
-import { QueriesComponent } from '../Components.enum';
 
 export const useComponentData = (id: string) => {
   const [{ data: processes }, { data: component }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcesses.GetProcessPairs, { groupIdentity: id }],
+        queryKey: [getAllProcesses(), { groupIdentity: id }],
         queryFn: () => RESTApi.fetchProcesses({ endTime: 0, groupIdentity: id }),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesComponent.GetComponents, id],
+        queryKey: [getAllComponents(), id],
         queryFn: () => RESTApi.fetchComponent(id),
         refetchInterval: UPDATE_INTERVAL
       }

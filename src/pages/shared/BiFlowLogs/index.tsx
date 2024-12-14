@@ -4,7 +4,7 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { NonNullableValue, SKTableColumn } from 'types/SkTable.interfaces';
 
-import { QueriesBiFlowLogs } from './BiFlowLogs.enum';
+import { getAllHttpRequests, getAllTcpConnections } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
 import { BIG_PAGINATION_SIZE } from '../../../config/app';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
@@ -33,12 +33,12 @@ const BiFlowLogs = function <T extends BiFlowResponse>({
   const [{ data: transportFlows }, { data: applicationFlows }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesBiFlowLogs.GetTcpConnections, { ...filters, ...queryParams }],
+        queryKey: [getAllTcpConnections(), { ...filters, ...queryParams }],
         queryFn: () => (!showAppplicationFlows ? RESTApi.fetchTransportFlows({ ...filters, ...queryParams }) : null),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesBiFlowLogs.GetHttpRequests, { ...filters, ...queryParams }],
+        queryKey: [getAllHttpRequests(), { ...filters, ...queryParams }],
         queryFn: () => (showAppplicationFlows ? RESTApi.fetchApplicationFlows({ ...filters, ...queryParams }) : null),
         refetchInterval: UPDATE_INTERVAL
       }

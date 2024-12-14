@@ -1,11 +1,11 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
+import { gePrometheusQueryPATH } from '../../../API/Prometheus.utils';
+import { getProcessPairsByServiceId } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { TopologyController } from '../../Topology/services';
-import { QueriesPairs } from '../../Topology/Topology.enum';
-import { QueriesServices } from '../Services.enum';
 
 const metricQueryParams = {
   fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` },
@@ -15,13 +15,13 @@ const metricQueryParams = {
 
 export const useServersData = (id: string, name: string) => {
   const { data: processPairs } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetProcessPairsByService, id],
+    queryKey: [getProcessPairsByServiceId(id), id],
     queryFn: () => RESTApi.fetchProcessPairsByService(id),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: metrics } = useQuery({
-    queryKey: [QueriesPairs.GetMetricsByPairs, { sourceSite: name }],
+    queryKey: [gePrometheusQueryPATH('single'), id, { service: name }],
     queryFn: () =>
       TopologyController.getAllTopologyMetrics({
         showBytes: true,

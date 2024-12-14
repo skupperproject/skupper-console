@@ -1,19 +1,19 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
+import { getAllConnectors, getAllListeners } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
-import { QueriesServices } from '../Services.enum';
 
 const useListenersAndConnectorsData = (serviceId: string) => {
   const [{ data: listenersData }, { data: connectorsData }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesServices.GetListeners, serviceId],
+        queryKey: [getAllListeners(), serviceId],
         queryFn: () => RESTApi.fetchListeners({ addressId: serviceId }),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesServices.GetConnectors, serviceId],
+        queryKey: [getAllConnectors(), serviceId],
         queryFn: () => RESTApi.fetchConnectors({ addressId: serviceId }),
         refetchInterval: UPDATE_INTERVAL
       }

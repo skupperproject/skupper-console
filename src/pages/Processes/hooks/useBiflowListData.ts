@@ -1,9 +1,9 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
+import { getAllHttpRequests, getAllTcpConnections } from '../../../API/REST.endpoints';
 import { TcpStatus } from '../../../API/REST.enum';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
-import { QueriesBiFlowLogs } from '../../shared/BiFlowLogs/BiFlowLogs.enum';
 
 const initServersQueryParams = {
   limit: 0
@@ -24,7 +24,7 @@ export const useBiflowListData = (sourceProcessId: string, destProcessId: string
     useSuspenseQueries({
       queries: [
         {
-          queryKey: [QueriesBiFlowLogs.GetHttpRequests, initServersQueryParams, sourceProcessId, destProcessId],
+          queryKey: [getAllHttpRequests(), initServersQueryParams, sourceProcessId, destProcessId],
           queryFn: () =>
             RESTApi.fetchApplicationFlows({
               ...initServersQueryParams,
@@ -34,7 +34,7 @@ export const useBiflowListData = (sourceProcessId: string, destProcessId: string
           refetchInterval: UPDATE_INTERVAL
         },
         {
-          queryKey: [QueriesBiFlowLogs.GetTcpConnections, activeConnectionsQueryParams, sourceProcessId, destProcessId],
+          queryKey: [getAllTcpConnections(), activeConnectionsQueryParams, sourceProcessId, destProcessId],
           queryFn: () =>
             RESTApi.fetchTransportFlows({
               ...activeConnectionsQueryParams,
@@ -44,12 +44,7 @@ export const useBiflowListData = (sourceProcessId: string, destProcessId: string
           refetchInterval: UPDATE_INTERVAL
         },
         {
-          queryKey: [
-            QueriesBiFlowLogs.GetTcpConnections,
-            terminatedConnectionsQueryParams,
-            sourceProcessId,
-            destProcessId
-          ],
+          queryKey: [getAllTcpConnections(), terminatedConnectionsQueryParams, sourceProcessId, destProcessId],
           queryFn: () =>
             RESTApi.fetchTransportFlows({
               ...terminatedConnectionsQueryParams,

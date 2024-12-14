@@ -1,12 +1,12 @@
 import { useQueries, useSuspenseQueries } from '@tanstack/react-query';
 
+import { gePrometheusQueryPATH } from '../../../API/Prometheus.utils';
+import { getAllComponentPairs } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { PairsResponse } from '../../../types/REST.interfaces';
 import { TopologyController } from '../../Topology/services';
-import { QueriesPairs } from '../../Topology/Topology.enum';
-import { QueriesComponent } from '../Components.enum';
 
 const metricQueryParams = {
   fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceComponentName},${PrometheusLabelsV2.DestComponentName}` },
@@ -20,7 +20,7 @@ export const useComponensPairsListData = (id: string, name: string) => {
   const [{ data: metricsTx }, { data: metricsRx }] = useQueries({
     queries: [
       {
-        queryKey: [QueriesPairs.GetMetricsByPairs, { sourceComponent: name }],
+        queryKey: [gePrometheusQueryPATH('single'), id, { sourceComponent: name }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
@@ -34,7 +34,7 @@ export const useComponensPairsListData = (id: string, name: string) => {
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesPairs.GetMetricsByPairs, { destComponent: name }],
+        queryKey: [gePrometheusQueryPATH('single'), id, { destComponent: name }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
@@ -53,12 +53,12 @@ export const useComponensPairsListData = (id: string, name: string) => {
   const [{ data: pairsTx }, { data: pairsRx }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesComponent.GetComponentPairs, queryParams('sourceId')],
+        queryKey: [getAllComponentPairs(), queryParams('sourceId')],
         queryFn: () => RESTApi.fetchComponentsPairs(queryParams('sourceId')),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesComponent.GetComponentPairs, queryParams('destinationId')],
+        queryKey: [getAllComponentPairs(), queryParams('destinationId')],
         queryFn: () => RESTApi.fetchComponentsPairs(queryParams('destinationId')),
         refetchInterval: UPDATE_INTERVAL
       }

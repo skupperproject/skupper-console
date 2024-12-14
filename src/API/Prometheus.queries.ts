@@ -65,11 +65,5 @@ export const queries = {
     }
 
     return `sum by(${groupBy})(rate(${PrometheusMetricsV2.LatencySum}[1m]))`;
-  },
-
-  // SERVICES queries
-  // calculate the byterate used by the sankey diagram in the requests/connections page
-  getResourcePairsByService(param: string, groupBy: string, time: string) {
-    return `sum by(${groupBy})(rate(${PrometheusMetricsV2.SentBytes}{${param}}[${time}]) > 0)`;
   }
 };

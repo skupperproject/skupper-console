@@ -1,17 +1,11 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
+import { gePrometheusQueryPATH } from '../../../API/Prometheus.utils';
+import { getAllLinks, getAllSitePairs, getAllSites } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
-import { QueriesSites } from '../../Sites/Sites.enum';
 import { TopologyController } from '../services';
-import { QueriesPairs } from '../Topology.enum';
-
-interface UseTopologySiteDataProps {
-  showDataLink: boolean;
-  showBytes: boolean;
-  showByteRate: boolean;
-}
 
 const metricQueryParams = {
   fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName}` },
@@ -21,31 +15,31 @@ const metricQueryParams = {
   }
 };
 
-const useTopologySiteData = ({ showDataLink, showBytes, showByteRate }: UseTopologySiteDataProps) => {
+const useTopologySiteData = ({ showDataLink }: { showDataLink: boolean }) => {
   const [{ data: sites }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesSites.GetSites],
+        queryKey: [getAllSites()],
         queryFn: () => RESTApi.fetchSites(),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesSites.GetLinks, showDataLink],
+        queryKey: [getAllLinks(), showDataLink],
         queryFn: () => (!showDataLink ? RESTApi.fetchLinks() : null),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesSites.GetSitesPairs, showDataLink],
+        queryKey: [getAllSitePairs(), showDataLink],
         queryFn: () => (showDataLink ? RESTApi.fetchSitesPairs() : null),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesPairs.GetMetricsByPairs, showBytes, showByteRate, showDataLink],
+        queryKey: [gePrometheusQueryPATH('single'), metricQueryParams],
         queryFn: () =>
           showDataLink
             ? TopologyController.getAllTopologyMetrics({
-                showBytes,
-                showByteRate,
+                showBytes: true,
+                showByteRate: true,
                 metricQueryParams
               })
             : null,

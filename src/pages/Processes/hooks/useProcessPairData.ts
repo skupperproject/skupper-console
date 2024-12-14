@@ -1,7 +1,7 @@
 import { useSuspenseQueries, useSuspenseQuery } from '@tanstack/react-query';
 
+import { getAllProcesses, getAllProcessPairs } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
-import { QueriesProcesses } from '../Processes.enum';
 
 interface useProcessPairDataProps {
   id: string;
@@ -9,7 +9,7 @@ interface useProcessPairDataProps {
 
 export const useProcessPairData = ({ id }: useProcessPairDataProps) => {
   const { data } = useSuspenseQuery({
-    queryKey: [QueriesProcesses.GetProcessPairs, id],
+    queryKey: [getAllProcessPairs(), id],
     queryFn: () => RESTApi.fetchProcessesPair(id)
   });
 
@@ -19,11 +19,11 @@ export const useProcessPairData = ({ id }: useProcessPairDataProps) => {
   const [{ data: source }, { data: destination }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcesses.GetProcesses, sourceId],
+        queryKey: [getAllProcesses(), sourceId],
         queryFn: () => RESTApi.fetchProcess(sourceId)
       },
       {
-        queryKey: [QueriesProcesses.GetProcesses, destId],
+        queryKey: [getAllProcesses(), destId],
         queryFn: () => RESTApi.fetchProcess(destId)
       }
     ]

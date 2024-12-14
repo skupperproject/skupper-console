@@ -45,9 +45,7 @@ const TopologySite: FC<{
   );
 
   const { sites, routerLinks, sitesPairs, metrics } = useTopologySiteData({
-    showDataLink: displayOptionsSelected.includes(SHOW_DATA_LINKS),
-    showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
-    showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE)
+    showDataLink: displayOptionsSelected.includes(SHOW_DATA_LINKS)
   });
 
   const handleShowDetails = useCallback(

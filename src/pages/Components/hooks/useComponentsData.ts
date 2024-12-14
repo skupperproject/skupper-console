@@ -2,12 +2,12 @@ import { startTransition, useState } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 
+import { getAllComponents } from '../../../API/REST.endpoints';
 import { Role } from '../../../API/REST.enum';
 import { RESTApi } from '../../../API/REST.resources';
 import { BIG_PAGINATION_SIZE } from '../../../config/app';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { QueryFilters } from '../../../types/REST.interfaces';
-import { QueriesComponent } from '../Components.enum';
 
 const defaultQueryParams = {
   limit: BIG_PAGINATION_SIZE,
@@ -19,7 +19,7 @@ export const useComponentsData = () => {
   const [queryParams, setQueryParams] = useState<QueryFilters>(defaultQueryParams);
 
   const { data } = useSuspenseQuery({
-    queryKey: [QueriesComponent.GetComponents, queryParams],
+    queryKey: [getAllComponents(), queryParams],
     queryFn: () => RESTApi.fetchComponents(queryParams),
     refetchInterval: UPDATE_INTERVAL
   });

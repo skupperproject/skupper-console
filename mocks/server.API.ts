@@ -7,7 +7,6 @@ import {
   RouterLinkResponse,
   ComponentResponse,
   ProcessResponse,
-  RouterResponse,
   SiteResponse,
   PairsResponse,
   ApplicationFlowResponse,
@@ -347,23 +346,6 @@ for (let i = 0; i < ITEM_COUNT; i++) {
     routerCount: 1
   });
 }
-
-const mockRoutersForPerf: RouterResponse[] = [];
-mockSitesForPerf.forEach((site, index) => {
-  mockRoutersForPerf.push({
-    identity: `router${index}:0`,
-    parent: site.identity,
-    startTime: 1674048674810887,
-    endTime: 0,
-    name: `0/${site.name}-skupper-router-${`router${index}`}`,
-    namespace: `router-namespace-${`router${index}`}`,
-    imageName: 'skupper-router',
-    imageVersion: 'latest',
-    hostName: `skupper-router-${`router${index}`}`,
-    buildVersion: 'UNKNOWN',
-    mode: 'interior'
-  });
-});
 
 const mockProcessesForPerf: ProcessResponse[] = [];
 for (let i = 0; i < ITEM_COUNT; i++) {

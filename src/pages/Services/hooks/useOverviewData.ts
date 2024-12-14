@@ -1,12 +1,12 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
+import { getProcessPairsByServiceId } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
-import { QueriesServices } from '../Services.enum';
 
 export const useServiceOverviewData = (id: string) => {
   const { data } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetProcessPairsByService, id],
+    queryKey: [getProcessPairsByServiceId(id), id],
     queryFn: () => RESTApi.fetchProcessPairsByService(id),
     refetchInterval: UPDATE_INTERVAL
   });

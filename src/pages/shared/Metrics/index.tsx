@@ -61,7 +61,6 @@ const Metrics: FC<MetricsProps> = function (props) {
           destSites={destSites}
           sourceProcesses={sourceProcesses}
           destProcesses={destProcesses}
-          availableProtocols={availableProtocols}
           onRefetch={triggerMetricUpdate}
           onSelectFilters={handleFilterChange}
         />

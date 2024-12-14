@@ -1,9 +1,9 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
+import { getAllSitePairs } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { PairsResponse } from '../../../types/REST.interfaces';
-import { QueriesSites } from '../Sites.enum';
 
 export const useSiteOverviewData = (id: string) => {
   const queryParams = (idKey: keyof PairsResponse) => ({ [idKey]: id });
@@ -11,12 +11,12 @@ export const useSiteOverviewData = (id: string) => {
   const [{ data: pairsTx }, { data: pairsRx }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesSites.GetSitesPairs, queryParams('sourceId')],
+        queryKey: [getAllSitePairs(), queryParams('sourceId')],
         queryFn: () => RESTApi.fetchSitesPairs(queryParams('sourceId')),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesSites.GetSitesPairs, queryParams('destinationId')],
+        queryKey: [getAllSitePairs(), queryParams('destinationId')],
         queryFn: () => RESTApi.fetchSitesPairs(queryParams('destinationId')),
         refetchInterval: UPDATE_INTERVAL
       }

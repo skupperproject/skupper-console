@@ -26,9 +26,7 @@ describe('useTopologySiteData', () => {
 
     const { result } = renderHook(() =>
       useTopologySiteData({
-        showDataLink: true,
-        showBytes: true,
-        showByteRate: true
+        showDataLink: true
       })
     );
 
@@ -60,9 +58,7 @@ describe('useTopologySiteData', () => {
 
     const { result } = renderHook(() =>
       useTopologySiteData({
-        showDataLink: false,
-        showBytes: false,
-        showByteRate: false
+        showDataLink: false
       })
     );
 
@@ -87,9 +83,7 @@ describe('useTopologySiteData', () => {
 
     const { result } = renderHook(() =>
       useTopologySiteData({
-        showDataLink: true,
-        showBytes: false,
-        showByteRate: false
+        showDataLink: true
       })
     );
 

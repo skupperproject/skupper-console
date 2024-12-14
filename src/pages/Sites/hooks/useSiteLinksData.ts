@@ -1,9 +1,9 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
+import { getAllLinks } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { RouterLinkResponse } from '../../../types/REST.interfaces';
-import { QueriesSites } from '../Sites.enum';
 
 export const useSiteLinksData = (id: string) => {
   const queryParams = (idKey: keyof RouterLinkResponse) => ({ [idKey]: id });
@@ -11,12 +11,12 @@ export const useSiteLinksData = (id: string) => {
   const [{ data: links }, { data: remoteLinks }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesSites.GetLinks, queryParams('sourceSiteId')],
+        queryKey: [getAllLinks(), queryParams('sourceSiteId')],
         queryFn: () => RESTApi.fetchLinks(queryParams('sourceSiteId')),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesSites.GetLinks, queryParams('destinationSiteId')],
+        queryKey: [getAllLinks(), queryParams('destinationSiteId')],
         queryFn: () => RESTApi.fetchLinks(queryParams('destinationSiteId')),
         refetchInterval: UPDATE_INTERVAL
       }

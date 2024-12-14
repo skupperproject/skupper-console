@@ -4,7 +4,6 @@ import { Server } from 'miragejs';
 import processesData from '../mocks/data/PROCESSES.json';
 import siteData from '../mocks/data/SITES.json';
 import { loadMockServer } from '../mocks/server';
-import { Protocols } from '../src/API/REST.enum';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import MetricFilters from '../src/pages/shared/Metrics/components/Filters';
 import { Labels } from '../src/config/labels';
@@ -36,7 +35,6 @@ describe('Metrics component', () => {
           { destinationName: processesData.results[2].name },
           { destinationName: processesData.results[3].name }
         ]}
-        availableProtocols={[Protocols.Http, Protocols.Http2, Protocols.Tcp]}
         configFilters={{
           destinationProcesses: { disabled: false, placeholder: Labels.AllConnectedProcesses },
           sourceProcesses: { disabled: false, placeholder: Labels.AllSourceProcesses },
@@ -96,7 +94,6 @@ describe('Metrics component', () => {
           { destinationName: processesData.results[2].name },
           { destinationName: processesData.results[3].name }
         ]}
-        availableProtocols={[Protocols.Http, Protocols.Http2, Protocols.Tcp]}
         configFilters={{
           destinationProcesses: { disabled: false, placeholder: Labels.AllConnectedProcesses },
           sourceProcesses: { disabled: false, placeholder: Labels.AllSourceProcesses },
