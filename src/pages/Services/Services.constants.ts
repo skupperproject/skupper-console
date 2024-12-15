@@ -38,6 +38,16 @@ export const customServiceCells = {
       type: 'service',
       link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}`
     }),
+  ConnectorNameLinkCell: (props: SkLinkCellProps<ConnectorResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'connector'
+    }),
+  ListenerNameLinkCell: (props: SkLinkCellProps<ConnectorResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'listener'
+    }),
   ProcessNameLinkCell: (props: SkLinkCellProps<ConnectorResponse>) =>
     SkLinkCell({
       ...props,
@@ -112,7 +122,8 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
 export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
   {
     name: Labels.Name,
-    prop: 'name'
+    prop: 'name',
+    customCellName: 'ListenerNameLinkCell'
   },
   {
     name: Labels.Site,
@@ -131,7 +142,13 @@ export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
 export const ConnectorColumns: SKTableColumn<ConnectorResponse>[] = [
   {
     name: Labels.Name,
-    prop: 'name'
+    prop: 'name',
+    customCellName: 'ConnectorNameLinkCell'
+  },
+  {
+    name: Labels.Site,
+    prop: 'siteName',
+    customCellName: 'SiteNameLinkCell'
   },
   {
     name: Labels.DestHost,
@@ -146,11 +163,7 @@ export const ConnectorColumns: SKTableColumn<ConnectorResponse>[] = [
     prop: 'count',
     customCellName: 'ConnectorProcessCountCell'
   },
-  {
-    name: Labels.Site,
-    prop: 'siteName',
-    customCellName: 'SiteNameLinkCell'
-  },
+
   {
     name: Labels.Created,
     prop: 'startTime',

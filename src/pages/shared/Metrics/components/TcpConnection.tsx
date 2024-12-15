@@ -80,7 +80,8 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
       </CardHeader>
 
       <CardExpandableContent>
-        <CardBody style={{ minHeight: minChartHeight }}>
+        {/*display grid center the child SKEmptyData */}
+        <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
           {isLoading && <SkIsLoading />}
 
           {!isLoading && connections && (

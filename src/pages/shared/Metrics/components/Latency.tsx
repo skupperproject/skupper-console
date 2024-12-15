@@ -74,15 +74,15 @@ const Latency: FC<LatencyProps> = function ({
   }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
   return (
-    <Card isExpanded={isExpanded} aria-label={title}>
+    <Card isExpanded={isExpanded} aria-label={title} isFullHeight>
       <CardHeader onExpand={handleExpand}>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
 
       <CardExpandableContent>
-        <CardBody style={{ minHeight: minChartHeight }}>
+        {/*display grid center the child SKEmptyData */}
+        <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
           {(isLoading || isLoadingBuckets) && <SkIsLoading />}
-
           {!isLoading && !isLoadingBuckets && data?.length && bucketsData && (
             <>
               {!isLoading && !isLoadingBuckets && isRefetching && isRefetchingBuckets && <SkIsLoading />}
@@ -93,7 +93,6 @@ const Latency: FC<LatencyProps> = function ({
               />
             </>
           )}
-
           {!isLoading && !isLoadingBuckets && (!data?.length || !bucketsData) && (
             <SKEmptyData
               message={Labels.NoMetricFound}

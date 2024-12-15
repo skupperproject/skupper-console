@@ -20,6 +20,11 @@ export const customSiteCells = {
       type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.name}@${props.data.identity}`
     }),
+  LinkNameCell: (props: SkLinkCellProps<RouterLinkResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'link'
+    }),
   LinkToCell: (props: SkLinkCellProps<RouterLinkResponse>) =>
     SkLinkCell({
       ...props,
@@ -81,7 +86,8 @@ export const siteColumns: SKTableColumn<SiteResponse>[] = [
 export const linksColumns: SKTableColumn<RouterLinkResponse>[] = [
   {
     name: Labels.Name,
-    prop: 'name'
+    prop: 'name',
+    customCellName: 'LinkNameCell'
   },
   {
     name: Labels.To,
@@ -97,7 +103,6 @@ export const linksColumns: SKTableColumn<RouterLinkResponse>[] = [
     prop: 'status',
     customCellName: 'SkStatusLinkCell'
   },
-
   {
     name: Labels.Created,
     prop: 'startTime',

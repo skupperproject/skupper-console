@@ -20,8 +20,8 @@ const LatencyCharts: FC<{
   bucketsData: LatencyBucketDistributionData[];
   summary: LatencyBucketSummary[];
 }> = memo(({ latenciesData, bucketsData, summary }) => (
-  <Grid>
-    <GridItem md={12} xl={12}>
+  <Grid hasGutter>
+    <GridItem span={12}>
       <Title headingLevel="h4">{Labels.PercentileOverTime}</Title>
       <SkChartArea
         formatY={formatLatency}
@@ -31,8 +31,7 @@ const LatencyCharts: FC<{
       />
     </GridItem>
 
-    <GridItem rowSpan={2} md={12} xl={8}>
-      <Title headingLevel="h4">{Labels.Buckets}</Title>
+    <GridItem md={12} xl={8}>
       <SkChartBar
         themeColor={ChartThemeColor.multi}
         legendLabels={bucketsData.map(({ label }) => label)}

@@ -69,7 +69,8 @@ const Request: FC<RequestProps> = function ({
         <CardTitle>{Labels.Requests}</CardTitle>
       </CardHeader>
       <CardExpandableContent>
-        <CardBody style={{ minHeight: minChartHeight }}>
+        {/*display grid center the child SKEmptyData */}
+        <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
           {isLoading && <SkIsLoading />}
 
           {!isLoading && request?.requestRateData?.length && (

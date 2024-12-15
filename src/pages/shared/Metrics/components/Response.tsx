@@ -100,7 +100,8 @@ const Response: FC<ResponseProps> = function ({
         <CardTitle>{Labels.Responses}</CardTitle>
       </CardHeader>
       <CardExpandableContent>
-        <CardBody style={{ minHeight: minChartHeight }}>
+        {/*display grid center the child SKEmptyData */}
+        <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
           {(isLoading || isLoadingReverse) && <SkIsLoading />}
 
           {!isLoading && !isLoadingReverse && responseData && (

@@ -20,7 +20,7 @@ const SkLinkCell = function <T>({ value, link, type }: SkLinkCellProps<T>) {
   return (
     <div style={{ display: 'flex' }} data-testid={`${value}`}>
       {type && <ResourceIcon type={type} />}
-      <Link to={link} style={{ textDecoration: 'none' }}>{`${value}`}</Link>
+      {link ? <Link to={link} style={{ textDecoration: 'none' }}>{`${value}`}</Link> : `${value}`}
     </div>
   );
 };
