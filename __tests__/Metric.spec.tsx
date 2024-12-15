@@ -11,15 +11,13 @@ import { configDefaultFilters } from '../src/pages/shared/Metrics/Metrics.consta
 
 describe('useMetrics', () => {
   const initialProps = {
-    selectedFilters: { protocol: Protocols.Http },
-    openSections: { byterate: true },
-    setSelectedFilters: jest.fn(),
-    setOpenSections: jest.fn()
+    sessionKey: 'test-id',
+    defaultMetricFilterValues: { protocol: Protocols.Http }
   };
 
   it('initializes with the correct state from props', () => {
     const { result } = renderHook(() => useMetricsState(initialProps));
-    expect(result.current.queryParams).toEqual({ protocol: Protocols.Http });
+    expect(result.current.selectedFilters).toEqual({ protocol: Protocols.Http });
     expect(result.current.shouldUpdateData).toBe(0);
   });
 
@@ -37,20 +35,8 @@ describe('useMetrics', () => {
     act(() => {
       result.current.handleFilterChange(newFilters);
     });
-    expect(result.current.queryParams).toEqual(newFilters);
-    expect(initialProps.setSelectedFilters).toHaveBeenCalledWith(newFilters);
-  });
 
-  it('updates expanded sections and calls onGetExpandedSectionsConfig when handleSectionToggle is invoked', () => {
-    const { result } = renderHook(() => useMetricsState(initialProps));
-    const newSections = { traffic: false };
-    act(() => {
-      result.current.handleSectionToggle(newSections);
-    });
-    expect(initialProps.setOpenSections).toHaveBeenCalledWith({
-      ...initialProps.openSections,
-      ...newSections
-    });
+    expect(result.current.selectedFilters).toEqual(newFilters);
   });
 });
 

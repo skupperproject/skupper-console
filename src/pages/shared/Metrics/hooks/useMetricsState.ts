@@ -1,24 +1,24 @@
-import { useCallback, useRef, useState, startTransition } from 'react';
+import { useCallback, useState, startTransition } from 'react';
 
-import { ExpandedMetricSections, QueryMetricsParams } from '../../../../types/Metrics.interfaces';
+import { useMetricSessionHandlers } from './useMetricsSessionHandler';
+import { QueryMetricsParams } from '../../../../types/Metrics.interfaces';
 
 interface UseMetricsProps {
-  selectedFilters: QueryMetricsParams;
-  openSections?: ExpandedMetricSections;
-  setSelectedFilters: Function;
-  setOpenSections?: Function;
+  sessionKey?: string;
+  defaultMetricFilterValues: QueryMetricsParams;
 }
 
-export const useMetricsState = ({
-  selectedFilters,
-  openSections,
-  setSelectedFilters,
-  setOpenSections
-}: UseMetricsProps) => {
-  const { ...filters } = selectedFilters;
-  const [queryParams, setQueryParams] = useState<QueryMetricsParams>(filters);
+export const useMetricsState = ({ sessionKey, defaultMetricFilterValues }: UseMetricsProps) => {
+  const {
+    selectedFilters: storedFilters,
+    openSections,
+    setSelectedFilters: setStoredFilters,
+    setOpenSections
+  } = useMetricSessionHandlers(sessionKey, defaultMetricFilterValues);
+
   const [shouldUpdateData, setShouldUpdateData] = useState(0);
-  const expandedSectionsConfigRef = useRef(openSections);
+
+  const [selectedFilters, setSelectedFilters] = useState<QueryMetricsParams>(storedFilters);
 
   const triggerMetricUpdate = () => {
     setShouldUpdateData(new Date().getTime());
@@ -27,26 +27,26 @@ export const useMetricsState = ({
   const handleFilterChange = useCallback(
     (updatedFilters: QueryMetricsParams) => {
       startTransition(() => {
-        setQueryParams(updatedFilters);
-        setSelectedFilters(updatedFilters);
+        // let to override undefined values with default values if they exists
+        const filters = { ...defaultMetricFilterValues, ...JSON.parse(JSON.stringify({ ...updatedFilters })) };
+
+        setStoredFilters(filters);
+        setSelectedFilters(filters);
       });
     },
-    [setSelectedFilters]
+    [defaultMetricFilterValues, setStoredFilters]
   );
 
   const handleSectionToggle = useCallback(
     (section: Record<string, boolean>) => {
-      if (setOpenSections) {
-        const config = { ...expandedSectionsConfigRef.current, ...section };
-        setOpenSections(config);
-        expandedSectionsConfigRef.current = config;
-      }
+      setOpenSections(section);
     },
     [setOpenSections]
   );
 
   return {
-    queryParams,
+    selectedFilters,
+    openSections,
     shouldUpdateData,
     triggerMetricUpdate,
     handleFilterChange,

@@ -8,10 +8,10 @@ import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { TopologyController } from '../services';
 
 const metricQueryParams = {
-  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName}` },
-  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName}` },
+  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId}` },
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId}` },
   fetchLatency: {
-    groupBy: `${PrometheusLabelsV2.SourceSiteName},${PrometheusLabelsV2.DestSiteName},${PrometheusLabelsV2.Direction}`
+    groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId},${PrometheusLabelsV2.Direction}`
   }
 };
 
@@ -34,7 +34,7 @@ const useTopologySiteData = ({ showDataLink }: { showDataLink: boolean }) => {
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [gePrometheusQueryPATH('single'), metricQueryParams],
+        queryKey: [gePrometheusQueryPATH('single'), metricQueryParams, showDataLink],
         queryFn: () =>
           showDataLink
             ? TopologyController.getAllTopologyMetrics({

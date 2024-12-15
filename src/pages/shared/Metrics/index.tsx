@@ -8,7 +8,6 @@ import Request from './components/Request';
 import Response from './components/Response';
 import TcpConnection from './components/TcpConnection';
 import Traffic from './components/Traffic';
-import { useMetricSessionHandlers } from './hooks/useMetricsSessionHandler';
 import { useMetricsState } from './hooks/useMetricsState';
 import { Protocols, Direction } from '../../../API/REST.enum';
 import { Labels } from '../../../config/labels';
@@ -37,16 +36,17 @@ const Metrics: FC<MetricsProps> = function (props) {
     destProcesses,
     availableProtocols
   } = props;
-  const { selectedFilters, openSections, setSelectedFilters, setOpenSections } = useMetricSessionHandlers(
-    sessionKey,
-    defaultMetricFilterValues
-  );
 
-  const { shouldUpdateData, triggerMetricUpdate, handleFilterChange, handleSectionToggle } = useMetricsState({
+  const {
     selectedFilters,
     openSections,
-    setSelectedFilters,
-    setOpenSections
+    shouldUpdateData,
+    triggerMetricUpdate,
+    handleFilterChange,
+    handleSectionToggle
+  } = useMetricsState({
+    sessionKey,
+    defaultMetricFilterValues
   });
 
   const showHttp = !!availableProtocols?.includes(Protocols.Http) || !!availableProtocols?.includes(Protocols.Http2);
@@ -89,7 +89,7 @@ const Metrics: FC<MetricsProps> = function (props) {
           <Latency
             title={Labels.LatencyOut}
             selectedFilters={{ ...selectedFilters, direction: Direction.Incoming }}
-            openSections={openSections?.latency}
+            openSections={openSections?.[Labels.LatencyOut]}
             forceUpdate={shouldUpdateData}
             onGetIsSectionExpanded={handleSectionToggle}
           />
@@ -97,9 +97,9 @@ const Metrics: FC<MetricsProps> = function (props) {
 
         <StackItem>
           <Latency
-            title={Labels.LatencyOut}
+            title={Labels.LatencyIn}
             selectedFilters={{ ...selectedFilters, direction: Direction.Outgoing }}
-            openSections={openSections?.latency}
+            openSections={openSections?.[Labels.LatencyIn]}
             forceUpdate={shouldUpdateData}
             onGetIsSectionExpanded={handleSectionToggle}
           />

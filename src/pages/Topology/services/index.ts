@@ -126,18 +126,23 @@ export const TopologyController = {
     );
 
     return edges.map((edge) => {
+      // processes use name to query prometheus
       const pairKey = `${edge.sourceName}${edge.targetName}`;
+      // sites use id to query prometheus
+      const pairKeyId = `${edge.source}${edge.target}`;
+
       const inversePairKey = `${edge.targetName}${edge.sourceName}`;
+      const inversePairKeyId = `${edge.target}${edge.source}`;
 
       return {
         ...edge,
         metrics: {
-          bytes: sourceToDestBytesMap[pairKey],
-          byteRate: sourceToDestByteRateMap[pairKey],
-          latency: latencyByPairsMapIn[pairKey],
-          bytesReverse: destToSourceBytesMap[pairKey],
-          byteRateReverse: destToSourceByteRateMap[pairKey],
-          latencyReverse: latencyByPairsMapOut[inversePairKey]
+          bytes: sourceToDestBytesMap[pairKeyId] || sourceToDestBytesMap[pairKey],
+          byteRate: sourceToDestByteRateMap[pairKeyId] || sourceToDestByteRateMap[pairKey],
+          latency: latencyByPairsMapIn[pairKeyId] || latencyByPairsMapIn[pairKey],
+          bytesReverse: destToSourceBytesMap[pairKeyId] || destToSourceBytesMap[pairKey],
+          byteRateReverse: destToSourceByteRateMap[pairKeyId] || destToSourceByteRateMap[pairKey],
+          latencyReverse: latencyByPairsMapOut[inversePairKeyId] || latencyByPairsMapOut[inversePairKey]
         }
       };
     });

@@ -57,9 +57,9 @@ const Latency: FC<LatencyProps> = function ({
     setIsExpanded(!isExpanded);
 
     if (onGetIsSectionExpanded) {
-      onGetIsSectionExpanded({ latency: !isExpanded });
+      onGetIsSectionExpanded({ [title]: !isExpanded });
     }
-  }, [isExpanded, onGetIsSectionExpanded]);
+  }, [isExpanded, onGetIsSectionExpanded, title]);
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {

@@ -14,8 +14,14 @@ export const useMetricSessionHandlers = (id?: string, defaultMetricFilterValues?
   );
 
   const setOpenSections = useCallback(
-    (sections: ExpandedMetricSections) =>
-      storeDataToSession<ExpandedMetricSections>(`${PREFIX_VISIBLE_METRICS_KEY}-${id}`, sections),
+    (sections: ExpandedMetricSections) => {
+      const storedOpenSections =
+        getDataFromSession<ExpandedMetricSections>(`${PREFIX_VISIBLE_METRICS_KEY}-${id}`) || undefined;
+      storeDataToSession<ExpandedMetricSections>(`${PREFIX_VISIBLE_METRICS_KEY}-${id}`, {
+        ...storedOpenSections,
+        ...sections
+      });
+    },
     [id]
   );
 
