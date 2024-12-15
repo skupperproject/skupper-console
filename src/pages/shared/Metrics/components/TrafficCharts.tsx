@@ -14,7 +14,7 @@ import { MetricsController } from '../services';
 
 const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }> = memo(
   ({ byteRateData, colorScale }) => (
-    <Flex direction={{ xl: 'row', md: 'column' }} style={{ alignItems: 'center' }}>
+    <Flex direction={{ xl: 'row', default: 'column' }} style={{ alignItems: 'center' }}>
       <FlexItem flex={{ default: 'flex_2' }}>
         <Flex>
           <SkChartArea
@@ -35,7 +35,9 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }
           />
         </Flex>
       </FlexItem>
+
       <Divider orientation={{ default: 'vertical' }} />
+
       <FlexItem flex={{ xl: 'flex_1' }}>
         <Flex>
           <Table borders={false}>
