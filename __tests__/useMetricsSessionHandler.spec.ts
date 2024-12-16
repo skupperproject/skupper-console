@@ -6,6 +6,7 @@ import { Direction } from '../src/API/REST.enum';
 import { getDataFromSession, storeDataToSession } from '../src/core/utils/persistData';
 import { useMetricSessionHandlers } from '../src/pages/shared/Metrics/hooks/useMetricsSessionHandler';
 import { QueryMetricsParams, ExpandedMetricSections } from '../src/types/Metrics.interfaces';
+import { Labels } from '../src/config/labels';
 
 const mockQueryMetricsParams: QueryMetricsParams = {
   sourceSite: 'SiteA',
@@ -23,7 +24,8 @@ const mockQueryMetricsParams: QueryMetricsParams = {
 
 const mockExpandedMetricSections: ExpandedMetricSections = {
   byterate: true,
-  latency: false,
+  [Labels.LatencyIn]: false,
+  [Labels.LatencyOut]: false,
   request: true,
   response: true,
   connection: false
@@ -46,7 +48,7 @@ describe('useMetricSessionHandlers', () => {
     (getDataFromSession as jest.Mock).mockReturnValueOnce(undefined);
 
     const { result } = renderHook(() => useMetricSessionHandlers(id));
-    expect(result.current.visibleMetrics).toBeUndefined();
+    expect(result.current.openSections).toBeUndefined();
   });
 
   it('should retrieve selectedFilters and visibleMetrics from session', () => {
@@ -60,7 +62,7 @@ describe('useMetricSessionHandlers', () => {
     const { result } = renderHook(() => useMetricSessionHandlers(id));
 
     expect(result.current.selectedFilters).toEqual(mockFilters);
-    expect(result.current.visibleMetrics).toEqual(mockVisibleMetrics);
+    expect(result.current.openSections).toEqual(mockVisibleMetrics);
     expect(getDataFromSession).toHaveBeenCalledTimes(2);
   });
 
@@ -80,7 +82,7 @@ describe('useMetricSessionHandlers', () => {
     const { result } = renderHook(() => useMetricSessionHandlers(id));
 
     act(() => {
-      result.current.setVisibleMetrics(mockVisibleMetrics);
+      result.current.setOpenSections(mockVisibleMetrics);
     });
 
     expect(storeDataToSession).toHaveBeenCalledWith(`metric-sections-${id}`, mockVisibleMetrics);

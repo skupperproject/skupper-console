@@ -59,17 +59,6 @@ export interface SiteResponse extends BaseResponse {
   routerCount: number;
 }
 
-export interface RouterResponse extends BaseResponse {
-  parent: string;
-  name: string;
-  namespace: string;
-  hostName: string;
-  buildVersion: string;
-  imageName: string;
-  imageVersion: string;
-  mode: string;
-}
-
 export interface RouterLinkResponse extends BaseResponse {
   cost: number | null;
   routerAccessId: string | null; // When connected, the identity of the destitation (peer) router access
@@ -210,7 +199,7 @@ export type BiFlowResponse = TransportFlowResponse | ApplicationFlowResponse;
 export interface PairsWithMetrics<T> {
   processesPairs: T[];
   prometheusKey: PrometheusLabelsV2;
-  processPairsKey: 'sourceName' | 'destinationName';
+  processPairsKey: 'sourceId' | 'sourceName' | 'destinationId' | 'destinationName';
   metrics?: TopologyMetrics;
 }
 

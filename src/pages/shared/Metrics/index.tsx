@@ -12,42 +12,42 @@ import { useMetricsState } from './hooks/useMetricsState';
 import { Protocols, Direction } from '../../../API/REST.enum';
 import { Labels } from '../../../config/labels';
 import { hexColors } from '../../../config/styles';
-import { ConfigMetricFilters, ExpandedMetricSections, QueryMetricsParams } from '../../../types/Metrics.interfaces';
+import { ConfigMetricFilters, QueryMetricsParams } from '../../../types/Metrics.interfaces';
 
 export interface MetricsProps {
+  sessionKey?: string; //Used to Save filters to local storage, allowing the selected filters to persist across page reloads.
   defaultMetricFilterValues: QueryMetricsParams;
-  defaultOpenSections?: ExpandedMetricSections;
-  sourceSites?: { destinationName: string }[];
-  destSites?: { destinationName: string }[];
-  sourceProcesses?: { destinationName: string; siteName?: string }[];
-  destProcesses?: { destinationName: string; siteName?: string }[];
+  sourceSites?: { id: string; destinationName: string }[];
+  destSites?: { id: string; destinationName: string }[];
+  sourceProcesses?: { id: string; destinationName: string; parentId?: string; parentName?: string }[];
+  destProcesses?: { id: string; destinationName: string; parentId?: string; parentName?: string }[];
   availableProtocols?: Protocols[];
   configFilters?: ConfigMetricFilters;
-  onGetMetricFiltersConfig?: Function;
-  onGetExpandedSectionsConfig?: Function;
 }
-
+//ExpandedMetricSections
 const Metrics: FC<MetricsProps> = function (props) {
   const {
+    sessionKey,
     configFilters,
     defaultMetricFilterValues,
-    defaultOpenSections,
     sourceSites,
     destSites,
     sourceProcesses,
     destProcesses,
-    availableProtocols,
-    onGetMetricFiltersConfig,
-    onGetExpandedSectionsConfig
+    availableProtocols
   } = props;
 
-  const { queryParams, shouldUpdateData, triggerMetricUpdate, handleFilterChange, handleSectionToggle } =
-    useMetricsState({
-      defaultMetricFilterValues,
-      defaultOpenSections,
-      onGetMetricFiltersConfig,
-      onGetExpandedSectionsConfig
-    });
+  const {
+    selectedFilters,
+    openSections,
+    shouldUpdateData,
+    triggerMetricUpdate,
+    handleFilterChange,
+    handleSectionToggle
+  } = useMetricsState({
+    sessionKey,
+    defaultMetricFilterValues
+  });
 
   const showHttp = !!availableProtocols?.includes(Protocols.Http) || !!availableProtocols?.includes(Protocols.Http2);
 
@@ -56,12 +56,11 @@ const Metrics: FC<MetricsProps> = function (props) {
       <div style={{ position: 'sticky', top: 0, zIndex: 1, backgroundColor: hexColors.White }}>
         <MetricFilters
           configFilters={configFilters}
-          defaultMetricFilterValues={defaultMetricFilterValues}
+          defaultMetricFilterValues={selectedFilters}
           sourceSites={sourceSites}
           destSites={destSites}
           sourceProcesses={sourceProcesses}
           destProcesses={destProcesses}
-          availableProtocols={availableProtocols}
           onRefetch={triggerMetricUpdate}
           onSelectFilters={handleFilterChange}
         />
@@ -70,18 +69,18 @@ const Metrics: FC<MetricsProps> = function (props) {
       <Stack hasGutter>
         <StackItem>
           <Traffic
-            selectedFilters={queryParams}
+            selectedFilters={selectedFilters}
             forceUpdate={shouldUpdateData}
-            openSections={defaultOpenSections?.byterate}
+            openSections={openSections?.byterate}
             onGetIsSectionExpanded={handleSectionToggle}
           />
         </StackItem>
 
         <StackItem>
           <TcpConnection
-            selectedFilters={queryParams}
+            selectedFilters={selectedFilters}
             forceUpdate={shouldUpdateData}
-            openSections={defaultOpenSections?.connection}
+            openSections={openSections?.connection}
             onGetIsSectionExpanded={handleSectionToggle}
           />
         </StackItem>
@@ -89,8 +88,8 @@ const Metrics: FC<MetricsProps> = function (props) {
         <StackItem>
           <Latency
             title={Labels.LatencyOut}
-            selectedFilters={{ ...queryParams, direction: Direction.Incoming }}
-            openSections={defaultOpenSections?.latency}
+            selectedFilters={{ ...selectedFilters, direction: Direction.Incoming }}
+            openSections={openSections?.[Labels.LatencyOut]}
             forceUpdate={shouldUpdateData}
             onGetIsSectionExpanded={handleSectionToggle}
           />
@@ -98,9 +97,9 @@ const Metrics: FC<MetricsProps> = function (props) {
 
         <StackItem>
           <Latency
-            title={Labels.LatencyOut}
-            selectedFilters={{ ...queryParams, direction: Direction.Outgoing }}
-            openSections={defaultOpenSections?.latency}
+            title={Labels.LatencyIn}
+            selectedFilters={{ ...selectedFilters, direction: Direction.Outgoing }}
+            openSections={openSections?.[Labels.LatencyIn]}
             forceUpdate={shouldUpdateData}
             onGetIsSectionExpanded={handleSectionToggle}
           />
@@ -110,8 +109,8 @@ const Metrics: FC<MetricsProps> = function (props) {
           <>
             <StackItem>
               <Request
-                selectedFilters={queryParams}
-                openSections={defaultOpenSections?.request}
+                selectedFilters={selectedFilters}
+                openSections={openSections?.request}
                 forceUpdate={shouldUpdateData}
                 onGetIsSectionExpanded={handleSectionToggle}
               />
@@ -119,8 +118,8 @@ const Metrics: FC<MetricsProps> = function (props) {
 
             <StackItem>
               <Response
-                selectedFilters={queryParams}
-                openSections={defaultOpenSections?.response}
+                selectedFilters={selectedFilters}
+                openSections={openSections?.response}
                 forceUpdate={shouldUpdateData}
                 onGetIsSectionExpanded={handleSectionToggle}
               />

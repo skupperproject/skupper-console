@@ -54,8 +54,8 @@ export const TopologySiteController = {
       edges = TopologyController.convertPairsToEdges(sitesPairs, 'SkDataEdge');
       edges = TopologyController.addMetricsToEdges(
         edges,
-        PrometheusLabelsV2.SourceSiteName,
-        PrometheusLabelsV2.DestSiteName,
+        PrometheusLabelsV2.SourceSiteId,
+        PrometheusLabelsV2.DestSiteId,
         metrics
       );
       edges = TopologyController.addLabelToEdges(edges, options);

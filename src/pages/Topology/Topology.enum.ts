@@ -3,11 +3,6 @@ export enum TopologyRoutesPaths {
   Overview = '/topology/Overview'
 }
 
-export enum QueriesPairs {
-  GetComponentsPairs = 'get-components-pairs-query',
-  GetMetricsByPairs = 'get-metrics-by-pairs-query'
-}
-
 export enum TopologyViews {
   Sites = 'Sites',
   Components = 'Components',

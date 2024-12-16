@@ -1,12 +1,12 @@
 import { useQueries, useSuspenseQueries } from '@tanstack/react-query';
 
+import { gePrometheusQueryPATH } from '../../../API/Prometheus.utils';
+import { getAllProcessPairs } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
 import { PrometheusLabelsV2 } from '../../../config/prometheus';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { ProcessPairsResponse } from '../../../types/REST.interfaces';
 import { TopologyController } from '../../Topology/services';
-import { QueriesPairs } from '../../Topology/Topology.enum';
-import { QueriesProcesses } from '../Processes.enum';
 
 const metricQueryParams = {
   fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` },
@@ -20,7 +20,7 @@ export const useProcessPairsListData = (id: string, name: string) => {
   const [{ data: metricsTx }, { data: metricsRx }] = useQueries({
     queries: [
       {
-        queryKey: [QueriesPairs.GetMetricsByPairs, { sourceProcess: name }],
+        queryKey: [gePrometheusQueryPATH('single'), id, { sourceProcess: name }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
@@ -34,7 +34,7 @@ export const useProcessPairsListData = (id: string, name: string) => {
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesPairs.GetMetricsByPairs, { destProcess: name }],
+        queryKey: [gePrometheusQueryPATH('single'), id, { destProcess: name }],
         queryFn: () =>
           TopologyController.getAllTopologyMetrics({
             showBytes: true,
@@ -53,12 +53,12 @@ export const useProcessPairsListData = (id: string, name: string) => {
   const [{ data: pairsTx }, { data: pairsRx }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcesses.GetProcessPairs, queryParams('sourceId')],
+        queryKey: [getAllProcessPairs(), queryParams('sourceId')],
         queryFn: () => RESTApi.fetchProcessesPairs(queryParams('sourceId')),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesProcesses.GetProcessPairs, queryParams('destinationId')],
+        queryKey: [getAllProcessPairs(), queryParams('destinationId')],
         queryFn: () => RESTApi.fetchProcessesPairs(queryParams('destinationId')),
         refetchInterval: UPDATE_INTERVAL
       }

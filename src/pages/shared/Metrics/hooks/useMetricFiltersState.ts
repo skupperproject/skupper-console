@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 
-import { Protocols } from '../../../../API/REST.enum';
 import { QueryMetricsParams } from '../../../../types/Metrics.interfaces';
 
 interface UseMetricFiltersStateProps {
@@ -31,9 +30,9 @@ const useMetricFiltersState = ({ defaultMetricFilterValues, onSelectFilters }: U
 
   const handleSelectDestSite = useCallback(
     (selection: string | number | undefined) => {
-      handleSelect({ destSite: (selection as string) || defaultMetricFilterValues.destSite, destProcess: undefined });
+      handleSelect({ destSite: selection as string, destProcess: undefined });
     },
-    [handleSelect, defaultMetricFilterValues]
+    [handleSelect]
   );
 
   const handleSelectSourceProcess = useCallback(
@@ -48,19 +47,6 @@ const useMetricFiltersState = ({ defaultMetricFilterValues, onSelectFilters }: U
       handleSelect({ destProcess: selection as string });
     },
     [handleSelect]
-  );
-
-  const handleSelectProtocol = useCallback(
-    (selection: string | number | undefined) => {
-      const protocol = selection as Protocols;
-
-      setSelectedFilters((prev) => ({ ...prev, protocol }));
-
-      if (onSelectFilters) {
-        onSelectFilters({ ...selectedFilters, protocol });
-      }
-    },
-    [onSelectFilters, selectedFilters]
   );
 
   const handleSelectTimeInterval = useCallback(
@@ -82,7 +68,6 @@ const useMetricFiltersState = ({ defaultMetricFilterValues, onSelectFilters }: U
     handleSelectDestSite,
     handleSelectSourceProcess,
     handleSelectDestProcess,
-    handleSelectProtocol,
     handleSelectTimeInterval
   };
 };

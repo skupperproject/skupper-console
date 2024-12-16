@@ -1,9 +1,9 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
+import { getAllProcessPairs } from '../../../API/REST.endpoints';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { ProcessPairsResponse } from '../../../types/REST.interfaces';
-import { QueriesProcesses } from '../Processes.enum';
 
 export const useProcessOverviewData = (id: string) => {
   const queryParams = (idKey: keyof ProcessPairsResponse) => ({ [idKey]: id });
@@ -11,12 +11,12 @@ export const useProcessOverviewData = (id: string) => {
   const [{ data: pairsTx }, { data: pairsRx }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcesses.GetProcessPairs, queryParams('sourceId')],
+        queryKey: [getAllProcessPairs(), queryParams('sourceId')],
         queryFn: () => RESTApi.fetchProcessesPairs(queryParams('sourceId')),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesProcesses.GetProcessPairs, queryParams('destinationId')],
+        queryKey: [getAllProcessPairs(), queryParams('destinationId')],
         queryFn: () => RESTApi.fetchProcessesPairs(queryParams('destinationId')),
         refetchInterval: UPDATE_INTERVAL
       }

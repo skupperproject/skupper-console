@@ -4,7 +4,6 @@ import { Server } from 'miragejs';
 import processesData from '../mocks/data/PROCESSES.json';
 import siteData from '../mocks/data/SITES.json';
 import { loadMockServer } from '../mocks/server';
-import { Protocols } from '../src/API/REST.enum';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import MetricFilters from '../src/pages/shared/Metrics/components/Filters';
 import { Labels } from '../src/config/labels';
@@ -26,17 +25,22 @@ describe('Metrics component', () => {
 
     render(
       <MetricFilters
-        sourceSites={[{ destinationName: siteData.results[0].name }, { destinationName: siteData.results[1].name }]}
-        destSites={[{ destinationName: siteData.results[2].name }, { destinationName: siteData.results[1].name }]}
+        sourceSites={[
+          { id: siteData.results[0].identity, destinationName: siteData.results[0].name },
+          { id: siteData.results[1].identity, destinationName: siteData.results[1].name }
+        ]}
+        destSites={[
+          { id: siteData.results[2].identity, destinationName: siteData.results[2].name },
+          { id: siteData.results[1].identity, destinationName: siteData.results[1].name }
+        ]}
         sourceProcesses={[
-          { destinationName: processesData.results[0].name },
-          { destinationName: processesData.results[1].name }
+          { id: processesData.results[0].name, destinationName: processesData.results[0].name },
+          { id: processesData.results[1].name, destinationName: processesData.results[1].name }
         ]}
         destProcesses={[
-          { destinationName: processesData.results[2].name },
-          { destinationName: processesData.results[3].name }
+          { id: processesData.results[2].name, destinationName: processesData.results[2].name },
+          { id: processesData.results[3].name, destinationName: processesData.results[3].name }
         ]}
-        availableProtocols={[Protocols.Http, Protocols.Http2, Protocols.Tcp]}
         configFilters={{
           destinationProcesses: { disabled: false, placeholder: Labels.AllConnectedProcesses },
           sourceProcesses: { disabled: false, placeholder: Labels.AllSourceProcesses },
@@ -86,17 +90,22 @@ describe('Metrics component', () => {
 
     render(
       <MetricFilters
-        sourceSites={[{ destinationName: siteData.results[0].name }, { destinationName: siteData.results[1].name }]}
-        destSites={[{ destinationName: siteData.results[2].name }, { destinationName: siteData.results[1].name }]}
+        sourceSites={[
+          { id: siteData.results[0].identity, destinationName: siteData.results[0].name },
+          { id: siteData.results[1].identity, destinationName: siteData.results[1].name }
+        ]}
+        destSites={[
+          { id: siteData.results[2].identity, destinationName: siteData.results[2].name },
+          { id: siteData.results[1].identity, destinationName: siteData.results[1].name }
+        ]}
         sourceProcesses={[
-          { destinationName: processesData.results[0].name },
-          { destinationName: processesData.results[1].name }
+          { id: processesData.results[0].name, destinationName: processesData.results[0].name },
+          { id: processesData.results[1].name, destinationName: processesData.results[1].name }
         ]}
         destProcesses={[
-          { destinationName: processesData.results[2].name },
-          { destinationName: processesData.results[3].name }
+          { id: processesData.results[2].name, destinationName: processesData.results[2].name },
+          { id: processesData.results[3].name, destinationName: processesData.results[3].name }
         ]}
-        availableProtocols={[Protocols.Http, Protocols.Http2, Protocols.Tcp]}
         configFilters={{
           destinationProcesses: { disabled: false, placeholder: Labels.AllConnectedProcesses },
           sourceProcesses: { disabled: false, placeholder: Labels.AllSourceProcesses },

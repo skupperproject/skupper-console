@@ -1,7 +1,6 @@
 import { fetchApiData } from './apiClient';
 import { queries } from './Prometheus.queries';
 import { convertToPrometheusQueryParams, gePrometheusQueryPATH } from './Prometheus.utils';
-import { PrometheusLabelsV2 } from '../config/prometheus';
 import {
   PrometheusQueryParams,
   PrometheusResponse,
@@ -208,47 +207,6 @@ export const PrometheusApi = {
         end,
         step
       }
-    });
-
-    return result;
-  },
-
-  fethResourcePairsByService: async ({
-    serviceName,
-    clientType,
-    serverType,
-    sourceProcesses,
-    destProcesses
-  }: {
-    serviceName: string;
-    clientType: 'client' | 'clientSite';
-    serverType: 'server' | 'serverSite';
-    sourceProcesses?: string;
-    destProcesses?: string;
-  }): Promise<PrometheusMetric<'vector'>[]> => {
-    const client =
-      clientType === 'client'
-        ? `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.SourceSiteName}`
-        : PrometheusLabelsV2.SourceSiteName;
-    const server =
-      serverType === 'server'
-        ? `${PrometheusLabelsV2.DestProcessName},${PrometheusLabelsV2.DestSiteName}`
-        : PrometheusLabelsV2.DestSiteName;
-
-    let queryFilters = `${PrometheusLabelsV2.RoutingKey}="${serviceName}"`;
-
-    if (sourceProcesses) {
-      queryFilters = [queryFilters, `${PrometheusLabelsV2.SourceProcessName}=~"${sourceProcesses}"`].join(',');
-    }
-
-    if (destProcesses) {
-      queryFilters = [queryFilters, `${PrometheusLabelsV2.DestProcessName}=~"${destProcesses}"`].join(',');
-    }
-
-    const {
-      data: { result }
-    } = await fetchApiData<PrometheusResponse<'vector'>>(gePrometheusQueryPATH('single'), {
-      params: { query: queries.getResourcePairsByService(queryFilters, `${client},${server}`, '1h') }
     });
 
     return result;

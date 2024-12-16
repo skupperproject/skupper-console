@@ -3,7 +3,6 @@ import { FC, memo } from 'react';
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup } from '@patternfly/react-core';
 import { OutlinedClockIcon } from '@patternfly/react-icons';
 
-import { Protocols } from '../../../../API/REST.enum';
 import { timeIntervalMap } from '../../../../config/prometheus';
 import ResourceIcon from '../../../../core/components/ResourceIcon';
 import SkSelect from '../../../../core/components/SkSelect';
@@ -15,11 +14,10 @@ import { generateFilterItems } from '../services';
 
 interface MetricFiltersProps {
   defaultMetricFilterValues: QueryMetricsParams;
-  sourceSites?: { destinationName: string }[];
-  destSites?: { destinationName: string }[];
-  sourceProcesses?: { destinationName: string; siteName?: string }[];
-  destProcesses?: { destinationName: string; siteName?: string }[];
-  availableProtocols?: Protocols[];
+  sourceSites?: { id: string; destinationName: string }[];
+  destSites?: { id: string; destinationName: string }[];
+  sourceProcesses?: { id: string; destinationName: string; parentId?: string; parentName?: string }[];
+  destProcesses?: { id: string; destinationName: string; parentId?: string; parentName?: string }[];
   configFilters?: ConfigMetricFilters;
   isRefetching?: boolean;
   onRefetch?: Function;

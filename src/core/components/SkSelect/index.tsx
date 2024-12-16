@@ -61,7 +61,8 @@ const SkSelect: FC<SkSelectProps> = function ({
         setIsOpen(false);
       }
 
-      onSelect(selection);
+      // TODO: Bug from Patternfly? The selection value is null, not undefined. For consistency and to properly override merged object properties (see useMetricSessionHandlers), we prefer using undefined.
+      onSelect(selection || undefined);
     },
     [forceClose, onSelect]
   );

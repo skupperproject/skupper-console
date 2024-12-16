@@ -6,26 +6,32 @@ import { ExpandedMetricSections, QueryMetricsParams } from '../../../../types/Me
 const PREFIX_METRIC_FILTERS_KEY = 'metric-filters';
 const PREFIX_VISIBLE_METRICS_KEY = `metric-sections`;
 
-export const useMetricSessionHandlers = (id: string) => {
+export const useMetricSessionHandlers = (id?: string, defaultMetricFilterValues?: QueryMetricsParams) => {
   const setSelectedFilters = useCallback(
     (filters: QueryMetricsParams) =>
       storeDataToSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_KEY}-${id}`, filters),
     [id]
   );
 
-  const setVisibleMetrics = useCallback(
-    (sections: ExpandedMetricSections) =>
-      storeDataToSession<ExpandedMetricSections>(`${PREFIX_VISIBLE_METRICS_KEY}-${id}`, sections),
+  const setOpenSections = useCallback(
+    (sections: ExpandedMetricSections) => {
+      const storedOpenSections =
+        getDataFromSession<ExpandedMetricSections>(`${PREFIX_VISIBLE_METRICS_KEY}-${id}`) || undefined;
+      storeDataToSession<ExpandedMetricSections>(`${PREFIX_VISIBLE_METRICS_KEY}-${id}`, {
+        ...storedOpenSections,
+        ...sections
+      });
+    },
     [id]
   );
 
   const selectedFilters = getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_KEY}-${id}`);
-  const visibleMetrics = getDataFromSession<ExpandedMetricSections>(`${PREFIX_VISIBLE_METRICS_KEY}-${id}`) || undefined;
+  const openSections = getDataFromSession<ExpandedMetricSections>(`${PREFIX_VISIBLE_METRICS_KEY}-${id}`) || undefined;
 
   return {
     setSelectedFilters,
-    setVisibleMetrics,
-    selectedFilters,
-    visibleMetrics
+    setOpenSections,
+    selectedFilters: { ...defaultMetricFilterValues, ...selectedFilters },
+    openSections
   };
 };

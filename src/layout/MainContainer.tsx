@@ -72,7 +72,7 @@ const HeaderSection: FC<{
 /** Subcomponent for rendering navigation */
 const NavigationSection: FC<{ navigationComponent?: ReactElement }> = function ({ navigationComponent }) {
   return navigationComponent ? (
-    <div>
+    <div style={{ position: 'relative' }}>
       {navigationComponent}
       <Divider style={{ position: 'absolute', bottom: 0 }} />
     </div>

@@ -57,7 +57,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
       {/* Errors distribution */}
       <Flex
         alignItems={{ default: 'alignItemsStretch', md: 'alignItemsStretch' }}
-        direction={{ md: 'column', xl: 'row' }}
+        direction={{ xl: 'row', default: 'column' }}
       >
         <FlexItem flex={{ default: 'flex_1' }}>
           <SkChartArea

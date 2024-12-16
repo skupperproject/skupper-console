@@ -1,11 +1,16 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
+import {
+  getAllConnectors,
+  getAllHttpRequests,
+  getAllListeners,
+  getAllProcesses,
+  getAllServices,
+  getAllTcpConnections
+} from '../../../API/REST.endpoints';
 import { TcpStatus } from '../../../API/REST.enum';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
-import { QueriesProcesses } from '../../Processes/Processes.enum';
-import { QueriesBiFlowLogs } from '../../shared/BiFlowLogs/BiFlowLogs.enum';
-import { QueriesServices } from '../Services.enum';
 
 const initServersQueryParams = {
   limit: 0
@@ -23,45 +28,45 @@ const terminatedConnectionsQueryParams = {
 
 const useServiceData = (serviceId: string) => {
   const { data: service } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetServices, serviceId],
+    queryKey: [getAllServices(), serviceId],
     queryFn: () => RESTApi.fetchService(serviceId),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: serversData } = useQuery({
-    queryKey: [QueriesProcesses.GetProcesses, { ...initServersQueryParams, addresses: [service.results.identity] }],
+    queryKey: [getAllProcesses(), { ...initServersQueryParams, addresses: [service.results.identity] }],
     queryFn: () => RESTApi.fetchProcesses({ ...initServersQueryParams, addresses: [service.results.identity] }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: requestsData } = useQuery({
-    queryKey: [QueriesBiFlowLogs.GetHttpRequests, initServersQueryParams],
+    queryKey: [getAllHttpRequests(), initServersQueryParams],
     queryFn: () => RESTApi.fetchApplicationFlows({ ...initServersQueryParams, routingKey: service.results.name }),
     enabled: !!service.results.observedApplicationProtocols.length,
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: activeConnectionsData } = useQuery({
-    queryKey: [QueriesBiFlowLogs.GetTcpConnections, activeConnectionsQueryParams],
+    queryKey: [getAllTcpConnections(), activeConnectionsQueryParams],
     queryFn: () => RESTApi.fetchTransportFlows({ ...activeConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: terminatedConnectionsData } = useQuery({
-    queryKey: [QueriesBiFlowLogs.GetTcpConnections, terminatedConnectionsQueryParams],
+    queryKey: [getAllTcpConnections(), terminatedConnectionsQueryParams],
     queryFn: () =>
       RESTApi.fetchTransportFlows({ ...terminatedConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: listenersData } = useQuery({
-    queryKey: [QueriesServices.GetListeners, initServersQueryParams],
+    queryKey: [getAllListeners(), initServersQueryParams],
     queryFn: () => RESTApi.fetchListeners({ ...initServersQueryParams, addressId: serviceId }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: connectorsData } = useQuery({
-    queryKey: [QueriesServices.GetConnectors, initServersQueryParams],
+    queryKey: [getAllConnectors(), initServersQueryParams],
     queryFn: () => RESTApi.fetchConnectors({ ...initServersQueryParams, addressId: serviceId }),
     refetchInterval: UPDATE_INTERVAL
   });

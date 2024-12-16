@@ -13,7 +13,7 @@ const RequestCharts: FC<{
   requestRateData: RequestMetrics[];
   requestPerf: { avg: number; max: number; current: number; label: string }[] | undefined;
 }> = memo(({ requestRateData, requestPerf }) => (
-  <Flex direction={{ xl: 'row', md: 'column' }}>
+  <Flex direction={{ xl: 'row', default: 'column' }}>
     <FlexItem flex={{ default: 'flex_2' }}>
       <SkChartArea
         data={requestRateData.map(({ data }) => data)}
@@ -25,7 +25,7 @@ const RequestCharts: FC<{
 
     <Divider orientation={{ default: 'vertical' }} />
     <Flex flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
-      <Table borders={false} variant="compact">
+      <Table borders={false}>
         <Thead noWrap>
           <Tr>
             <Th>{Labels.Method}</Th>

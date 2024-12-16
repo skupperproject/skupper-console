@@ -80,13 +80,14 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
       </CardHeader>
 
       <CardExpandableContent>
-        <CardBody style={{ minHeight: minChartHeight }}>
+        {/*display grid center the child SKEmptyData */}
+        <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
           {isLoading && <SkIsLoading />}
 
           {!isLoading && connections && (
             <>
               {isRefetching && <SkIsLoading />}
-              <Flex direction={{ xl: 'row', md: 'column' }}>
+              <Flex direction={{ xl: 'row', default: 'column' }}>
                 <FlexItem flex={{ default: 'flex_2' }}>
                   {connections.liveConnectionsSerie && (
                     <SkChartArea data={connections.liveConnectionsSerie} legendLabels={[`${Labels.OpenConnections}`]} />

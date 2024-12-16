@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Tooltip } from '@patternfly/react-core';
 
 import skupperProcessSVG from '../../../assets/skupper.svg';
-import { hexColors, styles } from '../../../config/styles';
+import { hexColors } from '../../../config/styles';
 
 import './ResourceIcon.css';
 
@@ -11,6 +11,10 @@ const RESOURCE_MAP = {
   site: {
     symbol: 'S',
     style: { background: hexColors.Green500 }
+  },
+  link: {
+    symbol: 'L',
+    style: { background: hexColors.Blue400 }
   },
   component: {
     symbol: 'C',
@@ -22,7 +26,15 @@ const RESOURCE_MAP = {
   },
   process: {
     symbol: 'P',
-    style: { background: styles.default.darkBackgroundColor }
+    style: { background: hexColors.Black500 }
+  },
+  connector: {
+    symbol: 'CN',
+    style: { background: hexColors.Orange400 }
+  },
+  listener: {
+    symbol: 'LS',
+    style: { background: hexColors.Red500 }
   },
   skupper: {
     symbol: '',
@@ -31,7 +43,7 @@ const RESOURCE_MAP = {
 };
 
 export interface ResourceIconProps {
-  type: 'site' | 'component' | 'service' | 'process' | 'skupper';
+  type: 'site' | 'link' | 'component' | 'service' | 'process' | 'connector' | 'listener' | 'skupper';
 }
 
 const ResourceIcon: FC<ResourceIconProps> = function ({ type }) {

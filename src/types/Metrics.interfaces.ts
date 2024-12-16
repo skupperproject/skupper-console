@@ -1,6 +1,7 @@
 import { PrometheusMetric } from './Prometheus.interfaces';
 import { skAxisXY } from './SkChartArea.interfaces';
 import { Protocols, Direction } from '../API/REST.enum';
+import { Labels } from '../config/labels';
 
 export interface ConfigMetricFilters {
   sourceSites?: { disabled?: boolean; placeholder?: string; hide?: boolean };
@@ -37,7 +38,8 @@ export interface QueryMetricsParams {
 
 export interface ExpandedMetricSections {
   byterate?: boolean;
-  latency?: boolean;
+  [Labels.LatencyIn]?: boolean;
+  [Labels.LatencyOut]?: boolean;
   request?: boolean;
   response?: boolean;
   connection?: boolean;

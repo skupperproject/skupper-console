@@ -5,10 +5,18 @@ import { removeDuplicatesFromArrayOfObjects } from './removeDuplicatesFromArrayO
  * and optionally a parent name (from the parentKey). The parent name is used to link related filters, e.g., showing only child
  * items (like processes) associated with a selected parent item (like a site).
  */
-export function mapDataToMetricFilterOptions<T>(data: T[], key: keyof T, siteKey?: keyof T) {
+export function mapDataToMetricFilterOptions<T>(
+  data: T[],
+  keyId: keyof T,
+  key: keyof T,
+  siteKeyId?: keyof T,
+  siteKey?: keyof T
+) {
   return mapAndDeduplicate(data, (item) => ({
+    id: item[keyId] as string,
     destinationName: item[key] as string,
-    siteName: siteKey && (item[siteKey] as string)
+    parentId: siteKeyId && (item[siteKeyId] as string),
+    parentName: siteKey && (item[siteKey] as string)
   }));
 }
 

@@ -380,10 +380,10 @@ exports[`Metrics Component renders correctly 1`] = `
         >
           <div
             class="pf-v6-c-card__body"
-            style="min-height: 450px;"
+            style="min-height: 450px; display: grid;"
           >
             <div
-              style="position: absolute; width: 100%; height: 100%; background-color: rgba(3, 3, 3, 0.1); left: 0px; right: 0px; top: 0px; bottom: 0px; z-index: 1;"
+              style="position: absolute; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.5); left: 0px; right: 0px; top: 0px; bottom: 0px; z-index: 1;"
             >
               <div
                 class="pf-v6-l-bullseye"
@@ -394,7 +394,7 @@ exports[`Metrics Component renders correctly 1`] = `
                   aria-valuetext="Loading..."
                   class="pf-v6-c-spinner pf-m-xl"
                   role="progressbar"
-                  style="--pf-v6-c-spinner--diameter: 150px;"
+                  style="--pf-v6-c-spinner--diameter: 80px;"
                   viewBox="0 0 100 100"
                 >
                   <circle
@@ -480,7 +480,7 @@ exports[`Metrics Component renders correctly 1`] = `
     >
       <div
         aria-label="Tcp latency Out"
-        class="pf-v6-c-card"
+        class="pf-v6-c-card pf-m-full-height"
         data-ouia-component-id="OUIA-Generated-Card-3"
         data-ouia-component-type="PF6/Card"
         data-ouia-safe="true"
@@ -543,8 +543,8 @@ exports[`Metrics Component renders correctly 1`] = `
       class="pf-v6-l-stack__item"
     >
       <div
-        aria-label="Tcp latency Out"
-        class="pf-v6-c-card"
+        aria-label="Tcp latency In"
+        class="pf-v6-c-card pf-m-full-height"
         data-ouia-component-id="OUIA-Generated-Card-4"
         data-ouia-component-type="PF6/Card"
         data-ouia-safe="true"
@@ -596,7 +596,7 @@ exports[`Metrics Component renders correctly 1`] = `
               <div
                 class="pf-v6-c-card__title-text"
               >
-                Tcp latency Out
+                Tcp latency In
               </div>
             </div>
           </div>

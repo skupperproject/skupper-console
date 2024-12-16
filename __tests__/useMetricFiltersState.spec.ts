@@ -2,7 +2,6 @@ import { act } from 'react';
 
 import { renderHook } from '@testing-library/react';
 
-import { Protocols } from '../src/API/REST.enum';
 import useMetricFiltersState from '../src/pages/shared/Metrics/hooks/useMetricFiltersState';
 import { QueryMetricsParams } from '../src/types/Metrics.interfaces';
 
@@ -59,16 +58,6 @@ describe('useMetricFiltersState', () => {
     });
 
     expect(result.current.selectedFilters.destProcess).toEqual('newDestProcess');
-  });
-
-  it('should update protocol when handleSelectProtocol is called', () => {
-    const { result } = renderHook(() => useMetricFiltersState({ defaultMetricFilterValues }));
-
-    act(() => {
-      result.current.handleSelectProtocol(Protocols.Tcp);
-    });
-
-    expect(result.current.selectedFilters.protocol).toEqual(Protocols.Tcp);
   });
 
   it('should update time interval when handleSelectTimeInterval is called', () => {

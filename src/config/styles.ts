@@ -15,7 +15,8 @@ import {
   t_global_font_size_body_default,
   t_global_font_family_100,
   t_global_border_width_100,
-  t_global_border_radius_large
+  t_global_border_radius_large,
+  t_global_font_weight_200
 } from '@patternfly/react-tokens';
 
 export const hexColors = {
@@ -37,6 +38,7 @@ export const hexColors = {
 export const styles = {
   default: {
     fontSize: t_global_font_size_body_default,
+    fontLightBold: t_global_font_weight_200,
     fontFamily: t_global_font_family_100.value,
     borderWidth: t_global_border_width_100.value,
     borderRadius: t_global_border_radius_large.value,
