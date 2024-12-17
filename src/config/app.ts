@@ -8,7 +8,7 @@ export const BIG_PAGINATION_SIZE = 20;
 export const SMALL_PAGINATION_SIZE = 10;
 
 export const EMPTY_VALUE_SYMBOL = '-';
-export const DEFAULT_COMPLEX_STRING_SEPARATOR = '@'; // process -> addresses format and connector name format
+export const DEFAULT_COMPLEX_STRING_SEPARATOR = '@'; // used for: 1) process -> services format and 2) connector name format
 
 /** Tests */
 export const waitForElementToBeRemovedTimeout = 10000;

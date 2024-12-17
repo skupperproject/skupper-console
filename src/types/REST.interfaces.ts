@@ -94,7 +94,7 @@ export interface ProcessResponse extends BaseResponse {
   processRole: Role;
   hostName: string | null;
   imageName: string | null;
-  addresses: string[] | null;
+  services: string[] | null;
 }
 
 export interface BasePairs {
@@ -121,8 +121,8 @@ export type PairsResponse = BasePairsResponse | ProcessPairsResponse;
 export interface ListenerResponse extends BaseResponse {
   name: string;
   parent: string;
-  addressId: string;
-  address: string;
+  serviceId: string;
+  service: string;
   destHost: string;
   destPort: number;
   processId: string;
@@ -133,8 +133,8 @@ export interface ListenerResponse extends BaseResponse {
 export interface ConnectorResponse extends BaseResponse {
   name: string;
   parent: string;
-  addressId: string;
-  address: string;
+  serviceId: string;
+  service: string;
   destHost: string;
   destPort: number;
   processId: string;

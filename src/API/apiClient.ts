@@ -9,10 +9,10 @@ import { QueryFilters, ApiResponse } from '../types/REST.interfaces';
  * Maps the `results` field of the response using the provided field mapping.
  */
 export const fetchApiDataWithMapper = async <T>(url: string, options?: QueryFilters): Promise<ApiResponse<T>> => {
-  const params = options ? mapFiltersToRequestQueryParams(options) : null;
+  const params = options ? mapFiltersToRequestQueryParams(mapResponseProperties(options, 'toBackend')) : null;
   const data = await fetchApiData<ApiResponse<T>>(url, { params });
 
-  return { ...data, results: mapResponseProperties<T>(data.results) };
+  return { ...data, results: mapResponseProperties(data.results, 'toFrontend') };
 };
 
 /**

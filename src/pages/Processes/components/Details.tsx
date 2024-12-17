@@ -42,7 +42,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
     hostName,
     startTime,
     processBinding,
-    addresses
+    services
   } = process;
 
   return (
@@ -113,13 +113,13 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
               </DescriptionListGroup>
             </GridItem>
 
-            {!!addresses?.length && (
+            {!!services?.length && (
               <GridItem span={6}>
                 <DescriptionListGroup>
                   <DescriptionListTerm>{Labels.RoutingKeys}</DescriptionListTerm>
                   <DescriptionListDescription>
                     <Flex>
-                      {addresses.map((service) => (
+                      {services.map((service) => (
                         <div key={service}>
                           <ResourceIcon type="service" />
                           <Link to={`${ServicesRoutesPaths.Services}/${service}`}>

@@ -212,7 +212,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                               </FlexItem>
 
                               <FlexItem>
-                                {itemSelected?.addresses?.map((service) => (
+                                {itemSelected?.services?.map((service) => (
                                   <Fragment key={service}>
                                     <ResourceIcon type="service" />
                                     <Link

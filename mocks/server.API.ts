@@ -170,7 +170,7 @@ export const MockApi = {
     const processesByServiceIds = processes.results
       .filter(
         ({ addresses }) =>
-          addresses && addresses.some((address) => address.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[1] === id)
+          addresses && addresses.some((service) => service.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[1] === id)
       )
       .map(({ identity }) => identity);
 

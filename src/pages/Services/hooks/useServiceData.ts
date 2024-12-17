@@ -34,8 +34,8 @@ const useServiceData = (serviceId: string) => {
   });
 
   const { data: serversData } = useQuery({
-    queryKey: [getAllProcesses(), { ...initServersQueryParams, addresses: [service.results.identity] }],
-    queryFn: () => RESTApi.fetchProcesses({ ...initServersQueryParams, addresses: [service.results.identity] }),
+    queryKey: [getAllProcesses(), { ...initServersQueryParams, services: [service.results.identity] }],
+    queryFn: () => RESTApi.fetchProcesses({ ...initServersQueryParams, services: [service.results.identity] }),
     refetchInterval: UPDATE_INTERVAL
   });
 
@@ -61,13 +61,13 @@ const useServiceData = (serviceId: string) => {
 
   const { data: listenersData } = useQuery({
     queryKey: [getAllListeners(), initServersQueryParams],
-    queryFn: () => RESTApi.fetchListeners({ ...initServersQueryParams, addressId: serviceId }),
+    queryFn: () => RESTApi.fetchListeners({ ...initServersQueryParams, serviceId }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: connectorsData } = useQuery({
     queryKey: [getAllConnectors(), initServersQueryParams],
-    queryFn: () => RESTApi.fetchConnectors({ ...initServersQueryParams, addressId: serviceId }),
+    queryFn: () => RESTApi.fetchConnectors({ ...initServersQueryParams, serviceId }),
     refetchInterval: UPDATE_INTERVAL
   });
 

@@ -71,9 +71,9 @@
   },
 
   // Include the following directories for type-checking and compiling
-  "include": ["src", "__tests__", "jest.config.ts", "mocks"],
+  "include": ["src", "jest.config.ts"],
 
   // Exclude unnecessary directories like build and node_modules from type-checking
   // Cypress config is excluded due to a known issue: https://github.com/cypress-io/cypress/issues/22059
-  "exclude": ["node_modules", "build", "cypress.config.ts"]
+  "exclude": ["node_modules", "build", "cypress.config.ts", "__tests__", "mocks"]
 }
