@@ -20,10 +20,11 @@ import * as useTopologyState from '../src/pages/Topology/hooks/useTopologyState'
 import { TopologyController } from '../src/pages/Topology/services';
 import { convertProcessToNode } from '../src/pages/Topology/services/topologyProcessController';
 import { SkGraphProps } from '../src/types/Graph.interfaces';
-import { ProcessPairsResponse, ProcessResponse, ServiceResponse } from '../src/types/REST.interfaces';
+import { ProcessPairsResponse, ServiceResponse } from '../src/types/REST.interfaces';
 import { Labels } from '../src/config/labels';
+import { extendedProcessResponse } from '../mocks/server.API';
 
-const processesResults = processesData.results as ProcessResponse[];
+const processesResults = processesData.results as extendedProcessResponse[];
 const processesPairsResults = processesPairsData.results as ProcessPairsResponse[];
 const serviceResults = servicesData.results as ServiceResponse[];
 

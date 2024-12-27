@@ -12,9 +12,9 @@ import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
 import Response from '../src/pages/shared/Metrics/components/Response';
 import { Labels } from '../src/config/labels';
-import { ProcessResponse } from '../src/types/REST.interfaces';
+import { extendedProcessResponse } from '../mocks/server.API';
 
-const processResult = processesData.results[0] as ProcessResponse;
+const processResult = processesData.results[0] as extendedProcessResponse;
 
 describe('Response component', () => {
   let server: Server;

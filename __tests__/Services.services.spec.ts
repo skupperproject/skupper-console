@@ -6,8 +6,8 @@ import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../src/core/components/SKSancke
 import connectorsData from '../mocks/data/CONNECTORS.json';
 import listenersData from '../mocks/data/LISTENERS.json';
 
-const connectorResults = connectorsData.results as ConnectorResponse[];
-const listenerResults = listenersData.results as ListenerResponse[];
+const connectorResults = connectorsData.results as any[];
+const listenerResults = listenersData.results as any[];
 
 describe('ServicesController', () => {
   describe('convertPairsToSankeyChartData', () => {

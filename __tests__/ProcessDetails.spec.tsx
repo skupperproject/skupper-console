@@ -8,10 +8,10 @@ import { loadMockServer } from '../mocks/server';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
 import Details from '../src/pages/Processes/components/Details';
-import { ProcessResponse } from '../src/types/REST.interfaces';
 import { setMockUseParams } from '../jest.mock.router';
+import { extendedProcessResponse } from '../mocks/server.API';
 
-const processResult = processesData.results[0] as ProcessResponse;
+const processResult = processesData.results[0] as extendedProcessResponse;
 
 setMockUseParams({ id: `${processResult.name}@${processResult.identity}` });
 

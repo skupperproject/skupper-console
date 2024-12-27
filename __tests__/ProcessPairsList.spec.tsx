@@ -15,8 +15,9 @@ import PairsList from '../src/pages/Processes/components/PairsList';
 import { ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
 import { ProcessResponse, PairsResponse } from '../src/types/REST.interfaces';
 import { Labels } from '../src/config/labels';
+import { extendedProcessResponse } from '../mocks/server.API';
 
-const data = processesData.results[0] as ProcessResponse;
+const data = processesData.results[0] as extendedProcessResponse;
 const dataNoPairs = {
   endTime: 0,
   identity: 'no-pairs',

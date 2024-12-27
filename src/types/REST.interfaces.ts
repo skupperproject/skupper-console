@@ -144,6 +144,7 @@ export interface ConnectorResponse extends BaseResponse {
   siteId: string;
   processes?: ConnectorResponse[];
 }
+
 export interface ServiceResponse extends BaseResponse {
   name: string;
   protocol: Protocols;
