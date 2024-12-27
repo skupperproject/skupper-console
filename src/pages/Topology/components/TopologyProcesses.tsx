@@ -1,4 +1,4 @@
-import { ComponentType, FC, useCallback, useEffect, useState } from 'react';
+import { ComponentType, FC, useCallback } from 'react';
 
 import {
   Drawer,
@@ -47,10 +47,6 @@ const TopologyProcesses: FC<{
 }> = function ({ serviceIds, ids: processIds, GraphComponent = SkGraph, ModalComponent = TopologyDetails }) {
   const navigate = useNavigate();
 
-  // TODO: The graph doesn't resize its children if the drawer is opened before the graph is mounted.
-  // To fix this, we need to delay the action of opening the drawer until after the graph has been mounted
-  // We can do this by opening the drawer in a separate useEffect that runs after the graph has been
-  const [enableDrawer, setEnableDrawer] = useState(false);
   const { serviceIdsSelected, handleServiceSelected } = useServiceState(serviceIds);
   const { idsSelected, searchText, displayOptionsSelected, handleSelected, handleSearchText, handleDisplaySelected } =
     useTopologyState({
@@ -114,10 +110,6 @@ const TopologyProcesses: FC<{
     }
   });
 
-  useEffect(() => {
-    setEnableDrawer(true);
-  }, []);
-
   const panelContent = (
     <DrawerPanelContent isResizable minSize={`${MIN_DRAWER_WIDTH}px`} maxSize={`${MAX_DRAWER_WIDTH}px`}>
       <DrawerHead>
@@ -151,10 +143,7 @@ const TopologyProcesses: FC<{
         />
       </StackItem>
       <StackItem isFilled>
-        <Drawer
-          isExpanded={TopologyController.areGroupOfIds(nodeIdSelected) && !!nodeIdSelected && enableDrawer}
-          isInline
-        >
+        <Drawer isExpanded={TopologyController.areGroupOfIds(nodeIdSelected) && !!nodeIdSelected} isInline>
           <DrawerContent panelContent={panelContent}>
             <DrawerContentBody>
               <GraphComponent

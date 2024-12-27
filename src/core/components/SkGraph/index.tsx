@@ -223,62 +223,45 @@ const SkGraph: FC<SkGraphProps> = memo(
 
     useEffect(() => () => save(), [save]);
 
-    // handle the resize from the  browers window
-    useLayoutEffect(() => {
-      if (!isGraphLoaded) {
-        return;
-      }
-
-      const handleResizeGraph = async () => {
-        const graphInstance = topologyGraphRef.current;
-        const container = GraphController.getParent().getBoundingClientRect();
-
-        try {
-          graphInstance?.resize(container.width, container.height);
-        } catch {
-          return;
-        }
-      };
-
-      const debouncedHandleResize = debounce(handleResizeGraph, 350);
-      window.addEventListener('resize', debouncedHandleResize);
-
-      return () => {
-        window.removeEventListener('resize', debouncedHandleResize);
-      };
-    }, [isGraphLoaded]);
-
     // handle resize from the Graph parent.
     useLayoutEffect(() => {
       if (!isGraphLoaded) {
         return;
       }
 
+      const graphInstance = topologyGraphRef.current!;
+      const container = GraphController.getParent();
+
       const handleTranslateGraph = () => {
-        const graphInstance = topologyGraphRef.current!;
+        const containerDimensions = container!.getBoundingClientRect();
+        const selectedNodes = graphInstance.getElementDataByState('node', GraphLabels.Select);
 
-        const container = GraphController.getParent()!.getBoundingClientRect();
-        const nodes = graphInstance.getElementDataByState('node', GraphLabels.Select);
-        if (nodes?.length) {
-          const itemSelectedPos = graphInstance.getElementPosition(nodes[0].id);
-          // we need to keep in consideration scaling from zoom
-          const itemSelectedPosCanvas = graphInstance.getViewportByCanvas(itemSelectedPos);
+        if (selectedNodes?.length) {
+          const selectedNodePosition = graphInstance.getElementPosition(selectedNodes[0].id);
+          // Translate the selected node's position to canvas coordinates, which accounts for zoom.
+          const selectedNodeCanvasPosition = graphInstance.getViewportByCanvas(selectedNodePosition);
+          // Check if node is out of view to the right
+          const isNodeOutOfViewRight = containerDimensions.width < selectedNodeCanvasPosition[0];
 
-          if (container.width < itemSelectedPosCanvas[0]) {
-            graphInstance.translateBy([container.width - itemSelectedPosCanvas[0] - 50 * graphInstance.getZoom(), 0]);
+          if (isNodeOutOfViewRight) {
+            const deltaX = containerDimensions.width - selectedNodeCanvasPosition[0] - 50 * graphInstance.getZoom();
+            graphInstance.translateBy([deltaX, 0]);
           }
+        }
+
+        try {
+          graphInstance?.resize(containerDimensions.width, containerDimensions.height);
+        } catch {
+          return;
         }
       };
 
-      const container = GraphController.getParent();
+      const debouncedHandleResize = debounce(handleTranslateGraph, 350);
       const resizeObserver = new ResizeObserver((entries) => debouncedHandleResize(entries));
 
-      const debouncedHandleResize = debounce(handleTranslateGraph, 350);
       resizeObserver.observe(container);
 
-      return () => {
-        resizeObserver.disconnect();
-      };
+      return () => resizeObserver.disconnect();
     }, [isGraphLoaded]);
 
     return (
