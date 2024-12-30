@@ -9,10 +9,7 @@ import { TopologyController } from '../services';
 
 const metricQueryParams = {
   fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId}` },
-  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId}` },
-  fetchLatency: {
-    groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId},${PrometheusLabelsV2.Direction}`
-  }
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId}` }
 };
 
 const useTopologySiteData = ({ showDataLink }: { showDataLink: boolean }) => {

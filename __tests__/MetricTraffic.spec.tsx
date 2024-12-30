@@ -12,9 +12,9 @@ import { Providers } from '../src/providers';
 import Traffic from '../src/pages/shared/Metrics/components/Traffic';
 import { Labels } from '../src/config/labels';
 import * as MetricsModule from '../src/pages/shared/Metrics/services/index';
-import { ProcessResponse } from '../src/types/REST.interfaces';
+import { extendedProcessResponse } from '../mocks/server.API';
 
-const processResult = processesData.results[0] as ProcessResponse;
+const processResult = processesData.results[0] as extendedProcessResponse;
 
 describe('Traffic component', () => {
   let server: Server;

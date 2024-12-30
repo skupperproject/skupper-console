@@ -11,10 +11,10 @@ import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import { Providers } from '../src/providers';
 import Process from '../src/pages/Processes/views/Process';
-import { ProcessResponse } from '../src/types/REST.interfaces';
 import { Labels } from '../src/config/labels';
+import { extendedProcessResponse } from '../mocks/server.API';
 
-const processResult = processesData.results[0] as ProcessResponse;
+const processResult = processesData.results[0] as extendedProcessResponse;
 
 describe('Process component', () => {
   let server: Server;

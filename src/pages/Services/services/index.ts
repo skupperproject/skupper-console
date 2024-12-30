@@ -24,13 +24,13 @@ export const ServicesController = {
   },
 
   mapListenersToRoutingKey: (listeners: ListenerResponse[]) =>
-    listeners.map(({ identity, name, siteId, siteName, address, addressId }) => ({
+    listeners.map(({ identity, name, siteId, siteName, service, serviceId }) => ({
       sourceId: identity,
       sourceName: name,
       siteId: `${siteId}-listener`, // Avoids including connectors and processes in the combo
       siteName,
-      destinationId: addressId,
-      destinationName: address,
+      destinationId: serviceId,
+      destinationName: service,
       type: 'SkEmptyNode' as GraphElementNames,
       iconName: 'listener' as GraphIconKeys
     })),
@@ -50,8 +50,8 @@ export const ServicesController = {
   mapRoutingKeyToAggregatedConnectors: (aggregatedConnectors: ConnectorResponse[], id: string, name: string) =>
     aggregatedConnectors.length
       ? aggregatedConnectors.map((item) => ({
-          sourceId: item.addressId,
-          sourceName: item.address,
+          sourceId: item.serviceId,
+          sourceName: item.service,
           destinationId: `${item.name}-${item.siteId}-${item.destPort}`,
           destinationName: `${item.name}:${item.destPort}`,
           type: 'SkEmptyNode' as GraphElementNames,

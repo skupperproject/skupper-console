@@ -1,48 +1,62 @@
 import { IntervalTimeMap } from '../types/Prometheus.interfaces';
 
-export function calculateStep(seconds: number) {
-  if (seconds <= 60) {
-    return '5s';
-  }
+/**
+ * Calculates the appropriate step for Prometheus range queries based on the time range.
+ * This helps optimize query performance and data visualization by adjusting the data point density.
+ */
+export function calculateStep(range: number): string {
+  const shortRangeThreshold = 60 * 60; // 1 hour
+  const mediumRangeThreshold = 24 * 60 * 60; // 1 day
+  const longRangeThreshold = 7 * 24 * 60 * 60; // 1 week
+  const twoWeeksRangeThreshold = 2 * 7 * 24 * 60 * 60; // 2 weeks
+  const fourWeeksRangeThreshold = 4 * 7 * 24 * 60 * 60; // 4 weeks
 
-  if (seconds <= 3600) {
-    return '15s';
-  }
+  if (range <= shortRangeThreshold) {
+    // Up to 1 hour: aim for approximately 250 data points, but not less than 1 second.
+    // This provides a good resolution for detailed views.
+    const step = Math.max(Math.floor(range / 250), 1);
 
-  if (seconds <= 2 * 3600) {
-    return '30s';
-  }
+    return `${step}s`;
+  } else if (range <= mediumRangeThreshold) {
+    // 1 hour to 1 day: aim for approximately 1 data point per minute.
+    // This balances detail and data volume.
+    const step = Math.max(Math.floor(range / 1440), 1); // 1440 minutes in a day
 
-  if (seconds <= 6 * 3600) {
-    return '1m';
-  }
+    return `${step}m`;
+  } else if (range <= longRangeThreshold) {
+    // 1 day to 1 week: aim for approximately 1 data point every 5 minutes.
+    const step = Math.max(Math.floor(range / (288 * 5)), 1); // 288 five-minute intervals in a day
 
-  if (seconds <= 12 * 3600) {
-    return '2m';
-  }
+    return `${step}m`;
+  } else if (range <= twoWeeksRangeThreshold) {
+    // 1 week to 2 weeks: aim for approximately 1 data point every 15 minutes.
+    const step = Math.max(Math.floor(range / (96 * 15)), 1); // 96 fifteen-minute intervals in a day
 
-  if (seconds <= 24 * 3600) {
-    return '4m';
-  }
+    return `${step}m`;
+  } else if (range <= fourWeeksRangeThreshold) {
+    // 2 weeks to 4 weeks: aim for approximately 1 data point every hour.
+    const step = Math.max(Math.floor(range / 24), 1); // 24 hours in a day
 
-  if (seconds <= 2 * 24 * 3600) {
-    return '9m';
+    return `${step}h`;
   }
+  // More than 4 weeks: aim for approximately 1 data point per day.
+  const step = Math.max(Math.floor(range / (24 * 60 * 60)), 1);
 
-  return `${Math.floor(seconds / 1000)}s`;
+  return `${step}d`;
 }
 
 export const timeIntervalMap: IntervalTimeMap = {
-  oneMinute: { value: '1m', seconds: 60, step: '5s', key: 'oneMinute', label: 'Last 1 min.' },
-  fiveMinutes: { value: '5m', seconds: 5 * 60, step: '15s', key: 'fiveMinutes', label: 'Last 5 min.' },
-  fifteenMinutes: { value: '15m', seconds: 15 * 60, step: '15s', key: 'fifteenMinutes', label: 'Last 15 min.' },
-  thirtyMinutes: { value: '30m', seconds: 30 * 60, step: '15s', key: 'thirtyMinutes', label: 'Last 30 min.' },
-  oneHours: { value: '1h', seconds: 3600, step: '15s', key: 'oneHours', label: 'Last hour' },
-  twoHours: { value: '2h', seconds: 2 * 3600, step: '30s', key: 'twoHours', label: 'Last 2 hours' },
-  sixHours: { value: '6h', seconds: 6 * 3600, step: '1m', key: 'sixHours', label: 'Last 6 hours' },
-  twelveHours: { value: '12h', seconds: 12 * 3600, step: '2m', key: 'twelveHours', label: 'Last 12 hours' },
-  oneDay: { value: '1d', seconds: 24 * 3600, step: '4m', key: 'oneDay', label: 'Last day' },
-  twoDay: { value: '2d', seconds: 2 * 24 * 3600, step: '9m', key: 'twoDay', label: 'Last 2 day' }
+  oneMinute: { seconds: 60, label: 'Last 1 min.' },
+  fiveMinutes: { seconds: 5 * 60, label: 'Last 5 min.' },
+  fifteenMinutes: { seconds: 15 * 60, label: 'Last 15 min.' },
+  thirtyMinutes: { seconds: 30 * 60, label: 'Last 30 min.' },
+  oneHours: { seconds: 3600, label: 'Last hour' },
+  twoHours: { seconds: 2 * 3600, label: 'Last 2 hours' },
+  sixHours: { seconds: 6 * 3600, label: 'Last 6 hours' },
+  twelveHours: { seconds: 12 * 3600, label: 'Last 12 hours' },
+  oneDay: { seconds: 24 * 3600, label: 'Last day' },
+  twoDay: { seconds: 2 * 24 * 3600, label: 'Last 2 day' },
+  fourDay: { seconds: 4 * 24 * 3600, label: 'Last 4 day' }
 };
 
 export const defaultTimeInterval = Object.values(timeIntervalMap)[0];

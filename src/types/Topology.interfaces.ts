@@ -5,24 +5,20 @@ export interface TopologyMetrics {
   destToSourceBytes: PrometheusMetric<'vector'>[];
   sourceToDestByteRate: PrometheusMetric<'vector'>[];
   destToSourceByteRate: PrometheusMetric<'vector'>[];
-  latencyByProcessPairs: PrometheusMetric<'vector'>[];
 }
 
 export interface TopologyConfigMetricsParams {
   fetchBytes: { groupBy: string };
   fetchByteRate: { groupBy: string };
-  fetchLatency: { groupBy: string };
   filterBy?: PrometheusLabels;
 }
 
 export interface TopologyConfigMetrics {
   showBytes?: boolean;
   showByteRate?: boolean;
-  showLatency?: boolean;
   metricQueryParams: {
     fetchBytes: { groupBy: string };
     fetchByteRate: { groupBy: string };
-    fetchLatency: { groupBy: string };
     filterBy?: PrometheusLabels;
   };
 }
@@ -31,7 +27,6 @@ export interface TopologyShowOptionsSelected {
   showLinkBytes: boolean;
   showLinkByteRate: boolean;
   showDeployments: boolean;
-  showInboundMetrics: boolean;
   showMetricDistribution: boolean;
   showMetricValue: boolean;
 }

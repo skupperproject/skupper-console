@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 
-import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
+import useUpdateQueryStringValueWithoutNavigation from '../src/hooks/useUpdateQueryStringValueWithoutNavigation';
 
 // Mock useLocation hook
 jest.mock('react-router-dom', () => ({

@@ -20,7 +20,6 @@ interface TopologyProcessControllerProps {
     showLinkBytes: boolean;
     showLinkByteRate: boolean;
     showDeployments: boolean;
-    showInboundMetrics: boolean;
     showMetricDistribution: boolean;
     showMetricValue: boolean;
   };
@@ -65,7 +64,7 @@ export const TopologyProcessController = {
     // a process can be filered by services
     if (serviceIdsSelected) {
       const serverIds = processesSelected
-        .filter(({ addresses: services }) =>
+        .filter(({ services: services }) =>
           services
             ?.map((service) => parseService(service).serviceId)
             .some((service) => serviceIdsSelected.includes(service))
@@ -132,7 +131,7 @@ function findMatched(processNodes: GraphNode[] | GraphEdge[], idsSelected?: stri
 function filterProcessesBySelectedServices(processes: ProcessResponse[], serviceIdSelected: string[]) {
   return processes.filter(
     (process) =>
-      process.addresses?.some((address) => serviceIdSelected.some((serviceId) => address.includes(`@${serviceId}`))) ||
+      process.services?.some((service) => serviceIdSelected.some((serviceId) => service.includes(`@${serviceId}`))) ||
       serviceIdSelected.includes(process.identity)
   );
 }

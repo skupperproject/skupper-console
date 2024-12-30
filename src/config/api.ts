@@ -22,7 +22,7 @@ export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
   in transforming the data received from the backend into a format
   that can be used directly by the frontend for display or further processing.
 */
-export const backendToFrontendPropertydMapper: Record<string, string> = {
+export const backendToFrontendPropertyMapper: Record<string, string> = {
   identity: 'identity',
   startTime: 'startTime',
   endTime: 'endTime',
@@ -66,7 +66,9 @@ export const backendToFrontendPropertydMapper: Record<string, string> = {
   sourceHost: 'sourceHost',
   processBinding: 'processBinding',
   processRole: 'processRole',
-  addresses: 'addresses',
+  addresses: 'services',
+  address: 'service',
+  addressId: 'serviceId',
   processPairs: 'processPairs',
   prometheusKey: 'prometheusKey',
   processPairsKey: 'processPairsKey',

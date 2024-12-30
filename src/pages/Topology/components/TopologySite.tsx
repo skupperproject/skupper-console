@@ -17,7 +17,6 @@ import {
   SHOW_DATA_LINKS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
-  SHOW_INBOUND_METRICS,
   SHOW_ROUTER_LINKS,
   SHOW_LINK_METRIC_VALUE,
   SHOW_DEPLOYMENTS,
@@ -76,7 +75,6 @@ const TopologySite: FC<{
     options: {
       showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-      showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
       showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),
       showMetricValue: displayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE),
       showDeployments: displayOptionsSelected.includes(SHOW_DEPLOYMENTS) // a deployment is a group of processes in the same site that have the same function

@@ -1,4 +1,4 @@
-import { ComponentType, FC, useCallback, useEffect, useState } from 'react';
+import { ComponentType, FC, useCallback } from 'react';
 
 import {
   Drawer,
@@ -33,7 +33,6 @@ import {
   SHOW_LINK_BYTES,
   SHOW_LINK_METRIC_DISTRIBUTION,
   SHOW_LINK_METRIC_VALUE,
-  SHOW_INBOUND_METRICS,
   displayOptionsForProcesses
 } from '../Topology.constants';
 
@@ -48,10 +47,6 @@ const TopologyProcesses: FC<{
 }> = function ({ serviceIds, ids: processIds, GraphComponent = SkGraph, ModalComponent = TopologyDetails }) {
   const navigate = useNavigate();
 
-  // TODO: The graph doesn't resize its children if the drawer is opened before the graph is mounted.
-  // To fix this, we need to delay the action of opening the drawer until after the graph has been mounted
-  // We can do this by opening the drawer in a separate useEffect that runs after the graph has been
-  const [enableDrawer, setEnableDrawer] = useState(false);
   const { serviceIdsSelected, handleServiceSelected } = useServiceState(serviceIds);
   const { idsSelected, searchText, displayOptionsSelected, handleSelected, handleSearchText, handleDisplaySelected } =
     useTopologyState({
@@ -109,16 +104,11 @@ const TopologyProcesses: FC<{
     options: {
       showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-      showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
       showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),
       showMetricValue: displayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE),
       showDeployments: displayOptionsSelected.includes(SHOW_DEPLOYMENTS) // a deployment is a group of processes in the same site that have the same function
     }
   });
-
-  useEffect(() => {
-    setEnableDrawer(true);
-  }, []);
 
   const panelContent = (
     <DrawerPanelContent isResizable minSize={`${MIN_DRAWER_WIDTH}px`} maxSize={`${MAX_DRAWER_WIDTH}px`}>
@@ -153,10 +143,7 @@ const TopologyProcesses: FC<{
         />
       </StackItem>
       <StackItem isFilled>
-        <Drawer
-          isExpanded={TopologyController.areGroupOfIds(nodeIdSelected) && !!nodeIdSelected && enableDrawer}
-          isInline
-        >
+        <Drawer isExpanded={TopologyController.areGroupOfIds(nodeIdSelected) && !!nodeIdSelected} isInline>
           <DrawerContent panelContent={panelContent}>
             <DrawerContentBody>
               <GraphComponent

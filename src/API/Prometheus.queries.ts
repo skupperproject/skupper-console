@@ -1,21 +1,20 @@
 import { Quantiles } from './REST.enum';
 import { PrometheusLabelsV2, PrometheusMetricsV2 } from '../config/prometheus';
-import { IntervalTimePropValue } from '../types/Prometheus.interfaces';
 
 export const queries = {
   // data transfer queries
-  getByteRateInTimeRange(param: string, range: IntervalTimePropValue, areDataReceived = false) {
+  getByteRateInTimeRange(param: string, range: string, areDataReceived = false) {
     const label = areDataReceived ? PrometheusMetricsV2.ReceivedBytes : PrometheusMetricsV2.SentBytes;
 
     return `sum(rate(${label}{${param}}[${range}]))`;
   },
 
   // latency queries
-  getPercentilesByLeInTimeRange(param: string, range: IntervalTimePropValue, quantile: Quantiles) {
+  getPercentilesByLeInTimeRange(param: string, range: string, quantile: Quantiles) {
     return `histogram_quantile(${quantile},sum(rate(${PrometheusMetricsV2.LatencyBuckets}{${param}}[${range}]))by(le))`;
   },
 
-  getBucketCountsInTimeRange(param: string, range: IntervalTimePropValue) {
+  getBucketCountsInTimeRange(param: string, range: string) {
     return `sum by(le)(floor(delta(${PrometheusMetricsV2.LatencyBuckets}{${param}}[${range}])))`;
   },
 
@@ -25,16 +24,16 @@ export const queries = {
   },
 
   // http request queries
-  getRequestRateByMethodInInTimeRange(param: string, range: IntervalTimePropValue) {
+  getRequestRateByMethodInInTimeRange(param: string, range: string) {
     return `sum by(${PrometheusLabelsV2.Method})(rate(${PrometheusMetricsV2.HttpRequests}{${param}}[${range}]))`;
   },
 
   // http response queries
-  getResponseCountsByPartialCodeInTimeRange(param: string, range: IntervalTimePropValue) {
+  getResponseCountsByPartialCodeInTimeRange(param: string, range: string) {
     return `sum by(partial_code)(label_replace(increase(${PrometheusMetricsV2.HttpRequests}{${param}}[${range}]),"partial_code", "$1", "${PrometheusLabelsV2.Code}","(.*).{2}"))`;
   },
 
-  getResponseRateByPartialCodeInTimeRange(param: string, range: IntervalTimePropValue) {
+  getResponseRateByPartialCodeInTimeRange(param: string, range: string) {
     return `sum by(partial_code)(label_replace(rate((${PrometheusMetricsV2.HttpRequests}{${param}}[${range}])),"partial_code", "$1", "${PrometheusLabelsV2.Code}","(.*).{2}"))`;
   },
 

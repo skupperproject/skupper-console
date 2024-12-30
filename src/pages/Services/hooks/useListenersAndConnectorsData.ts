@@ -9,12 +9,12 @@ const useListenersAndConnectorsData = (serviceId: string) => {
     queries: [
       {
         queryKey: [getAllListeners(), serviceId],
-        queryFn: () => RESTApi.fetchListeners({ addressId: serviceId }),
+        queryFn: () => RESTApi.fetchListeners({ serviceId }),
         refetchInterval: UPDATE_INTERVAL
       },
       {
         queryKey: [getAllConnectors(), serviceId],
-        queryFn: () => RESTApi.fetchConnectors({ addressId: serviceId }),
+        queryFn: () => RESTApi.fetchConnectors({ serviceId }),
         refetchInterval: UPDATE_INTERVAL
       }
     ]

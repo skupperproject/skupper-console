@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { ServicesRoutesPaths } from 'pages/Services/Services.enum';
+import { ServicesRoutesPaths } from '../src/pages/Services/Services.enum';
 
 import servicesData from '../mocks/data/SERVICES.json';
 import { loadMockServer } from '../mocks/server';

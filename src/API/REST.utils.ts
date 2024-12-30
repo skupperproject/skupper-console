@@ -1,5 +1,5 @@
 import { Protocols, SortDirection } from './REST.enum';
-import { backendToFrontendPropertydMapper } from '../config/api';
+import { backendToFrontendPropertyMapper } from '../config/api';
 import { PairsResponse, RouterLinkResponse, QueryFilters, QueryParams } from '../types/REST.interfaces';
 
 /* 
@@ -82,13 +82,24 @@ export const aggregateLinksBySite = (linksData: RouterLinkResponse[]): RouterLin
  * Maps the data in the response object based on a provided field mapping.
  * Transforms the keys in the `results` array or object to align with the specified mapping.
  */
-export function mapResponseProperties<T>(results: T): T {
-  // Helper function to map a single item
+export function mapResponseProperties<T>(results: T, direction: 'toFrontend' | 'toBackend'): T {
+  // Helper per invertire la mappa al volo
+  const mapKey = (key: string) => {
+    if (direction === 'toFrontend') {
+      return backendToFrontendPropertyMapper[key] || key;
+    }
+    // Trova la chiave inversa nella mappa per 'toBackend'
+    const entry = Object.entries(backendToFrontendPropertyMapper).find(([, value]) => value === key);
+
+    return entry ? entry[0] : key;
+  };
+
+  // Helper per mappare un singolo oggetto
   const mapItem = (item: Record<string, unknown>) => {
     const mappedItem = {} as Record<string, unknown>;
     for (const key in item) {
       if (Object.prototype.hasOwnProperty.call(item, key)) {
-        const mappedKey = backendToFrontendPropertydMapper[key] || key;
+        const mappedKey = mapKey(key);
         mappedItem[mappedKey] = item[key];
       }
     }
@@ -101,7 +112,6 @@ export function mapResponseProperties<T>(results: T): T {
     return results.map(mapItem) as T;
   }
 
-  // If results is a single object (not an array), map it directly
   return mapItem(results as Record<string, unknown>) as T;
 }
 

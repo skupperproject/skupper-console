@@ -6,10 +6,12 @@ import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
 import { Providers } from '../src/providers';
 import TopologyDetails from '../src/pages/Topology/components/TopologyDetails';
-import { ProcessPairsResponse, ProcessResponse } from '../src/types/REST.interfaces';
+import { ProcessPairsResponse } from '../src/types/REST.interfaces';
 import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../src/config/app';
+import { mapResponseProperties } from '../src/API/REST.utils';
+import { extendedProcessResponse } from '../mocks/server.API';
 
-const processesResults = processesData.results as ProcessResponse[];
+const processesResults = mapResponseProperties(processesData.results, 'toFrontend') as extendedProcessResponse[];
 const processPairsResults = processesPairsData.results as ProcessPairsResponse[];
 
 describe('Topology details', () => {
@@ -115,8 +117,7 @@ describe('Topology details', () => {
                 value: [1722715709.263, 38],
                 values: [] as never
               }
-            ],
-            latencyByProcessPairs: []
+            ]
           }}
         />
       </Providers>
@@ -126,7 +127,7 @@ describe('Topology details', () => {
     expect(screen.getAllByText(processesResults[12].parentName)[0]).toBeInTheDocument();
     expect(
       screen.getAllByText(
-        (processesResults[12].addresses as string[])[0]?.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[0] as string
+        (processesResults[12].services as string[])[0]?.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[0] as string
       )[0]
     ).toBeInTheDocument();
   });
@@ -173,16 +174,6 @@ describe('Topology details', () => {
               }
             ],
             destToSourceByteRate: [
-              {
-                metric: {
-                  destProcess: processPairsResults[2].destinationName,
-                  sourceProcess: processPairsResults[2].sourceName
-                },
-                value: [1722715709.263, 38],
-                values: [] as never
-              }
-            ],
-            latencyByProcessPairs: [
               {
                 metric: {
                   destProcess: processPairsResults[2].destinationName,

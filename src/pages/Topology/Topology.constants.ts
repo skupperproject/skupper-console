@@ -12,7 +12,6 @@ export const TopologyPaths = {
 export const SHOW_LINK_BYTES = 'show-link-bytes';
 export const SHOW_LINK_BYTERATE = 'show-link-byterate';
 export const SHOW_DEPLOYMENTS = 'show-deployments';
-export const SHOW_INBOUND_METRICS = 'show-inbound-metrics';
 export const SHOW_LINK_METRIC_DISTRIBUTION = 'show-metric-distribution';
 export const SHOW_LINK_METRIC_VALUE = 'show-metric-value';
 

@@ -54,12 +54,12 @@ const PairsList: FC<PairsListProps> = function ({ component: { identity: id, nam
       {renderTable(
         Labels.Clients,
         clients,
-        setColumnVisibility(PairsListColumns, { protocol: false, observedApplicationProtocols: false, latency: false })
+        setColumnVisibility(PairsListColumns, { protocol: false, observedApplicationProtocols: false })
       )}
       {renderTable(
         Labels.Servers,
         servers,
-        setColumnVisibility(PairsListColumns, { protocol: false, observedApplicationProtocols: false, latency: false })
+        setColumnVisibility(PairsListColumns, { protocol: false, observedApplicationProtocols: false })
       )}
     </Flex>
   );
