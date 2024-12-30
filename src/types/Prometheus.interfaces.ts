@@ -53,9 +53,8 @@ export interface PrometheusQueryParamsLatency extends PrometheusQueryParams {
 }
 
 export type IntervalTimeMap = {
-  [key: string]: { value: string; seconds: number; step: string; key: string; label: string };
+  [key: string]: { seconds: number; label: string };
 };
-export type IntervalTimePropValue = IntervalTimeMap[keyof IntervalTimeMap]['value'];
 
 export interface MetricData {
   values: skAxisXY[][];

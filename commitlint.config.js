@@ -86,7 +86,6 @@ const Configuration = {
       'Process',
       'Services',
       'Topology',
-      'Metrics',
       'Shared',
       'Core utils',
       'Core UI'
