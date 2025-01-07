@@ -1,4 +1,4 @@
-import { ForwardRefRenderFunction, Key, MutableRefObject, forwardRef, useImperativeHandle, useState } from 'react';
+import { ForwardRefRenderFunction, Key, forwardRef, useImperativeHandle, useState } from 'react';
 
 import {
   Alert,
@@ -18,7 +18,6 @@ export interface ToastExposeMethods {
 interface AlertToastProps {
   variant?: AlertVariant;
   timeout?: number | boolean;
-  ref: MutableRefObject<ToastExposeMethods>;
 }
 
 const AlertToast: ForwardRefRenderFunction<ToastExposeMethods, AlertToastProps> = function (
