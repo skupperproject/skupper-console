@@ -20,15 +20,9 @@
 
 The Network Console is a web-based graphical user interface (GUI) designed for easy observability and monitoring of your [Skupper](https://github.com/skupperproject/skupper) network resources. With the Network Console, you can visualize your network topology, explore components and endpoints, and monitor traffic patterns to gain valuable insights into the health and performance of your Skupper infrastructure. Whether you are a developer or a network operator, Network Console makes it easy to stay on top of your Skupper network by providing an intuitive and user-friendly interface.
 
-## Status
-
-Please access the Web console demo by clicking [here](https://skupper-console-v2.vercel.app).
-
-This demo is synchronized with the latest version of the Skupper or a modified version of it, using the current main branch.
-
 ## Enable the console from Skupper
 
-To access the Network console in [Skupper](https://github.com/skupperproject/skupper) version 2 and above, please refer to the step-by-step instructions provided in this [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/index.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
+The network console works alongside the **network observer**. Follow the steps outlined in the [network observer setup guide](https://github.com/skupperproject/skupper/blob/v2/cmd/network-observer/resources/README.md) to configure a valid route.
 
 ## Development
 
@@ -47,41 +41,11 @@ _Note_:
 
 The running application uses the data in the mock folder.
 
-### Run the console with demo routes
-
-To run the console with demo routes, execute the following command:
+### Run the Standalone Console for Skupper
 
 ```bash
-COLLECTOR_URL=https://skupper-vb-boutique-a-demo.skupper-0-153f1de160110098c1928a6c05e19444-0000.us-east.containers.appdomain.cloud yarn start
+COLLECTOR_URL=<network observer console url route> yarn start
 ```
-
-These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
-
-### Run the console from Skupper
-
-When running skupper, executing `skupper init --enable-flow-collector` will generate a publicly accessible route to the collector. This route can be secured or unsecured, depending on the desired level of security.
-
-#### Use the Flow collector
-
-```bash
-COLLECTOR_URL=<skupper url> yarn start
-```
-
-**Cross-Origin Resource Sharing (CORS) issue**
-For security reasons, browsers forbid requests that come in from cross-domain sources. We need to allow the CORS manually:
-
-```bash
-kubectl set env <name of your skupper controller deployed> USE_CORS=yes
-```
-
-example:
-
-```bash
-kubectl set env deployment/skupper-service-controller USE_CORS=yes
-```
-
-**Run skupper without authentication**
-This standalone mode is intended for development purposes and does not work with a Skupper network that require authorization. However, in the case of Basic Auth, you can use any browser plugin to set the header property "Authorization: Basic < base64 of username:password >". In this last case the logout is does not work because we override the values of this header property every time.
 
 ## Testing
 
