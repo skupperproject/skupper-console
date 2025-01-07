@@ -223,7 +223,10 @@ class SkNodeRemote extends SkNode {
       stroke: NODE_BACKGROUND_COLOR,
       size: NODE_SIZE / 2,
       icon: false,
-      badge: false,
+      badgeFontSize: LABEL_FONT_SIZE - 2,
+      badgeDx: -NODE_SIZE / 10,
+      badgeBackgroundHeight: LABEL_FONT_SIZE + 4,
+      badgeBackgroundWidth: LABEL_FONT_SIZE + 4,
       halo: true
     });
   }
