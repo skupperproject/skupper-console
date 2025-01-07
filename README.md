@@ -18,15 +18,9 @@
 
 Skupper Console is a web-based graphical user interface (GUI) designed for easy observability and monitoring of your [Skupper](https://github.com/skupperproject/skupper) network resources. With Skupper Console, you can visualize your network topology, explore components and endpoints, and monitor traffic patterns to gain valuable insights into the health and performance of your Skupper infrastructure. Whether you are a developer or a network operator, Skupper Console makes it easy to stay on top of your Skupper network by providing an intuitive and user-friendly interface.
 
-## Status
-
-Please access the Web console demo by clicking [here](https://skupper-console-vry5.vercel.app/#/topology).
-
-This demo is synchronized with the latest version of the Skupper or a modified version of it, using the current main branch.
-
 ## Enable the console from Skupper
 
-To access the Web console in [Skupper](https://github.com/skupperproject/skupper) version 1.3 and above, please refer to the step-by-step instructions provided in this [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/index.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
+To access the Web console in [Skupper](https://github.com/skupperproject/skupper) version 1.3 and above, please refer to the step-by-step instructions provided in this [this guide](https://github.com/skupperproject/skupper-docs/blob/main/console/index.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
 
 ## Development
 
@@ -45,16 +39,6 @@ _Note_:
 
 The running application uses the data in the mock folder.
 
-### Run the console with demo routes
-
-To run the console with demo routes, execute the following command:
-
-```bash
-COLLECTOR_URL=https://skupper-vb-boutique-a-demo.skupper-0-153f1de160110098c1928a6c05e19444-0000.us-east.containers.appdomain.cloud yarn start
-```
-
-These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
-
 ### Run the console from Skupper
 
 When running skupper, executing `skupper init --enable-flow-collector` will generate a publicly accessible route to the collector. This route can be secured or unsecured, depending on the desired level of security.
@@ -62,7 +46,7 @@ When running skupper, executing `skupper init --enable-flow-collector` will gene
 #### Use the Flow collector
 
 ```bash
-COLLECTOR_URL=<skupper url> yarn start
+COLLECTOR_URL=<skupper route url> yarn start
 ```
 
 **Cross-Origin Resource Sharing (CORS) issue**
