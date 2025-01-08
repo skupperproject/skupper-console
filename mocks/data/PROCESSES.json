@@ -207,6 +207,30 @@
       "processRole": "external",
       "sourceHost": "172.17.27.140",
       "startTime": 1728076312000000
+    },
+    {
+      "groupIdentity": "pg-hdda5ea377d48ebb",
+      "groupName": "site-clients",
+      "endTime": 0,
+      "identity": "3a44ecba-5ff6-46a1-b367-aa95c099cc47",
+      "name": "site-clients-ec00feed-172.17.17.225",
+      "parent": "12345678-abcd-4321-efgh-87654321abcd",
+      "parentName": "Sidney",
+      "processBinding": "unbound",
+      "processRole": "remote",
+      "startTime": 1736272015000000
+    },
+    {
+      "groupIdentity": "pg-hdda5ea377d48ebb",
+      "groupName": "site-clients",
+      "endTime": 0,
+      "identity": "757ebdba-34c6-4dbc-803e-b56786804703",
+      "name": "site-clients-ec00feed-172.17.61.134",
+      "parent": "12345678-abcd-4321-efgh-87654321abcd",
+      "parentName": "Sidney",
+      "processBinding": "unbound",
+      "processRole": "remote",
+      "startTime": 1736272015000000
     }
   ]
 }

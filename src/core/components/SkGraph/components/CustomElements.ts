@@ -53,10 +53,9 @@ class SkNodeRemote extends SkNode {
       opacity: 1,
       fill: theme.colors.nodeBorder,
       stroke: theme.colors.nodeBackground,
-      size: theme.node.size / 2,
       icon: false,
-      badge: false,
-      halo: true
+      halo: true,
+      size: theme.node.size / 1.7
     });
   }
 }

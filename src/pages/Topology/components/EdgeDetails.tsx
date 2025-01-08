@@ -130,16 +130,14 @@ const EdgeDetails: FC<{ data: ProcessPairsResponse[]; metrics: TopologyMetrics }
                       </DescriptionListGroup>
 
                       <DescriptionListGroup>
-                        <DescriptionListTerm>{Labels.TCP}</DescriptionListTerm>
+                        <DescriptionListTerm>{Labels.Protocols}</DescriptionListTerm>
                         <DescriptionListDescription>
-                          {itemSelected.protocol || EMPTY_VALUE_SYMBOL}
-                        </DescriptionListDescription>
-                      </DescriptionListGroup>
-
-                      <DescriptionListGroup>
-                        <DescriptionListTerm>{Labels.HTTP}</DescriptionListTerm>
-                        <DescriptionListDescription>
-                          {itemSelected.observedApplicationProtocols || EMPTY_VALUE_SYMBOL}
+                          {[
+                            itemSelected.protocol,
+                            itemSelected.observedApplicationProtocols && `${itemSelected.observedApplicationProtocols}`
+                          ]
+                            .filter(Boolean)
+                            .join(', ') || EMPTY_VALUE_SYMBOL}
                         </DescriptionListDescription>
                       </DescriptionListGroup>
 
