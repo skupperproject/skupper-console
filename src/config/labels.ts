@@ -118,6 +118,7 @@ export const Labels = {
   TcpConnections: 'Tcp connections',
   RequestRate: 'Request rate',
 
+  Protocols: 'Protocols',
   HTTP: ' Http/2',
   TCP: 'Tcp',
 
