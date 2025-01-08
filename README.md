@@ -5,12 +5,10 @@
 ## Table of Contents
 
 - [Network console V2](#network-console-v2)
-  - [Status](#status)
-  - [Enable the console from Skupper](#enable-the-console-from-skupper)
+- [Enable the console from Skupper](#enable-the-console-from-skupper)
 - [Development](#development)
   - [Quick start](#quick-start)
-  - [Run the console with demo routes](#run-the-console-with-demo-routes)
-  - [Run the console from Skupper](#run-the-console-from-skupper)
+  - [Run the Console with external routes](#run-the-console-with-external-routes)
   - [Testing](#testing)
 - [Project structure](#project-structure)
   - [Page sections](#page-sections)
@@ -41,7 +39,7 @@ _Note_:
 
 The running application uses the data in the mock folder.
 
-### Run the Standalone Console for Skupper
+### Run the Console with external routes
 
 ```bash
 COLLECTOR_URL=<network observer console url route> yarn start
