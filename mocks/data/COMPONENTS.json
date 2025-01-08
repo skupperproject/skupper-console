@@ -95,6 +95,14 @@
       "processCount": 1,
       "processGroupRole": "external",
       "startTime": 1733495321535050
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-hdda5ea377d48ebb",
+      "name": "site-clients",
+      "processCount": 2,
+      "processGroupRole": "remote",
+      "startTime": 1733495329535056
     }
   ]
 }

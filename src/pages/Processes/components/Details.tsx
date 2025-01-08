@@ -77,7 +77,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
             <GridItem span={6}>
               <DescriptionListGroup>
                 <DescriptionListTerm>{Labels.SourceIP}</DescriptionListTerm>
-                <DescriptionListDescription>{sourceHost}</DescriptionListDescription>
+                <DescriptionListDescription>{sourceHost || EMPTY_VALUE_SYMBOL}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 

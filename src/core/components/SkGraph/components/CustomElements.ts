@@ -55,10 +55,7 @@ class SkNodeRemote extends SkNode {
       stroke: theme.colors.nodeBackground,
       icon: false,
       halo: true,
-      size: theme.node.size / 1.7,
-      badgeFontSize: theme.font.labelFontSize - 2,
-      badgeBackgroundHeight: theme.font.labelFontSize * 1.4,
-      badgeBackgroundWidth: theme.font.labelFontSize * 1.4
+      size: theme.node.size / 1.7
     });
   }
 }
