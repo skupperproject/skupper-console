@@ -9,6 +9,13 @@ if [ ! -d "node_modules" ]; then
   fi
 fi
 
+# Run TypeScript type check using tsc to verify the code compiles without errors
+echo "Running TypeScript type dep. cycles..."
+if ! yarn check-cycles; then
+  echo "Error: TypeScript dep. cycles failed!"
+  exit 1
+fi
+
 # Run code formatting with Prettier
 echo "Running Prettier formatting..."
 if ! yarn format; then
