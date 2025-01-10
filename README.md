@@ -11,6 +11,14 @@
   - [Testing](#testing)
 - [ENV variables](#env-variables)
 
+![alt text](https://github.com/user-attachments/assets/702ae1fa-a52d-4564-a9ff-3f250bb00cf3)
+
+![alt text](https://github.com/user-attachments/assets/91b284f6-a1b3-4ee1-83cd-656d0b65b0d0)
+
+![alt text](https://github.com/user-attachments/assets/b5c7941f-bc4d-4f72-875a-d12890c1e9a7)
+
+![alt text](https://github.com/user-attachments/assets/862e61a3-067d-48ed-b612-bee1efd1ffc2)
+
 ## Enable the console from Skupper
 
 The network console works alongside the **network observer**. Follow the steps outlined in the [network observer setup guide](https://github.com/skupperproject/skupper/blob/v2/cmd/network-observer/resources/README.md) to configure a valid route.
