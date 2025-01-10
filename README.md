@@ -105,9 +105,9 @@ Please note that the `services` folder contains utilities for data normalization
 ## Env variables
 
 - `COLLECTOR_URL`: The console uses a real network observer.
-- `API_VERSION`: Defaults to 'api/v1alpha1'. **Note**: Do not include a leading slash (/) in the value of API_VERSION.
-- `BRAND_APP_LOGO`
-- `BRAND_FAVICON`
-- `ENABLE_MOCK_SERVER`
+- `API_VERSION`: Part of the url api. **Note**: Do not include a leading slash (/) in the value of API_VERSION.
+- `BRAND_APP_LOGO`: Customize the logo for the build.
+- `BRAND_FAVICON`: Customize the favicon for the build.
+- `ENABLE_MOCK_SERVER`: Use predefined static data to display the console.
 - `ENABLE_DELAY_RESPONSE`: It simulates a delay in the response.
 - `MOCK_ITEM_COUNT`: It generates X random resources (processes, sites, links, etc.)

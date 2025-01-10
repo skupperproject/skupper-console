@@ -1,7 +1,8 @@
 import { ApiResponse } from '../src/types/REST.interfaces';
 
-const DATA_PATH = './data';
-export const loadData = <T>(fileName: string): ApiResponse<T[]> => require(`${DATA_PATH}/${fileName}.json`);
+import { DataMap, dataMap } from './dataMao';
+
+export const loadData = <T>(fileName: keyof DataMap): ApiResponse<T[]> => dataMap[fileName];
 
 export function extractQueryParams(url?: string): Record<string, string[]> | null {
   if (!url) return null;
@@ -72,8 +73,6 @@ export function sortData<T extends Record<string, any>>(data: T[], sortBy: strin
     return 0;
   });
 }
-
-
 
 export const getMockData = <T>(data: T[], isPerformanceTest: boolean, mockData: T[] = []) => {
   return isPerformanceTest ? [...data, ...mockData] : data;

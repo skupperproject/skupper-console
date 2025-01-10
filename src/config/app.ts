@@ -1,7 +1,7 @@
 import Logo from '../assets/skupper-logo.svg';
 
 /** Brand */
-export const brandLogo = process.env.BRAND_APP_LOGO ? require(process.env.BRAND_APP_LOGO) : Logo;
+export const brandLogo = process.env.BRAND_APP_LOGO?.split('/').pop() || Logo;
 
 /** Default page size for tables */
 export const BIG_PAGINATION_SIZE = 20;

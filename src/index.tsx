@@ -13,7 +13,12 @@ createRoot(rootElement).render(
 );
 
 if (!process.env.COLLECTOR_URL && (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER)) {
-  const mockServer = require('../mocks/server');
-
-  mockServer.loadMockServer();
+  import('../mocks/server')
+    .then((module) => {
+      module.loadMockServer();
+    })
+    .catch((error) => {
+      // eslint-disable-next-line no-console
+      console.error('Error loading mock server:', error);
+    });
 }
