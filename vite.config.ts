@@ -1,4 +1,4 @@
-import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react-swc';
 import { defineConfig, PluginOption } from 'vite';
 import vitePluginFaviconsInject from 'vite-plugin-favicons-inject';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
