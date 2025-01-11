@@ -96,7 +96,8 @@
   "scripts": {
     "build": "tsc && vite build",
     "start": "vite --host",
-    "test": "ENABLE_MOCK_SERVER=true jest --config jest.config.ts",
+    "preview": "vite preview",
+    "test": "USE_MOCK_SERVER=true jest --config jest.config.ts",
     "coverage": "yarn test --coverage --collectCoverageFrom='src/**/*.{tsx,ts}'",
     "cy:open": "cypress open",
     "cy:run": "cypress run",

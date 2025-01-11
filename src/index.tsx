@@ -12,7 +12,7 @@ createRoot(rootElement).render(
   </Providers>
 );
 
-if (!process.env.COLLECTOR_URL && (process.env.NODE_ENV === 'development' || !!process.env.ENABLE_MOCK_SERVER)) {
+if (!process.env.OBSERVER_URL && (process.env.NODE_ENV === 'development' || !!process.env.USE_MOCK_SERVER)) {
   import('../mocks/server')
     .then((module) => {
       module.loadMockServer();

@@ -1,10 +1,10 @@
 import { RestResources } from '../API/REST.enum';
 
 /*
-Base URL used to connect to the Network Observer backend. 
+Base URL used to connect to the Network Observer backend.
 If not explicitly set via environment variables, it defaults to the current host.
 */
-const BASE_URL_NETWORK_OBSERVER = process.env.COLLECTOR_URL || `${window.location.protocol}//${window.location.host}`;
+const BASE_URL_NETWORK_OBSERVER = process.env.OBSERVER_URL || `${window.location.protocol}//${window.location.host}`;
 export const API_VERSION = process.env.API_VERSION ? `/${process.env.API_VERSION}` : '/api/v1alpha1';
 export const API_URL = `${BASE_URL_NETWORK_OBSERVER}${API_VERSION}`;
 
@@ -15,7 +15,7 @@ export const PROMETHEUS_URL_RANGE_QUERY = `${API_URL}${PROMETHEUS_SUFFIX}/rangeq
 // Error message to display when a request times out
 export const MSG_TIMEOUT_ERROR = 'The request to fetch the data has timed out.';
 
-/* 
+/*
   Backend -> Frontend props mapper
   This object maps the property names from the backend API response
   to the property names expected by the frontend components. It helps
