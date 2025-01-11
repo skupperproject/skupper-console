@@ -1,13 +1,27 @@
+export enum RestResources {
+  Sites = 'sites',
+  RouterLinks = 'routerlinks',
+  Components = 'processgroups',
+  Processes = 'processes',
+  Services = 'addresses',
+  Listeners = 'listeners',
+  Connectors = 'connectors',
+  TcpConnections = 'connections',
+  HttpRequests = 'applicationflows',
+  SiteDataLinks = 'sitepairs',
+  ComponentDataLinks = 'processgrouppairs',
+  ProcessDataLinks = 'processpairs'
+}
+
 export enum SortDirection {
   ASC = 'asc',
   DESC = 'desc'
 }
 
-export enum AvailableProtocols {
+export enum Protocols {
   Tcp = 'tcp',
   Http = 'http1',
-  Http2 = 'http2',
-  AllHttp = 'http.*'
+  Http2 = 'http2'
 }
 
 export enum TcpStatus {

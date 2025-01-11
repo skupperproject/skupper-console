@@ -1,11 +1,12 @@
 {
-  "extends": "../tsconfig.paths.json",
   "compilerOptions": {
     "esModuleInterop": true,
     "target": "ES2022",
     "lib": ["dom", "es2022"],
     "types": ["cypress"],
-    "baseUrl": "../src"
+    "baseUrl": "../src",
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
   },
   "include": ["**/*.ts"]
 }

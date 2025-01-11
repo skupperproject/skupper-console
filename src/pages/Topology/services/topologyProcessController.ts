@@ -1,8 +1,10 @@
-import { Role } from '@API/REST.enum';
-import { ProcessPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
-import { TopologyMetrics } from '@sk-types/Topology.interfaces';
 import { GraphEdge, GraphNode } from 'types/Graph.interfaces';
 
+import { Role } from '../../../API/REST.enum';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/app';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import { ProcessPairsResponse, ProcessResponse } from '../../../types/REST.interfaces';
+import { TopologyMetrics } from '../../../types/Topology.interfaces';
 import { shape } from '../Topology.constants';
 
 import { TopologyController, groupEdges, groupNodes } from '.';
@@ -17,52 +19,34 @@ interface TopologyProcessControllerProps {
   options: {
     showLinkBytes: boolean;
     showLinkByteRate: boolean;
-    showLinkLatency: boolean;
-    showLinkProtocol: boolean;
     showDeployments: boolean;
-    showInboundMetrics: boolean;
     showMetricDistribution: boolean;
     showMetricValue: boolean;
   };
 }
 
-const addProcessMetricsToEdges = (
-  edges: GraphEdge[],
-  metrics: TopologyMetrics | null,
-  protocolByProcessPairsMap: Record<string, string>
-) =>
-  TopologyController.addMetricsToEdges(
-    edges,
-    'sourceProcess',
-    'destProcess',
-    protocolByProcessPairsMap,
-    metrics?.bytesByProcessPairs,
-    metrics?.byteRateByProcessPairs,
-    metrics?.latencyByProcessPairs
-  );
+export const convertProcessToNode = ({
+  identity,
+  name,
+  parent: combo,
+  parentName: comboName,
+  groupIdentity,
+  groupName,
+  processRole: role,
+  processBinding
+}: ProcessResponse): GraphNode => ({
+  type: shape[role === Role.Remote ? role : processBinding],
+  id: identity,
+  name,
+  label: name,
+  iconName: role === Role.Internal ? 'skupper' : 'process',
+  combo,
+  comboName,
+  groupId: groupIdentity,
+  groupName
+});
 
-const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] =>
-  processes?.map(
-    ({
-      identity,
-      name: label,
-      parent: combo,
-      parentName: comboName,
-      groupIdentity,
-      groupName,
-      processRole: role,
-      processBinding
-    }) => ({
-      type: shape[role === Role.Remote ? role : processBinding],
-      id: identity,
-      label,
-      iconName: role === Role.Internal ? 'skupper' : 'process',
-      combo,
-      comboName,
-      groupId: groupIdentity,
-      groupName
-    })
-  );
+const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] => processes?.map(convertProcessToNode);
 
 export const TopologyProcessController = {
   dataTransformer: ({
@@ -74,38 +58,36 @@ export const TopologyProcessController = {
     serviceIdsSelected,
     options
   }: TopologyProcessControllerProps) => {
-    let pPairs = processesPairs;
-    let p = processes;
+    let pairsSelectedByService = processesPairs;
+    let processesSelected = processes;
 
     // a process can be filered by services
     if (serviceIdsSelected) {
-      const serverIds = p
-        // the format of one address is  serviceName@seviceId@protocol
-        .filter(({ addresses }) =>
-          addresses?.map((address) => address.split('@')[1]).some((address) => serviceIdsSelected.includes(address))
+      const serverIds = processesSelected
+        .filter(({ services: services }) =>
+          services
+            ?.map((service) => parseService(service).serviceId)
+            .some((service) => serviceIdsSelected.includes(service))
         )
         .map(({ identity }) => identity);
 
-      pPairs = pPairs.filter((pair) => serverIds.includes(pair.destinationId));
+      pairsSelectedByService = pairsSelectedByService.filter((pair) => serverIds.includes(pair.destinationId));
+      const processIdsFromProcessPairsByService = pairsSelectedByService?.flatMap(({ sourceId, destinationId }) => [
+        sourceId,
+        destinationId
+      ]);
 
-      const processIdsFromService = pPairs?.flatMap(({ sourceId, destinationId }) => [sourceId, destinationId]);
-      p = p.filter(({ identity }) => processIdsFromService.includes(identity));
+      processesSelected = [
+        ...filterProcessesBySelectedServices(processes, [...serviceIdsSelected, ...processIdsFromProcessPairsByService])
+      ];
     }
 
-    const protocolByProcessPairsMap = (processesPairs || []).reduce(
-      (acc, { sourceId, destinationId, protocol }) => {
-        acc[`${sourceId}${destinationId}`] = protocol || '';
-
-        return acc;
-      },
-      {} as Record<string, string>
-    );
-
-    let processNodes = convertProcessesToNodes(p);
-    let processPairEdges = addProcessMetricsToEdges(
-      TopologyController.convertPairsToEdges(pPairs, 'SkDataEdge'),
-      metrics,
-      protocolByProcessPairsMap
+    let processNodes = convertProcessesToNodes(processesSelected);
+    let processPairEdges = TopologyController.addMetricsToEdges(
+      TopologyController.convertPairsToEdges(pairsSelectedByService, 'SkDataEdge'),
+      PrometheusLabelsV2.SourceProcessName,
+      PrometheusLabelsV2.DestProcessName,
+      metrics
     );
 
     if (options.showDeployments) {
@@ -122,7 +104,7 @@ export const TopologyProcessController = {
         ...node,
         persistPositionKey: serviceIdsSelected?.length ? `${node.id}-${serviceIdsSelected}` : node.id
       })),
-      edges: TopologyController.configureEdges(processPairEdges, options),
+      edges: TopologyController.addLabelToEdges(processPairEdges, options),
       combos: TopologyController.getCombosFromNodes(processNodes)
     };
   }
@@ -144,4 +126,23 @@ function findMatched(processNodes: GraphNode[] | GraphEdge[], idsSelected?: stri
   });
 
   return processNode?.id;
+}
+
+function filterProcessesBySelectedServices(processes: ProcessResponse[], serviceIdSelected: string[]) {
+  return processes.filter(
+    (process) =>
+      process.services?.some((service) => serviceIdSelected.some((serviceId) => service.includes(`@${serviceId}`))) ||
+      serviceIdSelected.includes(process.identity)
+  );
+}
+
+// the format of one servce is  serviceName@seviceId@protocol
+function parseService(serviceString: string) {
+  const [serviceName, serviceId, protocol] = serviceString.split(DEFAULT_COMPLEX_STRING_SEPARATOR);
+
+  return {
+    serviceName,
+    serviceId,
+    protocol
+  };
 }

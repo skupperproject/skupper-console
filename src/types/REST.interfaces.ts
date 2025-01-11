@@ -1,11 +1,8 @@
-import { AxiosError, AxiosRequestConfig } from 'axios';
+import { TopologyMetrics } from './Topology.interfaces';
+import { Protocols, Binding, Role, SortDirection } from '../API/REST.enum';
+import { PrometheusLabelsV2 } from '../config/prometheus';
 
-import { AvailableProtocols, Binding, Direction, Role, SortDirection } from '@API/REST.enum';
-
-export type FetchWithOptions = AxiosRequestConfig;
-export type FlowDirections = Direction.Outgoing | Direction.Incoming;
-
-export interface RemoteFilterOptions extends Record<string, string | string[] | number | SortDirection | undefined> {
+export interface QueryFilters extends Record<string, string | string[] | number | boolean | SortDirection | undefined> {
   filter?: string;
   offset?: number;
   limit?: number;
@@ -25,16 +22,19 @@ export interface QueryParams {
   sortBy?: string | null;
 }
 
-export interface HTTPError extends AxiosError {
-  httpStatus?: string;
-}
-
-export type ResponseWrapper<T> = {
+/**
+ * Represents a response wrapper that contains the results, count, and time range count.
+ * The `results` property holds the actual data based on the Response interface.
+ * The `count` property represents the total count of the results.
+ * The `timeRangeCount` property represents the count of results within the specified time range.
+ *
+ * @typeParam T - The type of the results based on the Response interface.
+ * @returns A ResponseWrapper object containing the results, count, and time range count.
+ */
+export type ApiResponse<T> = {
   results: T; // Type based on the Response interface
-  status: string; // this field is for debug scope. Empty value => OK. In case we have some internal BE error that is not a http status this field is not empty. For example a value can be `Malformed sortBy query`
   count: number;
   timeRangeCount: number;
-  totalCount: number;
 };
 
 /* Response Interfaces */
@@ -42,7 +42,6 @@ export type ResponseWrapper<T> = {
 // Properties that are shared by every response
 interface BaseResponse {
   identity: string;
-  recType: string;
   startTime: number;
   endTime: number;
 }
@@ -56,7 +55,26 @@ export interface SiteResponse extends BaseResponse {
   name: string;
   nameSpace: string;
   siteVersion: string;
-  platform: 'kubernetes' | 'podman' | undefined;
+  platform: 'kubernetes' | 'podman' | string | undefined;
+  routerCount: number;
+}
+
+export interface RouterLinkResponse extends BaseResponse {
+  cost: number | null;
+  routerAccessId: string | null; // When connected, the identity of the destitation (peer) router access
+  destinationRouterId: string | null; // When connected, the identity of the destitation (peer) router
+  destinationRouterName: string | null;
+  destinationSiteId: string | null;
+  destinationSiteName: string | null;
+  name: string;
+  octets: number;
+  octetsReverse: number;
+  routerId: string;
+  routerName: string;
+  sourceSiteId: string;
+  sourceSiteName: string;
+  role: 'inter-router' | 'edge-router';
+  status: 'up' | 'down' | 'partially_up';
 }
 
 export interface ComponentResponse extends BaseResponse {
@@ -71,117 +89,122 @@ export interface ProcessResponse extends BaseResponse {
   parentName: string;
   groupIdentity: string;
   groupName: string;
-  imageName?: string;
   sourceHost: string;
-  hostName: string;
   processBinding: Binding;
   processRole: Role;
-  addresses?: string[];
+  hostName: string | null;
+  imageName: string | null;
+  services: string[] | null;
 }
 
-export interface ProcessPairsResponse extends BaseResponse {
-  pairType: string;
+export interface BasePairs {
   sourceId: string;
   sourceName: string;
   destinationId: string;
   destinationName: string;
+}
+
+interface BasePairsResponse extends BaseResponse, BasePairs {
+  protocol: Protocols;
+  observedApplicationProtocols?: string;
+}
+
+export interface ProcessPairsResponse extends BasePairsResponse {
   sourceSiteId: string;
   sourceSiteName: string;
   destinationSiteId: string;
   destinationSiteName: string;
-  protocol?: AvailableProtocols; // undefined = there is a remote process
 }
 
-export type ComponentPairsResponse = ProcessPairsResponse;
+export type PairsResponse = BasePairsResponse | ProcessPairsResponse;
 
-export interface SitePairsResponse extends BaseResponse {
-  pairType: string;
-  sourceId: string;
-  sourceName: string;
-  destinationId: string;
-  destinationName: string;
-  protocol?: AvailableProtocols;
+export interface ListenerResponse extends BaseResponse {
+  name: string;
+  parent: string;
+  serviceId: string;
+  service: string;
+  destHost: string;
+  destPort: number;
+  processId: string;
+  siteId: string;
+  siteName: string;
+}
+
+export interface ConnectorResponse extends BaseResponse {
+  name: string;
+  parent: string;
+  serviceId: string;
+  service: string;
+  destHost: string;
+  destPort: number;
+  processId: string;
+  target: string; //process name associated,
+  count?: number;
+  siteName: string;
+  siteId: string;
+  processes?: ConnectorResponse[];
 }
 
 export interface ServiceResponse extends BaseResponse {
   name: string;
-  protocol: AvailableProtocols;
+  protocol: Protocols;
+  observedApplicationProtocols: string[];
   connectorCount: number;
   listenerCount: number;
+  isBound: boolean;
+  hasListener: boolean;
 }
 
-export interface FlowPairsResponse<T = RequestHTTP & ConnectionTCP> extends BaseResponse {
+interface BaseFlow extends BaseResponse {
+  identity: string;
+  sourceProcessId: string;
+  sourceProcessName: string;
   sourceSiteId: string;
   sourceSiteName: string;
-  destinationSiteId: string;
-  destinationSiteName: string;
-  protocol: string;
-  forwardFlow: T;
-  counterFlow: T;
-  flowTrace: string;
-  siteAggregateId: string;
-  processGroupAggregateId: string;
-  processAggregateId: string;
-  duration: number;
+  destSiteId: string;
+  destSiteName: string;
+  destProcessId: string;
+  destProcessName: string;
+  routingKey: string;
+  duration: number | null;
+  octets: number;
+  octetsReverse: number;
+  traceRouters: string[];
+  traceSites: string[];
+  protocol: Protocols;
 }
 
-export interface ConnectionTCP extends BaseResponse {
-  parent: string;
-  counterFlow: string;
-  octets: number;
-  octetsUnacked: number;
-  windowSize: number;
-  sourceHost: string;
-  sourcePort: string;
+export interface TransportFlowResponse extends BaseFlow {
   latency: number;
-  process: string;
-  processName: string;
+  latencyReverse: number;
+  proxyHost: string; //what the service will see as the client.  ie: 172.17.44.249
+  proxyPort: string; //ie: 56956
+  destHost: string; //what the service will see as the
+  destPort: string;
+  sourceHost: string; //ie: '172.17.44.196'
+  sourcePort: string; //ie:  47504
+  connectorError: null;
+  connectorId: string;
+  listenerId: string;
+  listenerError: string | null;
 }
 
-export interface RequestHTTP extends BaseResponse {
-  counterFlow: string;
-  parent: string;
-  octets: number;
+export interface ApplicationFlowResponse extends BaseFlow {
+  connectionId: string;
   method?: string;
-  latency: number;
-  process: string;
-  processName: string;
-  streamIdentity?: number;
-  result?: number;
-  reason?: string;
-  place: 1 | 2;
+  status?: string;
 }
 
-export interface RouterResponse extends BaseResponse {
-  name: string;
-  parent: string;
-  namespace: string;
-  hostname: string;
-  imageName: string;
-  imageVersion: string;
-  buildVersion: string;
+export type BiFlowResponse = TransportFlowResponse | ApplicationFlowResponse;
+
+export interface PairsWithMetrics<T> {
+  processesPairs: T[];
+  prometheusKey: PrometheusLabelsV2;
+  processPairsKey: 'sourceId' | 'sourceName' | 'destinationId' | 'destinationName';
+  metrics?: TopologyMetrics;
 }
 
-export interface LinkResponse extends BaseResponse {
-  name?: string;
-  parent: string;
-  mode: string;
-  direction: FlowDirections;
-  linkCost: number;
-  sourceSiteId: string;
-  destinationSiteId: string;
-}
-
-export interface HostResponse extends BaseResponse {
-  name: string;
-  parent: string;
-  provider?: string;
-}
-
-// The collector is not part of the data model. It retrieves setup information such as prometheus properties
-export interface CollectorsResponse {
-  recType: string;
-  identity: string;
-  startTime: number;
-  endTime: number;
-}
+export type PairsWithInstantMetrics = PairsResponse & {
+  bytes: number;
+  byteRate: number;
+};

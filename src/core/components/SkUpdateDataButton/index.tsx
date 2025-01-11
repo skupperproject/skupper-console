@@ -1,57 +1,43 @@
-import { FC, useMemo, MouseEvent as ReactMouseEvent, useState, useCallback, Ref, useRef, useEffect } from 'react';
+import { FC, useMemo, useState, useCallback, useRef, useEffect } from 'react';
 
-import {
-  Button,
-  MenuToggle,
-  MenuToggleElement,
-  Select,
-  SelectList,
-  SelectOption,
-  debounce
-} from '@patternfly/react-core';
+import { Button, ButtonVariant, debounce, Flex, FlexItem } from '@patternfly/react-core';
 import { SyncIcon } from '@patternfly/react-icons';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 
-import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
+import { getDataFromSession, storeDataToSession } from '../../utils/persistData';
+import SkSelect, { SkSelectOption } from '../SkSelect';
 
-type validIntervals = 'Refresh off' | '15s' | '30s' | '60s' | '120s';
+export const refreshDataIntervalMap: SkSelectOption[] = [
+  {
+    label: 'Refresh off',
+    id: `${0}`
+  },
+  {
+    label: '15s',
+    id: `${15 * 1000}`
+  },
+  {
+    label: '30s',
+    id: `${30 * 1000}`
+  },
+  {
+    label: '60s',
+    id: `${60 * 1000}`
+  },
+  {
+    label: '120s',
+    id: `${120 * 1000}`
+  }
+];
 
-interface RefreshDataIntervalProps {
-  key: validIntervals;
-  value: number;
-}
+const REFRESH_INTERVAL_KEY = 'refreshIntervalSelected';
 
 interface SkUpdateDataButtonProps {
   isLoading?: boolean;
   onClick?: Function;
   onRefreshIntervalSelected?: Function;
-  refreshIntervalDefault?: validIntervals;
+  refreshIntervalDefault?: string;
 }
-
-export const refreshDataIntervalMap: RefreshDataIntervalProps[] = [
-  {
-    key: 'Refresh off',
-    value: 0
-  },
-  {
-    key: '15s',
-    value: 15 * 1000
-  },
-  {
-    key: '30s',
-    value: 30 * 1000
-  },
-  {
-    key: '60s',
-    value: 60 * 1000
-  },
-  {
-    key: '120s',
-    value: 120 * 1000
-  }
-];
-
-const REFRESH_INTERVAL_KEY = 'refreshIntervalSelected';
 
 const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
   onClick,
@@ -65,22 +51,11 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
     predicate: (query) => query.queryKey[0] !== 'QueriesGetUser' && query.queryKey[0] !== 'QueryLogout'
   });
 
-  const [isSelectOpen, setSelectOpen] = useState(false);
   const [refreshIntervalSelected, setSelectIntervalSelected] = useState<string>(
-    getDataFromSession(REFRESH_INTERVAL_KEY) || refreshIntervalDefault || refreshDataIntervalMap[0].key
+    getDataFromSession(REFRESH_INTERVAL_KEY) || refreshIntervalDefault || `${refreshDataIntervalMap[0].id}`
   );
 
-  const refreshIntervalId = useRef<number>();
-
-  const refreshIntervalOptions = useMemo(
-    () =>
-      refreshDataIntervalMap.map(({ key }, index) => (
-        <SelectOption key={index} value={key}>
-          {key}
-        </SelectOption>
-      )),
-    []
-  );
+  const refreshIntervalId = useRef<number>(0);
 
   const revalidateLiveQueries = useCallback(() => {
     queryClient.invalidateQueries({
@@ -94,13 +69,11 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
   }, [onClick, queryClient]);
 
   const handleSelectRefreshInterval = useCallback(
-    (_: ReactMouseEvent<Element, MouseEvent> | undefined, selection: string | number | undefined) => {
+    (selection: string | number | undefined) => {
       const refreshDataIntervalSelected = selection as string;
 
       setSelectIntervalSelected(refreshDataIntervalSelected);
       storeDataToSession('refreshIntervalSelected', refreshDataIntervalSelected);
-
-      setSelectOpen(false);
 
       if (onRefreshIntervalSelected) {
         onRefreshIntervalSelected(findRefreshDataIntervalValueFromLabel(refreshDataIntervalSelected));
@@ -127,40 +100,31 @@ const SkUpdateDataButton: FC<SkUpdateDataButtonProps> = function ({
   const isLoading = useMemo(() => fetchNumber > 0, [fetchNumber]);
 
   return (
-    <div id="sk-update-data-button">
-      <Select
-        isOpen={isSelectOpen}
-        onSelect={handleSelectRefreshInterval}
-        toggle={(toggleRef: Ref<MenuToggleElement>) => (
-          <MenuToggle
-            data-testid="update-data-dropdown"
-            ref={toggleRef}
-            onClick={() => setSelectOpen(!isSelectOpen)}
-            isExpanded={isSelectOpen}
-          >
-            {refreshIntervalSelected || refreshDataIntervalMap[0].key}
-          </MenuToggle>
-        )}
-        shouldFocusToggleOnSelect
-      >
-        <SelectList>{refreshIntervalOptions}</SelectList>
-      </Select>
+    <Flex id="sk-update-data-button">
+      <FlexItem>
+        <SkSelect
+          selected={refreshIntervalSelected || refreshDataIntervalMap[0].id}
+          items={refreshDataIntervalMap}
+          onSelect={handleSelectRefreshInterval}
+        />
+      </FlexItem>
 
-      <Button
-        key="split-action-primary"
-        data-testid="update-data-click"
-        onClick={debounce(revalidateLiveQueries, 750)}
-        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-        isLoading={isLoading}
-      >
-        <SyncIcon />
-      </Button>
-    </div>
+      <FlexItem>
+        <Button
+          icon={<SyncIcon />}
+          key="split-action-primary"
+          data-testid="update-data-click"
+          onClick={debounce(revalidateLiveQueries, 750)}
+          variant={ButtonVariant.control}
+          isLoading={isLoading}
+        />
+      </FlexItem>
+    </Flex>
   );
 };
 
 export default SkUpdateDataButton;
 
-function findRefreshDataIntervalValueFromLabel(value: string | undefined): number {
-  return refreshDataIntervalMap.find(({ key }) => key === value)?.value || 0;
+function findRefreshDataIntervalValueFromLabel(selected: string | undefined): number {
+  return Number(refreshDataIntervalMap.find(({ id }) => id === selected)?.id || 0);
 }

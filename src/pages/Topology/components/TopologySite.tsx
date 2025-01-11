@@ -1,13 +1,13 @@
 import { ComponentType, FC, useCallback } from 'react';
 
-import { Divider, Stack, StackItem } from '@patternfly/react-core';
+import { Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
-
-import SkGraph from '@core/components/SkGraph';
-import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { SkGraphProps } from 'types/Graph.interfaces';
+import { GraphEdge, GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';
+import { Labels } from '../../../config/labels';
+import SkGraph from '../../../core/components/SkGraph';
+import { SitesRoutesPaths } from '../../Sites/Sites.enum';
 import useTopologySiteData from '../hooks/useTopologySiteData';
 import useTopologyState from '../hooks/useTopologyState';
 import { TopologySiteController } from '../services/topologySiteController';
@@ -16,15 +16,11 @@ import {
   SHOW_DATA_LINKS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
-  SHOW_LINK_LATENCY,
-  SHOW_INBOUND_METRICS,
   SHOW_ROUTER_LINKS,
   SHOW_LINK_METRIC_VALUE,
   SHOW_DEPLOYMENTS,
-  SHOW_LINK_PROTOCOL,
   SHOW_LINK_METRIC_DISTRIBUTION
 } from '../Topology.constants';
-import { TopologyLabels } from '../Topology.enum';
 
 const TopologySite: FC<{
   ids?: string[];
@@ -47,19 +43,26 @@ const TopologySite: FC<{
   );
 
   const { sites, routerLinks, sitesPairs, metrics } = useTopologySiteData({
-    showDataLink: displayOptionsSelected.includes(SHOW_DATA_LINKS),
-    showBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
-    showByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-    showLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY)
+    showDataLink: displayOptionsSelected.includes(SHOW_DATA_LINKS)
   });
 
   const handleShowDetails = useCallback(
-    (siteId: string) => {
-      const site = sites.find(({ identity }) => identity === siteId);
-      navigate(`${SitesRoutesPaths.Sites}/${site?.name}@${siteId}`);
+    (data: GraphNode | null) => {
+      const id = data?.id;
+
+      if (id) {
+        navigate(`${SitesRoutesPaths.Sites}/${data.name}@${id}`);
+      }
     },
-    [navigate, sites]
+    [navigate]
   );
+
+  const handleShowLinkDetails = (data: GraphEdge | null) => {
+    if (data) {
+      const type = data.type.includes('SkSiteEdge') ? Labels.RouterLinks : Labels.Pairs;
+      navigate(`${SitesRoutesPaths.Sites}/${data.sourceName}@${data.source}?type=${type}`);
+    }
+  };
 
   const { nodes, edges, nodeIdSelected, nodeIdsToHighLight } = TopologySiteController.siteDataTransformer({
     idsSelected,
@@ -70,10 +73,7 @@ const TopologySite: FC<{
     metrics,
     options: {
       showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
-      showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-      showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
-      showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
       showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),
       showMetricValue: displayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE),
       showDeployments: displayOptionsSelected.includes(SHOW_DEPLOYMENTS) // a deployment is a group of processes in the same site that have the same function
@@ -87,10 +87,9 @@ const TopologySite: FC<{
           displayOptions={displayOptionsForSites}
           onDisplayOptionSelected={handleDisplaySelected}
           defaultDisplayOptionsSelected={displayOptionsSelected}
-          resourcePlaceholder={TopologyLabels.DisplaySitesDefaultLabel}
+          resourcePlaceholder={Labels.FindSites}
           onResourceSelected={handleSearchText}
         />
-        <Divider />
       </StackItem>
 
       <StackItem isFilled>
@@ -100,6 +99,7 @@ const TopologySite: FC<{
           itemSelected={nodeIdSelected}
           itemsToHighlight={nodeIdsToHighLight}
           onClickNode={handleShowDetails}
+          onClickEdge={handleShowLinkDetails}
         />
       </StackItem>
     </Stack>

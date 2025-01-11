@@ -1,12 +1,12 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { Role } from '@API/REST.enum';
-import { UPDATE_INTERVAL } from '@config/config';
-import { QueriesProcesses } from '@pages/Processes/Processes.enum';
-
+import { gePrometheusQueryPATH } from '../../../API/Prometheus.utils';
+import { getAllProcesses, getAllProcessPairs } from '../../../API/REST.endpoints';
+import { Role } from '../../../API/REST.enum';
+import { RESTApi } from '../../../API/REST.resources';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { TopologyController } from '../services';
-import { QueriesTopology } from '../Topology.enum';
 
 const processesQueryParams = {
   processRole: [Role.Remote, Role.External],
@@ -14,33 +14,31 @@ const processesQueryParams = {
 };
 
 const metricQueryParams = {
-  fetchBytes: { groupBy: 'destProcess, sourceProcess, direction' },
-  fetchByteRate: { groupBy: 'destProcess, sourceProcess, direction' },
-  fetchLatency: { groupBy: 'sourceProcess, destProcess, direction' }
+  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` },
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceProcessName},${PrometheusLabelsV2.DestProcessName}` }
 };
 
 const useTopologyProcessData = () => {
   const [{ data: processes }, { data: processesPairs }, { data: metrics }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesProcesses.GetProcessResult, processesQueryParams],
-        queryFn: () => RESTApi.fetchProcessesResult(processesQueryParams),
+        queryKey: [getAllProcesses(), processesQueryParams],
+        queryFn: () => RESTApi.fetchProcesses(processesQueryParams),
         refetchInterval: UPDATE_INTERVAL
       },
 
       {
-        queryKey: [QueriesTopology.GetProcessesPairs],
-        queryFn: () => RESTApi.fetchProcessesPairsResult(),
+        queryKey: [getAllProcessPairs()],
+        queryFn: () => RESTApi.fetchProcessesPairs(),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesTopology.GetBytesByProcessPairs],
+        queryKey: [gePrometheusQueryPATH('single'), metricQueryParams],
         queryFn: () =>
-          TopologyController.getTopologyMetrics({
+          TopologyController.getAllTopologyMetrics({
             showBytes: true,
             showByteRate: true,
-            showLatency: true,
-            params: metricQueryParams
+            metricQueryParams
           }),
         refetchInterval: UPDATE_INTERVAL
       }
@@ -48,8 +46,8 @@ const useTopologyProcessData = () => {
   });
 
   return {
-    processes,
-    processesPairs,
+    processes: processes.results,
+    processesPairs: processesPairs.results,
     metrics
   };
 };

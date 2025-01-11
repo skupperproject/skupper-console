@@ -1,32 +1,37 @@
+import { Labels } from '../../../config/labels';
+import { MetricKeys } from '../../../types/SkSankeyChart.interfaces';
+
 export const DEFAULT_SANKEY_CHART_FLOW_VALUE = 0.000001;
 export const DEFAULT_SANKEY_CHART_HEIGHT = '350px';
 
-// Themes
-
 //Filters
-export const sankeyMetricOptions = [
-  { id: 'none', name: 'Display only relationships' },
-  { id: 'byterate', name: 'Compare avg. byterate (last hour)' }
+export const SankeyMetricOptions: {
+  id: MetricKeys | ''; // 'id' può essere un MetricKeys o una stringa vuota
+  label: string;
+}[] = [
+  { id: '', label: 'No Metrics' },
+  { id: 'byteRate', label: Labels.ByteRate },
+  { id: 'bytes', label: Labels.Bytes }
 ];
 
-export const ServiceClientResourceOptions: { name: string; id: 'client' | 'clientSite' }[] = [
+export const ServiceClientResourceOptions: { label: string; id: 'client' | 'clientSite' }[] = [
   {
-    name: 'Client sites',
-    id: 'clientSite'
+    label: 'Clients',
+    id: 'client'
   },
   {
-    name: 'Client processes',
-    id: 'client'
+    label: 'Client sites',
+    id: 'clientSite'
   }
 ];
 
-export const ServiceServerResourceOptions: { name: string; id: 'server' | 'serverSite' }[] = [
+export const ServiceServerResourceOptions: { label: string; id: 'server' | 'serverSite' }[] = [
   {
-    name: 'Server sites',
-    id: 'serverSite'
+    label: 'Servers',
+    id: 'server'
   },
   {
-    name: 'Server processes',
-    id: 'server'
+    label: 'Server sites',
+    id: 'serverSite'
   }
 ];

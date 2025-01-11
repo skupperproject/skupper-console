@@ -1,12 +1,11 @@
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import { Server } from 'miragejs';
-
 import App from 'App';
+import { Server } from 'miragejs';
 
 import { loadMockServer } from '../mocks/server';
 import { getTestsIds } from '../src/config/testIds';
-import { Wrapper } from '../src/core/components/Wrapper';
+import { Providers } from '../src/providers';
 
 describe('Begin testing the App component', () => {
   let server: Server;
@@ -24,9 +23,9 @@ describe('Begin testing the App component', () => {
   it('should render the Components view after the data loading is complete', async () => {
     await waitFor(() => {
       render(
-        <Wrapper>
+        <Providers>
           <App />
-        </Wrapper>
+        </Providers>
       );
       expect(screen.getByTestId(getTestsIds.header())).toBeInTheDocument();
     });

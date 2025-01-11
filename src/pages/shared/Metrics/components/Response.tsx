@@ -4,13 +4,12 @@ import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@p
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import SKEmptyData from '@core/components/SkEmptyData';
-import SkIsLoading from '@core/components/SkIsLoading';
-import { QueryMetricsParams, QueriesMetrics } from '@sk-types/Metrics.interfaces';
-
 import ResponseCharts from './ResponseCharts';
-import { MetricsLabels } from '../Metrics.enum';
-import MetricsController from '../services';
+import { Labels } from '../../../../config/labels';
+import SKEmptyData from '../../../../core/components/SkEmptyData';
+import SkIsLoading from '../../../../core/components/SkIsLoading';
+import { QueryMetricsParams, QueriesMetrics } from '../../../../types/Metrics.interfaces';
+import { MetricsController } from '../services';
 
 interface ResponseProps {
   selectedFilters: QueryMetricsParams;
@@ -96,12 +95,13 @@ const Response: FC<ResponseProps> = function ({
     : response?.responseRateData || null;
 
   return (
-    <Card isExpanded={isExpanded}>
+    <Card isExpanded={isExpanded} aria-label={Labels.Responses}>
       <CardHeader onExpand={handleExpand}>
-        <CardTitle>{MetricsLabels.ResposeTitle}</CardTitle>
+        <CardTitle>{Labels.Responses}</CardTitle>
       </CardHeader>
       <CardExpandableContent>
-        <CardBody style={{ minHeight: minChartHeight }}>
+        {/*display grid center the child SKEmptyData */}
+        <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
           {(isLoading || isLoadingReverse) && <SkIsLoading />}
 
           {!isLoading && !isLoadingReverse && responseData && (
@@ -113,8 +113,8 @@ const Response: FC<ResponseProps> = function ({
 
           {!isLoading && !isLoadingReverse && !responseData && (
             <SKEmptyData
-              message={MetricsLabels.NoMetricFoundTitleMessage}
-              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              message={Labels.NoMetricFound}
+              description={Labels.NoMetricFoundDescription}
               icon={SearchIcon}
             />
           )}

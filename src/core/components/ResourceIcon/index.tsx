@@ -2,26 +2,54 @@ import { FC } from 'react';
 
 import { Tooltip } from '@patternfly/react-core';
 
-import skupperProcessSVG from '@assets/skupper.svg';
+import skupperProcessSVG from '../../../assets/skupper.svg';
+import { hexColors } from '../../../config/styles';
 
 import './ResourceIcon.css';
 
 const RESOURCE_MAP = {
-  site: { class: 'sk-resource-site', symbol: 'S' },
-  component: { class: 'sk-resource-process-group', symbol: 'C' },
-  service: { class: 'sk-resource-service', symbol: 'SE' },
-  process: { class: 'sk-resource-process', symbol: 'P' },
-  skupper: { class: 'sk-resource-skupper', symbol: '' }
+  site: {
+    symbol: 'S',
+    style: { background: hexColors.Green500 }
+  },
+  link: {
+    symbol: 'L',
+    style: { background: hexColors.Blue400 }
+  },
+  component: {
+    symbol: 'C',
+    style: { background: hexColors.Teal500 }
+  },
+  service: {
+    symbol: 'RK',
+    style: { background: hexColors.Purple500 }
+  },
+  process: {
+    symbol: 'P',
+    style: { background: hexColors.Black500 }
+  },
+  connector: {
+    symbol: 'CN',
+    style: { background: hexColors.Orange400 }
+  },
+  listener: {
+    symbol: 'LS',
+    style: { background: hexColors.Red500 }
+  },
+  skupper: {
+    symbol: '',
+    style: { background: 'transparent', marginLeft: '-5px', minWidth: '32px' }
+  }
 };
 
-interface ResourceIconProps {
-  type: 'site' | 'component' | 'service' | 'process' | 'skupper';
+export interface ResourceIconProps {
+  type: 'site' | 'link' | 'component' | 'service' | 'process' | 'connector' | 'listener' | 'skupper';
 }
 
 const ResourceIcon: FC<ResourceIconProps> = function ({ type }) {
   return (
     <Tooltip content={`resource type: ${type}`}>
-      <span role={`${type}-resource-icon`} className={`sk-resource-icon ${RESOURCE_MAP[type].class}`}>
+      <span role={`${type}-resource-icon`} className={`sk-resource-icon`} style={RESOURCE_MAP[type].style}>
         {RESOURCE_MAP[type].symbol || <img src={skupperProcessSVG} alt={'Skupper Icon'} />}
       </span>
     </Tooltip>

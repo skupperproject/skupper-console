@@ -6,10 +6,11 @@ import {
   DropdownItem,
   DropdownList,
   Masthead,
-  MastheadBrand,
+  MastheadLogo,
   MastheadContent,
   MastheadMain,
   MastheadToggle,
+  MastheadBrand,
   MenuToggle,
   MenuToggleElement,
   PageToggleButton,
@@ -22,14 +23,11 @@ import { BarsIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST.api';
-import { brandLogo } from '@config/config';
+import { RESTApi } from '../API/REST.resources';
+import { brandLogo } from '../config/app';
 
 export enum HeaderLabels {
   Logout = 'Logout',
-  DarkMode = ' Dark mode',
-  LightModeTestId = 'light-mode-btn-testId',
-  DarkModeTestId = 'dark-mode-btn-testId',
   UserDropdownTestId = 'user-dropdown-testId',
   OpenShiftAuth = 'openshift'
 }
@@ -37,22 +35,23 @@ export enum HeaderLabels {
 const SkHeader = function () {
   return (
     <Masthead className="sk-header" data-testid="sk-header">
-      <MastheadToggle>
-        <PageToggleButton variant="plain">
-          <BarsIcon />
-        </PageToggleButton>
-      </MastheadToggle>
-
       <MastheadMain>
-        <MastheadBrand>
-          <Brand src={brandLogo} alt="logo" heights={{ default: '45px' }} />
+        <MastheadToggle>
+          <PageToggleButton variant="plain">
+            <BarsIcon />
+          </PageToggleButton>
+        </MastheadToggle>
+        <MastheadBrand data-codemods>
+          <MastheadLogo data-codemods>
+            <Brand src={brandLogo} alt="logo" heights={{ default: '45px' }} />
+          </MastheadLogo>
         </MastheadBrand>
       </MastheadMain>
 
       <MastheadContent>
         <Toolbar isFullHeight>
           <ToolbarContent>
-            <ToolbarGroup align={{ default: 'alignRight' }} spacer={{ default: 'spacerMd' }}>
+            <ToolbarGroup align={{ default: 'alignEnd' }} gap={{ default: 'gapMd' }}>
               <ToolbarItem>
                 <Suspense fallback={null}>
                   <UserDropdown />

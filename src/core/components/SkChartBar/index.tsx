@@ -1,18 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
-import {
-  Chart,
-  ChartAxis,
-  ChartBar,
-  ChartGroup,
-  ChartLegendTooltip,
-  ChartProps,
-  ChartThemeColor,
-  createContainer
-} from '@patternfly/react-charts';
+import { ChartProps, Chart, ChartAxis, ChartBar, ChartThemeColor, ChartStack } from '@patternfly/react-charts/victory';
 import { getResizeObserver } from '@patternfly/react-core';
-
-import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
 
 const DEFAULT_CHART_PADDING = {
   bottom: 65,
@@ -58,16 +47,17 @@ const SkChartBar: FC<SkChartBarProps> = function ({
   }
 
   useEffect(() => {
-    if (chartContainerRef.current) {
-      observer.current = getResizeObserver(chartContainerRef.current, handleResize);
-      handleResize();
-
-      () => observer.current();
+    if (!chartContainerRef.current) {
+      return;
     }
+
+    observer.current = getResizeObserver(chartContainerRef.current, handleResize);
+    handleResize();
+
+    return () => observer.current();
   }, []);
 
   const legendData = legendLabels.map((name) => ({ childName: name, name }));
-  const CursorVoronoiContainer = createContainer('voronoi', 'cursor');
 
   return (
     <div ref={chartContainerRef} style={{ width: '100%', height: `100%` }}>
@@ -80,24 +70,6 @@ const SkChartBar: FC<SkChartBarProps> = function ({
         domainPadding={{ x: [width / 10 - 25, 0] }}
         themeColor={props.themeColor || ChartThemeColor.multi}
         padding={props.padding || DEFAULT_CHART_PADDING}
-        containerComponent={
-          <CursorVoronoiContainer
-            cursorDimension="x"
-            voronoiDimension="x"
-            labels={({ datum }: { datum: skAxisXY }) => `counts  ${formatY(datum.y)}`}
-            labelComponent={
-              <ChartLegendTooltip
-                legendData={legendData}
-                cornerRadius={5}
-                flyoutStyle={{
-                  fillOpacity: 0.75
-                }}
-              />
-            }
-            mouseFollowTooltips
-            voronoiPadding={20}
-          />
-        }
         {...props}
       >
         <ChartAxis
@@ -118,11 +90,11 @@ const SkChartBar: FC<SkChartBarProps> = function ({
           tickFormat={(tick) => tick && formatY(tick < 0.001 ? 0 : tick)}
           showGrid
         />
-        <ChartGroup>
+        <ChartStack>
           {data.map((row, index: number) => (
-            <ChartBar key={index} data={row} name={legendData[index]?.name} barWidth={width / 10} />
+            <ChartBar key={index} data={row} name={legendData[index]?.name} barWidth={width / 15} />
           ))}
-        </ChartGroup>
+        </ChartStack>
       </Chart>
     </div>
   );

@@ -12,12 +12,12 @@ import {
   MenuFooter
 } from '@patternfly/react-core';
 
-import { TopologyLabels } from '@pages/Topology/Topology.enum';
-
 import {
   SkSelectTypeHeadWithCheckboxUseData,
   SkSelectTypeHeadWithCheckboxUseDataUseDataProps
 } from './SkSelectTypeHeadWithCheckboxUseData';
+import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 
 interface SkSelectTypeHeadwithCheckboxProps extends SkSelectTypeHeadWithCheckboxUseDataUseDataProps {
   initIdsSelected: string[];
@@ -49,8 +49,8 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
     onSelected
   });
 
-  const [placeholder, setPlaceholder] = useState(`${selected.length} services selected`);
-  const textInputRef = useRef<HTMLInputElement>();
+  const [placeholder, setPlaceholder] = useState(`${selected.length} routing keys selected`);
+  const textInputRef = useRef<HTMLInputElement>(null);
 
   const handleSelectService = (item: string) => {
     selectService(item);
@@ -58,7 +58,7 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
   };
 
   useEffect(() => {
-    setPlaceholder(`${selected.length} services selected`);
+    setPlaceholder(`${selected.length} routing keys selected`);
   }, [selected]);
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
@@ -101,7 +101,7 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
       onOpenChange={(open) => !open && closeMenu()}
       toggle={toggle}
     >
-      <SelectList id="select-multi-typeahead-checkbox-listbox">
+      <SelectList>
         {selectOptions.map((option, index) => (
           <SelectOption
             {...(!option.isDisabled && { hasCheckbox: true })}
@@ -109,7 +109,7 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
             key={option.value}
             isFocused={focusedItemIndex === index}
             className={option.className}
-            id={`select-multi-typeahead-${option.value.replace(' ', '-')}`}
+            id={`select-multi-typeahead-${option.value.replace(' ', EMPTY_VALUE_SYMBOL)}`}
             {...option}
             ref={null}
           >
@@ -119,7 +119,7 @@ const SkSelectTypeHeadWithCheckbox: FC<SkSelectTypeHeadwithCheckboxProps> = func
       </SelectList>
       <MenuFooter>
         <Button variant="link" isInline onClick={selectAllServices}>
-          {TopologyLabels.DeselectAll}
+          {Labels.ClearAll}
         </Button>
       </MenuFooter>
     </Select>

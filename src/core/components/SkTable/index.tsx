@@ -1,6 +1,6 @@
 import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState, useMemo, FC } from 'react';
 
-import { Card, CardBody, CardHeader, Flex, Text, TextContent, Title } from '@patternfly/react-core';
+import { Card, CardBody, CardHeader, Flex, Content, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import {
   InnerScrollContainer,
@@ -15,10 +15,11 @@ import {
   Tr
 } from '@patternfly/react-table';
 
-import { getValueFromNestedProperty } from '@core/utils/getValueFromNestedProperty';
-import { NonNullableValue, SKTableColumn } from '@sk-types/SkTable.interfaces';
-
 import SkPagination from './SkPagination';
+import { sortRowsByColumnName } from './SkTable.utils';
+import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
+import { NonNullableValue, SKTableColumn } from '../../../types/SkTable.interfaces';
+import { getValueFromNestedProperty } from '../../utils/getValueFromNestedProperty';
 import SKEmptyData from '../SkEmptyData';
 
 const FIRST_PAGE_NUMBER = 1;
@@ -41,13 +42,12 @@ export interface SKTableProps<T> {
   onGetFilters?: Function;
 }
 
-export interface CustomCellProps<T> {
+interface CustomCellProps<T> {
   value: string | T[keyof T] | undefined;
   data: T;
   callback?: Function;
   isDisabled?: boolean;
   format?: Function;
-  fitContent?: boolean;
 }
 
 const SkTable = function <T>({
@@ -172,14 +172,14 @@ const SkTable = function <T>({
     <Card isFullHeight={isFullHeight}>
       {title && (
         <CardHeader>
-          <TextContent>
+          <Content>
             <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
               <Title headingLevel="h3">{title}</Title>
               {!isPaginationEnabled && (
-                <Text>{`${paginationTotalRows || rows.length} ${rows.length === 1 ? 'item' : 'items'}`}</Text>
+                <Content component="p">{`${paginationTotalRows || rows.length} ${rows.length === 1 ? 'item' : 'items'}`}</Content>
               )}
             </Flex>
-          </TextContent>
+          </Content>
         </CardHeader>
       )}
 
@@ -193,7 +193,7 @@ const SkTable = function <T>({
                     aria-label={!name ? 'Action Column' : undefined}
                     colSpan={1}
                     key={name}
-                    modifier={modifier}
+                    modifier={modifier || 'nowrap'}
                     isStickyColumn={isStickyColumn}
                     sort={(prop && shouldSort && getSortParams(index)) || undefined}
                     info={
@@ -240,17 +240,24 @@ const SkTable = function <T>({
                           >
                             {Component && (
                               <Component
-                                value={value}
+                                value={
+                                  value === '' || value === undefined || value === null
+                                    ? EMPTY_VALUE_SYMBOL
+                                    : `${value}`
+                                }
                                 data={data}
                                 callback={callback}
                                 format={format && format(value)}
-                                fitContent={modifier === 'nowrap'}
                               />
                             )}
 
                             {!Component && (
-                              <TableText wrapModifier={modifier === 'nowrap' ? 'fitContent' : 'truncate'}>
-                                {(format && format(value)) || value}
+                              <TableText>
+                                {format
+                                  ? format(value)
+                                  : value === '' || value === undefined || value === null
+                                    ? EMPTY_VALUE_SYMBOL
+                                    : `${value}`}
                               </TableText>
                             )}
                           </Td>
@@ -278,17 +285,3 @@ const SkTable = function <T>({
 };
 
 export default SkTable;
-
-function sortRowsByColumnName<T>(rows: NonNullableValue<T>[], columnName: string, direction: number) {
-  return rows.sort((a, b) => {
-    // Get the values of the sort column for the two rows being compared, and handle null values.
-    const paramA = getValueFromNestedProperty(a, columnName.split('.') as (keyof T)[]);
-    const paramB = getValueFromNestedProperty(b, columnName.split('.') as (keyof T)[]);
-
-    if (paramA == null || paramB == null || paramA === paramB) {
-      return 0;
-    }
-
-    return paramA > paramB ? direction : -direction;
-  });
-}

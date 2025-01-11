@@ -1,13 +1,33 @@
 import { LayoutOptions } from '@antv/g6';
 
-type GraphIconKeys = 'component' | 'process' | 'site' | 'podman' | 'kubernetes' | 'skupper';
+type BehaviorKey =
+  | 'drag-canvas'
+  | 'zoom-canvas'
+  | 'drag-element'
+  | 'click-select'
+  | 'hover-activate-single-node'
+  | 'hover-activate'
+  | 'hover-activate-single-edge';
+
+export type GraphIconKeys =
+  | 'component'
+  | 'process'
+  | 'site'
+  | 'podman'
+  | 'kubernetes'
+  | 'skupper'
+  | 'connector'
+  | 'listener'
+  | 'routingKey';
 
 export type GraphElementNames =
   | 'SkDataEdge'
-  | 'SkSiteDataEdge'
   | 'SkSiteEdge'
-  | 'SkLoopEdge'
+  | 'SkSiteEdgeDown'
+  | 'SkSiteEdgePartialDown'
+  | 'SkListenerConnectorEdge'
   | 'SkNode'
+  | 'SkEmptyNode'
   | 'SkNodeUnexposed'
   | 'SkNodeRemote'
   | 'SkCombo';
@@ -18,6 +38,7 @@ export type GraphIconsMap = {
 
 export interface GraphNode {
   id: string;
+  name: string;
   type: GraphElementNames;
   label: string;
   combo?: string;
@@ -25,7 +46,7 @@ export interface GraphNode {
   groupId?: string;
   groupName?: string;
   groupCount?: number;
-  groupedNodeCount?: number;
+  info?: { primary?: string; secondary?: string };
   x?: number | undefined;
   y?: number | undefined;
   persistPositionKey?: string;
@@ -39,24 +60,18 @@ export interface GraphCombo {
 }
 
 interface GraphEdgeMetrics {
-  protocol: string | undefined;
   bytes: number | undefined;
   byteRate: number | undefined;
-  latency: number | undefined;
-  bytesReverse: number | undefined;
-  byteRateReverse: number | undefined;
-  latencyReverse: number | undefined;
 }
 
 export interface GraphEdge {
   id: string;
   type: GraphElementNames;
   source: string;
-  target: string;
-  sourceName?: string;
-  targetName?: string;
+  target: string | 'unknown';
+  sourceName: string;
+  targetName: string | null;
   label?: string;
-  protocolLabel?: string;
   metricValue?: number;
   metrics?: GraphEdgeMetrics;
 }
@@ -64,6 +79,7 @@ export interface GraphEdge {
 export interface GraphLayouts {
   combo: LayoutOptions;
   default: LayoutOptions;
+  dagre: LayoutOptions;
 }
 
 export interface SkGraphProps {
@@ -72,11 +88,12 @@ export interface SkGraphProps {
   combos?: GraphCombo[];
   itemsToHighlight?: string[];
   itemSelected?: string;
-  onClickNode?: (id: string) => void;
-  onClickEdge?: (id: string) => void;
+  forceFitView?: boolean;
+  onClickNode?: (data: GraphNode | null) => void;
+  onClickEdge?: (data: GraphEdge | null) => void;
   layout?: keyof GraphLayouts;
-  moveToSelectedNode?: boolean;
   savePositions?: boolean;
+  excludeBehaviors?: BehaviorKey[];
 }
 
 export interface LocalStorageDataSavedPayload {

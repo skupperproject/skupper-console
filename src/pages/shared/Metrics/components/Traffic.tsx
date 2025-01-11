@@ -4,13 +4,13 @@ import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } f
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import SKEmptyData from '@core/components/SkEmptyData';
-import SkIsLoading from '@core/components/SkIsLoading';
-import { QueriesMetrics, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
-
 import TrafficCharts from './TrafficCharts';
-import { MetricsLabels } from '../Metrics.enum';
-import MetricsController from '../services';
+import { Labels } from '../../../../config/labels';
+import { hexColors, styles } from '../../../../config/styles';
+import SKEmptyData from '../../../../core/components/SkEmptyData';
+import SkIsLoading from '../../../../core/components/SkIsLoading';
+import { QueriesMetrics, QueryMetricsParams } from '../../../../types/Metrics.interfaces';
+import { MetricsController } from '../services';
 
 interface TrafficProps {
   selectedFilters: QueryMetricsParams;
@@ -57,28 +57,62 @@ const Traffic: FC<TrafficProps> = function ({
     }
   }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
+  const dataClientAvailable =
+    !!data?.trafficClient.txTimeSerie?.data.length && !!data?.trafficClient.rxTimeSerie?.data.length;
+  const dataSeverAvailable =
+    !!data?.trafficServer.txTimeSerie?.data.length && !!data?.trafficServer.rxTimeSerie?.data.length;
+
+  const isOnlyClientOrServer = dataSeverAvailable && dataClientAvailable;
+
   return (
-    <Card isExpanded={isExpanded}>
+    <Card isExpanded={isExpanded} aria-label={Labels.TcpTraffic}>
       <CardHeader onExpand={handleExpand}>
-        <CardTitle>{MetricsLabels.DataTransferTitle}</CardTitle>
+        <CardTitle>{Labels.TcpTraffic}</CardTitle>
       </CardHeader>
 
       <CardExpandableContent>
-        <CardBody style={{ minHeight: minChartHeight }}>
+        {/*display grid center the child SKEmptyData */}
+        <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
           {isLoading && <SkIsLoading />}
 
-          {(data?.txTimeSerie || data?.rxTimeSerie) && (
+          {(!!data?.traffic.txTimeSerie?.data.length || !!data?.traffic.rxTimeSerie?.data.length) && (
             <>
               {!isLoading && isRefetching && <SkIsLoading />}
-              <Title headingLevel="h4">{MetricsLabels.ByteRateTitle} </Title>
-              <TrafficCharts byteRateData={data} />
+              <Title headingLevel="h4">{`${Labels.ByteRate}`} </Title>
+              <TrafficCharts byteRateData={data.traffic} />
             </>
           )}
 
-          {!isLoading && !data?.txTimeSerie && !data?.rxTimeSerie && (
+          {isOnlyClientOrServer &&
+            (!!data?.trafficClient.txTimeSerie?.data.length || !!data?.trafficClient.rxTimeSerie?.data.length) && (
+              <>
+                {!isLoading && isRefetching && <SkIsLoading />}
+                <Title headingLevel="h4">{`${Labels.ByteRate} as Client`} </Title>
+                <small>{Labels.ByteRateDataOutDescription} </small>
+                <TrafficCharts
+                  byteRateData={data.trafficClient}
+                  colorScale={[hexColors.Orange100, styles.default.warningColor]}
+                />
+              </>
+            )}
+
+          {isOnlyClientOrServer &&
+            (!!data?.trafficServer.txTimeSerie?.data.length || !!data?.trafficServer.rxTimeSerie?.data.length) && (
+              <>
+                {!isLoading && isRefetching && <SkIsLoading />}
+                <Title headingLevel="h4">{`${Labels.ByteRate} as Server`} </Title>
+                <small>{Labels.ByteRateDataInDescription} </small>
+                <TrafficCharts
+                  byteRateData={data.trafficServer}
+                  colorScale={[hexColors.Purple100, hexColors.Purple500]}
+                />
+              </>
+            )}
+
+          {!isLoading && !data?.traffic.txTimeSerie?.data.length && !data?.traffic.rxTimeSerie?.data.length && (
             <SKEmptyData
-              message={MetricsLabels.NoMetricFoundTitleMessage}
-              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              message={Labels.NoMetricFound}
+              description={Labels.NoMetricFoundDescription}
               icon={SearchIcon}
             />
           )}

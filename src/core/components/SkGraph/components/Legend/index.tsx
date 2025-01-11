@@ -1,77 +1,99 @@
-import { Divider, Flex, FlexItem, Title } from '@patternfly/react-core';
+import { Content, Divider, Flex, FlexItem, Panel, PanelHeader, PanelMainBody, Title } from '@patternfly/react-core';
 
 import SvgCircle from './Shapes/Circle';
 import SvgDiamond from './Shapes/Diamond';
 import SvgHorizontalLine from './Shapes/HorizontalLine';
 import SvgSquare from './Shapes/Square';
-
-enum Labels {
-  EntitiesTitle = ' Entities',
-  LinksTitle = ' Links',
-  Exposed = 'Process, component or site exposed',
-  NoExposed = 'Process/Component',
-  SiteGroup = 'Related site grouping',
-  Remote = 'Remote process/component',
-  DataLink = 'Data flow link',
-  ActiveDataLink = 'Active data link',
-  SiteLink = 'Site link connected'
-}
+import { Labels } from '../../../../../config/labels';
 
 const ProcessLegend = function () {
   return (
     <>
-      <Title headingLevel="h3" className="pf-v5-u-my-sm ">
-        {Labels.EntitiesTitle}
-      </Title>
+      <Panel>
+        <PanelHeader>
+          <Title headingLevel="h4">{Labels.EntitiesTitle}</Title>
+        </PanelHeader>
 
-      <Flex className="pf-v5-u-mb-md pf-v5-u-mx-md">
-        <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
-          <FlexItem>
-            <SvgCircle />
-          </FlexItem>
+        <PanelMainBody>
+          <Flex>
+            <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
+              <FlexItem>
+                <Content>
+                  <SvgCircle />
+                </Content>
+              </FlexItem>
 
-          <FlexItem>
-            <SvgDiamond />
-          </FlexItem>
+              <FlexItem>
+                <Content>
+                  <SvgDiamond />
+                </Content>
+              </FlexItem>
 
-          <FlexItem>
-            <SvgSquare />
-          </FlexItem>
+              <FlexItem>
+                <Content>
+                  <SvgSquare />
+                </Content>
+              </FlexItem>
 
-          <FlexItem>
-            <SvgCircle dimension={8} fillOpacity={1} />
-          </FlexItem>
-        </Flex>
+              <FlexItem>
+                <Content>
+                  <SvgCircle dimension={8} fillOpacity={1} />
+                </Content>
+              </FlexItem>
+            </Flex>
 
-        <Flex direction={{ default: 'column' }}>
-          <FlexItem>{Labels.Exposed}</FlexItem>
-          <FlexItem>{Labels.NoExposed}</FlexItem>
-          <FlexItem>{Labels.SiteGroup}</FlexItem>
-          <FlexItem>{Labels.Remote}</FlexItem>
-        </Flex>
-      </Flex>
+            <Flex direction={{ default: 'column' }}>
+              <FlexItem>
+                <Content>{Labels.Exposed}</Content>
+              </FlexItem>
+              <FlexItem>
+                <Content>{Labels.NoExposed}</Content>
+              </FlexItem>
+              <FlexItem>
+                <Content>{Labels.SiteGroup}</Content>
+              </FlexItem>
+              <FlexItem>
+                <Content>{Labels.Remote}</Content>
+              </FlexItem>
+            </Flex>
+          </Flex>
+        </PanelMainBody>
+      </Panel>
 
       <Divider />
-      <Title headingLevel="h3" className="pf-v5-u-my-sm ">
-        {Labels.LinksTitle}
-      </Title>
 
-      <Flex className="pf-v5-u-mb-md pf-v5-u-mx-md">
-        <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
-          <FlexItem>
-            <SvgHorizontalLine />
-          </FlexItem>
+      <Panel>
+        <PanelHeader>
+          <Title headingLevel="h4">{Labels.Links}</Title>
+        </PanelHeader>
 
-          <FlexItem>
-            <SvgHorizontalLine dashed withConnector />
-          </FlexItem>
-        </Flex>
+        <PanelMainBody>
+          <Flex>
+            <Flex direction={{ default: 'column' }} alignItems={{ default: 'alignItemsCenter' }}>
+              <FlexItem>
+                <Content>
+                  <SvgHorizontalLine />
+                </Content>
+              </FlexItem>
 
-        <Flex direction={{ default: 'column' }}>
-          <FlexItem>{Labels.DataLink}</FlexItem>
-          <FlexItem>{Labels.SiteLink}</FlexItem>
-        </Flex>
-      </Flex>
+              <FlexItem>
+                <Content>
+                  <SvgHorizontalLine dashed />
+                </Content>
+              </FlexItem>
+            </Flex>
+
+            <Flex direction={{ default: 'column' }}>
+              <FlexItem>
+                <Content>{Labels.DataLink}</Content>
+              </FlexItem>
+              <FlexItem>
+                <Content>{Labels.SiteLink}</Content>
+              </FlexItem>
+            </Flex>
+          </Flex>
+        </PanelMainBody>
+      </Panel>
     </>
   );
 };

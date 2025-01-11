@@ -1,8 +1,6 @@
 import { PageSidebar, PageSidebarBody } from '@patternfly/react-core';
 
-import NavBar from '@core/components/NavBar';
-
-import './Sidebar.css';
+import NavBar from '../core/components/NavBar';
 
 const SkSidebar = function () {
   return (

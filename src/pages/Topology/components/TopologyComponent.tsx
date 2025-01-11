@@ -1,17 +1,16 @@
 import { FC, useCallback, ComponentType } from 'react';
 
-import { Divider, Stack, StackItem } from '@patternfly/react-core';
+import { Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
-
-import SkGraph from '@core/components/SkGraph';
-import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
-import { SkGraphProps } from 'types/Graph.interfaces';
+import { GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';
+import { Labels } from '../../../config/labels';
+import SkGraph from '../../../core/components/SkGraph';
+import { ComponentRoutesPaths } from '../../Components/Components.enum';
 import useTopologyComponentData from '../hooks/useTopologyComponentData';
 import useTopologyState from '../hooks/useTopologyState';
 import { TopologyComponentController } from '../services/topologyComponentController';
-import { TopologyLabels } from '../Topology.enum';
 
 const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<SkGraphProps> }> = function ({
   ids,
@@ -23,11 +22,14 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<SkG
   const { components, componentsPairs } = useTopologyComponentData();
 
   const handleShowDetails = useCallback(
-    (componentId: string) => {
-      const component = components.find(({ identity }) => identity === componentId);
-      navigate(`${ComponentRoutesPaths.ProcessGroups}/${component?.name}@${componentId}`);
+    (data: GraphNode | null) => {
+      const id = data?.id;
+
+      if (id) {
+        navigate(`${ComponentRoutesPaths.Components}/${data?.name}@${id}`);
+      }
     },
-    [navigate, components]
+    [navigate]
   );
 
   const { nodeIdSelected, nodes, edges, nodeIdsToHighLight } = TopologyComponentController.dataTransformer({
@@ -40,11 +42,7 @@ const TopologyComponent: FC<{ ids?: string[]; GraphComponent?: ComponentType<SkG
   return (
     <Stack>
       <StackItem>
-        <TopologyToolbar
-          resourcePlaceholder={TopologyLabels.DisplayComponentsDefaultLabel}
-          onResourceSelected={handleSearchText}
-        />
-        <Divider />
+        <TopologyToolbar resourcePlaceholder={Labels.FindComponents} onResourceSelected={handleSearchText} />
       </StackItem>
 
       <StackItem isFilled>

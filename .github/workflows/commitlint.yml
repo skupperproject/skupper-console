@@ -1,11 +1,25 @@
-name: Lint Commit Messages
-on: [pull_request, push]
+name: Lint Commit Messages 📝
+
+on:
+  pull_request:
+    branches:
+      - main
+      - v2
+  push:
+    branches:
+      - main
+      - v2
 
 jobs:
   commitlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code 📥
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v5
+
+      - name: Run commit lint check ✅
+        uses: wagoid/commitlint-github-action@v5
+        with:
+          configFile: .commitlint.config.js

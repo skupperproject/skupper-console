@@ -1,2 +1,4 @@
 #!/bin/sh
-npm run format
+. "$(dirname "$0")/_/husky.sh"
+
+yarn lint-staged

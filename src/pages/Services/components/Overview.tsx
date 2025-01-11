@@ -1,90 +1,62 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
-
-import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
-import { RESTApi } from '@API/REST.api';
-import { AvailableProtocols } from '@API/REST.enum';
-import { UPDATE_INTERVAL } from '@config/config';
-import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
-import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
-import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
-
-import { QueriesServices } from '../Services.enum';
-
-const PREFIX_METRIC_FILTERS_CACHE_KEY = 'service-metric-filter';
-const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `service-open-metric-sections`;
+import { Protocols } from '../../../API/REST.enum';
+import { extractUniqueValues } from '../../../core/utils/extractUniqueValues';
+import { mapDataToMetricFilterOptions } from '../../../core/utils/getResourcesFromPairs';
+import Metrics from '../../shared/Metrics';
+import { useServiceOverviewData } from '../hooks/useOverviewData';
 
 interface OverviewProps {
-  serviceId: string;
-  serviceName: string;
-  protocol: AvailableProtocols;
+  id: string;
+  name: string;
 }
 
-const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol }) {
-  const { data: processPairs } = useSuspenseQuery({
-    queryKey: [QueriesServices.GetProcessPairsByService, serviceId],
-    queryFn: () => RESTApi.fetchProcessPairsByService(serviceId),
-    refetchInterval: UPDATE_INTERVAL
-  });
+const Overview: FC<OverviewProps> = function ({ id, name }) {
+  const { pairs } = useServiceOverviewData(id);
 
-  const handleSelectedFilters = useCallback(
-    (filters: string) => {
-      storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`, filters);
-    },
-    [serviceId]
+  // prometheus read a process name as id
+  const sourceProcesses = mapDataToMetricFilterOptions(
+    pairs,
+    'sourceName',
+    'sourceName',
+    'sourceSiteId',
+    'sourceSiteName'
   );
+  const destProcesses = mapDataToMetricFilterOptions(
+    pairs,
+    'destinationName',
+    'destinationName',
+    'destinationSiteId',
+    'destinationSiteName'
+  );
+  const sourceSites = mapDataToMetricFilterOptions(pairs, 'sourceSiteId', 'sourceSiteName');
+  const destSites = mapDataToMetricFilterOptions(pairs, 'destinationSiteId', 'destinationSiteName');
 
-  const handleGetExpandedSectionsConfig = useCallback(
-    (sections: ExpandedMetricSections) => {
-      storeDataToSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${serviceId}`, sections);
-    },
-    [serviceId]
-  );
+  const uniqueProtocols = extractUniqueValues(pairs, 'observedApplicationProtocols').join();
+  const uniqueProtocolsAarray = (
+    uniqueProtocols.length && uniqueProtocols.includes(',') ? uniqueProtocols.split(',') : uniqueProtocols
+  ) as Protocols[];
 
-  const processPairsResults = processPairs?.results || [];
-
-  const sourceProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
-    processPairsResults.map(({ sourceName, sourceSiteName, sourceSiteId }) => ({
-      destinationName: sourceName,
-      siteName: composePrometheusSiteLabel(sourceSiteName, sourceSiteId)
-    }))
-  );
-  const destProcesses = removeDuplicatesFromArrayOfObjects<{ destinationName: string; siteName: string }>(
-    processPairsResults.map(({ destinationName, destinationSiteName, destinationSiteId }) => ({
-      destinationName,
-      siteName: composePrometheusSiteLabel(destinationSiteName, destinationSiteId)
-    }))
-  );
-
-  const destSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
-    processPairsResults.map(({ destinationSiteId, destinationSiteName }) => ({
-      destinationName: composePrometheusSiteLabel(destinationSiteName, destinationSiteId)
-    }))
-  );
-
-  const sourceSites = removeDuplicatesFromArrayOfObjects<{ destinationName: string }>(
-    processPairsResults.map(({ sourceSiteId, sourceSiteName }) => ({
-      destinationName: composePrometheusSiteLabel(sourceSiteName, sourceSiteId)
-    }))
-  );
+  const sourceSite = sourceSites.map((site) => site.id).join('|');
+  const destSite = destSites.map((site) => site.id).join('|');
+  const sourceProcess = sourceProcesses.map((process) => process.id).join('|');
+  const destProcess = destProcesses.map((process) => process.id).join('|');
 
   return (
     <Metrics
-      key={serviceId}
+      key={id}
+      sessionKey={id}
       sourceSites={sourceSites}
       destSites={destSites}
       sourceProcesses={sourceProcesses}
       destProcesses={destProcesses}
-      availableProtocols={[protocol]}
-      defaultOpenSections={{
-        ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${serviceId}`)
-      }}
+      availableProtocols={uniqueProtocolsAarray}
       defaultMetricFilterValues={{
-        protocol,
-        service: serviceName,
-        ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${serviceId}`)
+        service: name, // prometheus use a service name as id
+        sourceSite,
+        sourceProcess,
+        destSite,
+        destProcess
       }}
       configFilters={{
         sourceSites: {
@@ -98,11 +70,8 @@ const Overview: FC<OverviewProps> = function ({ serviceId, serviceName, protocol
         },
         destinationProcesses: {
           hide: destProcesses.length === 0
-        },
-        protocols: { disabled: true }
+        }
       }}
-      onGetMetricFiltersConfig={handleSelectedFilters}
-      onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
     />
   );
 };

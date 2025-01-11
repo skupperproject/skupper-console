@@ -1,143 +1,234 @@
-import { SortDirection, TcpStatus } from '@API/REST.enum';
-import { BIG_PAGINATION_SIZE } from '@config/config';
-import { httpFlowPairsColumns, tcpFlowPairsColumns } from '@core/components/SkFlowPairsTable/FlowPair.constants';
-import { FlowPairLabels } from '@core/components/SkFlowPairsTable/FlowPair.enum';
-import SkLinkCell, { SkLinkCellProps } from '@core/components/SkLinkCell';
-import { sankeyMetricOptions } from '@core/components/SKSanckeyChart/SkSankey.constants';
-import { timeAgo } from '@core/utils/timeAgo';
-import { ProcessesLabels } from '@pages/Processes/Processes.enum';
-import { ServiceResponse, ProcessResponse, RemoteFilterOptions } from '@sk-types/REST.interfaces';
-import { SKTableColumn } from 'types/SkTable.interfaces';
-
-import { ServicesRoutesPaths, ServicesLabels } from './Services.enum';
+import ConnectorProcessCountCell from './components/ConnectorProcessCountCell';
+import { ServicesRoutesPaths } from './Services.enum';
+import { SortDirection, TcpStatus } from '../../API/REST.enum';
+import { BIG_PAGINATION_SIZE, EMPTY_VALUE_SYMBOL } from '../../config/app';
+import { Labels } from '../../config/labels';
+import SkEndTimeCell from '../../core/components/SkEndTimeCell';
+import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
+import { SkSelectOption } from '../../core/components/SkSelect';
+import { formatByteRate, formatBytes } from '../../core/utils/formatBytes';
+import {
+  ServiceResponse,
+  QueryFilters,
+  ListenerResponse,
+  ConnectorResponse,
+  ProcessPairsResponse,
+  PairsWithInstantMetrics
+} from '../../types/REST.interfaces';
+import { SKTableColumn } from '../../types/SkTable.interfaces';
+import { ProcessesRoutesPaths } from '../Processes/Processes.enum';
+import { SitesRoutesPaths } from '../Sites/Sites.enum';
 
 export const ServicesPaths = {
   path: ServicesRoutesPaths.Services,
-  name: ServicesLabels.Section
+  name: Labels.Services
 };
+
+export const TAB_0_KEY = Labels.Overview;
+export const TAB_1_KEY = Labels.Pairs;
+export const TAB_2_KEY = Labels.Requests;
+export const TAB_3_KEY = Labels.OpenConnections;
+export const TAB_4_KEY = Labels.OldConnections;
+export const TAB_5_KEY = Labels.ListenersAndConnectors;
 
 export const customServiceCells = {
   ServiceNameLinkCell: (props: SkLinkCellProps<ServiceResponse>) =>
     SkLinkCell({
       ...props,
       type: 'service',
-      link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}@${props.data.protocol}`
-    })
+      link: `${ServicesRoutesPaths.Services}/${props.data.name}@${props.data.identity}`
+    }),
+  ConnectorNameLinkCell: (props: SkLinkCellProps<ConnectorResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'connector'
+    }),
+  ListenerNameLinkCell: (props: SkLinkCellProps<ConnectorResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'listener'
+    }),
+  ProcessNameLinkCell: (props: SkLinkCellProps<ConnectorResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'process',
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.target}@${props.data.processId}`
+    }),
+  SiteNameLinkCell: (props: SkLinkCellProps<ConnectorResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'site',
+      link: `${SitesRoutesPaths.Sites}/${props.data.siteName}@${props.data.siteId}`
+    }),
+  SourceProcessNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'site',
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}`
+    }),
+  DestProcessNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'site',
+      link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationName}@${props.data.destinationId}`
+    }),
+  SourceSiteNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'site',
+      link: `${SitesRoutesPaths.Sites}/${props.data.sourceSiteName}@${props.data.sourceSiteId}`
+    }),
+  DestSiteNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
+    SkLinkCell({
+      ...props,
+      type: 'site',
+      link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteName}@${props.data.destinationSiteId}`
+    }),
+  TimestampCell: SkEndTimeCell,
+  ApplicationProtocolCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
+    data?.observedApplicationProtocols.join(', ') || EMPTY_VALUE_SYMBOL,
+  ConnectorProcessCountCell
 };
 
 // Services Table
 export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
   {
-    name: ServicesLabels.Name,
+    name: Labels.RoutingKey,
     prop: 'name',
     customCellName: 'ServiceNameLinkCell'
   },
   {
-    name: ServicesLabels.Protocol,
-    prop: 'protocol',
-    width: 15
+    name: Labels.TCP,
+    prop: 'protocol'
   },
   {
-    name: ServicesLabels.Servers,
-    prop: 'connectorCount',
-    width: 15
+    name: Labels.HTTP,
+    prop: 'observedApplicationProtocols',
+    customCellName: 'ApplicationProtocolCell'
   },
   {
-    name: ServicesLabels.CurrentFlowPairs,
-    columnDescription: 'Open connections',
-
-    prop: 'currentFlows' as keyof ServiceResponse,
-    width: 15
+    name: Labels.IsBound,
+    prop: 'isBound'
+  },
+  {
+    name: Labels.Created,
+    prop: 'startTime',
+    customCellName: 'TimestampCell',
+    modifier: 'fitContent'
   }
 ];
 
-// Server Table
-export const tcpServerColumns = [
+// Listeners Table
+export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
   {
-    name: ProcessesLabels.Name,
-    prop: 'name' as keyof ProcessResponse,
-    customCellName: 'linkCell'
+    name: Labels.Name,
+    prop: 'name',
+    customCellName: 'ListenerNameLinkCell'
   },
   {
-    name: ProcessesLabels.Component,
-    prop: 'groupName' as keyof ProcessResponse,
-    customCellName: 'linkComponentCell'
+    name: Labels.Site,
+    prop: 'siteName',
+    customCellName: 'SiteNameLinkCell'
   },
   {
-    name: ProcessesLabels.Site,
-    prop: 'parentName' as keyof ProcessResponse,
-    customCellName: 'linkCellSite'
-  },
-  {
-    name: ProcessesLabels.ByteRateRx,
-    prop: 'byteRate' as keyof ProcessResponse,
-    customCellName: 'ByteRateFormatCell'
-  },
-  {
-    name: ProcessesLabels.Created,
-    prop: 'startTime' as keyof ProcessResponse,
-    format: timeAgo
+    name: Labels.Created,
+    prop: 'startTime',
+    customCellName: 'TimestampCell',
+    modifier: 'fitContent'
   }
 ];
 
-// Http/2 Table
-export const httpColumns = httpFlowPairsColumns;
-
-// Tcp Table
-const tcpHiddenColumns: Record<string, { show: boolean }> = {
-  [FlowPairLabels.FlowPairClosed]: {
-    show: false
-  },
-  [FlowPairLabels.To]: {
-    show: false
-  }
-};
-
-export const tcpColumns = tcpFlowPairsColumns.map((flowPair) => ({
-  ...flowPair,
-  show: tcpHiddenColumns[flowPair.name]?.show
-}));
-
-export const TAB_0_KEY = '0';
-export const TAB_1_KEY = '1';
-export const TAB_2_KEY = '2';
-export const TAB_3_KEY = '3';
-
-export const servicesSelectOptions: { name: string; id: string }[] = [
+// Connectors Table
+export const ConnectorColumns: SKTableColumn<ConnectorResponse>[] = [
   {
-    name: 'Address',
+    name: Labels.Name,
+    prop: 'name',
+    customCellName: 'ConnectorNameLinkCell'
+  },
+  {
+    name: Labels.Site,
+    prop: 'siteName',
+    customCellName: 'SiteNameLinkCell'
+  },
+  {
+    name: Labels.DestHost,
+    prop: 'destHost'
+  },
+  {
+    name: Labels.DestPort,
+    prop: 'destPort'
+  },
+  {
+    name: Labels.Processes,
+    prop: 'count',
+    customCellName: 'ConnectorProcessCountCell'
+  },
+
+  {
+    name: Labels.Created,
+    prop: 'startTime',
+    customCellName: 'TimestampCell',
+    modifier: 'fitContent'
+  }
+];
+
+export const PairColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
+  {
+    name: Labels.Client,
+    prop: 'sourceName',
+    customCellName: 'SourceProcessNameLinkCell'
+  },
+  {
+    name: Labels.Site,
+    prop: 'sourceSiteName' as keyof PairsWithInstantMetrics,
+    customCellName: 'SourceSiteNameLinkCell'
+  },
+  {
+    name: Labels.Server,
+    prop: 'destinationName',
+    customCellName: 'DestProcessNameLinkCell'
+  },
+  {
+    name: Labels.ServerSite,
+    prop: 'destinationSiteName' as keyof PairsWithInstantMetrics,
+    customCellName: 'DestSiteNameLinkCell'
+  },
+  {
+    name: Labels.Bytes,
+    prop: 'bytes',
+    format: formatBytes
+  },
+  {
+    name: Labels.ByteRate,
+    prop: 'byteRate',
+    format: formatByteRate
+  }
+];
+
+export const servicesSelectOptions: SkSelectOption[] = [
+  {
+    label: Labels.Name,
     id: 'name'
-  },
-  {
-    name: 'Protocol',
-    id: 'protocol'
   }
 ];
 
 // Filters
-export const initServersQueryParams = {
-  limit: BIG_PAGINATION_SIZE,
-  endTime: 0 // active servers
-};
-
-export const initActiveConnectionsQueryParams: RemoteFilterOptions = {
+export const initActiveConnectionsQueryParams: QueryFilters = {
   state: TcpStatus.Active,
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
 
-export const initOldConnectionsQueryParams: RemoteFilterOptions = {
+export const initTerminatedConnectionsQueryParams: QueryFilters = {
   state: TcpStatus.Terminated,
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
 
-export const initRequestsQueryParams: RemoteFilterOptions = {
+export const initRequestsQueryParams: QueryFilters = {
   limit: BIG_PAGINATION_SIZE,
   sortName: 'endTime',
   sortDirection: SortDirection.DESC
 };
-
-export const defaultMetricOption = sankeyMetricOptions[0].id;

@@ -17,9 +17,7 @@ const SkViewDetailCell = function <T>({ value, onClick }: SkViewDetailCellProps<
   }, [value, onClick]);
 
   return (
-    <Button variant="plain" aria-label="Action" onClick={handleOnClick} title="Click details">
-      <SearchIcon />
-    </Button>
+    <Button icon={<SearchIcon />} variant="plain" aria-label="Action" onClick={handleOnClick} title="Click details" />
   );
 };
 

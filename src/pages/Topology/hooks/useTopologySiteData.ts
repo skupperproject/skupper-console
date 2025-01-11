@@ -1,55 +1,43 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { Direction } from '@API/REST.enum';
-import { UPDATE_INTERVAL } from '@config/config';
-import { QueriesSites } from '@pages/Sites/Sites.enum';
-
+import { gePrometheusQueryPATH } from '../../../API/Prometheus.utils';
+import { getAllLinks, getAllSitePairs, getAllSites } from '../../../API/REST.endpoints';
+import { RESTApi } from '../../../API/REST.resources';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { TopologyController } from '../services';
-import { QueriesTopology } from '../Topology.enum';
-
-const linkQueryParams = { direction: Direction.Outgoing };
-
-interface UseTopologySiteDataProps {
-  showDataLink: boolean;
-  showBytes: boolean;
-  showByteRate: boolean;
-  showLatency: boolean;
-}
 
 const metricQueryParams = {
-  fetchBytes: { groupBy: 'destSite, sourceSite, direction' },
-  fetchByteRate: { groupBy: 'destSite, sourceSite, direction' },
-  fetchLatency: { groupBy: 'sourceSite, destSite, direction' }
+  fetchBytes: { groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId}` },
+  fetchByteRate: { groupBy: `${PrometheusLabelsV2.SourceSiteId},${PrometheusLabelsV2.DestSiteId}` }
 };
 
-const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatency }: UseTopologySiteDataProps) => {
+const useTopologySiteData = ({ showDataLink }: { showDataLink: boolean }) => {
   const [{ data: sites }, { data: routerLinks }, { data: sitesPairs }, { data: metrics }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [QueriesSites.GetSites],
+        queryKey: [getAllSites()],
         queryFn: () => RESTApi.fetchSites(),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesSites.GetLinks, linkQueryParams, showDataLink],
-        queryFn: () => (!showDataLink ? RESTApi.fetchLinks(linkQueryParams) : null),
+        queryKey: [getAllLinks(), showDataLink],
+        queryFn: () => (!showDataLink ? RESTApi.fetchLinks() : null),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesTopology.GetSitesPairs, showDataLink],
+        queryKey: [getAllSitePairs(), showDataLink],
         queryFn: () => (showDataLink ? RESTApi.fetchSitesPairs() : null),
         refetchInterval: UPDATE_INTERVAL
       },
       {
-        queryKey: [QueriesTopology.GetBytesByProcessPairs, showBytes, showByteRate, showLatency, showDataLink],
+        queryKey: [gePrometheusQueryPATH('single'), metricQueryParams, showDataLink],
         queryFn: () =>
           showDataLink
-            ? TopologyController.getTopologyMetrics({
-                showBytes,
-                showByteRate,
-                showLatency,
-                params: metricQueryParams
+            ? TopologyController.getAllTopologyMetrics({
+                showBytes: true,
+                showByteRate: true,
+                metricQueryParams
               })
             : null,
         refetchInterval: UPDATE_INTERVAL
@@ -58,9 +46,9 @@ const useTopologySiteData = ({ showDataLink, showBytes, showByteRate, showLatenc
   });
 
   return {
-    sites,
-    sitesPairs,
-    routerLinks,
+    sites: sites.results,
+    sitesPairs: sitesPairs?.results,
+    routerLinks: routerLinks?.results,
     metrics
   };
 };

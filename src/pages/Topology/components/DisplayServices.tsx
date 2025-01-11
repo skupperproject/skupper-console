@@ -2,10 +2,10 @@ import { FC, useCallback } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { UPDATE_INTERVAL } from '@config/config';
-import SkSelectTypeHeadWithCheckbox from '@core/components/SkSelectTypeHeadWithCheckbox';
-import { QueriesServices } from '@pages/Services/Services.enum';
+import { getAllServices } from '../../../API/REST.endpoints';
+import { RESTApi } from '../../../API/REST.resources';
+import { UPDATE_INTERVAL } from '../../../config/reactQuery';
+import SkSelectTypeHeadWithCheckbox from '../../../core/components/SkSelectTypeHeadWithCheckbox';
 
 interface DisplayServicesProps {
   initialIdsSelected?: string[];
@@ -14,7 +14,7 @@ interface DisplayServicesProps {
 
 const DisplayServices: FC<DisplayServicesProps> = function ({ initialIdsSelected, onSelected: onSelect }) {
   const { data: services } = useQuery({
-    queryKey: [QueriesServices.GetServices],
+    queryKey: [getAllServices()],
     queryFn: () => RESTApi.fetchServices(),
     refetchInterval: UPDATE_INTERVAL
   });

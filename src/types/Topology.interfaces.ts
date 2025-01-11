@@ -1,48 +1,32 @@
 import { PrometheusMetric, PrometheusLabels } from './Prometheus.interfaces';
-import { ProcessPairsResponse } from './REST.interfaces';
 
 export interface TopologyMetrics {
-  bytesByProcessPairs: PrometheusMetric<'vector'>[];
-  byteRateByProcessPairs: PrometheusMetric<'vector'>[];
-  latencyByProcessPairs: PrometheusMetric<'vector'>[];
+  sourceToDestBytes: PrometheusMetric<'vector'>[];
+  destToSourceBytes: PrometheusMetric<'vector'>[];
+  sourceToDestByteRate: PrometheusMetric<'vector'>[];
+  destToSourceByteRate: PrometheusMetric<'vector'>[];
+}
+
+export interface TopologyConfigMetricsParams {
+  fetchBytes: { groupBy: string };
+  fetchByteRate: { groupBy: string };
+  filterBy?: PrometheusLabels;
 }
 
 export interface TopologyConfigMetrics {
   showBytes?: boolean;
   showByteRate?: boolean;
-  showLatency?: boolean;
-  params: {
+  metricQueryParams: {
     fetchBytes: { groupBy: string };
     fetchByteRate: { groupBy: string };
-    fetchLatency: { groupBy: string };
     filterBy?: PrometheusLabels;
   };
-}
-
-export interface TopologyDisplayOptionsMenu {
-  title?: string;
-  items: {
-    key: string;
-    value: string;
-    label: string;
-    isDisabled?: Function;
-  }[];
 }
 
 export interface TopologyShowOptionsSelected {
   showLinkBytes: boolean;
   showLinkByteRate: boolean;
-  showLinkLatency: boolean;
-  showLinkProtocol: boolean;
   showDeployments: boolean;
-  showInboundMetrics: boolean;
   showMetricDistribution: boolean;
   showMetricValue: boolean;
-}
-
-export interface ProcessPairsWithMetrics {
-  processesPairs?: ProcessPairsResponse[];
-  metrics?: TopologyMetrics;
-  prometheusKey: 'sourceProcess' | 'destProcess';
-  processPairsKey: 'sourceName' | 'destinationName';
 }

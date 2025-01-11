@@ -1,29 +1,18 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
-import {
-  Button,
-  Card,
-  CardBody,
-  CardExpandableContent,
-  CardHeader,
-  CardTitle,
-  Icon,
-  Tooltip
-} from '@patternfly/react-core';
-import { QuestionCircleIcon, SearchIcon } from '@patternfly/react-icons';
+import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
+import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import SKEmptyData from '@core/components/SkEmptyData';
-import SkIsLoading from '@core/components/SkIsLoading';
-import { QueryMetricsParams, QueriesMetrics } from '@sk-types/Metrics.interfaces';
-
 import LatencyCharts from './LatencyCharts';
-import { MetricsLabels } from '../Metrics.enum';
-import MetricsController from '../services';
+import { Labels } from '../../../../config/labels';
+import SKEmptyData from '../../../../core/components/SkEmptyData';
+import SkIsLoading from '../../../../core/components/SkIsLoading';
+import { QueryMetricsParams, QueriesMetrics } from '../../../../types/Metrics.interfaces';
+import { MetricsController } from '../services';
 
 interface LatencyProps {
   title?: string;
-  description?: string;
   selectedFilters: QueryMetricsParams;
   openSections?: boolean;
   forceUpdate?: number;
@@ -35,7 +24,6 @@ const minChartHeight = 680;
 
 const Latency: FC<LatencyProps> = function ({
   title = '',
-  description = '',
   selectedFilters,
   forceUpdate,
   openSections = false,
@@ -69,9 +57,9 @@ const Latency: FC<LatencyProps> = function ({
     setIsExpanded(!isExpanded);
 
     if (onGetIsSectionExpanded) {
-      onGetIsSectionExpanded({ latency: !isExpanded });
+      onGetIsSectionExpanded({ [title]: !isExpanded });
     }
-  }, [isExpanded, onGetIsSectionExpanded]);
+  }, [isExpanded, onGetIsSectionExpanded, title]);
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
@@ -86,24 +74,15 @@ const Latency: FC<LatencyProps> = function ({
   }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
   return (
-    <Card isExpanded={isExpanded}>
+    <Card isExpanded={isExpanded} aria-label={title} isFullHeight>
       <CardHeader onExpand={handleExpand}>
-        <CardTitle>
-          {title}{' '}
-          <Tooltip content={description}>
-            <Button variant="plain">
-              <Icon status="info">
-                <QuestionCircleIcon />
-              </Icon>
-            </Button>
-          </Tooltip>
-        </CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
 
       <CardExpandableContent>
-        <CardBody style={{ minHeight: minChartHeight }}>
+        {/*display grid center the child SKEmptyData */}
+        <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
           {(isLoading || isLoadingBuckets) && <SkIsLoading />}
-
           {!isLoading && !isLoadingBuckets && data?.length && bucketsData && (
             <>
               {!isLoading && !isLoadingBuckets && isRefetching && isRefetchingBuckets && <SkIsLoading />}
@@ -114,11 +93,10 @@ const Latency: FC<LatencyProps> = function ({
               />
             </>
           )}
-
           {!isLoading && !isLoadingBuckets && (!data?.length || !bucketsData) && (
             <SKEmptyData
-              message={MetricsLabels.NoMetricFoundTitleMessage}
-              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              message={Labels.NoMetricFound}
+              description={Labels.NoMetricFoundDescription}
               icon={SearchIcon}
             />
           )}

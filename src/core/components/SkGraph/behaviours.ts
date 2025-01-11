@@ -1,13 +1,13 @@
-import { BehaviorOptions, IPointerEvent } from '@antv/g6';
+import { CustomBehaviorOption, IPointerEvent } from '@antv/g6';
 
-import { GraphElementStates } from './Graph.enum';
+import { GraphLabels } from './enum';
 
 const CLICK_SELECT_BEHAVIOR = {
   key: 'click-select',
   type: 'click-select',
   degree: 1,
-  state: GraphElementStates.Select,
-  neighborState: GraphElementStates.HoverNode,
+  state: GraphLabels.Select,
+  neighborState: GraphLabels.HoverNode,
   unselectedState: '',
   enable: ({ targetType }: IPointerEvent) => targetType === 'node' || targetType === 'edge'
 };
@@ -18,7 +18,7 @@ const HOVER_ACTIVATE_BEHAVIOR = {
     key: 'hover-activate-single-node',
     type: 'hover-activate',
     degree: 0,
-    state: GraphElementStates.HoverNode,
+    state: GraphLabels.HoverNode,
     enable: ({ targetType }: IPointerEvent) => targetType === 'node'
   },
 
@@ -27,8 +27,8 @@ const HOVER_ACTIVATE_BEHAVIOR = {
     key: 'hover-activate',
     type: 'hover-activate',
     degree: 1,
-    state: GraphElementStates.Visible,
-    inactiveState: GraphElementStates.Hidden,
+    state: GraphLabels.Visible,
+    inactiveState: GraphLabels.Hidden,
     enable: ({ targetType }: IPointerEvent) => targetType === 'node'
   },
 
@@ -37,15 +37,15 @@ const HOVER_ACTIVATE_BEHAVIOR = {
     key: 'hover-activate-single-edge',
     type: 'hover-activate',
     degree: 0,
-    state: GraphElementStates.HoverEdge,
+    state: GraphLabels.HoverEdge,
     enable: ({ targetType }: IPointerEvent) => targetType === 'edge'
   }
 };
 
-export const behaviors: BehaviorOptions = [
-  'drag-canvas',
-  'zoom-canvas',
-  'drag-element',
+export const behaviors: CustomBehaviorOption[] = [
+  { key: 'drag-canvas', type: 'drag-canvas', enable: false },
+  { key: 'zoom-canvas', type: 'zoom-canvas' },
+  { key: 'drag-element', type: 'drag-element' },
   CLICK_SELECT_BEHAVIOR,
   HOVER_ACTIVATE_BEHAVIOR.HOVER_DEGREE_0_NODE,
   HOVER_ACTIVATE_BEHAVIOR.HOVER_DEGREE_0_EDGE,

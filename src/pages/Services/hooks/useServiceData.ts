@@ -1,11 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
-import { RESTApi } from '@API/REST.api';
-import { AvailableProtocols, TcpStatus } from '@API/REST.enum';
-import { UPDATE_INTERVAL } from '@config/config';
-
-import { QueriesServices } from '../Services.enum';
+import {
+  getAllConnectors,
+  getAllHttpRequests,
+  getAllListeners,
+  getAllProcesses,
+  getAllServices,
+  getAllTcpConnections
+} from '../../../API/REST.endpoints';
+import { TcpStatus } from '../../../API/REST.enum';
+import { RESTApi } from '../../../API/REST.resources';
+import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 
 const initServersQueryParams = {
   limit: 0
@@ -21,47 +26,61 @@ const terminatedConnectionsQueryParams = {
   state: TcpStatus.Terminated
 };
 
-const useServiceData = () => {
-  const { service } = useParams();
-  const serviceName = service?.split('@')[0];
-  const serviceId = service?.split('@')[1] as string;
-  const protocol = service?.split('@')[2] as AvailableProtocols | undefined;
+const useServiceData = (serviceId: string) => {
+  const { data: service } = useSuspenseQuery({
+    queryKey: [getAllServices(), serviceId],
+    queryFn: () => RESTApi.fetchService(serviceId),
+    refetchInterval: UPDATE_INTERVAL
+  });
 
   const { data: serversData } = useQuery({
-    queryKey: [QueriesServices.GetProcessesByService, serviceId, initServersQueryParams],
-    queryFn: () => RESTApi.fetchServersByService(serviceId, initServersQueryParams),
+    queryKey: [getAllProcesses(), { ...initServersQueryParams, services: [service.results.identity] }],
+    queryFn: () => RESTApi.fetchProcesses({ ...initServersQueryParams, services: [service.results.identity] }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: requestsData } = useQuery({
-    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, initServersQueryParams],
-    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, initServersQueryParams),
-    enabled: protocol !== AvailableProtocols.Tcp,
+    queryKey: [getAllHttpRequests(), initServersQueryParams],
+    queryFn: () => RESTApi.fetchApplicationFlows({ ...initServersQueryParams, routingKey: service.results.name }),
+    enabled: !!service.results.observedApplicationProtocols.length,
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: activeConnectionsData } = useQuery({
-    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, activeConnectionsQueryParams],
-    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, activeConnectionsQueryParams),
-    enabled: protocol === AvailableProtocols.Tcp,
+    queryKey: [getAllTcpConnections(), activeConnectionsQueryParams],
+    queryFn: () => RESTApi.fetchTransportFlows({ ...activeConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: terminatedConnectionsData } = useQuery({
-    queryKey: [QueriesServices.GetFlowPairsByService, serviceId, terminatedConnectionsQueryParams],
-    queryFn: () => RESTApi.fetchFlowPairsByService(serviceId, terminatedConnectionsQueryParams),
-    enabled: protocol === AvailableProtocols.Tcp,
+    queryKey: [getAllTcpConnections(), terminatedConnectionsQueryParams],
+    queryFn: () =>
+      RESTApi.fetchTransportFlows({ ...terminatedConnectionsQueryParams, routingKey: service.results.name }),
+    refetchInterval: UPDATE_INTERVAL
+  });
+
+  const { data: listenersData } = useQuery({
+    queryKey: [getAllListeners(), initServersQueryParams],
+    queryFn: () => RESTApi.fetchListeners({ ...initServersQueryParams, serviceId }),
+    refetchInterval: UPDATE_INTERVAL
+  });
+
+  const { data: connectorsData } = useQuery({
+    queryKey: [getAllConnectors(), initServersQueryParams],
+    queryFn: () => RESTApi.fetchConnectors({ ...initServersQueryParams, serviceId }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   return {
-    serviceName,
-    serviceId,
-    protocol,
-    serverCount: serversData?.timeRangeCount || 0,
-    requestsCount: requestsData?.timeRangeCount || 0,
-    tcpActiveConnectionCount: activeConnectionsData?.timeRangeCount || 0,
-    tcpTerminatedConnectionCount: terminatedConnectionsData?.timeRangeCount || 0
+    service: service.results,
+    summary: {
+      serverCount: serversData?.timeRangeCount || 0,
+      requestsCount: requestsData?.timeRangeCount || 0,
+      activeConnectionCount: activeConnectionsData?.timeRangeCount || 0,
+      terminatedConnectionCount: terminatedConnectionsData?.timeRangeCount || 0,
+      listenerCount: listenersData?.timeRangeCount || 0,
+      connectorCount: connectorsData?.timeRangeCount || 0
+    }
   };
 };
 

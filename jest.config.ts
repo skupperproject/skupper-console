@@ -1,47 +1,28 @@
-const ROOT = process.cwd();
-
-const ROOT_PROJECT = `${ROOT}`;
-const SRC_PATH = `${ROOT_PROJECT}/src`;
+const ROOT_PROJECT = `<rootDir>`;
+const SRC_PATH = `src`;
 const TESTS_PATH = `${ROOT_PROJECT}/__tests__`;
-const MODE_MODULES_PATH = `${ROOT_PROJECT}/node_modules`;
-const TS_CONFIG_PATH = './tsconfig.paths.json';
-const FILE_MOCK = 'jest.config.fileMock.ts';
-
-const extensionsAllowed = {
-  '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$/': `${TESTS_PATH}/${FILE_MOCK}`,
-  '\\.(css|scss)$': `${TESTS_PATH}/${FILE_MOCK}`
-};
-
-function makeModuleNameMapper(srcPath: string, tsconfigPath: string) {
-  const { paths } = require(tsconfigPath).compilerOptions;
-  const aliases: { [key: string]: string } = {};
-
-  Object.keys(paths).forEach((item) => {
-    const key = item.replace('/*', '/(.*)');
-    const path = paths[item][0].replace('/*', '/$1');
-
-    aliases[key] = `${srcPath}/${path}`;
-  });
-
-  return { ...extensionsAllowed, ...aliases };
-}
+const MODE_MODULES_PATH = `node_modules`;
+const TRANSFORMER = 'mocks/jest.mock.transformer.ts';
+const MOCK_ROUTER = 'jest.setup.ts';
 
 const config = {
-  preset: 'ts-jest/presets/js-with-ts',
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['@testing-library/jest-dom'],
-  moduleNameMapper: makeModuleNameMapper(SRC_PATH, TS_CONFIG_PATH),
+  coveragePathIgnorePatterns: ['./src/config', 'API', 'routes', 'core/components/SkGraph'],
   moduleDirectories: [MODE_MODULES_PATH, SRC_PATH],
+  // Configuration for mapping module names to different paths, for mocking modules or resolving different module formats.
+  moduleNameMapper: {
+    '^d3-(.*)$': `${ROOT_PROJECT}/node_modules/d3-$1/dist/d3-$1.js`,
+    '\\.(css)$': `${ROOT_PROJECT}/${TRANSFORMER}`
+  },
   roots: [TESTS_PATH],
-  // We need to include 'd3' or 'internmap' for the @nivo/sankey library
-  transformIgnorePatterns: [`${MODE_MODULES_PATH}/(?!d3|internmap)`],
+  setupFilesAfterEnv: ['@testing-library/jest-dom', `${ROOT_PROJECT}/${MOCK_ROUTER}`],
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  testEnvironment: 'jsdom',
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', { isolatedModules: true }],
-    '^.+\\.svg$': `${TESTS_PATH}/${FILE_MOCK}`,
-    '.+\\.(png)$': `${TESTS_PATH}/${FILE_MOCK}`
+    '^.+\\.svg$': `${ROOT_PROJECT}/${TRANSFORMER}`
   },
-  modulePathIgnorePatterns: [`${TESTS_PATH}/${FILE_MOCK}`],
-  coveragePathIgnorePatterns: ['API', './src/index.tsx', 'routes.tsx', './src/config', 'core/components/SkGraph']
+  // Configuration for ignoring transformations of specific modules within node_modules.
+  transformIgnorePatterns: ['/node_modules/(?!(d3-(.*)))']
 };
 
 export default config;

@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
 import {
+  ChartProps,
   Chart,
   ChartAxis,
   createContainer,
@@ -8,13 +9,12 @@ import {
   ChartLegendTooltip,
   ChartThemeColor,
   ChartArea,
-  ChartLine,
-  ChartProps
-} from '@patternfly/react-charts';
+  ChartLine
+} from '@patternfly/react-charts/victory';
 import { getResizeObserver } from '@patternfly/react-core';
 
-import { formatChartDate } from '@core/utils/formatChartDate';
-import { skAxisXY } from '@sk-types/SkChartArea.interfaces';
+import { skAxisXY } from '../../../types/SkChartArea.interfaces';
+import { formatChartDate } from '../../utils/formatChartDate';
 
 const DEFAULT_CHART_PADDING = {
   bottom: 70,
@@ -58,12 +58,14 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
   }
 
   useEffect(() => {
-    if (chartContainerRef.current) {
-      observer.current = getResizeObserver(chartContainerRef.current, handleResize);
-      handleResize();
-
-      () => observer.current();
+    if (!chartContainerRef.current) {
+      return;
     }
+
+    observer.current = getResizeObserver(chartContainerRef.current, handleResize);
+    handleResize();
+
+    return () => observer.current();
   }, []);
 
   const legendData = legendLabels.map((name) => ({ childName: name, name }));

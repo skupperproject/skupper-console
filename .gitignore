@@ -1,24 +1,38 @@
-# Javascript builds
-.DS_Store
+# App
 build
-node_modules
 coverage
+node_modules
 
-# package managers
-npm-debug.log*
-yarn-error.log*
+# Package Managers
 package-lock.json
+pnpm-lock.yaml
 
-.eslintcache
-# IDEs and editors
-.idea
-.project
+# Logs and temporary files
+*.log
+*.tmp
+temp/
+tmp/
+
+# IDEs and Editors
+.c9/
 .classpath
-.c9
+.eslintcache
+.idea/
+.project
+.settings/
+.sublime-workspace
+.vscode/
 *.launch
-.settings
-*.sublime-workspace
 .history
-.vscode
-# For vim
+*.DS_Store
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# System Files
+.DS_Store
+
+# Vim
 *.swp

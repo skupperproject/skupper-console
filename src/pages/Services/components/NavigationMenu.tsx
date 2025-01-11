@@ -1,16 +1,15 @@
 import { FC } from 'react';
 
-import { Badge, Tab, TabTitleText, Tabs } from '@patternfly/react-core';
+import { Tab, TabTitleText, Tabs } from '@patternfly/react-core';
 
-import { AvailableProtocols } from '@API/REST.enum';
-import { TopologyURLQueyParams } from '@pages/Topology/Topology.enum';
-import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
-
-import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY } from '../Services.constants';
-import { ServicesLabels } from '../Services.enum';
+import { Labels } from '../../../config/labels';
+import useUpdateQueryStringValueWithoutNavigation from '../../../hooks/useUpdateQueryStringValueWithoutNavigation';
+import { TopologyURLQueyParams } from '../../Topology/Topology.enum';
+import { TAB_0_KEY, TAB_1_KEY, TAB_2_KEY, TAB_3_KEY, TAB_4_KEY, TAB_5_KEY } from '../Services.constants';
 
 interface NavigationMenuProps {
-  protocol: AvailableProtocols | undefined;
+  hasListenersOrConnectors: boolean;
+  hasApplicationProtocol: boolean;
   serverCount: number;
   requestsCount: number;
   tcpActiveConnectionCount: number;
@@ -19,11 +18,12 @@ interface NavigationMenuProps {
   onMenuSelected?: (index: string) => void;
 }
 const NavigationMenu: FC<NavigationMenuProps> = function ({
+  hasListenersOrConnectors,
   serverCount,
   requestsCount,
   tcpActiveConnectionCount,
   tcpTerminatedConnectionCount,
-  protocol,
+  hasApplicationProtocol,
   menuSelected,
   onMenuSelected
 }) {
@@ -35,42 +35,25 @@ const NavigationMenu: FC<NavigationMenuProps> = function ({
 
   return (
     <Tabs activeKey={menuSelected} onSelect={(_, index) => handleMenuClick(index)} component="nav">
-      <Tab eventKey={TAB_0_KEY} title={<TabTitleText>{`${ServicesLabels.Overview}`}</TabTitleText>} />
+      <Tab eventKey={TAB_0_KEY} title={<TabTitleText>{`${Labels.Overview}`}</TabTitleText>} />
       <Tab
-        isDisabled={!serverCount}
-        eventKey={TAB_1_KEY}
-        title={
-          <TabTitleText>
-            {`${ServicesLabels.Servers} `}
-            {!!serverCount && (
-              <Badge isRead key={1}>
-                {serverCount}
-              </Badge>
-            )}
-          </TabTitleText>
-        }
+        isDisabled={!hasListenersOrConnectors}
+        eventKey={TAB_5_KEY}
+        title={<TabTitleText>{`${Labels.ListenersAndConnectors} `}</TabTitleText>}
       />
-      {protocol !== AvailableProtocols.Tcp && (
-        <Tab
-          isDisabled={!requestsCount}
-          eventKey={TAB_2_KEY}
-          title={<TabTitleText>{ServicesLabels.Requests}</TabTitleText>}
-        />
-      )}
-      {protocol === AvailableProtocols.Tcp && (
-        <Tab
-          isDisabled={!tcpActiveConnectionCount}
-          eventKey={TAB_2_KEY}
-          title={<TabTitleText>{ServicesLabels.ActiveConnections}</TabTitleText>}
-        />
-      )}
-
-      {protocol === AvailableProtocols.Tcp && (
-        <Tab
-          isDisabled={!tcpTerminatedConnectionCount}
-          eventKey={TAB_3_KEY}
-          title={<TabTitleText>{ServicesLabels.OldConnections}</TabTitleText>}
-        />
+      <Tab isDisabled={!serverCount} eventKey={TAB_1_KEY} title={<TabTitleText>{`${Labels.Pairs} `}</TabTitleText>} />
+      <Tab
+        isDisabled={!tcpActiveConnectionCount}
+        eventKey={TAB_3_KEY}
+        title={<TabTitleText>{Labels.OpenConnections}</TabTitleText>}
+      />
+      <Tab
+        isDisabled={!tcpTerminatedConnectionCount}
+        eventKey={TAB_4_KEY}
+        title={<TabTitleText>{Labels.OldConnections}</TabTitleText>}
+      />
+      {hasApplicationProtocol && (
+        <Tab isDisabled={!requestsCount} eventKey={TAB_2_KEY} title={<TabTitleText>{Labels.Requests}</TabTitleText>} />
       )}
     </Tabs>
   );

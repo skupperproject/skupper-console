@@ -2,31 +2,26 @@
 
 [![Tests](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml/badge.svg)](https://github.com/skupperproject/skupper-console/actions/workflows/skupper-console.yml) [![codecov](https://codecov.io/github/skupperproject/skupper-console/graph/badge.svg?token=42RWX7XAHH)](https://codecov.io/github/skupperproject/skupper-console) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## Table of Contents
+## Network console V2
 
-- [Skupper Console](#skupper-console)
-  - [Status](#status)
-  - [Enable the console from Skupper](#enable-the-console-from-skupper)
+- [Enable the console from Skupper](#enable-the-console-from-skupper)
 - [Development](#development)
   - [Quick start](#quick-start)
-  - [Run the console with demo routes](#run-the-console-with-demo-routes)
-  - [Run the console with Skupper](#run-the-console-with-skupper)
+  - [Run the Console with external routes](#run-the-console-with-external-routes)
   - [Testing](#testing)
-- [Project structure](#project-structure)
-  - [Page sections](#page-sections)
-- [Brand customization](#brand-customization)
+- [ENV variables](#env-variables)
 
-Skupper Console is a web-based graphical user interface (GUI) designed for easy observability and monitoring of your [Skupper](https://github.com/skupperproject/skupper) network resources. With Skupper Console, you can visualize your network topology, explore components and endpoints, and monitor traffic patterns to gain valuable insights into the health and performance of your Skupper infrastructure. Whether you are a developer or a network operator, Skupper Console makes it easy to stay on top of your Skupper network by providing an intuitive and user-friendly interface.
+![alt text](https://github.com/user-attachments/assets/702ae1fa-a52d-4564-a9ff-3f250bb00cf3)
 
-## Status
+![alt text](https://github.com/user-attachments/assets/91b284f6-a1b3-4ee1-83cd-656d0b65b0d0)
 
-Please access the Web console demo by clicking [here](https://skupper-console-vry5.vercel.app/#/topology).
+![alt text](https://github.com/user-attachments/assets/b5c7941f-bc4d-4f72-875a-d12890c1e9a7)
 
-This demo is synchronized with the latest version of the Skupper or a modified version of it, using the current main branch.
+![alt text](https://github.com/user-attachments/assets/862e61a3-067d-48ed-b612-bee1efd1ffc2)
 
 ## Enable the console from Skupper
 
-To access the Web console in [Skupper](https://github.com/skupperproject/skupper) version 1.3 and above, please refer to the step-by-step instructions provided in this [this guide](https://github.com/skupperproject/skupper-docs/blob/main/modules/console/pages/index.adoc). The guide will walk you through the process of enabling the console and accessing it in your Skupper deployment.
+The network console works alongside the **network observer**. Follow the steps outlined in the [network observer setup guide](https://github.com/skupperproject/skupper/blob/v2/cmd/network-observer/resources/README.md) to configure a valid route.
 
 ## Development
 
@@ -41,45 +36,11 @@ To get started quickly, follow the steps below:
 2. Start the application by running `yarn start`.
 3. Open <http://localhost:3000> in your web browser.
 
-_Note_:
-
-The running application uses the data in the mock folder.
-
-### Run the console with demo routes
-
-To run the console with demo routes, execute the following command:
+### Run the Console with external routes
 
 ```bash
-COLLECTOR_URL=https://skupper-vb-boutique-a-demo.skupper-0-153f1de160110098c1928a6c05e19444-0000.us-east.containers.appdomain.cloud yarn start
+OBSERVER_URL=<network observer console url route> yarn start
 ```
-
-These routes are associated with the boutique demo, which can be found at the following link <https://github.com/skupperproject/skupper-example-grpc>.
-
-### Run the console from Skupper
-
-When running skupper, executing `skupper init --enable-flow-collector` will generate a publicly accessible route to the collector. This route can be secured or unsecured, depending on the desired level of security.
-
-#### Use the Flow collector
-
-```bash
-COLLECTOR_URL=<skupper url> yarn start
-```
-
-**Cross-Origin Resource Sharing (CORS) issue**
-For security reasons, browsers forbid requests that come in from cross-domain sources. We need to allow the CORS manually:
-
-```bash
-kubectl set env <name of your skupper controller deployed> USE_CORS=yes
-```
-
-example:
-
-```bash
-kubectl set env deployment/skupper-service-controller USE_CORS=yes
-```
-
-**Run skupper without authentication**
-This standalone mode is intended for development purposes and does not work with a Skupper network that require authorization. However, in the case of Basic Auth, you can use any browser plugin to set the header property "Authorization: Basic < base64 of username:password >". In this last case the logout is does not work because we override the values of this header property every time.
 
 ## Testing
 
@@ -99,40 +60,12 @@ To run integration tests, use the following command:
 yarn cy
 ```
 
-#### Development mode
+## Env variables
 
-To run integration tests in development mode and open the Cypress test runner, use the following command:
-
-```bash
-yarn cy:open
-```
-
-Note that the above commands assume that you have the necessary dependencies installed and configured for testing.
-
-## Project Structure
-
-The project has the following directory structure:
-
-- `build`: Contains the output of the production build, which is the compiled and optimized version of the application that can be deployed to a server.
-- `config`: Contains the configuration files for the development tools used in the project, such as webpack, jest, typescript paths, eslint, etc.
-- `cypress`: Contains the integration testing code using Cypress framework, which is used to test the application's user interface and user interactions.
-- `mocks`: Contains a mock server that runs on a static dataset to simulate a basic network, which is useful for testing the application's data handling and network requests.
-- `public`: Contains the index.html file, which is the entry point of the application and serves as the shell for the application's content.
-- `src`: Contains the source and test code of the application, including all the React components, utility functions, and data models.
-  - `API`: Contains the Api, which is responsible for handling all the network requests and data fetching for the application.
-  - `assets`: Contains images and other assets used in the application, such as icons, logos, and background images.
-  - `core/components`: Contains generic and reusable React components, such as Navbar, topology graph, and table, that can be used throughout the application.
-  - `core/utils`: Contains generic app functionalities such as date and formatting utilities that are used throughout the application.
-  - `layout`: Contains the components that form the foundation of the application's structure, such as the header, footer, and navigation menu.
-  - `pages`: Contains the components that are displayed within the container, which represent the different pages or views of the application.
-    - `<page>/components`: Contains the components of a particular view, such as the list and details.
-    - `<page>/services`: Contains data utilities for a specific page, such as filtering or sorting the products on the product list page.
-    - `<page>/views`: Contains a collection of views for a particular page, such as the list view or details view.
-  - `config`: Contains the configuration files for the application, such as the environment variables, constants, or settings used throughout the application.
-  - `routes`: Contains the aggregation of page routes, which define the mapping between URLs and components/views in the application.
-
-### Page sections
-
-Each page section includes constants, interfaces, and enums that are specific to the React views and components used in that section. If you require more generic modules or API-related items, we recommend accessing them from the services folder modules.
-
-Please note that the `services` folder contains utilities for data normalization, sanitization, and manipulation for a specific page, while other generic app functionalities such as date and formatting utilities can be found in the `core/utils` folder.
+- ``: The console uses a real network observer.
+- `API_VERSION`: Part of the url api. **Note**: Do not include a leading slash (/) in the value of API_VERSION.
+- `BRAND_APP_LOGO`: Customize the logo for the build.
+- `BRAND_FAVICON`: Customize the favicon for the build.
+- `USE_MOCK_SERVER`: Use predefined static data to display the console.
+- `MOCK_RESPONSE_DELAY`: It simulates a delay (milliseconds) in the response when using the mock server.
+- `MOCK_ITEM_COUNT`: It generates X random resources (processes, sites, links, etc.)

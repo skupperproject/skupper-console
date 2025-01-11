@@ -5,27 +5,20 @@ import {
   Flex,
   FlexItem,
   PageGroup,
-  PageNavigation,
   PageSection,
-  PageSectionVariants,
-  Text,
-  TextContent,
-  TextVariants,
+  Content,
+  ContentVariants,
   Title,
   Toolbar,
   ToolbarContent,
   ToolbarItem
 } from '@patternfly/react-core';
 
-import SkUpdateDataButton from '@core/components/SkUpdateDataButton';
-import LoadingPage from '@pages/shared/Loading';
-import { TopologyLabels } from '@pages/Topology/Topology.enum';
-
+import { Labels } from '../config/labels';
+import LoadingPage from '../core/components/SkLoading';
 import SkNavigationViewLink from '../core/components/SkNavigationViewLink';
+import SkUpdateDataButton from '../core/components/SkUpdateDataButton';
 import TransitionPage from '../core/components/TransitionPages/Fade';
-
-import '@patternfly/patternfly/patternfly-addons.css';
-import '@patternfly/patternfly/patternfly-charts-theme-dark.css';
 
 interface MainContainerProps {
   dataTestId?: string;
@@ -34,17 +27,75 @@ interface MainContainerProps {
   linkLabel?: string;
   iconName?: 'topologyIcon' | 'listIcon';
   description?: string;
-  isPlain?: boolean;
   hasMainContentPadding?: boolean;
   navigationComponent?: ReactElement;
-  mainContentChildren?: ReactElement;
+  mainContentChildren: ReactElement;
 }
+
+/** Subcomponent for rendering the header section */
+const HeaderSection: FC<{
+  title?: string;
+  description?: string;
+  link?: string;
+  linkLabel?: string;
+  iconName?: 'topologyIcon' | 'listIcon';
+}> = function ({ title, description, link, linkLabel, iconName }) {
+  return (
+    <PageSection role="sk-heading">
+      <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }} alignItems={{ default: 'alignItemsFlexStart' }}>
+        <Content>
+          {title && <Title headingLevel="h1">{title}</Title>}
+          {description && <Content component={ContentVariants.p} dangerouslySetInnerHTML={{ __html: description }} />}
+        </Content>
+        <Flex>
+          <FlexItem>
+            <Toolbar>
+              <ToolbarContent>
+                <ToolbarItem id="custom-element">
+                  <SkUpdateDataButton />
+                </ToolbarItem>
+                {link && <ToolbarItem variant="separator" />}
+                {link && linkLabel && (
+                  <ToolbarItem>
+                    <SkNavigationViewLink link={link} linkLabel={linkLabel} iconName={iconName} />
+                  </ToolbarItem>
+                )}
+              </ToolbarContent>
+            </Toolbar>
+          </FlexItem>
+        </Flex>
+      </Flex>
+    </PageSection>
+  );
+};
+
+/** Subcomponent for rendering navigation */
+const NavigationSection: FC<{ navigationComponent?: ReactElement }> = function ({ navigationComponent }) {
+  return navigationComponent ? (
+    <div style={{ position: 'relative' }}>
+      {navigationComponent}
+      <Divider style={{ position: 'absolute', bottom: 0 }} />
+    </div>
+  ) : null;
+};
+
+/** Subcomponent for rendering the main content */
+const ContentSection: FC<{
+  contentChildren: ReactElement;
+  hasPadding?: boolean;
+}> = function ({ contentChildren, hasPadding }) {
+  return (
+    <PageSection hasBodyWrapper={false} padding={{ default: hasPadding ? 'noPadding' : 'padding' }} isFilled>
+      <Suspense fallback={<LoadingPage />}>{contentChildren}</Suspense>
+    </PageSection>
+  );
+};
 
 const MainContainer: FC<MainContainerProps> = function ({
   dataTestId,
   title,
   link,
-  linkLabel = TopologyLabels.TopologyView,
+  linkLabel = Labels.TopologyView,
   iconName = 'topologyIcon',
   description,
   hasMainContentPadding = false,
@@ -55,49 +106,16 @@ const MainContainer: FC<MainContainerProps> = function ({
     <TransitionPage>
       <PageGroup data-testid={dataTestId}>
         {title && (
-          <PageSection role="sk-heading" variant={PageSectionVariants.light}>
-            <Flex
-              justifyContent={{ default: 'justifyContentSpaceBetween' }}
-              alignItems={{ default: 'alignItemsFlexStart' }}
-            >
-              <TextContent>
-                <Title headingLevel="h1">{title}</Title>
-                {description && <Text component={TextVariants.p}>{description}</Text>}
-              </TextContent>
-              <Flex>
-                <FlexItem>
-                  <Toolbar style={{ padding: 0 }}>
-                    <ToolbarContent style={{ padding: 0 }}>
-                      <ToolbarItem id="custom-element">
-                        <SkUpdateDataButton />
-                      </ToolbarItem>
-                      {link && <ToolbarItem variant="separator" />}
-                      {link && (
-                        <ToolbarItem>
-                          {<SkNavigationViewLink link={link} linkLabel={linkLabel} iconName={iconName} />}
-                        </ToolbarItem>
-                      )}
-                    </ToolbarContent>
-                  </Toolbar>
-                </FlexItem>
-              </Flex>
-            </Flex>
-          </PageSection>
+          <HeaderSection
+            title={title}
+            description={description}
+            link={link}
+            linkLabel={linkLabel}
+            iconName={iconName}
+          />
         )}
-
-        {navigationComponent && (
-          <>
-            <PageNavigation className="pf-v5-u-py-0 pf-v5-u-px-xl">
-              <Flex>{navigationComponent}</Flex>
-            </PageNavigation>
-            <Divider />
-          </>
-        )}
-        {mainContentChildren && (
-          <PageSection padding={{ default: hasMainContentPadding ? 'noPadding' : 'padding' }} isFilled={true}>
-            <Suspense fallback={<LoadingPage />}>{mainContentChildren} </Suspense>
-          </PageSection>
-        )}
+        <NavigationSection navigationComponent={navigationComponent} />
+        <ContentSection contentChildren={mainContentChildren} hasPadding={hasMainContentPadding} />
       </PageGroup>
     </TransitionPage>
   );

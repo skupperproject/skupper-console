@@ -1,7 +1,7 @@
-import { Role } from '@API/REST.enum';
-import { ComponentPairsResponse, ComponentResponse } from '@sk-types/REST.interfaces';
 import { GraphNode } from 'types/Graph.interfaces';
 
+import { Role } from '../../../API/REST.enum';
+import { PairsResponse, ComponentResponse } from '../../../types/REST.interfaces';
 import { shape } from '../Topology.constants';
 
 import { TopologyController } from '.';
@@ -10,17 +10,24 @@ interface TopologyComponentControllerProps {
   idsSelected: string[] | undefined;
   searchText: string;
   components: ComponentResponse[];
-  componentsPairs: ComponentPairsResponse[];
+  componentsPairs: PairsResponse[];
 }
 
-const convertComponentsToNodes = (entities: ComponentResponse[]): GraphNode[] =>
-  entities.map(({ identity, name, processGroupRole: role, processCount }) => ({
-    id: identity,
-    label: name,
-    iconName: role === Role.Internal ? 'skupper' : 'component',
-    type: role === Role.Remote ? shape.remote : shape.bound,
-    groupedNodeCount: processCount
-  }));
+export const convertComponentToNode = ({
+  identity,
+  name,
+  processGroupRole: role,
+  processCount
+}: ComponentResponse): GraphNode => ({
+  id: identity,
+  name,
+  label: name,
+  iconName: role === Role.Internal ? 'skupper' : 'component',
+  type: role === Role.Remote ? shape.remote : shape.bound,
+  info: { primary: processCount.toString() }
+});
+
+const convertComponentsToNodes = (entities: ComponentResponse[]): GraphNode[] => entities.map(convertComponentToNode);
 
 export const TopologyComponentController = {
   dataTransformer: ({ idsSelected, components, componentsPairs, searchText }: TopologyComponentControllerProps) => {

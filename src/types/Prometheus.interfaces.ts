@@ -1,6 +1,5 @@
-import { FlowDirections } from './REST.interfaces';
 import { skAxisXY } from './SkChartArea.interfaces';
-import { AvailableProtocols, Quantiles } from '../API/REST.enum';
+import { Direction, Protocols, Quantiles } from '../API/REST.enum';
 // Common base type for result types
 type PrometheusResultType = 'matrix' | 'vector' | 'scalar' | 'string';
 
@@ -35,11 +34,14 @@ export interface PrometheusLabels {
   destSite?: string;
   sourceProcess?: string;
   destProcess?: string;
+  sourceComponent?: string;
+  destComponent?: string;
   service?: string;
   code?: string;
-  direction?: FlowDirections;
-  protocol?: AvailableProtocols;
+  direction?: Direction;
+  protocol?: Protocols;
 }
+
 export interface PrometheusQueryParams extends PrometheusLabels {
   step: string;
   start: number;
@@ -50,9 +52,8 @@ export interface PrometheusQueryParamsLatency extends PrometheusQueryParams {
   quantile: Quantiles;
 }
 
-export type IntervalTimePropValue = IntervalTimeMap[keyof IntervalTimeMap]['value'];
 export type IntervalTimeMap = {
-  [key: string]: { value: string; seconds: number; step: string; key: string; label: string };
+  [key: string]: { seconds: number; label: string };
 };
 
 export interface MetricData {

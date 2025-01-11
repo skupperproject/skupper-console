@@ -1,8 +1,8 @@
 import { Breadcrumb, BreadcrumbHeading, BreadcrumbItem } from '@patternfly/react-core';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
-import { getTestsIds } from '@config/testIds';
-import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
+import { getTestsIds } from '../../../config/testIds';
+import { getIdAndNameFromUrlParams } from '../../utils/getIdAndNameFromUrlParams';
 
 const SkBreadcrumb = function () {
   const { pathname } = useLocation();
@@ -21,7 +21,7 @@ const SkBreadcrumb = function () {
   return (
     <Breadcrumb data-testid={getTestsIds.breadcrumbComponent()}>
       {pathsNormalized.map((path, index) => (
-        <BreadcrumbItem key={path.name} className="sk-capitalize">
+        <BreadcrumbItem key={path.name} style={{ textTransform: 'capitalize' }}>
           <Link to={`${[...paths].slice(0, index + 1).join('/')}${queryParams}`}>{path.name}</Link>
         </BreadcrumbItem>
       ))}

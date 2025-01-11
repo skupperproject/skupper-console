@@ -1,6 +1,5 @@
-import { ComboData, EdgeData, NodeData } from '@antv/g6';
+import { ComboData, CornerPlacement, EdgeData, NodeData } from '@antv/g6';
 
-import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
 import {
   GraphCombo,
   GraphEdge,
@@ -8,9 +7,9 @@ import {
   LocalStorageData,
   LocalStorageDataSaved,
   LocalStorageDataSavedPayload
-} from '@sk-types/Graph.interfaces';
-
-import { graphIconsMap } from '../Graph.config';
+} from '../../../../types/Graph.interfaces';
+import { ellipsisInTheMiddle } from '../../../utils/EllipsisInTheMiddle';
+import { iconMapper, theme } from '../config';
 
 const prefixLocalStorageItem = 'skupper';
 const GRAPH_CONTAINER_ID = 'container';
@@ -131,90 +130,111 @@ export const GraphController = {
     });
   },
 
-  transformData: ({
-    nodes,
-    edges,
-    combos
-  }: {
-    nodes: GraphNode[];
-    edges: GraphEdge[];
-    combos?: GraphCombo[];
-  }): {
+  transformData({ nodes, edges, combos }: { nodes: GraphNode[]; edges: GraphEdge[]; combos?: GraphCombo[] }): {
     nodes: NodeData[];
     edges: EdgeData[];
     combos?: ComboData[];
-  } => {
-    const transformedEdges = markPairs(sanitizeEdges(nodes, edges)) as (GraphEdge & {
-      hasPair: boolean;
-    })[];
-    // Match the combo of the node with the existing combos
+  } {
+    // Get all combo IDs for easier node combo matching
     const comboIds = combos?.map(({ id }) => id);
 
-    // calculate the visual distribution of the metrics
-    const edgeMetrics = transformedEdges.map(({ metricValue, source, target }) =>
-      // remove metrics within the same site
+    // Sanitize edges and mark bidirectional edges
+    const processedEdges = markPairs(sanitizeEdges(nodes, edges)) as (GraphEdge & {
+      hasPair: boolean;
+    })[];
+
+    // Calculate metric values for edges
+    const edgeMetrics = processedEdges.map(({ metricValue, source, target }) =>
       source === target ? 0 : metricValue || 0
     );
+
     const maxMetricValue = Math.max(...edgeMetrics);
-    const minMetricValue = Math.min(...edgeMetrics.filter((metric) => metric)) || 0;
 
-    return {
-      nodes: nodes
-        .sort(sortNodesByCombo)
-        .map(({ id, combo, label, iconName, type = 'SkNode', groupedNodeCount, x, y, ...data }) => ({
-          id,
-          combo: combo && comboIds?.includes(combo) ? combo : undefined,
-          type,
-          data: {
-            ...data,
-            fullLabelText: label,
-            partialLabelText: ellipsisInTheMiddle(label),
-            cluster: combo,
-            fx: x,
-            fy: y
-          },
-          style: {
-            x,
-            y,
-            labelText: ellipsisInTheMiddle(label),
-            iconSrc: graphIconsMap[iconName],
-            badge: groupedNodeCount !== undefined,
-            badges: [
-              {
-                text: groupedNodeCount ? groupedNodeCount?.toString() : '',
-                placement: 'right-top'
-              }
-            ]
-          }
-        })),
+    // Get minimum metric value, ignoring 0 values
+    const minMetricValue = Math.min(...edgeMetrics.filter(Boolean)) || 0;
 
-      edges: transformedEdges.map(
-        ({ id, source, target, label, hasPair, type, metricValue, protocolLabel, ...data }) => ({
-          type,
+    const createBadges = (info?: { primary?: string; secondary?: string }) => [
+      ...(info?.primary
+        ? [
+            {
+              text: info.primary,
+              placement: 'right-top' as CornerPlacement,
+              offsetX: -theme.node.size / 6
+            }
+          ]
+        : []),
+      ...(info?.secondary
+        ? [
+            {
+              text: info.secondary,
+              placement: 'left-top' as CornerPlacement,
+              offsetX: theme.node.size / 6,
+              fontSize: 6
+            }
+          ]
+        : [])
+    ];
+
+    // Process nodes with combo matching and style assignment
+    const transformedNodes = nodes
+      .sort(sortNodesByCombo)
+      .map(({ id, combo, label, iconName, type = 'SkNode', info, x, y, ...rest }) => ({
+        id,
+        combo: combo && comboIds?.includes(combo) ? combo : undefined,
+        type,
+        data: {
           id,
-          source,
-          target,
-          data,
-          style: {
-            halo: true,
-            haloLineWidth: !(source === target)
+          ...rest,
+          fullLabelText: label,
+          partialLabelText: ellipsisInTheMiddle(label),
+          cluster: combo,
+          fx: x,
+          fy: y
+        },
+        style: {
+          x,
+          y,
+          labelText: ellipsisInTheMiddle(label),
+          iconSrc: iconMapper[iconName],
+          badge: !!info,
+          badges: createBadges(info)
+        }
+      }));
+
+    // Process edges with metric-based styling
+    const transformedEdges = processedEdges.map(
+      ({ id, source, target, sourceName, targetName, label, hasPair, type, metricValue }) => ({
+        type,
+        id,
+        source,
+        target,
+        data: { id, source, target, sourceName, targetName, label, hasPair, type, metricValue },
+        style: {
+          halo: true,
+          haloLineWidth:
+            source !== target
               ? normalizeBitrateToLineThickness(metricValue as number, minMetricValue, maxMetricValue)
               : 0,
-            badgeText: protocolLabel,
-            label: !!label,
-            labelText: label,
-            curveOffset: hasPair && 30
-          }
-        })
-      ),
-
-      combos: combos?.map(({ id, label, type }) => ({
-        id,
-        type,
-        style: {
-          labelText: label
+          label: true,
+          labelText: label,
+          curveOffset: hasPair ? 30 : 0
         }
-      }))
+      })
+    );
+
+    // Process combos if provided
+    const transformedCombos = combos?.map(({ id, label, type }) => ({
+      id,
+      type,
+      style: {
+        labelText: label
+      }
+    }));
+
+    return {
+      nodes: transformedNodes,
+      edges: transformedEdges,
+      combos: transformedCombos
     };
   },
 
@@ -262,7 +282,7 @@ function normalizeBitrateToLineThickness(
   minMetricValue: number,
   maxMetricValue: number,
   maxLineThickness = 30, // The maximum possible thickness of the line. Default is 30.
-  power = 0.35 //The exponent used for scaling, affecting the curve of normalization. Default is 0.35.
+  power = 0.55 //The exponent used for scaling, affecting the curve of normalization. Default is 0.35.
 ) {
   const minMetricValueSanitized = maxMetricValue - minMetricValue !== 0 ? minMetricValue : 0.1;
 
@@ -271,7 +291,7 @@ function normalizeBitrateToLineThickness(
   const normalizedValue =
     Math.pow((value - (minMetricValueSanitized === Infinity ? 0 : minMetricValueSanitized)) / range, power) *
     maxLineThickness;
-  const lineThickness = Math.max(Math.ceil(normalizedValue), 0.5);
+  const lineThickness = Math.max(Math.ceil(normalizedValue), 5);
 
   return lineThickness;
 }

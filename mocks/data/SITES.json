@@ -1,58 +1,48 @@
 {
   "results": [
     {
-      "recType": "SITE",
-      "identity": "site-1",
-      "startTime": 1674048683000000,
       "endTime": 0,
-      "name": "site 1",
-      "nameSpace": "config-grpc-site-1-test",
-      "platform": "podman",
-      "siteVersion": "1.5.0"
-    },
-    {
-      "recType": "SITE",
-      "identity": "site-2",
-      "startTime": 1674048662000000,
-      "endTime": 0,
-      "name": "site 2",
-      "nameSpace": "config-grpc-site-2-test",
+      "identity": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
+      "name": "dallas",
+      "nameSpace": "vb-boutique-c",
       "platform": "kubernetes",
-      "siteVersion": "1.5.0"
+      "provider": "kubernetes",
+      "routerCount": 1,
+      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "startTime": 1733493767000000
     },
     {
-      "recType": "SITE",
-      "identity": "site-3",
-      "startTime": 1674048705000000,
       "endTime": 0,
-      "name": "site 3",
-      "nameSpace": "config-grpc-site-3-test",
-      "platform": "podman",
-      "siteVersion": "1.5.0"
-    },
-    {
-      "recType": "SITE",
-      "identity": "site-4",
-      "startTime": 1674048705000000,
-      "endTime": 0,
-      "name": "site 4",
-      "nameSpace": "config-grpc-site-4-test",
+      "identity": "49becd97-6e22-4645-a22f-b5b98c89d827",
+      "name": "london",
+      "nameSpace": "vb-boutique-b",
       "platform": "kubernetes",
-      "siteVersion": "1.5.0"
+      "provider": "kubernetes",
+      "routerCount": 1,
+      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "startTime": 1733493674000000
     },
     {
-      "recType": "SITE",
-      "identity": "site-5",
-      "startTime": 1674048705000000,
       "endTime": 0,
-      "name": "site 5",
-      "nameSpace": "config-grpc-site-5-test",
+      "identity": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
+      "name": "malaga",
+      "nameSpace": "vb-boutique-a",
+      "platform": "kubernetes",
+      "provider": "kubernetes",
+      "routerCount": 1,
+      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "startTime": 1733493473000000
+    },
+    {
+      "endTime": 0,
+      "identity": "12345678-abcd-4321-efgh-87654321abcd",
+      "name": "Sidney",
+      "nameSpace": "vb-boutique-d",
       "platform": "podman",
-      "siteVersion": "1.5.0"
+      "provider": "podman",
+      "routerCount": 2,
+      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "startTime": 1733493000000000
     }
-  ],
-  "status": "",
-  "count": 5,
-  "timeRangeCount": 5,
-  "totalCount": 5
+  ]
 }

@@ -1,63 +1,82 @@
-import { useState, MouseEvent as ReactMouseEvent } from 'react';
+import { useState, MouseEvent as ReactMouseEvent, FC } from 'react';
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { RESTApi } from '@API/REST.api';
-import { getTestsIds } from '@config/testIds';
-import { getIdAndNameFromUrlParams } from '@core/utils/getIdAndNameFromUrlParams';
-import MainContainer from '@layout/MainContainer';
-import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '@pages/Topology/Topology.enum';
-import useUpdateQueryStringValueWithoutNavigation from 'hooks/useUpdateQueryStringValueWithoutNavigation';
-
+import { Labels } from '../../../config/labels';
+import { getTestsIds } from '../../../config/testIds';
+import { getIdAndNameFromUrlParams } from '../../../core/utils/getIdAndNameFromUrlParams';
+import useUpdateQueryStringValueWithoutNavigation from '../../../hooks/useUpdateQueryStringValueWithoutNavigation';
+import MainContainer from '../../../layout/MainContainer';
+import { TopologyRoutesPaths, TopologyURLQueyParams, TopologyViews } from '../../Topology/Topology.enum';
 import Details from '../components/Details';
+import Links from '../components/Links';
 import Overview from '../components/Overview.';
-import { SiteLabels, QueriesSites } from '../Sites.enum';
+import PairsList from '../components/PairList';
+import ProcessList from '../components/ProcessList';
+import { useSiteData } from '../hooks/useSiteData';
 
-const Site = function () {
-  const { id } = useParams() as { id: string };
-  const [searchParams] = useSearchParams();
+interface SiteProps {
+  id: string;
+  defaultTab: string;
+}
 
-  const { id: siteId } = getIdAndNameFromUrlParams(id);
-  const type = searchParams.get('type') || SiteLabels.Overview;
+const SiteContent: FC<SiteProps> = function ({ id, defaultTab }) {
+  const {
+    site,
+    summary: { processCount }
+  } = useSiteData(id);
 
-  const { data: site } = useSuspenseQuery({
-    queryKey: [QueriesSites.GetSite, siteId],
-    queryFn: () => RESTApi.fetchSite(siteId)
-  });
-
-  const [tabSelected, setTabSelected] = useState(type);
-
+  const [tabSelected, setTabSelected] = useState(defaultTab);
   useUpdateQueryStringValueWithoutNavigation(TopologyURLQueyParams.Type, tabSelected, true);
 
   function handleTabClick(_: ReactMouseEvent<HTMLElement, MouseEvent>, tabIndex: string | number) {
-    setTabSelected(tabIndex as SiteLabels);
+    setTabSelected(tabIndex as string);
   }
 
   const NavigationMenu = function () {
     return (
       <Tabs activeKey={tabSelected} onSelect={handleTabClick} component="nav">
-        <Tab eventKey={SiteLabels.Overview} title={<TabTitleText>{SiteLabels.Overview}</TabTitleText>} />
-        <Tab eventKey={SiteLabels.Details} title={<TabTitleText>{SiteLabels.Details}</TabTitleText>} />
+        <Tab eventKey={Labels.Overview} title={<TabTitleText>{Labels.Overview}</TabTitleText>} />
+        <Tab eventKey={Labels.Details} title={<TabTitleText>{Labels.Details}</TabTitleText>} />
+        <Tab eventKey={Labels.RouterLinks} title={<TabTitleText>{Labels.RouterLinks}</TabTitleText>} />
+        <Tab eventKey={Labels.Pairs} title={<TabTitleText>{Labels.Pairs}</TabTitleText>} />
+        <Tab
+          eventKey={Labels.Processes}
+          title={<TabTitleText>{Labels.Processes}</TabTitleText>}
+          disabled={!processCount}
+        />
       </Tabs>
     );
   };
 
   return (
     <MainContainer
-      dataTestId={getTestsIds.siteView(siteId)}
+      dataTestId={getTestsIds.siteView(id)}
       title={site.name}
-      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Sites}&${TopologyURLQueyParams.IdSelected}=${siteId}`}
+      link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Sites}&${TopologyURLQueyParams.IdSelected}=${id}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={
         <>
-          {tabSelected === SiteLabels.Overview && <Overview site={site} />}
-          {tabSelected === SiteLabels.Details && <Details site={site} />}
+          {tabSelected === Labels.Overview && <Overview site={site} />}
+          {tabSelected === Labels.Details && <Details site={site} />}
+          {tabSelected === Labels.RouterLinks && <Links site={site} />}
+          {tabSelected === Labels.Pairs && <PairsList site={site} />}
+          {tabSelected === Labels.Processes && <ProcessList site={site} />}
         </>
       }
     />
   );
+};
+
+const Site = function () {
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get('type') || Labels.Overview;
+
+  const { id: paramId } = useParams();
+  const { id } = getIdAndNameFromUrlParams(paramId as string);
+
+  return <SiteContent defaultTab={type} id={id} />;
 };
 
 export default Site;

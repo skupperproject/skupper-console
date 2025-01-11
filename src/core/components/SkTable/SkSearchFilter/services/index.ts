@@ -1,8 +1,9 @@
-import { FilterType, FilterSelected, FilterTypeWithSearchText } from '@sk-types/SkFilter.interfaces';
+import { FilterSelected, FilterTypeWithSearchText } from '../../../../../types/SkFilter.interfaces';
+import { SkSelectOption } from '../../../SkSelect';
 
 export const SkSearchFilterController = {
   getFilterTypesWithSearchValues: (
-    selectOptions: FilterType[],
+    selectOptions: SkSelectOption[],
     filterValues: FilterSelected | undefined
   ): FilterTypeWithSearchText[] => {
     if (!filterValues) {
@@ -11,9 +12,9 @@ export const SkSearchFilterController = {
 
     return selectOptions
       .filter(({ id }) => filterValues[id as keyof FilterSelected])
-      .map(({ id, name }) => ({
+      .map(({ id, label }) => ({
         id,
-        name,
+        label,
         searchValue: filterValues[id as keyof FilterSelected] as string
       }));
   }

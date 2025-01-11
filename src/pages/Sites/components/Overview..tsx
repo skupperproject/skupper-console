@@ -1,100 +1,52 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 
-import { useSuspenseQueries } from '@tanstack/react-query';
-
-import { composePrometheusSiteLabel } from '@API/Prometheus.utils';
-import { RESTApi } from '@API/REST.api';
-import { getDataFromSession, storeDataToSession } from '@core/utils/persistData';
-import { removeDuplicatesFromArrayOfObjects } from '@core/utils/removeDuplicatesFromArrayOfObjects';
-import Metrics from '@pages/shared/Metrics';
-import { ExpandedMetricSections, QueryMetricsParams } from '@sk-types/Metrics.interfaces';
-import { SitePairsResponse, SiteResponse } from '@sk-types/REST.interfaces';
-
-import { QueriesSites } from '../Sites.enum';
-
-const PREFIX_METRIC_FILTERS_CACHE_KEY = 'site-metric-filter';
-const PREFIX_METRIC_OPEN_SECTION_CACHE_KEY = `site-open-metric-sections`;
+import { Protocols } from '../../../API/REST.enum';
+import { extractUniqueValues } from '../../../core/utils/extractUniqueValues';
+import { mapDataToMetricFilterOptions } from '../../../core/utils/getResourcesFromPairs';
+import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
+import { SiteResponse } from '../../../types/REST.interfaces';
+import Metrics from '../../shared/Metrics';
+import { useSiteOverviewData } from '../hooks/useOverviewData';
 
 interface OverviewProps {
   site: SiteResponse;
 }
 
-const Overview: FC<OverviewProps> = function ({ site }) {
-  const { identity: siteId, name } = site;
+const Overview: FC<OverviewProps> = function ({ site: { identity: id, name } }) {
+  const { pairsTx, pairsRx } = useSiteOverviewData(id);
 
-  const sitePairsTxQueryParams = {
-    sourceId: siteId
-  };
-
-  const sitePairsRxQueryParams = {
-    destinationId: siteId
-  };
-
-  const [{ data: sitePairsTx }, { data: sitePairsRx }] = useSuspenseQueries({
-    queries: [
-      {
-        queryKey: [QueriesSites.GetSitesPairs, sitePairsTxQueryParams],
-        queryFn: () => RESTApi.fetchSitesPairs(sitePairsTxQueryParams)
-      },
-      {
-        queryKey: [QueriesSites.GetSitesPairs, sitePairsRxQueryParams],
-        queryFn: () => RESTApi.fetchSitesPairs(sitePairsRxQueryParams)
-      }
-    ]
-  });
-
-  const handleSelectedFilters = useCallback(
-    (filters: QueryMetricsParams) => {
-      storeDataToSession(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`, filters);
-    },
-    [siteId]
-  );
-
-  const handleGetExpandedSectionsConfig = useCallback(
-    (sections: ExpandedMetricSections) => {
-      storeDataToSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${siteId}`, sections);
-    },
-    [siteId]
-  );
-
-  const sourceSites = [{ destinationName: composePrometheusSiteLabel(name, siteId) }];
+  const sourceSites = [{ id, destinationName: name }];
   const destSites = removeDuplicatesFromArrayOfObjects([
-    ...createDestProcesses(sitePairsTx, 'destinationName', 'destinationId'),
-    ...createDestProcesses(sitePairsRx, 'sourceName', 'sourceId')
+    ...mapDataToMetricFilterOptions(pairsTx, 'destinationId', 'destinationName'),
+    ...mapDataToMetricFilterOptions(pairsRx, 'sourceId', 'sourceName')
   ]);
+  const uniqueProtocols = extractUniqueValues([...pairsTx, ...pairsRx], 'observedApplicationProtocols').join();
+  const uniqueProtocolsAarray = (
+    uniqueProtocols.length && uniqueProtocols.includes(',') ? uniqueProtocols.split(',') : uniqueProtocols
+  ) as Protocols[];
+  // Default destination site for Prometheus queries, representing the sum of all destination sites.
+  // We explicitly set this prop to ensure the destination site is included in the Prometheus query; otherwise, the result will also include values from the source site itself.
+  const destSite = destSites.map((site) => site.id).join('|');
 
   return (
     <Metrics
-      key={siteId}
+      key={id}
+      sessionKey={id}
       sourceSites={sourceSites}
       destSites={destSites}
-      defaultOpenSections={{
-        ...getDataFromSession<ExpandedMetricSections>(`${PREFIX_METRIC_OPEN_SECTION_CACHE_KEY}-${siteId}`)
-      }}
+      availableProtocols={uniqueProtocolsAarray}
       defaultMetricFilterValues={{
-        sourceSite: composePrometheusSiteLabel(name, siteId),
-        ...getDataFromSession<QueryMetricsParams>(`${PREFIX_METRIC_FILTERS_CACHE_KEY}-${siteId}`)
+        sourceSite: id, // prometheus read a site id as id. That's different compeare to processes and services
+        destSite
       }}
       configFilters={{
         sourceSites: { disabled: true },
+        destSites: { hide: !destSites.length },
         destinationProcesses: { hide: true },
         sourceProcesses: { hide: true }
       }}
-      onGetMetricFiltersConfig={handleSelectedFilters}
-      onGetExpandedSectionsConfig={handleGetExpandedSectionsConfig}
     />
   );
 };
 
 export default Overview;
-
-const createDestProcesses = (
-  sitePairs: SitePairsResponse[],
-  nameKey: keyof SitePairsResponse,
-  idKey: keyof SitePairsResponse
-) => [
-  ...(sitePairs || []).map(({ [nameKey]: namePair, [idKey]: idPair }) => ({
-    destinationName: composePrometheusSiteLabel(namePair as string, idPair as string),
-    siteName: ''
-  }))
-];

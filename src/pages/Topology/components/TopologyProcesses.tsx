@@ -1,7 +1,6 @@
-import { ComponentType, FC, useCallback, useEffect, useState } from 'react';
+import { ComponentType, FC, useCallback } from 'react';
 
 import {
-  Divider,
   Drawer,
   DrawerActions,
   DrawerCloseButton,
@@ -15,14 +14,13 @@ import {
   Title
 } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
-
-import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '@config/config';
-import SkGraph from '@core/components/SkGraph';
-import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { SkGraphProps } from 'types/Graph.interfaces';
+import { GraphEdge, GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyDetails, { TopoloyDetailsProps } from './TopologyDetails';
 import TopologyToolbar from './TopologyToolbar';
+import { Labels } from '../../../config/labels';
+import SkGraph from '../../../core/components/SkGraph';
+import { ProcessesRoutesPaths } from '../../Processes/Processes.enum';
 import useTopologyProcessData from '../hooks/useTopologyProcessData';
 import useServiceState from '../hooks/useTopologyServiceState';
 import useTopologyState from '../hooks/useTopologyState';
@@ -32,14 +30,13 @@ import {
   SHOW_DEPLOYMENTS,
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
-  SHOW_LINK_LATENCY,
   SHOW_LINK_METRIC_DISTRIBUTION,
   SHOW_LINK_METRIC_VALUE,
-  SHOW_LINK_PROTOCOL,
-  SHOW_INBOUND_METRICS,
   displayOptionsForProcesses
 } from '../Topology.constants';
-import { TopologyLabels } from '../Topology.enum';
+
+const MIN_DRAWER_WIDTH = 500;
+const MAX_DRAWER_WIDTH = 800;
 
 const TopologyProcesses: FC<{
   serviceIds?: string[];
@@ -49,10 +46,6 @@ const TopologyProcesses: FC<{
 }> = function ({ serviceIds, ids: processIds, GraphComponent = SkGraph, ModalComponent = TopologyDetails }) {
   const navigate = useNavigate();
 
-  // TODO: The graph doesn't resize its children if the drawer is opened before the graph is mounted.
-  // To fix this, we need to delay the action of opening the drawer until after the graph has been mounted
-  // We can do this by opening the drawer in a separate useEffect that runs after the graph has been
-  const [enableDrawer, setEnableDrawer] = useState(false);
   const { serviceIdsSelected, handleServiceSelected } = useServiceState(serviceIds);
   const { idsSelected, searchText, displayOptionsSelected, handleSelected, handleSearchText, handleDisplaySelected } =
     useTopologyState({
@@ -64,7 +57,9 @@ const TopologyProcesses: FC<{
   const { processes, processesPairs, metrics } = useTopologyProcessData();
 
   const handleShowProcessDetails = useCallback(
-    (id: string) => {
+    (data: GraphNode | null) => {
+      const id = data?.id;
+
       if (!id) {
         return handleSelected();
       }
@@ -74,14 +69,17 @@ const TopologyProcesses: FC<{
       }
 
       //handle a single process selection
-      const process = processes.find(({ identity }) => identity === id);
-      navigate(`${ProcessesRoutesPaths.Processes}/${process?.name}@${process?.identity}`);
+      if (id) {
+        navigate(`${ProcessesRoutesPaths.Processes}/${data.name}@${id}`);
+      }
     },
-    [handleSelected, navigate, processes]
+    [handleSelected, navigate]
   );
 
   const handleShowProcessPairDetails = useCallback(
-    (id: string) => {
+    (data: GraphEdge | null) => {
+      const id = data?.id;
+
       if (!id) {
         return handleSelected();
       }
@@ -90,12 +88,9 @@ const TopologyProcesses: FC<{
         return handleSelected(TopologyController.transformStringIdsToIds(id));
       }
 
-      const pair = processesPairs.find(({ identity }) => identity === id);
-      navigate(
-        `${ProcessesRoutesPaths.Processes}/${pair?.sourceName}@${pair?.sourceId}/${ProcessesLabels.ProcessPairs}@${pair?.identity}@${pair?.protocol}`
-      );
+      navigate(`${ProcessesRoutesPaths.Processes}/${data.sourceName}@${data.source}/${Labels.Pairs}@${id}`);
     },
-    [handleSelected, navigate, processesPairs]
+    [handleSelected, navigate]
   );
 
   const { nodes, edges, combos, nodeIdSelected, nodeIdsToHighLight } = TopologyProcessController.dataTransformer({
@@ -107,24 +102,17 @@ const TopologyProcesses: FC<{
     metrics,
     options: {
       showLinkBytes: displayOptionsSelected.includes(SHOW_LINK_BYTES),
-      showLinkLatency: displayOptionsSelected.includes(SHOW_LINK_LATENCY),
       showLinkByteRate: displayOptionsSelected.includes(SHOW_LINK_BYTERATE),
-      showLinkProtocol: displayOptionsSelected.includes(SHOW_LINK_PROTOCOL),
-      showInboundMetrics: displayOptionsSelected.includes(SHOW_INBOUND_METRICS),
       showMetricDistribution: displayOptionsSelected.includes(SHOW_LINK_METRIC_DISTRIBUTION),
       showMetricValue: displayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE),
       showDeployments: displayOptionsSelected.includes(SHOW_DEPLOYMENTS) // a deployment is a group of processes in the same site that have the same function
     }
   });
 
-  useEffect(() => {
-    setEnableDrawer(true);
-  }, []);
-
   const panelContent = (
     <DrawerPanelContent isResizable minSize={`${MIN_DRAWER_WIDTH}px`} maxSize={`${MAX_DRAWER_WIDTH}px`}>
       <DrawerHead>
-        <Title headingLevel="h1">{TopologyLabels.TopologyModalTitle}</Title>
+        <Title headingLevel="h1">{Labels.Details}</Title>
         <DrawerActions>
           <DrawerCloseButton onClick={() => handleSelected()} />
         </DrawerActions>
@@ -149,16 +137,12 @@ const TopologyProcesses: FC<{
           defaultDisplayOptionsSelected={displayOptionsSelected}
           serviceIdsSelected={serviceIdsSelected}
           onServiceSelected={handleServiceSelected}
-          resourcePlaceholder={TopologyLabels.DisplayProcessesDefaultLabel}
+          resourcePlaceholder={Labels.FindProcesses}
           onResourceSelected={handleSearchText}
         />
-        <Divider />
       </StackItem>
       <StackItem isFilled>
-        <Drawer
-          isExpanded={TopologyController.areGroupOfIds(nodeIdSelected) && !!nodeIdSelected && enableDrawer}
-          isInline
-        >
+        <Drawer isExpanded={TopologyController.areGroupOfIds(nodeIdSelected) && !!nodeIdSelected} isInline>
           <DrawerContent panelContent={panelContent}>
             <DrawerContentBody>
               <GraphComponent
@@ -168,6 +152,7 @@ const TopologyProcesses: FC<{
                 itemSelected={nodeIdSelected}
                 itemsToHighlight={nodeIdsToHighLight}
                 layout="combo"
+                forceFitView={!!serviceIdsSelected}
                 onClickNode={handleShowProcessDetails}
                 onClickEdge={handleShowProcessPairDetails}
               />

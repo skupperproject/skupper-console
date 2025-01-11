@@ -1,10 +1,9 @@
 import { FC } from 'react';
 
-import { ProcessPairsResponse, ProcessResponse } from '@sk-types/REST.interfaces';
-import { TopologyMetrics } from '@sk-types/Topology.interfaces';
-
 import EdgeDetails from './EdgeDetails';
 import NodeDetails from './NodeDetails';
+import { ProcessPairsResponse, ProcessResponse } from '../../../types/REST.interfaces';
+import { TopologyMetrics } from '../../../types/Topology.interfaces';
 
 export interface TopoloyDetailsProps {
   ids?: string[];

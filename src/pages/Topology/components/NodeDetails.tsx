@@ -3,36 +3,36 @@ import { FC, Fragment } from 'react';
 import {
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   CardTitle,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Divider,
   Flex,
   FlexItem,
+  Label,
   Split,
   SplitItem,
   Stack,
-  StackItem,
-  Title
+  StackItem
 } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { Link } from 'react-router-dom';
 
-import { Direction } from '@API/REST.enum';
-import ResourceIcon from '@core/components/ResourceIcon';
-import SkExposedCell from '@core/components/SkExposedCell';
-import { ellipsisInTheMiddle } from '@core/utils/EllipsisInTheMiddle';
-import { formatByteRate, formatBytes } from '@core/utils/formatBytes';
-import { ProcessesLabels, ProcessesRoutesPaths } from '@pages/Processes/Processes.enum';
-import { ComponentRoutesPaths } from '@pages/ProcessGroups/ProcessGroups.enum';
-import { MetricsLabels } from '@pages/shared/Metrics/Metrics.enum';
-import { SitesRoutesPaths } from '@pages/Sites/Sites.enum';
-import { ProcessResponse } from '@sk-types/REST.interfaces';
-import { TopologyMetrics } from '@sk-types/Topology.interfaces';
-
-import { TopologyLabels } from '../Topology.enum';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/app';
+import { Labels } from '../../../config/labels';
+import { PrometheusLabelsV2 } from '../../../config/prometheus';
+import ResourceIcon from '../../../core/components/ResourceIcon';
+import { ellipsisInTheMiddle } from '../../../core/utils/EllipsisInTheMiddle';
+import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
+import { ProcessResponse } from '../../../types/REST.interfaces';
+import { TopologyMetrics } from '../../../types/Topology.interfaces';
+import { ComponentRoutesPaths } from '../../Components/Components.enum';
+import { ProcessesRoutesPaths } from '../../Processes/Processes.enum';
+import { SitesRoutesPaths } from '../../Sites/Sites.enum';
 
 type Totals = {
   totalBytesIn: Record<string, number>;
@@ -51,25 +51,29 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
     totalByteRateOut: {}
   };
 
-  const bytes = metrics?.bytesByProcessPairs.reduce((acc, { metric, value }) => {
-    if (names.includes(metric.sourceProcess) && metric.direction === Direction.Incoming) {
-      acc.totalBytesOut[metric.sourceProcess] = (acc.totalBytesOut[metric.sourceProcess] || 0) + Number(value[1]);
+  const bytes = metrics?.sourceToDestBytes.reduce((acc, { metric, value }) => {
+    if (names.includes(metric[PrometheusLabelsV2.SourceProcessName])) {
+      acc.totalBytesOut[metric[PrometheusLabelsV2.SourceProcessName]] =
+        (acc.totalBytesOut[metric[PrometheusLabelsV2.SourceProcessName]] || 0) + Number(value[1]);
     }
 
-    if (names.includes(metric.destProcess) && metric.direction === Direction.Incoming) {
-      acc.totalBytesIn[metric.destProcess] = (acc.totalBytesIn[metric.destProcess] || 0) + Number(value[1]);
+    if (names.includes(metric[PrometheusLabelsV2.DestProcessName])) {
+      acc.totalBytesIn[metric[PrometheusLabelsV2.DestProcessName]] =
+        (acc.totalBytesIn[metric[PrometheusLabelsV2.DestProcessName]] || 0) + Number(value[1]);
     }
 
     return acc;
   }, initialTotals);
 
-  const byteRate = metrics?.byteRateByProcessPairs.reduce((acc, { metric, value }) => {
-    if (names.includes(metric.sourceProcess) && metric.direction === Direction.Incoming) {
-      acc.totalByteRateOut[metric.sourceProcess] = (acc.totalByteRateOut[metric.sourceProcess] || 0) + Number(value[1]);
+  const byteRate = metrics?.sourceToDestByteRate.reduce((acc, { metric, value }) => {
+    if (names.includes(metric[PrometheusLabelsV2.SourceProcessName])) {
+      acc.totalByteRateOut[metric[PrometheusLabelsV2.SourceProcessName]] =
+        (acc.totalByteRateOut[metric[PrometheusLabelsV2.SourceProcessName]] || 0) + Number(value[1]);
     }
 
-    if (names.includes(metric.destProcess) && metric.direction === Direction.Incoming) {
-      acc.totalByteRateIn[metric.destProcess] = (acc.totalByteRateIn[metric.destProcess] || 0) + Number(value[1]);
+    if (names.includes(metric[PrometheusLabelsV2.DestProcessName])) {
+      acc.totalByteRateIn[metric[PrometheusLabelsV2.DestProcessName]] =
+        (acc.totalByteRateIn[metric[PrometheusLabelsV2.DestProcessName]] || 0) + Number(value[1]);
     }
 
     return acc;
@@ -90,21 +94,21 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
     <>
       <Card isPlain>
         <CardHeader>
-          <CardTitle>Summary</CardTitle>
+          <CardTitle>{Labels.Summary}</CardTitle>
         </CardHeader>
         <CardBody>
           <Table borders={false} variant="compact">
             <Thead noWrap>
               <Tr>
                 <Th aria-label="metric" />
-                <Th>{MetricsLabels.TrafficReceived}</Th>
-                <Th>{MetricsLabels.TrafficSent}</Th>
+                <Th>{Labels.BytesIn}</Th>
+                <Th>{Labels.BytesOut}</Th>
               </Tr>
             </Thead>
             <Tbody>
               <Tr>
                 <Td>
-                  <b>{ProcessesLabels.ByteRate}</b>
+                  <b>{Labels.ByteRate}</b>
                 </Td>
                 <Td>{formatByteRate(totalByteRateInSum)}</Td>
                 <Td>{formatByteRate(totalByteRateOutSum)}</Td>
@@ -112,7 +116,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
 
               <Tr>
                 <Td>
-                  <b>Avg. {ProcessesLabels.ByteRate}</b>
+                  <b>Avg. {Labels.ByteRate}</b>
                 </Td>
                 <Td>{formatByteRate(avgByteRateInSum)}</Td>
                 <Td>{formatByteRate(avgByteRateOutSum)}</Td>
@@ -120,7 +124,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
 
               <Tr>
                 <Td>
-                  <b>{ProcessesLabels.Bytes}</b>
+                  <b>{Labels.Bytes}</b>
                 </Td>
                 <Td>{formatBytes(totalBytesInSum)}</Td>
                 <Td>{formatBytes(totalBytesOutSum)}</Td>
@@ -137,60 +141,44 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
               const goToLink = `${ProcessesRoutesPaths.Processes}/${itemSelected.name}@${itemSelected.identity}`;
 
               return (
-                <StackItem key={itemSelected.identity} className="pf-u-v5-mb-md">
-                  <Card isFlat>
-                    <CardBody>
+                <StackItem key={itemSelected.identity}>
+                  <Card>
+                    <CardHeader>
                       <Flex>
                         <FlexItem>
-                          <Title headingLevel="h3" title={itemSelected.name}>
+                          <CardTitle title={itemSelected.name}>
                             <ResourceIcon type="process" />
                             {ellipsisInTheMiddle(itemSelected.name, { rightPartLength: 10 })}
-                          </Title>
+                          </CardTitle>
                         </FlexItem>
                         <FlexItem>
-                          <SkExposedCell value={itemSelected.processBinding} />
+                          <Label variant="outline" color="teal">
+                            {itemSelected.processBinding}
+                          </Label>
                         </FlexItem>
                       </Flex>
+                    </CardHeader>
 
-                      <Split hasGutter>
-                        <SplitItem>
-                          <Link to={`${goToLink}?type=${ProcessesLabels.Details}`}>
-                            {TopologyLabels.TopologyModalAction1}
-                          </Link>
-                        </SplitItem>
-
-                        <SplitItem>
-                          <Link to={`${goToLink}?type=${ProcessesLabels.ProcessPairs}`}>
-                            {TopologyLabels.TopologyModalAction2}
-                          </Link>
-                        </SplitItem>
-
-                        <SplitItem>
-                          <Link to={`${goToLink}?type=${ProcessesLabels.Overview}`}>
-                            {TopologyLabels.TopologyModalAction3}
-                          </Link>
-                        </SplitItem>
-                      </Split>
-
+                    <CardBody>
                       <Table borders={false} variant="compact">
                         <Thead noWrap>
                           <Tr>
                             <Th aria-label="metric" />
-                            <Th>{MetricsLabels.TrafficReceived}</Th>
-                            <Th>{MetricsLabels.TrafficSent}</Th>
+                            <Th>{Labels.BytesIn}</Th>
+                            <Th>{Labels.BytesOut}</Th>
                           </Tr>
                         </Thead>
                         <Tbody>
                           <Tr>
                             <Th>
-                              <b>{ProcessesLabels.ByteRate}</b>
+                              <b>{Labels.ByteRate}</b>
                             </Th>
                             <Td>{formatBytes(byteRate?.totalByteRateIn[itemSelected.name] || 0)}</Td>
                             <Td>{formatBytes(byteRate?.totalByteRateOut[itemSelected.name] || 0)}</Td>
                           </Tr>
                           <Tr>
                             <Th>
-                              <b>{ProcessesLabels.Bytes}</b>
+                              <b>{Labels.Bytes}</b>
                             </Th>
                             <Td>{formatBytes(bytes?.totalBytesIn[itemSelected.name] || 0)}</Td>
                             <Td>{formatBytes(bytes?.totalBytesOut[itemSelected.name] || 0)}</Td>
@@ -217,20 +205,20 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                               <FlexItem>
                                 <ResourceIcon type="component" />
                                 <Link
-                                  to={`${ComponentRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
+                                  to={`${ComponentRoutesPaths.Components}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
                                 >
                                   {itemSelected.groupName}
                                 </Link>
                               </FlexItem>
 
                               <FlexItem>
-                                {itemSelected?.addresses?.map((service) => (
+                                {itemSelected?.services?.map((service) => (
                                   <Fragment key={service}>
                                     <ResourceIcon type="service" />
                                     <Link
-                                      to={`${ComponentRoutesPaths.ProcessGroups}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
+                                      to={`${ComponentRoutesPaths.Components}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
                                     >
-                                      {service.split('@')[0]}
+                                      {service.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[0]}
                                     </Link>
                                   </Fragment>
                                 ))}
@@ -240,6 +228,24 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                         </DescriptionListGroup>
                       </DescriptionList>
                     </CardBody>
+
+                    <Divider />
+
+                    <CardFooter>
+                      <Split hasGutter>
+                        <SplitItem>
+                          <Link to={`${goToLink}?type=${Labels.Details}`}>{Labels.ViewDetails}</Link>
+                        </SplitItem>
+
+                        <SplitItem>
+                          <Link to={`${goToLink}?type=${Labels.Pairs}`}>{Labels.ViewFlows}</Link>
+                        </SplitItem>
+
+                        <SplitItem>
+                          <Link to={`${goToLink}?type=${Labels.Overview}`}>{Labels.ViewMetrics}</Link>
+                        </SplitItem>
+                      </Split>
+                    </CardFooter>
                   </Card>
                 </StackItem>
               );

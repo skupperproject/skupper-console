@@ -1,98 +1,68 @@
-import { IntervalTimePropValue } from '@sk-types/Prometheus.interfaces';
-
-import { AvailableProtocols, Quantiles } from './REST.enum';
+import { Quantiles } from './REST.enum';
+import { PrometheusLabelsV2, PrometheusMetricsV2 } from '../config/prometheus';
 
 export const queries = {
-  // http request queries
-  getRequestRateByMethodInInTimeRange(param: string, range: IntervalTimePropValue) {
-    return `sum by(method)(rate(http_requests_method_total{${param}}[${range}]))`;
-  },
+  // data transfer queries
+  getByteRateInTimeRange(param: string, range: string, areDataReceived = false) {
+    const label = areDataReceived ? PrometheusMetricsV2.ReceivedBytes : PrometheusMetricsV2.SentBytes;
 
-  // http response queries
-  getResponseCountsByPartialCodeInTimeRange(param: string, range: IntervalTimePropValue) {
-    return `sum by(partial_code)(label_replace(sum_over_time(http_requests_result_total{${param}}[${range}]),"partial_code", "$1", "code","(.*).{2}"))`;
-  },
-
-  getResponseRateByPartialCodeInTimeRange(param: string, range: IntervalTimePropValue) {
-    return `sum by(partial_code)(label_replace(rate((http_requests_result_total{${param}}[${range}])),"partial_code", "$1", "code","(.*).{2}"))`;
+    return `sum(rate(${label}{${param}}[${range}]))`;
   },
 
   // latency queries
-  getPercentilesByLeInTimeRange(param: string, range: IntervalTimePropValue, quantile: Quantiles) {
-    return `histogram_quantile(${quantile},sum(rate(flow_latency_microseconds_bucket{${param}}[${range}]))by(le))`;
+  getPercentilesByLeInTimeRange(param: string, range: string, quantile: Quantiles) {
+    return `histogram_quantile(${quantile},sum(rate(${PrometheusMetricsV2.LatencyBuckets}{${param}}[${range}]))by(le))`;
   },
 
-  getBucketCountsInTimeRange(param: string, range: IntervalTimePropValue) {
-    return `sum by(le)(floor(delta(flow_latency_microseconds_bucket{${param}}[${range}])))`;
+  getBucketCountsInTimeRange(param: string, range: string) {
+    return `sum by(le)(floor(delta(${PrometheusMetricsV2.LatencyBuckets}{${param}}[${range}])))`;
   },
 
-  // data transfer queries
-  getByteRateByDirectionInTimeRange(param: string, range: IntervalTimePropValue) {
-    return `sum by(direction)(rate(octets_total{${param}}[${range}]))`;
+  // calculate the open connections serie
+  getOpenConnections(paramSource: string) {
+    return `sum(${PrometheusMetricsV2.TcpOpenConnections}{${paramSource}}-${PrometheusMetricsV2.TcpCloseCOnnections}{${paramSource}})`;
   },
 
-  // topology metrics
-  getAllPairsBytes(groupBy: string, params?: string) {
+  // http request queries
+  getRequestRateByMethodInInTimeRange(param: string, range: string) {
+    return `sum by(${PrometheusLabelsV2.Method})(rate(${PrometheusMetricsV2.HttpRequests}{${param}}[${range}]))`;
+  },
+
+  // http response queries
+  getResponseCountsByPartialCodeInTimeRange(param: string, range: string) {
+    return `sum by(partial_code)(label_replace(increase(${PrometheusMetricsV2.HttpRequests}{${param}}[${range}]),"partial_code", "$1", "${PrometheusLabelsV2.Code}","(.*).{2}"))`;
+  },
+
+  getResponseRateByPartialCodeInTimeRange(param: string, range: string) {
+    return `sum by(partial_code)(label_replace(rate((${PrometheusMetricsV2.HttpRequests}{${param}}[${range}])),"partial_code", "$1", "${PrometheusLabelsV2.Code}","(.*).{2}"))`;
+  },
+
+  // TOPOLOGY instant queries
+  getAllPairsBytes(groupBy: string, params?: string, areDataReceived = false) {
+    const label = areDataReceived ? PrometheusMetricsV2.ReceivedBytes : PrometheusMetricsV2.SentBytes;
+
     if (params) {
-      return `sum by(${groupBy})(octets_total{${params}})`;
+      return `sum by(${groupBy})(${label}{${params}})`;
     }
 
-    return `sum by(${groupBy})(octets_total)`;
+    return `sum by(${groupBy})(${label})`;
   },
 
-  getAllPairsByteRates(groupBy: string, params?: string) {
+  getAllPairsByteRates(groupBy: string, params?: string, areDataReceived = false) {
+    const label = areDataReceived ? PrometheusMetricsV2.ReceivedBytes : PrometheusMetricsV2.SentBytes;
+
     if (params) {
-      return `sum by(${groupBy})(rate(octets_total{${params}}[1m]))`;
+      return `sum by(${groupBy})(rate(${label}{${params}}[1m]))`;
     }
 
-    return `sum by(${groupBy})(rate(octets_total[1m]))`;
+    return `sum by(${groupBy})(rate(${label}[1m]))`;
   },
 
   getAllPairsLatencies(groupBy: string, params?: string) {
     if (params) {
-      return `sum by(${groupBy})(rate(flow_latency_microseconds_sum{${params}}[1m]))`;
+      return `sum by(${groupBy})(rate(${PrometheusMetricsV2.LatencySum}{${params}}[1m]))`;
     }
 
-    return `sum by(${groupBy})(rate(flow_latency_microseconds_sum[1m]))`;
-  },
-
-  getTotalHttpFlowByService() {
-    return `sum by(address)(flows_total{protocol=~"${AvailableProtocols.AllHttp}"}/2)`;
-  },
-
-  getTotalTcpFlowByService() {
-    return `sum by(address)(flows_total{protocol=~"${AvailableProtocols.Tcp}"})`;
-  },
-
-  getActiveFlows(paramSource: string) {
-    const hasProcessParam = paramSource.includes('sourceProcess') || paramSource.includes('destProcess');
-    const divider = hasProcessParam ? '' : '/2';
-
-    return `sum(active_flows{${paramSource}})${divider}`;
-  },
-
-  getActiveFlowsInTimeRange(paramSource: string) {
-    //TODO: acvitve flows are supposed to be in and out. In case we don't have processes as filters these values are used for both in and out (duplicated)
-    // this is a temporary solution
-    const hasProcessParam = paramSource.includes('sourceProcess') || paramSource.includes('destProcess');
-    const divider = hasProcessParam ? '' : '/2';
-
-    return `sum(active_flows{${paramSource}})${divider}`;
-  },
-
-  getTotalFlows(paramSource: string) {
-    return `sum(flows_total{${paramSource}})`;
-  },
-
-  getTcpActiveFlowsByService() {
-    return `sum by(address)(active_flows{protocol="${AvailableProtocols.Tcp}"})`;
-  },
-
-  getTcpByteRateByService(serviceName: string) {
-    return `rate(octets_total{protocol="tcp",  address="${serviceName}"}[1m])`;
-  },
-
-  getResourcePairsByService(param: string, groupBy: string, time: string) {
-    return `sum by(${groupBy})(rate(octets_total{${param}}[${time}]) > 0)`;
+    return `sum by(${groupBy})(rate(${PrometheusMetricsV2.LatencySum}[1m]))`;
   }
 };

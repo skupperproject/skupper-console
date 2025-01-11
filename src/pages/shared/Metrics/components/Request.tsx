@@ -4,13 +4,12 @@ import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } f
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import SKEmptyData from '@core/components/SkEmptyData';
-import SkIsLoading from '@core/components/SkIsLoading';
-import { QueryMetricsParams, QueriesMetrics } from '@sk-types/Metrics.interfaces';
-
 import RequestCharts from './RequestCharts';
-import { MetricsLabels } from '../Metrics.enum';
-import MetricsController from '../services';
+import { Labels } from '../../../../config/labels';
+import SKEmptyData from '../../../../core/components/SkEmptyData';
+import SkIsLoading from '../../../../core/components/SkIsLoading';
+import { QueryMetricsParams, QueriesMetrics } from '../../../../types/Metrics.interfaces';
+import { MetricsController } from '../services';
 
 interface RequestProps {
   selectedFilters: QueryMetricsParams;
@@ -65,26 +64,27 @@ const Request: FC<RequestProps> = function ({
   }, [forceUpdate, handleRefetchMetrics, isExpanded]);
 
   return (
-    <Card isExpanded={isExpanded}>
+    <Card isExpanded={isExpanded} aria-label={Labels.Requests}>
       <CardHeader onExpand={handleExpand}>
-        <CardTitle>{MetricsLabels.RequestsTitle}</CardTitle>
+        <CardTitle>{Labels.Requests}</CardTitle>
       </CardHeader>
       <CardExpandableContent>
-        <CardBody style={{ minHeight: minChartHeight }}>
+        {/*display grid center the child SKEmptyData */}
+        <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
           {isLoading && <SkIsLoading />}
 
           {!isLoading && request?.requestRateData?.length && (
             <>
               {isRefetching && <SkIsLoading />}
-              <Title headingLevel="h4">{MetricsLabels.RequestRateTitle} </Title>
+              <Title headingLevel="h4">{Labels.RequestRate} </Title>
               <RequestCharts requestRateData={request.requestRateData} requestPerf={request.requestPerf} />
             </>
           )}
 
           {!isLoading && !request?.requestRateData?.length && (
             <SKEmptyData
-              message={MetricsLabels.NoMetricFoundTitleMessage}
-              description={MetricsLabels.NoMetricFoundDescriptionMessage}
+              message={Labels.NoMetricFound}
+              description={Labels.NoMetricFoundDescription}
               icon={SearchIcon}
             />
           )}

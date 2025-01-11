@@ -1,30 +1,29 @@
 import { ReactNode } from 'react';
 
-import { Icon, Text, Tooltip, Truncate } from '@patternfly/react-core';
+import { Icon, Content, Tooltip } from '@patternfly/react-core';
 import { GlobeAmericasIcon } from '@patternfly/react-icons';
 
-import { timeAgo } from '@core/utils/timeAgo';
+import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
+import { formatLocalizedDateTime } from '../../utils/formatLocalizedDateTime';
 
-interface EndTimeProps<T> {
+interface EndTimeCellProps<T> {
   data: T;
   value: ReactNode;
 }
 
-const SkEndTimeCell = function <T>({ value }: EndTimeProps<T>) {
-  if (!value) {
-    return null;
+const SkEndTimeCell = function <T>({ value }: EndTimeCellProps<T>) {
+  if (!value || !Number(value)) {
+    return EMPTY_VALUE_SYMBOL;
   }
 
-  typeof value;
-
   return (
-    <Tooltip content={timeAgo(value as number)}>
-      <Text component="h4">
+    <Tooltip content={formatLocalizedDateTime(value as number)}>
+      <Content>
         <Icon size="md" isInline>
           <GlobeAmericasIcon />
         </Icon>{' '}
-        <Truncate content={timeAgo(value as number)} position={'middle'} />
-      </Text>
+        {formatLocalizedDateTime(value as number)}
+      </Content>
     </Tooltip>
   );
 };

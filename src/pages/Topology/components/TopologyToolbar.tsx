@@ -2,23 +2,20 @@ import { FC } from 'react';
 
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup } from '@patternfly/react-core';
 
-import { TopologyDisplayOptionsMenu } from '@sk-types/Topology.interfaces';
-
 import DisplayOptions from './DisplayOptions';
 import DisplayResources from './DisplayResources';
 import DisplayServices from './DisplayServices';
+import { SkSelectGroupedOptions } from '../../../core/components/SkSelect';
 import {
   SHOW_LINK_BYTERATE,
   SHOW_LINK_BYTES,
-  SHOW_LINK_LATENCY,
-  SHOW_INBOUND_METRICS,
   SHOW_ROUTER_LINKS,
   SHOW_LINK_METRIC_DISTRIBUTION,
   SHOW_LINK_METRIC_VALUE
 } from '../Topology.constants';
 
 interface ToolbarProps {
-  displayOptions?: TopologyDisplayOptionsMenu[];
+  displayOptions?: SkSelectGroupedOptions[];
   onDisplayOptionSelected?: (options: string[]) => void;
   defaultDisplayOptionsSelected?: string[];
   showOnlyNeighbours?: boolean;
@@ -43,11 +40,6 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
   const displayOptionsDisabled = {
     [SHOW_LINK_BYTES]: !!defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS),
     [SHOW_LINK_BYTERATE]: !!defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS),
-    [SHOW_LINK_LATENCY]: !!defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS),
-    [SHOW_INBOUND_METRICS]:
-      defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) ||
-      !defaultDisplayOptionsSelected.includes(SHOW_LINK_METRIC_VALUE) ||
-      !areMetricAvailable(defaultDisplayOptionsSelected),
     [SHOW_LINK_METRIC_DISTRIBUTION]:
       defaultDisplayOptionsSelected.includes(SHOW_ROUTER_LINKS) || !areMetricAvailable(defaultDisplayOptionsSelected),
     [SHOW_LINK_METRIC_VALUE]:
@@ -95,6 +87,4 @@ const TopologyToolbar: FC<ToolbarProps> = function ({
 export default TopologyToolbar;
 
 const areMetricAvailable = (displayOptionsSelected: string[] = []) =>
-  displayOptionsSelected?.includes(SHOW_LINK_BYTES) ||
-  displayOptionsSelected?.includes(SHOW_LINK_BYTERATE) ||
-  displayOptionsSelected?.includes(SHOW_LINK_LATENCY);
+  displayOptionsSelected?.includes(SHOW_LINK_BYTES) || displayOptionsSelected?.includes(SHOW_LINK_BYTERATE);

@@ -1,5 +1,5 @@
-import { HexColors } from '@config/colors';
+import { styles } from '../../../../../../config/styles';
 
-export const LEGEND_DEFAULT_BG_COLOR = HexColors.White;
-export const LEGEND_DEFAULT_STROKE_COLOR = HexColors.Black500;
-export const LINE_COLOR = HexColors.Black500;
+export const LEGEND_DEFAULT_BG_COLOR = styles.default.lightBackgroundColor;
+export const LEGEND_DEFAULT_STROKE_COLOR = styles.default.darkBackgroundColor;
+export const LINE_COLOR = styles.default.darkBackgroundColor;
