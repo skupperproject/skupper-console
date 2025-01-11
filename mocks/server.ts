@@ -4,14 +4,9 @@ import { MockApi } from './server.API';
 import { MockApiPaths } from './server.config';
 
 export function loadMockServer() {
-  // The mock server should be disabled if the current environment is not 'development' AND the ENABLE_MOCK_SERVER environment variable is not defined or is falsy
-  if (process.env.COLLECTOR_URL || (process.env.NODE_ENV !== 'development' && !process.env.ENABLE_MOCK_SERVER)) {
-    return undefined;
-  }
-
   return createServer({
     routes() {
-      this.timing = Number(process.env.MOCK_DELAY_RESPONSE) || 0;
+      this.timing = Number(process.env.MOCK_RESPONSE_DELAY) || 0;
       this.pretender.get('*', this.pretender.passthrough);
 
       this.get('', MockApi.get500Error);

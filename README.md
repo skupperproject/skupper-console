@@ -39,7 +39,7 @@ To get started quickly, follow the steps below:
 ### Run the Console with external routes
 
 ```bash
-COLLECTOR_URL=<network observer console url route> yarn start
+OBSERVER_URL=<network observer console url route> yarn start
 ```
 
 ## Testing
@@ -62,10 +62,10 @@ yarn cy
 
 ## Env variables
 
-- `COLLECTOR_URL`: The console uses a real network observer.
+- ``: The console uses a real network observer.
 - `API_VERSION`: Part of the url api. **Note**: Do not include a leading slash (/) in the value of API_VERSION.
 - `BRAND_APP_LOGO`: Customize the logo for the build.
 - `BRAND_FAVICON`: Customize the favicon for the build.
-- `ENABLE_MOCK_SERVER`: Use predefined static data to display the console.
-- `ENABLE_DELAY_RESPONSE`: It simulates a delay in the response.
+- `USE_MOCK_SERVER`: Use predefined static data to display the console.
+- `MOCK_RESPONSE_DELAY`: It simulates a delay (milliseconds) in the response when using the mock server.
 - `MOCK_ITEM_COUNT`: It generates X random resources (processes, sites, links, etc.)

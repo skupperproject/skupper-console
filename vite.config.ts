@@ -22,12 +22,12 @@ export default defineConfig(() => {
     ].filter(Boolean) as PluginOption[], // remove conditional plugins if undefined
 
     define: {
+      'process.env.OBSERVER_URL': JSON.stringify(process.env.OBSERVER_URL || ''),
       'process.env.BRAND_APP_LOGO': JSON.stringify(process.env.BRAND_APP_LOGO || ''),
-      'process.env.COLLECTOR_URL': JSON.stringify(process.env.COLLECTOR_URL || ''),
       'process.env.API_VERSION': JSON.stringify(process.env.API_VERSION || ''),
+      'process.env.USE_MOCK_SERVER': JSON.stringify(process.env.USE_MOCK_SERVER),
       'process.env.MOCK_ITEM_COUNT': JSON.stringify(process.env.MOCK_ITEM_COUNT),
-      'process.env.MOCK_DELAY_RESPONSE': JSON.stringify(process.env.MOCK_DELAY_RESPONSE),
-      'process.env.ENABLE_MOCK_SERVER': JSON.stringify(process.env.ENABLE_MOCK_SERVER || false)
+      'process.env.MOCK_RESPONSE_DELAY': JSON.stringify(process.env.MOCK_RESPONSE_DELAY)
     },
 
     base: './',
