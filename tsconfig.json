@@ -9,7 +9,7 @@
     "jsx": "react-jsx",
     "lib": ["dom", "ESNext"],
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,

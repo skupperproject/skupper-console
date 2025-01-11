@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { setMockUseParams } from '../jest.mock.router';
+import { setMockUseParams } from '../jest.setup';
 import processPairsData from '../mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';

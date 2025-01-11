@@ -23,9 +23,9 @@ export function extractQueryParams(url?: string): Record<string, string[]> | nul
 }
 
 // server.utils.ts
-export const paginateResults = (
-  results: string[],
-  queryParams: Record<string, string | string[] | null | undefined>
+export const paginateResults = <T>(
+  results: T[],
+  queryParams: Record<string, string | number | string[] | null | undefined>
 ) => {
   const offset = Number(queryParams.offset || 0);
   const limit = Number(queryParams.limit || results.length);
@@ -58,7 +58,7 @@ export const filterResults = <T>(results: T[], filters: Partial<Record<keyof T, 
     })
   );
 
-export function sortData<T extends Record<string, string>>(data: T[], sortBy: string[]): T[] {
+export function sortData<T extends object>(data: T[], sortBy: string[]): T[] {
   if (!Array.isArray(sortBy) || sortBy.length === 0) {
     return data;
   }
@@ -76,7 +76,8 @@ export function sortData<T extends Record<string, string>>(data: T[], sortBy: st
         continue;
       }
 
-      const compareValue = a[field] > b[field] ? 1 : a[field] < b[field] ? -1 : 0;
+      const compareValue =
+        a[field as keyof T] > b[field as keyof T] ? 1 : a[field as keyof T] < b[field as keyof T] ? -1 : 0;
 
       if (order === 'asc') {
         if (compareValue !== 0) {

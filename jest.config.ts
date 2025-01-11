@@ -2,8 +2,8 @@ const ROOT_PROJECT = `<rootDir>`;
 const SRC_PATH = `src`;
 const TESTS_PATH = `${ROOT_PROJECT}/__tests__`;
 const MODE_MODULES_PATH = `node_modules`;
-const TRANSFORMER = 'jest.transformer.ts';
-const MOCK_ROUTER = 'jest.mock.router.ts';
+const TRANSFORMER = 'mocks/jest.mock.transformer.ts';
+const MOCK_ROUTER = 'jest.setup.ts';
 
 const config = {
   preset: 'ts-jest/presets/js-with-ts',
@@ -21,14 +21,7 @@ const config = {
   moduleNameMapper: {
     '\\.(css|svg)$': `${ROOT_PROJECT}/${TRANSFORMER}`
   },
-  coveragePathIgnorePatterns: [
-    './src/index.tsx',
-    './src/config',
-    'API',
-    'routes',
-    'providers',
-    'core/components/SkGraph'
-  ]
+  coveragePathIgnorePatterns: ['./src/config', 'API', 'routes', 'core/components/SkGraph']
 };
 
 export default config;

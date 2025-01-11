@@ -32,23 +32,6 @@
     "url": "https://github.com/skupperproject/skupper-console/issues"
   },
   "private": true,
-  "scripts": {
-    "build": "tsc && vite build",
-    "start": "vite --host",
-    "test": "ENABLE_MOCK_SERVER=true jest --config jest.config.ts",
-    "coverage": "yarn test --coverage --collectCoverageFrom='src/**/*.{tsx,ts}'",
-    "cy:open": "cypress open",
-    "cy:run": "cypress run",
-    "ci": "start-test 3000 cy:run",
-    "lint": "TIMING=1 eslint --cache",
-    "lint-fix": "yarn lint --fix",
-    "format": "prettier --write '*/**/*.{ts,tsx,json,css}'",
-    "check-cycles": "madge --circular --extensions ts,tsx src",
-    "find-unused-modules": "ts-prune",
-    "commit": "git-cz",
-    "tsc:watch": "tsc --noEmit --watch",
-    "prepare": "husky"
-  },
   "dependencies": {
     "@antv/g6": "5.0.42",
     "@nivo/sankey": "0.88.0",
@@ -110,10 +93,27 @@
     "start-server-and-test": "^2.0.9"
   },
   "type": "module",
-  "engines": {
-    "node": ">=20.0.0",
-    "yarn": ">=1.22.10"
+  "scripts": {
+    "build": "tsc && vite build",
+    "start": "vite --host",
+    "test": "ENABLE_MOCK_SERVER=true jest --config jest.config.ts",
+    "coverage": "yarn test --coverage --collectCoverageFrom='src/**/*.{tsx,ts}'",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "ci": "start-test 3000 cy:run",
+    "lint": "TIMING=1 eslint --cache",
+    "lint-fix": "yarn lint --fix",
+    "format": "prettier --write '*/**/*.{ts,tsx,json,css}'",
+    "check-cycles": "madge --circular --extensions ts,tsx src",
+    "find-unused-modules": "ts-prune",
+    "commit": "git-cz",
+    "tsc:watch": "tsc --watch",
+    "prepare": "husky"
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "yarn@1.22.19",
   "config": {
     "commitizen": {
       "path": "node_modules/cz-git"

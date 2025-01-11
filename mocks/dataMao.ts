@@ -23,7 +23,6 @@ import {
   ListenerResponse
 } from '../src/types/REST.interfaces';
 
-// Definisci un tipo per ogni JSON
 type SitesData = SiteResponse[];
 type ComponentsData = ComponentResponse[];
 type ComponentPairsData = PairsResponse[];

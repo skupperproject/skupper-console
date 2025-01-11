@@ -5,7 +5,7 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
 
-import { mockNavigate } from '../jest.mock.router';
+import { mockNavigate } from '../jest.setup';
 import processesPairsData from '../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../mocks/data/PROCESSES.json';
 import servicesData from '../mocks/data/SERVICES.json';
