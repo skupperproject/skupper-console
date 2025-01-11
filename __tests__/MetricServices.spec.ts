@@ -1,3 +1,4 @@
+import * as PrometheusAPIModule from '../src/API/Prometheus.api';
 import {
   MetricsController,
   alignDataSeriesWithZeros,
@@ -5,8 +6,6 @@ import {
 } from '../src/pages/shared/Metrics/services';
 import { PrometheusMetric } from '../src/types/Prometheus.interfaces';
 import { skAxisXY } from '../src/types/SkChartArea.interfaces';
-
-import * as PrometheusAPIModule from '../src/API/Prometheus.api';
 
 describe('useMetrics', () => {
   it('should getLatencyPercentiles handles errors', async () => {

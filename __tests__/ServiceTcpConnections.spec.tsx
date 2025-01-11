@@ -3,14 +3,14 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import tcpConnections from '../mocks/data/TCP_CONNECTIONS.json';
 import servicesData from '../mocks/data/SERVICES.json';
+import tcpConnections from '../mocks/data/TCP_CONNECTIONS.json';
 import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import TcpConnections from '../src/pages/Services/components/TcpConnections';
+import { Providers } from '../src/providers';
 
 const servicesResults = servicesData.results;
 const tcpConnectionOpen = tcpConnections.results[0];

@@ -1,78 +1,29 @@
 {
   "compilerOptions": {
-    // Base URL for module imports (makes it easier to import from 'src' rather than relative paths)
-    "baseUrl": "src",
-
-    // Enable compatibility with CommonJS-style imports and exports
-    "esModuleInterop": true,
-
-    // Allow default imports for non-ESModule files (like CommonJS)
-    "allowSyntheticDefaultImports": true,
-
-    // Allow JavaScript files to be imported alongside TypeScript files
     "allowJs": true,
-
-    // Enable source map generation to facilitate debugging
-    "sourceMap": true,
-
-    // Enable strict type checking options for better type safety
-    "strict": true,
-
-    // Enable strict null checks to ensure null and undefined are properly handled
-    "strictNullChecks": true,
-
-    // Force consistent casing in file names
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "downlevelIteration": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-
-    // Ensure strict function type checking
-    "strictFunctionTypes": true,
-
-    // Enforce explicit returns in functions to avoid accidental undefined returns
-    "noImplicitReturns": true,
-
-    // Disallow unused function parameters to avoid unnecessary code
-    "noUnusedParameters": true,
-
-    // Disallow unused local variables to keep the codebase clean
-    "noUnusedLocals": true,
-
-    // Ensure that all properties are initialized in the constructor
-    "strictPropertyInitialization": true,
-
-    // Target the latest ECMAScript version for compatibility with modern JavaScript features
-    "target": "ESNext",
-
-    // Include DOM and ESNext libraries for full support of web APIs and modern ECMAScript features
-    "lib": ["dom", "ESNext"],
-
-    // Use ESNext module system, enabling dynamic imports and module resolution
-    "module": "ESNext",
-
-    // Use Node-style module resolution for better compatibility with the filesystem
-    "moduleResolution": "node",
-
-    // Use the React JSX transform introduced in React 17
     "jsx": "react-jsx",
-
-    // Specify where to look for type declarations for packages
-    "typeRoots": ["node_modules/@types"],
-
-    // Allow importing JSON modules directly
-    "resolveJsonModule": true,
-
-    // Do not generate any output files (useful for type-checking only)
+    "lib": ["dom", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "node",
     "noEmit": true,
-
-    // Skip type checking of declaration files to improve build time
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
-
-    // Enable support for iteration over iterable types like arrays and maps
-    "downlevelIteration": true
+    "sourceMap": true,
+    "strict": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "target": "ESNext",
+    "typeRoots": ["node_modules/@types"]
   },
-
-  // Include the following directories for type-checking and compiling
-  "include": ["src", "__tests__"],
-
-  // Exclude unnecessary directories like build and node_modules from type-checking
-  "exclude": ["node_modules", "build", "cypress"]
+  "exclude": ["node_modules", "build", "cypress"],
+  "include": ["src", "__tests__"]
 }

@@ -6,13 +6,13 @@ import * as router from 'react-router';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
+import { extendedProcessResponse } from '../mocks/server.API';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
+import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import Process from '../src/pages/Processes/views/Process';
-import { Labels } from '../src/config/labels';
-import { extendedProcessResponse } from '../mocks/server.API';
+import { Providers } from '../src/providers';
 
 const processResult = processesData.results[0] as extendedProcessResponse;
 

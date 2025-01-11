@@ -6,16 +6,16 @@ import { Server } from 'miragejs';
 import processesPairsData from '../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
+import { extendedProcessResponse } from '../mocks/server.API';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
+import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
 import { SkEmptyDataLabels } from '../src/core/components/SkEmptyData';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import PairsList from '../src/pages/Processes/components/PairsList';
 import { ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
+import { Providers } from '../src/providers';
 import { ProcessResponse, PairsResponse } from '../src/types/REST.interfaces';
-import { Labels } from '../src/config/labels';
-import { extendedProcessResponse } from '../mocks/server.API';
 
 const data = processesData.results[0] as extendedProcessResponse;
 const dataNoPairs = {

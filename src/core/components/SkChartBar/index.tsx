@@ -47,12 +47,14 @@ const SkChartBar: FC<SkChartBarProps> = function ({
   }
 
   useEffect(() => {
-    if (chartContainerRef.current) {
-      observer.current = getResizeObserver(chartContainerRef.current, handleResize);
-      handleResize();
-
-      () => observer.current();
+    if (!chartContainerRef.current) {
+      return;
     }
+
+    observer.current = getResizeObserver(chartContainerRef.current, handleResize);
+    handleResize();
+
+    return () => observer.current();
   }, []);
 
   const legendData = legendLabels.map((name) => ({ childName: name, name }));

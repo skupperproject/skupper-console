@@ -10,10 +10,10 @@ import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import TopologyComponent from '../src/pages/Topology/components/TopologyComponent';
 import { TopologyController } from '../src/pages/Topology/services';
 import { convertComponentToNode } from '../src/pages/Topology/services/topologyComponentController';
+import { Providers } from '../src/providers';
 import { SkGraphProps } from '../src/types/Graph.interfaces';
 import { ComponentResponse, PairsResponse } from '../src/types/REST.interfaces';
 

@@ -3,10 +3,10 @@ import { act } from 'react';
 import { renderHook } from '@testing-library/react';
 
 import { Direction } from '../src/API/REST.enum';
+import { Labels } from '../src/config/labels';
 import { getDataFromSession, storeDataToSession } from '../src/core/utils/persistData';
 import { useMetricSessionHandlers } from '../src/pages/shared/Metrics/hooks/useMetricsSessionHandler';
 import { QueryMetricsParams, ExpandedMetricSections } from '../src/types/Metrics.interfaces';
-import { Labels } from '../src/config/labels';
 
 const mockQueryMetricsParams: QueryMetricsParams = {
   sourceSite: 'SiteA',

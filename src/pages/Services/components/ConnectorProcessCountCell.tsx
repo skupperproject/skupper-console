@@ -1,5 +1,4 @@
 import { Button, List, ListItem, Popover } from '@patternfly/react-core';
-
 import { ConnectorResponse } from 'types/REST.interfaces';
 
 import { Labels } from '../../../config/labels';

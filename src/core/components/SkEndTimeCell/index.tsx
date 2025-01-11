@@ -16,8 +16,6 @@ const SkEndTimeCell = function <T>({ value }: EndTimeCellProps<T>) {
     return EMPTY_VALUE_SYMBOL;
   }
 
-  typeof value;
-
   return (
     <Tooltip content={formatLocalizedDateTime(value as number)}>
       <Content>

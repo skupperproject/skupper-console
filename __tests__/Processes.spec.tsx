@@ -8,10 +8,10 @@ import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
+import { ComponentRoutesPaths } from '../src/pages/Components/Components.enum';
 import Processes from '../src/pages/Processes/views/Processes';
 import { SitesRoutesPaths } from '../src/pages/Sites/Sites.enum';
-import { ComponentRoutesPaths } from '../src/pages/Components/Components.enum';
+import { Providers } from '../src/providers';
 
 const processesResults = processesData.results;
 

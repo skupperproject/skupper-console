@@ -4,10 +4,10 @@ import { act, render, renderHook } from '@testing-library/react';
 
 import { Protocols } from '../src/API/REST.enum';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import Metrics, { MetricsProps } from '../src/pages/shared/Metrics';
 import { useMetricsState } from '../src/pages/shared/Metrics/hooks/useMetricsState';
 import { configDefaultFilters } from '../src/pages/shared/Metrics/Metrics.constants';
+import { Providers } from '../src/providers';
 
 describe('useMetrics', () => {
   const initialProps = {

@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import { Server } from 'miragejs';
-
 import App from 'App';
+import { Server } from 'miragejs';
 
 import { loadMockServer } from '../mocks/server';
 import { getTestsIds } from '../src/config/testIds';

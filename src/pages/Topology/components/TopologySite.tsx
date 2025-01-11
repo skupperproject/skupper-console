@@ -2,7 +2,6 @@ import { ComponentType, FC, useCallback } from 'react';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
-
 import { GraphEdge, GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyToolbar from './TopologyToolbar';

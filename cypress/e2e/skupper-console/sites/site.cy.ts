@@ -1,6 +1,6 @@
-import { getTestsIds } from '../../../../src/config/testIds';
-import sitesData from '../../../../mocks/data/SITES.json';
 import processesData from '../../../../mocks/data/PROCESSES.json';
+import sitesData from '../../../../mocks/data/SITES.json';
+import { getTestsIds } from '../../../../src/config/testIds';
 
 const site = sitesData.results[0];
 const sitePath = `#/sites/${encodeURIComponent(site.name)}@${encodeURIComponent(site.identity)}`;

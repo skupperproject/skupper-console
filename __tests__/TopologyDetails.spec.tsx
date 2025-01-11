@@ -4,12 +4,12 @@ import { Server } from 'miragejs';
 import processesPairsData from '../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
-import { Providers } from '../src/providers';
-import TopologyDetails from '../src/pages/Topology/components/TopologyDetails';
-import { ProcessPairsResponse } from '../src/types/REST.interfaces';
-import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../src/config/app';
-import { mapResponseProperties } from '../src/API/REST.utils';
 import { extendedProcessResponse } from '../mocks/server.API';
+import { mapResponseProperties } from '../src/API/REST.utils';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../src/config/app';
+import TopologyDetails from '../src/pages/Topology/components/TopologyDetails';
+import { Providers } from '../src/providers';
+import { ProcessPairsResponse } from '../src/types/REST.interfaces';
 
 const processesResults = mapResponseProperties(processesData.results, 'toFrontend') as extendedProcessResponse[];
 const processPairsResults = processesPairsData.results as ProcessPairsResponse[];

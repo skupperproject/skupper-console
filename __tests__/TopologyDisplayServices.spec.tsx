@@ -5,8 +5,8 @@ import { Server } from 'miragejs';
 
 import { loadMockServer } from '../mocks/server';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import DisplayServices from '../src/pages/Topology/components/DisplayServices';
+import { Providers } from '../src/providers';
 
 describe('DisplayServices', () => {
   let server: Server;

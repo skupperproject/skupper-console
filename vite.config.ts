@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
+import { defineConfig, PluginOption } from 'vite';
 import vitePluginFaviconsInject from 'vite-plugin-favicons-inject';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(() => {
   const outDir = 'build';
 
   return {
@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
             }
           ]
         })
-    ].filter(Boolean), // remove conditional plugins if undefined
+    ].filter(Boolean) as PluginOption[], // remove conditional plugins if undefined
 
     define: {
       'process.env.BRAND_APP_LOGO': JSON.stringify(process.env.BRAND_APP_LOGO || ''),

@@ -6,9 +6,9 @@ import { Server } from 'miragejs';
 import { loadMockServer } from '../mocks/server';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import { TopologyViews } from '../src/pages/Topology/Topology.enum';
 import Topology from '../src/pages/Topology/views/Topology';
+import { Providers } from '../src/providers';
 
 jest.mock('@antv/g6');
 

@@ -1,5 +1,7 @@
 import { Response } from 'miragejs';
 
+import { extractQueryParams, filterResults, getMockData, loadData, paginateResults, sortData } from './server.utils';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../src/config/app';
 import { PrometheusMetricsV2 } from '../src/config/prometheus';
 import {
   ServiceResponse,
@@ -13,8 +15,6 @@ import {
   ConnectorResponse,
   ListenerResponse
 } from '../src/types/REST.interfaces';
-import { extractQueryParams, filterResults, getMockData, loadData, paginateResults, sortData } from './server.utils';
-import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../src/config/app';
 
 interface ApiProps {
   params: Record<string, string>;
@@ -81,6 +81,7 @@ export const MockApi = {
     const results = getMockData(links.results, ITEM_COUNT > 0, linksForPerfTests);
 
     const filteredResults = filterResults(results, queryParams);
+
     return {
       results: filteredResults,
       count: filteredResults.length,
@@ -224,6 +225,7 @@ export const MockApi = {
 
   getProcessPair: (_: unknown, { params: { id } }: ApiProps) => {
     const processPair = processPairs.results.find(({ identity }) => identity === id);
+
     return {
       results: processPair ? processPair : {}
     };
@@ -254,7 +256,7 @@ export const MockApi = {
   getHttpRequests: (_: unknown, { url }: ApiProps) => {
     const results = httpRequests.results;
     const { limit, offset, sortBy, ...filters } = extractQueryParams(url) || {};
-    let filteredResults = filterResults(results, { ...filters });
+    const filteredResults = filterResults(results, { ...filters });
 
     const sortedData = sortData(filteredResults, sortBy);
     const paginatedResults = paginateResults(sortedData, { offset, limit });

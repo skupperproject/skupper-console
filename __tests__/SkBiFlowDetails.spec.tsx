@@ -1,16 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { Protocols } from '../src/API/REST.enum';
-import { getTestsIds } from '../src/config/testIds';
-
 import httpRequests from '../mocks/data/HTTP_REQUESTS.json';
 import tcpConnections from '../mocks/data/TCP_CONNECTIONS.json';
 import { loadMockServer } from '../mocks/server';
+import { Protocols } from '../src/API/REST.enum';
+import { Labels } from '../src/config/labels';
+import { getTestsIds } from '../src/config/testIds';
 import SkBiFlowDetails from '../src/core/components/SkBiFlowDetails';
 import { Providers } from '../src/providers';
 import { ApplicationFlowResponse, BiFlowResponse } from '../src/types/REST.interfaces';
-import { Labels } from '../src/config/labels';
 
 describe('BiFlowDetails component', () => {
   let server: Server;

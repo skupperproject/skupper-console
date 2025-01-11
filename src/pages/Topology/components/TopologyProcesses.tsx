@@ -14,7 +14,6 @@ import {
   Title
 } from '@patternfly/react-core';
 import { useNavigate } from 'react-router-dom';
-
 import { GraphEdge, GraphNode, SkGraphProps } from 'types/Graph.interfaces';
 
 import TopologyDetails, { TopoloyDetailsProps } from './TopologyDetails';

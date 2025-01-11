@@ -5,14 +5,14 @@ import { Server } from 'miragejs';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
+import { extendedProcessResponse } from '../mocks/server.API';
 import * as PrometheusAPIModule from '../src/API/Prometheus.api';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
+import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import TcpConnection from '../src/pages/shared/Metrics/components/TcpConnection';
-import { Labels } from '../src/config/labels';
-import { extendedProcessResponse } from '../mocks/server.API';
+import { Providers } from '../src/providers';
 
 const processResult = processesData.results[0] as extendedProcessResponse;
 
@@ -52,7 +52,12 @@ describe('Tcp component', () => {
 
     expect(screen.getByText(Labels.TcpConnections)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByLabelText(Labels.TcpConnections)?.querySelector('button')!);
+    const button = screen.getByLabelText(Labels.TcpConnections)?.querySelector('button');
+
+    if (button) {
+      fireEvent.click(button);
+    }
+
     expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 
