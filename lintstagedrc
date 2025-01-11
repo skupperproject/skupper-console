@@ -1,6 +1,0 @@
-{
-  "*.{ts,tsx}": [
-    "yarn madge --circular --extensions ts,tsx src",
-    "yarn lint --fix"
-  ]
-}
