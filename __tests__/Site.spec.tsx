@@ -3,19 +3,19 @@ import { Suspense } from 'react';
 import { fireEvent, render, screen, waitForElementToBeRemoved, waitFor } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import { setMockUseParams } from '../jest.setup';
 import processesData from '../mocks/data/PROCESSES.json';
 import sitesData from '../mocks/data/SITES.json';
 import { loadMockServer } from '../mocks/server';
+import { extendedProcessResponse } from '../mocks/server.API';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
+import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import { ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
 import Site from '../src/pages/Sites/views/Site';
+import { Providers } from '../src/providers';
 import { SiteResponse } from '../src/types/REST.interfaces';
-import { setMockUseParams } from '../jest.mock.router';
-import { Labels } from '../src/config/labels';
-import { extendedProcessResponse } from '../mocks/server.API';
 
 const siteResults = sitesData.results as SiteResponse[];
 const processResults = processesData.results as extendedProcessResponse[];

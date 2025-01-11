@@ -8,8 +8,8 @@ import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import Components from '../src/pages/Components/views/Components';
+import { Providers } from '../src/providers';
 
 const componentResults = componentsData.results;
 

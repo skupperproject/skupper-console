@@ -5,14 +5,14 @@ import { Server } from 'miragejs';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
+import { extendedProcessResponse } from '../mocks/server.API';
 import * as PrometheusAPIModule from '../src/API/Prometheus.api';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
+import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import Latency from '../src/pages/shared/Metrics/components/Latency';
-import { Labels } from '../src/config/labels';
-import { extendedProcessResponse } from '../mocks/server.API';
+import { Providers } from '../src/providers';
 
 const processResult = processesData.results[0] as extendedProcessResponse;
 
@@ -53,7 +53,12 @@ describe('Latency component', () => {
 
     expect(screen.getByText(Labels.LatencyIn)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByLabelText(Labels.LatencyIn)?.querySelector('button')!);
+    const latencyButton = screen.getByLabelText(Labels.LatencyIn)?.querySelector('button');
+
+    if (latencyButton) {
+      fireEvent.click(latencyButton);
+    }
+
     expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 

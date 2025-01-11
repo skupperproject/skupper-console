@@ -1,24 +1,4 @@
 #!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
 
-# Check if the "node_modules" directory exists, otherwise run yarn install
-if [ ! -d "node_modules" ]; then
-  echo "node_modules directory not found. Running yarn install..."
-  if ! yarn install; then
-    echo "Error: yarn install failed!"
-    exit 1
-  fi
-fi
-
-# Run TypeScript type check using tsc to verify the code compiles without errors
-echo "Running TypeScript type dep. cycles..."
-if ! yarn check-cycles; then
-  echo "Error: TypeScript dep. cycles failed!"
-  exit 1
-fi
-
-# Run code formatting with Prettier
-echo "Running Prettier formatting..."
-if ! yarn format; then
-  echo "Error: Code formatting failed!"
-  exit 1
-fi
+yarn lint-staged

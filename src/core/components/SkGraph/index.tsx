@@ -2,7 +2,6 @@ import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } f
 
 import { Combo, ComboEvent, Edge, EdgeEvent, Graph, GraphOptions, IPointerEvent, Node, NodeEvent } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
-
 import { GraphCombo, GraphEdge, GraphNode, SkGraphProps, LocalStorageData } from 'types/Graph.interfaces';
 
 import ControlBar from './components/ControlBar';

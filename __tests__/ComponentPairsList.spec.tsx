@@ -10,8 +10,8 @@ import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import { SkEmptyDataLabels } from '../src/core/components/SkEmptyData';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import PairsList from '../src/pages/Components/components/PairList';
+import { Providers } from '../src/providers';
 import { ComponentResponse, BasePairs } from '../src/types/REST.interfaces';
 
 const data = components.results[0] as ComponentResponse;

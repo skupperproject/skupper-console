@@ -23,7 +23,6 @@ type ZoomControlsProps = {
 
 const ZOOM_RATIO_OUT = 1.2;
 const ZOOM_RATIO_IN = 0.8;
-
 const LEGEND_LABEL_NAME = 'Legend';
 
 const ControlBar = function ({ graphInstance }: ZoomControlsProps) {

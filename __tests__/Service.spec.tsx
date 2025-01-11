@@ -7,11 +7,11 @@ import * as router from 'react-router';
 import servicesData from '../mocks/data/SERVICES.json';
 import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
+import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import Service from '../src/pages/Services/views/Service';
-import { Labels } from '../src/config/labels';
+import { Providers } from '../src/providers';
 
 const servicesResults = servicesData.results;
 

@@ -3,15 +3,14 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
-import { ServicesRoutesPaths } from '../src/pages/Services/Services.enum';
-
 import servicesData from '../mocks/data/SERVICES.json';
 import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
+import { ServicesRoutesPaths } from '../src/pages/Services/Services.enum';
 import Services from '../src/pages/Services/views/Services';
+import { Providers } from '../src/providers';
 
 const servicesResults = servicesData.results;
 const service = servicesResults[0];

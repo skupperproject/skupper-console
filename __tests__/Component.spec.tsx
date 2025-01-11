@@ -3,16 +3,16 @@ import { Suspense } from 'react';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import { setMockUseParams } from '../jest.setup';
 import componentsData from '../mocks/data/COMPONENTS.json';
 import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
+import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import Component from '../src/pages/Components/views/Component';
-import { Labels } from '../src/config/labels';
+import { Providers } from '../src/providers';
 import { ComponentResponse } from '../src/types/REST.interfaces';
-import { setMockUseParams } from '../jest.mock.router';
 
 const componentResults = componentsData.results as ComponentResponse[];
 

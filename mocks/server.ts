@@ -1,4 +1,5 @@
 import { createServer } from 'miragejs';
+
 import { MockApi } from './server.API';
 import { MockApiPaths } from './server.config';
 

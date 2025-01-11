@@ -1,11 +1,12 @@
+import { DataMap, dataMap } from './dataMao';
 import { ApiResponse } from '../src/types/REST.interfaces';
 
-import { DataMap, dataMap } from './dataMao';
-
-export const loadData = <T>(fileName: keyof DataMap): ApiResponse<T[]> => dataMap[fileName];
+export const loadData = <T>(fileName: keyof DataMap): ApiResponse<T[]> => dataMap[fileName] as ApiResponse<T[]>;
 
 export function extractQueryParams(url?: string): Record<string, string[]> | null {
-  if (!url) return null;
+  if (!url) {
+    return null;
+  }
 
   const params = new URLSearchParams(new URL(url).search);
   const queryParams: Record<string, string[]> = {};
@@ -22,35 +23,48 @@ export function extractQueryParams(url?: string): Record<string, string[]> | nul
 }
 
 // server.utils.ts
-export const paginateResults = (
-  results: any[],
+export const paginateResults = <T>(
+  results: T[],
   queryParams: Record<string, string | number | string[] | null | undefined>
 ) => {
   const offset = Number(queryParams.offset || 0);
   const limit = Number(queryParams.limit || results.length);
+
   return results.slice(offset, offset + limit);
 };
 
-export const filterResults = (results: any[], filters: Record<string, any>) => {
-  return results.filter((result) => {
-    return Object.entries(filters).every(([key, value]) => {
-      if (Array.isArray(value)) {
-        return value.some((v) => result[key]?.toString().includes(v.toString()));
-      } else if (value && result[key]) {
-        return result[key].toString().includes(value.toString());
+export const filterResults = <T>(results: T[], filters: Partial<Record<keyof T, string | string[]>>): T[] =>
+  results.filter((result) =>
+    Object.entries(filters).every(([key, value]) => {
+      if (value === undefined) {
+        return true; // Skip filtering for undefined values
       }
-      return true;
-    });
-  });
-};
 
-export function sortData<T extends Record<string, any>>(data: T[], sortBy: string[]): T[] {
+      const resultValue = result[key as keyof T];
+
+      if (resultValue === undefined || resultValue === null) {
+        return false; // Handle cases where the property doesn't exist
+      }
+
+      const resultString = resultValue.toString();
+
+      if (Array.isArray(value)) {
+        return value.some((v) => resultString.includes(v));
+      } else if (typeof value === 'string') {
+        return resultString.includes(value);
+      }
+
+      return true; // Should not happen, but added for safety
+    })
+  );
+
+export function sortData<T extends object>(data: T[], sortBy: string[]): T[] {
   if (!Array.isArray(sortBy) || sortBy.length === 0) {
     return data;
   }
 
   return data.sort((a, b) => {
-    for (let criterion of sortBy) {
+    for (const criterion of sortBy) {
       const [field, order] = criterion.split('.');
 
       if (!field || !order || (order !== 'asc' && order !== 'desc')) {
@@ -62,18 +76,23 @@ export function sortData<T extends Record<string, any>>(data: T[], sortBy: strin
         continue;
       }
 
-      const compareValue = a[field] > b[field] ? 1 : a[field] < b[field] ? -1 : 0;
+      const compareValue =
+        a[field as keyof T] > b[field as keyof T] ? 1 : a[field as keyof T] < b[field as keyof T] ? -1 : 0;
 
       if (order === 'asc') {
-        if (compareValue !== 0) return compareValue;
+        if (compareValue !== 0) {
+          return compareValue;
+        }
       } else if (order === 'desc') {
-        if (compareValue !== 0) return -compareValue;
+        if (compareValue !== 0) {
+          return -compareValue;
+        }
       }
     }
+
     return 0;
   });
 }
 
-export const getMockData = <T>(data: T[], isPerformanceTest: boolean, mockData: T[] = []) => {
-  return isPerformanceTest ? [...data, ...mockData] : data;
-};
+export const getMockData = <T>(data: T[], isPerformanceTest: boolean, mockData: T[] = []) =>
+  isPerformanceTest ? [...data, ...mockData] : data;

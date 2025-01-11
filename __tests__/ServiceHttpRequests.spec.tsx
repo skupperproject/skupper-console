@@ -9,8 +9,8 @@ import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import HttpRequests from '../src/pages/Services/components/HttpRequests';
+import { Providers } from '../src/providers';
 
 const servicesResults = servicesData.results;
 const httpRequestResults = httpRequests.results;

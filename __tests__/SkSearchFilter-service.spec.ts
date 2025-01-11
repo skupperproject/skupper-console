@@ -1,5 +1,4 @@
 import { SkSelectOption } from '../src/core/components/SkSelect';
-
 import { SkSearchFilterController } from '../src/core/components/SkTable/SkSearchFilter/services'; // Assuming your service file path
 import { FilterTypeWithSearchText, FilterSelected } from '../src/types/SkFilter.interfaces'; // Assuming your interface file path
 

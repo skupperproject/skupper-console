@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 
+import { Labels } from '../src/config/labels';
 import { styles } from '../src/config/styles';
 import SkSankeyChart, { getColors } from '../src/core/components/SKSanckeyChart/index';
-import { Labels } from '../src/config/labels';
 
 describe('SkSankeyChart', () => {
   it('should return nodeColor if it exists', () => {

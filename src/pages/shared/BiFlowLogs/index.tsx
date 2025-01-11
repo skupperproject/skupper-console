@@ -1,7 +1,6 @@
 import { useCallback, useState, startTransition } from 'react';
 
 import { useSuspenseQueries } from '@tanstack/react-query';
-
 import { NonNullableValue, SKTableColumn } from 'types/SkTable.interfaces';
 
 import { getAllHttpRequests, getAllTcpConnections } from '../../../API/REST.endpoints';

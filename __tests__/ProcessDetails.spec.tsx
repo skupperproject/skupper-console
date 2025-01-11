@@ -3,13 +3,13 @@ import { Suspense } from 'react';
 import { render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import { setMockUseParams } from '../jest.setup';
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
-import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
-import Details from '../src/pages/Processes/components/Details';
-import { setMockUseParams } from '../jest.mock.router';
 import { extendedProcessResponse } from '../mocks/server.API';
+import LoadingPage from '../src/core/components/SkLoading';
+import Details from '../src/pages/Processes/components/Details';
+import { Providers } from '../src/providers';
 
 const processResult = processesData.results[0] as extendedProcessResponse;
 

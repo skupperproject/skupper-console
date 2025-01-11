@@ -5,14 +5,14 @@ import { Server } from 'miragejs';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
+import { extendedProcessResponse } from '../mocks/server.API';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
+import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import Traffic from '../src/pages/shared/Metrics/components/Traffic';
-import { Labels } from '../src/config/labels';
 import * as MetricsModule from '../src/pages/shared/Metrics/services/index';
-import { extendedProcessResponse } from '../mocks/server.API';
+import { Providers } from '../src/providers';
 
 const processResult = processesData.results[0] as extendedProcessResponse;
 
@@ -52,7 +52,12 @@ describe('Traffic component', () => {
 
     expect(screen.getByText(Labels.TcpTraffic)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByLabelText(Labels.TcpTraffic)?.querySelector('button')!);
+    const button = screen.getByLabelText(Labels.TcpTraffic)?.querySelector('button');
+
+    if (button) {
+      fireEvent.click(button);
+    }
+
     expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 

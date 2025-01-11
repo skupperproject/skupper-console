@@ -3,8 +3,8 @@ import { Server } from 'miragejs';
 import * as router from 'react-router';
 
 import { loadMockServer } from '../mocks/server';
-import { Providers } from '../src/providers';
 import SkHeader, { HeaderLabels, UserDropdown } from '../src/layout/Header';
+import { Providers } from '../src/providers';
 
 describe('SkHeader', () => {
   let server: Server;

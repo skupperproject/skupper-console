@@ -1,16 +1,12 @@
 // jest.setup.ts
 
 // 1. Import TextEncoder and TextDecoder from 'util' for Node.js environment
-import { TextEncoder, TextDecoder } from 'util';
+import { TextEncoder } from 'util';
 
 // 2. Conditionally assign TextEncoder and TextDecoder to global object
 // (for react router v7) Polyfill TextEncoder and TextDecoder globally if they aren't defined yet
 if (typeof global.TextEncoder === 'undefined') {
   global.TextEncoder = TextEncoder;
-}
-
-if (typeof global.TextDecoder === 'undefined') {
-  global.TextDecoder = TextDecoder as any;
 }
 
 // 3. Mock the React Router functions (useNavigate and useParams)
@@ -34,5 +30,5 @@ import { useNavigate, useParams } from 'react-router';
 // 7. Utility function to set mock return values for useParams
 // This function allows you to specify what values should be returned by the mocked useParams during the test
 export const setMockUseParams = (params: Record<string, string>) => {
-  (jest.mocked(require('react-router').useParams) as jest.Mock).mockReturnValue(params);
+  (jest.mocked(useParams) as jest.Mock).mockReturnValue(params);
 };

@@ -1,10 +1,10 @@
-import { ServicesController, aggregateConnectorResponses } from '../src/pages/Services/services';
-import { ConnectorResponse, ListenerResponse } from '../src/types/REST.interfaces';
-import { GraphElementNames, GraphIconKeys } from '../src/types/Graph.interfaces';
-import { styles } from '../src/config/styles';
-import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../src/core/components/SKSanckeyChart/SkSankey.constants';
 import connectorsData from '../mocks/data/CONNECTORS.json';
 import listenersData from '../mocks/data/LISTENERS.json';
+import { styles } from '../src/config/styles';
+import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../src/core/components/SKSanckeyChart/SkSankey.constants';
+import { ServicesController, aggregateConnectorResponses } from '../src/pages/Services/services';
+import { GraphElementNames, GraphIconKeys } from '../src/types/Graph.interfaces';
+import { ConnectorResponse, ListenerResponse } from '../src/types/REST.interfaces';
 
 const connectorResults = connectorsData.results as any[];
 const listenerResults = listenersData.results as any[];

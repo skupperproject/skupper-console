@@ -2,14 +2,14 @@ import { useCallback, useState } from 'react';
 
 import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 
+import { customCells } from './BiFlowList.constants';
 import { BiFlowResponse } from '../../../types/REST.interfaces';
+import SkBiFlowDetails from '../SkBiFlowDetails';
 import { SkLinkCellProps } from '../SkLinkCell';
 import SkTable, { SKTableProps } from '../SkTable';
 import SkViewDetailCell from '../SkViewDetailsCell';
-import { customCells } from './BiFlowList.constants';
-import SkBiFlowDetails from '../SkBiFlowDetails';
 
-interface SkBiFlowListProps<T extends BiFlowResponse> extends SKTableProps<T> {}
+type SkBiFlowListProps<T extends BiFlowResponse> = SKTableProps<T>;
 
 const SkBiFlowList = function <T extends BiFlowResponse>({ ...props }: SkBiFlowListProps<T>) {
   const [biFlowSelected, setBiflowSelected] = useState<T>();

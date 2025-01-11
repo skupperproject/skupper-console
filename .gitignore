@@ -1,30 +1,38 @@
-# app
-.DS_Store
+# App
 build
-node_modules
-public
-cypress
 coverage
+node_modules
 
-# package managers
-npm-debug.log*
-yarn-error.log*
+# Package Managers
 package-lock.json
+pnpm-lock.yaml
 
-.eslintcache
-.webpack-cache
+# Logs and temporary files
+*.log
+*.tmp
+temp/
+tmp/
 
-# IDEs and editors
-.idea
-.project
+# IDEs and Editors
+.c9/
 .classpath
-.c9
+.eslintcache
+.idea/
+.project
+.settings/
+.sublime-workspace
+.vscode/
 *.launch
-.settings
-*.sublime-workspace
 .history
-.vscode
-# For vim
+*.DS_Store
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# System Files
+.DS_Store
+
+# Vim
 *.swp
-
-

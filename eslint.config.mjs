@@ -1,87 +1,39 @@
-import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import globals from 'globals';
-import tsParser from '@typescript-eslint/parser';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { includeIgnoreFile } from '@eslint/compat';
 import js from '@eslint/js';
-import { FlatCompat } from '@eslint/eslintrc';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all
-});
-
-const gitignorePath = path.resolve(__dirname, '.gitignore');
+import typescriptEslint from '@typescript-eslint/eslint-plugin';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import pluginImport from 'eslint-plugin-import';
+import pluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import pluginReactRecommended from 'eslint-plugin-react/configs/recommended.js';
+import pluginReactHooks from 'eslint-plugin-react-hooks';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default [
-  includeIgnoreFile(gitignorePath),
-  ...fixupConfigRules(
-    compat.extends(
-      'eslint:recommended',
-      'plugin:react/recommended',
-      'plugin:import/errors',
-      'plugin:import/warnings',
-      'prettier'
-    )
-  ),
+  js.configs.recommended,
+  pluginImport.flatConfigs.recommended,
+  ...tseslint.configs.recommended,
+  pluginReactRecommended,
+  eslintConfigPrettier,
+  pluginPrettierRecommended,
+
   {
-    ignores: ['**/*.config.js', 'eslint.config.mjs']
+    ignores: ['**/build', '**/css']
   },
-  {
-    files: ['src/**/*.ts', 'src/**/*.tsx']
-  },
+
   {
     plugins: {
-      react: fixupPluginRules(react),
-      'react-hooks': fixupPluginRules(reactHooks),
+      'react-hooks': pluginReactHooks,
       '@typescript-eslint': typescriptEslint
     },
 
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.node,
-        ...globals.jest,
-        JSX: true
-      },
-
-      parser: tsParser,
-      ecmaVersion: 12,
-      sourceType: 'module',
-
-      parserOptions: {
-        comment: true,
-
-        ecmaFeatures: {
-          jsx: true
-        },
-
-        extraFileExtensions: ['.json'],
-        project: ['tsconfig.json', 'cypress.config.ts'],
-        tsconfigRootDir: './'
+        ...globals.jest
       }
     },
 
     settings: {
-      'import/parsers': {
-        '@typescript-eslint/parser': ['.ts', '.tsx']
-      },
-
-      'import/resolver': {
-        typescript: {},
-
-        node: {
-          extensions: ['.ts', '.tsx']
-        }
-      },
-
       'import/extensions': ['.ts', '.tsx'],
 
       react: {
@@ -90,21 +42,80 @@ export default [
     },
 
     rules: {
+      '@typescript-eslint/no-shadow': [
+        'error',
+        {
+          ignoreTypeValueShadow: true
+        }
+      ],
+
+      '@typescript-eslint/ban-ts-comment': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+
+      '@typescript-eslint/naming-convention': [
+        'error',
+        {
+          selector: ['enum', 'enumMember'],
+          format: ['PascalCase']
+        }
+      ],
+
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-use-before-define': 'off',
+      '@typescript-eslint/no-unsafe-function-type': 'off',
+      '@typescript-eslint/no-unused-vars': 'error',
+
       'arrow-body-style': ['error', 'as-needed'],
-      'padding-line-between-statements': 'off',
-      'import/prefer-default-export': 'off',
-
-      'import/no-cycle': 'off',
-
-      'no-console': 1,
-      semi: [1, 'always'],
-      'eol-last': 2,
       'consistent-return': 0,
       'consistent-this': [1, 'that'],
       curly: [2, 'all'],
       'default-case': [2],
       'dot-notation': [2],
+      'eol-last': 2,
+      eqeqeq: [2, 'allow-null'],
+      'guard-for-in': 2,
+      'import/newline-after-import': [
+        'error',
+        {
+          count: 1
+        }
+      ],
+      'import/no-cycle': 'off',
+      'import/no-unresolved': 'off',
+      'import/no-duplicates': ['error'],
+      'import/order': [
+        'warn',
+        {
+          'newlines-between': 'always',
 
+          alphabetize: {
+            caseInsensitive: true,
+            order: 'asc'
+          },
+
+          groups: ['builtin', 'external', 'internal', ['parent', 'sibling']],
+          pathGroupsExcludedImportTypes: ['react'],
+
+          pathGroups: [
+            {
+              pattern: 'react',
+              group: 'external',
+              position: 'before'
+            }
+          ]
+        }
+      ],
+      'import/prefer-default-export': 'off',
+      'max-nested-callbacks': [1, 4],
+      'newline-before-return': 'error',
+      'no-alert': 2,
+      'no-caller': 2,
+      'no-console': 1,
+      'no-constant-condition': 2,
+      'no-debugger': 2,
+      'no-else-return': ['error'],
+      'no-global-strict': 0,
+      'no-irregular-whitespace': ['error'],
       'no-multiple-empty-lines': [
         2,
         {
@@ -112,21 +123,6 @@ export default [
           maxEOF: 0
         }
       ],
-
-      eqeqeq: [2, 'allow-null'],
-      'guard-for-in': 2,
-      'import/no-unresolved': ['error'],
-      'import/no-duplicates': ['error'],
-      'max-nested-callbacks': [1, 4],
-      'newline-before-return': 'error',
-      'no-alert': 2,
-      'no-caller': 2,
-      'no-constant-condition': 2,
-      'no-debugger': 2,
-      'no-else-return': ['error'],
-      'no-global-strict': 0,
-      'no-irregular-whitespace': ['error'],
-
       'no-param-reassign': [
         'warn',
         {
@@ -150,37 +146,7 @@ export default [
 
       'prefer-template': 2,
       radix: 2,
-
-      'import/newline-after-import': [
-        'error',
-        {
-          count: 1
-        }
-      ],
-
-      'import/order': [
-        'warn',
-        {
-          'newlines-between': 'always',
-
-          alphabetize: {
-            caseInsensitive: true,
-            order: 'asc'
-          },
-
-          groups: ['builtin', 'external', 'internal', ['parent', 'sibling']],
-          pathGroupsExcludedImportTypes: ['react'],
-
-          pathGroups: [
-            {
-              pattern: 'react',
-              group: 'external',
-              position: 'before'
-            }
-          ]
-        }
-      ],
-
+      'padding-line-between-statements': 'off',
       'react/jsx-filename-extension': [
         1,
         {
@@ -220,28 +186,7 @@ export default [
 
       'react/display-name': 0,
       'require-atomic-updates': 0,
-
-      '@typescript-eslint/no-shadow': [
-        'error',
-        {
-          ignoreTypeValueShadow: true
-        }
-      ],
-
-      '@typescript-eslint/ban-ts-comment': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-
-      '@typescript-eslint/naming-convention': [
-        'error',
-        {
-          selector: ['enum', 'enumMember'],
-          format: ['PascalCase']
-        }
-      ],
-
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-use-before-define': 0,
-      '@typescript-eslint/no-unused-vars': 'error'
+      semi: [1, 'always']
     }
   }
 ];

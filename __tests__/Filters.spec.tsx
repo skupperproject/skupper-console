@@ -5,8 +5,8 @@ import processesData from '../mocks/data/PROCESSES.json';
 import siteData from '../mocks/data/SITES.json';
 import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
-import MetricFilters from '../src/pages/shared/Metrics/components/Filters';
 import { Labels } from '../src/config/labels';
+import MetricFilters from '../src/pages/shared/Metrics/components/Filters';
 
 describe('Metrics component', () => {
   let server: Server;
@@ -74,10 +74,9 @@ describe('Metrics component', () => {
     });
 
     fireEvent.click(screen.getByText(Labels.AllSourceSites));
-    await waitFor(() => expect(screen.getByText(siteData.results[0].name)).toBeInTheDocument()),
-      {
-        timeout: waitForElementToBeRemovedTimeout
-      };
+    await waitFor(() => expect(screen.getByText(siteData.results[0].name)).toBeInTheDocument(), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
     fireEvent.click(screen.getByText(siteData.results[0].name));
     await waitFor(() => expect(screen.queryByText(Labels.AllSourceSites)).not.toBeInTheDocument(), {

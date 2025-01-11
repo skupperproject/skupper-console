@@ -3,16 +3,16 @@ import { Suspense } from 'react';
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 
+import { setMockUseParams } from '../jest.setup';
 import processPairsData from '../mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
+import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
-import { Providers } from '../src/providers';
 import ProcessPair, { ProcessPairContent } from '../src/pages/Processes/views/ProcessPair';
+import { Providers } from '../src/providers';
 import { PairsResponse } from '../src/types/REST.interfaces';
-import { setMockUseParams } from '../jest.mock.router';
-import { Labels } from '../src/config/labels';
 
 const processPairsResultOpToCart = processPairsData.results[0] as PairsResponse; // HTTP2 flow
 const processPairsResultDatabaseToPayment = processPairsData.results[6] as PairsResponse; // old TCP flow and active TCP flow
