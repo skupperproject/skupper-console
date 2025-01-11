@@ -1,6 +1,6 @@
 import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-import { Edge, EdgeEvent, Graph, GraphOptions, IPointerEvent, Node, NodeEvent } from '@antv/g6';
+import { Combo, ComboEvent, Edge, EdgeEvent, Graph, GraphOptions, IPointerEvent, Node, NodeEvent } from '@antv/g6';
 import { debounce } from '@patternfly/react-core';
 
 import { GraphCombo, GraphEdge, GraphNode, SkGraphProps, LocalStorageData } from 'types/Graph.interfaces';
@@ -55,6 +55,8 @@ const SkGraph: FC<SkGraphProps> = memo(
     const toggleHover = useCallback((enable: boolean = false) => {
       const graphInstance = topologyGraphRef.current as Graph;
 
+      graphInstance.updateBehavior({ key: 'zoom-canvas', enable });
+
       graphInstance.updateBehavior({
         key: 'hover-activate',
         enable: ({ targetType }: IPointerEvent) => (enable ? targetType === 'node' : false)
@@ -101,6 +103,8 @@ const SkGraph: FC<SkGraphProps> = memo(
         // Enable the graphic behavior ActivateNodeRelation for the drag and drop event
         graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_DOWN, () => toggleHover(false));
         graph.on<IPointerEvent<Node>>(NodeEvent.POINTER_UP, () => toggleHover(true));
+        graph.on<IPointerEvent<Combo>>(ComboEvent.DRAG_START, () => toggleHover(false));
+        graph.on<IPointerEvent<Combo>>(ComboEvent.DRAG_END, () => toggleHover(true));
 
         graph.on<IPointerEvent<Node>>(NodeEvent.CLICK, ({ target }) => {
           // if the node is already selected , set id = undefined to deleselect it

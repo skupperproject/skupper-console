@@ -43,7 +43,7 @@ const HOVER_ACTIVATE_BEHAVIOR = {
 };
 
 export const behaviors: CustomBehaviorOption[] = [
-  { key: 'drag-canvas', type: 'drag-canvas' },
+  { key: 'drag-canvas', type: 'drag-canvas', enable: false },
   { key: 'zoom-canvas', type: 'zoom-canvas' },
   { key: 'drag-element', type: 'drag-element' },
   CLICK_SELECT_BEHAVIOR,

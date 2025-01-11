@@ -46,7 +46,8 @@
     "check-cycles": "madge --circular --extensions ts,tsx src",
     "find-unused-modules": "ts-prune",
     "prepare": "husky",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "tsc:watch": "tsc --noEmit --watch"
   },
   "dependencies": {
     "@antv/g6": "5.0.42",
