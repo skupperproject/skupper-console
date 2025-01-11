@@ -28,7 +28,7 @@ export default [
       'plugin:react/recommended',
       'plugin:import/errors',
       'plugin:import/warnings',
-      'prettier'
+      'plugin:prettier/recommended'
     )
   ),
   {
@@ -53,7 +53,6 @@ export default [
       },
 
       parser: tsParser,
-      ecmaVersion: 12,
       sourceType: 'module',
 
       parserOptions: {

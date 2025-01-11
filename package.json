@@ -128,5 +128,11 @@
     "> 0.5%",
     "not dead",
     "not op_mini all"
-  ]
+  ],
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "yarn madge --circular --extensions ts,tsx src",
+      "yarn lint --fix"
+    ]
+  }
 }
