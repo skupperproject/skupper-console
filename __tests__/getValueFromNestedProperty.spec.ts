@@ -1,5 +1,3 @@
-import { expect } from '@jest/globals';
-
 import { getValueFromNestedProperty } from '../src/core/utils/getValueFromNestedProperty';
 
 type TestObject = {
