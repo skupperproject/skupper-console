@@ -79,7 +79,6 @@
     "madge": "^8.0.0",
     "miragejs": "^0.1.48",
     "prettier": "^3.4.2",
-    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "ts-prune": "^0.10.3",
     "typescript": "^5.7.3",
