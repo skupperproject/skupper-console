@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
+import pluginVitest from '@vitest/eslint-plugin';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import pluginImport from 'eslint-plugin-import';
 import pluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
@@ -15,13 +16,13 @@ export default [
   pluginReactRecommended,
   eslintConfigPrettier,
   pluginPrettierRecommended,
-
   {
     ignores: ['**/build', '**/css']
   },
 
   {
     plugins: {
+      pluginVitest,
       'react-hooks': pluginReactHooks,
       '@typescript-eslint': typescriptEslint
     },
@@ -29,12 +30,15 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.jest
+        ...pluginVitest.environments.env.globals
       }
     },
 
     settings: {
       'import/extensions': ['.ts', '.tsx'],
+      vitest: {
+        typecheck: true
+      },
 
       react: {
         version: 'detect'

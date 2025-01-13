@@ -1,6 +1,7 @@
 import { act } from 'react';
 
 import { renderHook } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 import useMetricFiltersState from '../src/pages/shared/Metrics/hooks/useMetricFiltersState';
 import { QueryMetricsParams } from '../src/types/Metrics.interfaces';
@@ -61,7 +62,7 @@ describe('useMetricFiltersState', () => {
   });
 
   it('should update time interval when handleSelectTimeInterval is called', () => {
-    const onSelectFiltersMock = jest.fn();
+    const onSelectFiltersMock = vi.fn();
 
     const { result } = renderHook(() =>
       useMetricFiltersState({
@@ -84,7 +85,7 @@ describe('useMetricFiltersState', () => {
   });
 
   it('should call onSelectFilters when a filter is updated', () => {
-    const onSelectFiltersMock = jest.fn();
+    const onSelectFiltersMock = vi.fn();
     const { result } = renderHook(() =>
       useMetricFiltersState({ defaultMetricFilterValues, onSelectFilters: onSelectFiltersMock })
     );

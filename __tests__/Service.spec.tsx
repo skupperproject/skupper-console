@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
-import * as router from 'react-router';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import servicesData from '../mocks/data/SERVICES.json';
 import { loadMockServer } from '../mocks/server';
@@ -12,8 +12,17 @@ import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import Service from '../src/pages/Services/views/Service';
 import { Providers } from '../src/providers';
+import { setMockUseParams } from '../vite.setup';
 
 const servicesResults = servicesData.results;
+
+vi.mock('@nivo/sankey', () => ({
+  ResponsiveSankey: () => <div />
+}));
+
+vi.mock('../src/core/components/SkGraph', () => ({
+  default: <div />
+}));
 
 describe('Begin testing the Service component', () => {
   let server: Server;
@@ -22,7 +31,7 @@ describe('Begin testing the Service component', () => {
     server = loadMockServer() as Server;
     server.logging = false;
 
-    jest.spyOn(router, 'useParams').mockReturnValue({
+    setMockUseParams({
       id: `${servicesResults[0].name}@${servicesResults[0].identity}`
     });
 
@@ -37,7 +46,7 @@ describe('Begin testing the Service component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the TCP Service view after the data loading is complete', async () => {
@@ -52,12 +61,12 @@ describe('Begin testing the Service component', () => {
   });
 
   it('should render the HTTP/2 Service view after the data loading is complete', async () => {
-    jest.spyOn(router, 'useParams').mockReturnValue({
-      id: `${servicesResults[2].name}@${servicesResults[2].identity}`
-    });
-
     await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
       timeout: waitForElementToBeRemovedTimeout
+    });
+
+    setMockUseParams({
+      id: `${servicesResults[2].name}@${servicesResults[2].identity}`
     });
 
     expect(screen.getByText(Labels.Overview)).toBeInTheDocument();

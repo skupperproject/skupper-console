@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { loadMockServer } from '../mocks/server';
 import { getTestsIds } from '../src/config/testIds';
@@ -10,7 +11,9 @@ import { TopologyViews } from '../src/pages/Topology/Topology.enum';
 import Topology from '../src/pages/Topology/views/Topology';
 import { Providers } from '../src/providers';
 
-jest.mock('@antv/g6');
+vi.mock('../src/core/components/SkGraph', () => ({
+  default: <div />
+}));
 
 describe('Begin testing the Topology component', () => {
   let server: Server;
@@ -29,7 +32,7 @@ describe('Begin testing the Topology component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render a loading page when data is loading', () => {

@@ -1,11 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import eventUser from '@testing-library/user-event';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { Labels } from '../src/config/labels';
 import DisplayResources from '../src/pages/Topology/components/DisplayResources';
 
 describe('DisplayResources', () => {
-  const onSelectMock = jest.fn();
+  const onSelectMock = vi.fn();
 
   beforeEach(() => {
     render(<DisplayResources onSelect={onSelectMock} />);

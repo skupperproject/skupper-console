@@ -1,15 +1,16 @@
 import { renderHook } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
+import { describe, expect, it, Mock, vi } from 'vitest';
 
 import useUpdateQueryStringValueWithoutNavigation from '../src/hooks/useUpdateQueryStringValueWithoutNavigation';
 
 // Mock useLocation hook
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useLocation: jest.fn()
+vi.mock('react-router-dom', () => ({
+  ...vi.importActual('react-router-dom'),
+  useLocation: vi.fn()
 }));
 
-const mockReplaceState = jest.fn();
+const mockReplaceState = vi.fn();
 Object.defineProperty(window, 'history', {
   value: { replaceState: mockReplaceState }
 });
@@ -22,7 +23,7 @@ describe('useUpdateQueryStringValueWithoutNavigation', () => {
       search: '?param1=value1&param2=value2'
     };
 
-    (useLocation as jest.Mock).mockImplementation(() => mockLocation);
+    (useLocation as Mock).mockImplementation(() => mockLocation);
 
     // Call the hook
     renderHook(() => useUpdateQueryStringValueWithoutNavigation('param3', 'value3'));

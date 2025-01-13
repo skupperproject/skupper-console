@@ -2,14 +2,15 @@ import { Suspense } from 'react';
 
 import { render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { setMockUseParams } from '../jest.setup';
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
 import { extendedProcessResponse } from '../mocks/server.API';
 import LoadingPage from '../src/core/components/SkLoading';
 import Details from '../src/pages/Processes/components/Details';
 import { Providers } from '../src/providers';
+import { setMockUseParams } from '../vite.setup';
 
 const processResult = processesData.results[0] as extendedProcessResponse;
 
@@ -31,7 +32,7 @@ describe('Process component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the title, description data and processes associated the data loading is complete', async () => {

@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
@@ -25,11 +26,11 @@ describe('Traffic component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the Traffic section of the metric', async () => {
-    const handleGetisSectionExpanded = jest.fn();
+    const handleGetisSectionExpanded = vi.fn();
 
     render(
       <Providers>
@@ -62,8 +63,8 @@ describe('Traffic component', () => {
   });
 
   it('should render the Traffic section and display the no metric found message', async () => {
-    jest.spyOn(MetricsModule.MetricsController, 'getDataTraffic').mockImplementation(
-      jest.fn().mockReturnValue({
+    vi.spyOn(MetricsModule.MetricsController, 'getDataTraffic').mockImplementation(
+      vi.fn().mockReturnValue({
         traffic: [],
         trafficClient: [],
         trafficServer: []

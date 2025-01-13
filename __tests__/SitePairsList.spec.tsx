@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import pairsList from '../mocks/data/SITE_PAIRS.json';
 import sites from '../mocks/data/SITES.json';
@@ -32,7 +33,7 @@ describe('Site Pairs List component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('Should ensure the Process associated renders with correct link href after loading page', async () => {

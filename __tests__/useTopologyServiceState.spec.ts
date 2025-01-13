@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import useServiceState from '../src/pages/Topology/hooks/useTopologyServiceState';
 
@@ -25,7 +26,7 @@ describe('useTopologyServiceState', () => {
   });
 
   it('should handle getServiceIdsFromLocalStorage', () => {
-    jest.spyOn(window.localStorage.__proto__, 'getItem').mockImplementation(() => '[1,2]');
+    vi.spyOn(window.localStorage.__proto__, 'getItem').mockImplementation(() => '[1,2]');
 
     const { result } = renderHook(() => useServiceState());
 

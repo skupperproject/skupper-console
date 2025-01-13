@@ -2,8 +2,8 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { setMockUseParams } from '../jest.setup';
 import processPairsData from '../mocks/data/PROCESS_PAIRS.json';
 import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
@@ -13,6 +13,7 @@ import LoadingPage from '../src/core/components/SkLoading';
 import ProcessPair, { ProcessPairContent } from '../src/pages/Processes/views/ProcessPair';
 import { Providers } from '../src/providers';
 import { PairsResponse } from '../src/types/REST.interfaces';
+import { setMockUseParams } from '../vite.setup';
 
 const processPairsResultOpToCart = processPairsData.results[0] as PairsResponse; // HTTP2 flow
 const processPairsResultDatabaseToPayment = processPairsData.results[6] as PairsResponse; // old TCP flow and active TCP flow
@@ -30,7 +31,7 @@ describe('Begin testing the Processes component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the ProcessPairs view after the data loading is complete', async () => {

@@ -1,15 +1,16 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
 import useTopologyComponentData from '../src/pages/Topology/hooks/useTopologyComponentData';
 
-jest.mock('@tanstack/react-query', () => ({
-  useSuspenseQueries: jest.fn()
+vi.mock('@tanstack/react-query', () => ({
+  useSuspenseQueries: vi.fn()
 }));
 
 describe('useTopologyComponentData', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   const components = { results: [{ identity: 'component1' }, { identity: 'component2' }, { identity: 'component3' }] };
@@ -21,7 +22,7 @@ describe('useTopologyComponentData', () => {
   };
 
   it('should call useTopologyComponentData', async () => {
-    (useSuspenseQueries as jest.Mock).mockReturnValue([{ data: components }, { data: componentPairs }]);
+    (useSuspenseQueries as Mock).mockReturnValue([{ data: components }, { data: componentPairs }]);
 
     const { result } = renderHook(() => useTopologyComponentData());
 

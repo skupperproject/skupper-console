@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Metrics Component renders correctly 1`] = `
+exports[`Metrics Component > renders correctly 1`] = `
 <DocumentFragment>
   <div
     style="position: sticky; top: 0px; z-index: 1; background-color: rgb(255, 255, 255);"

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import siteData from '../mocks/data/SITES.json';
@@ -17,11 +18,11 @@ describe('Metrics component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the Metric Filter', async () => {
-    const onRefetch = jest.fn();
+    const onRefetch = vi.fn();
 
     render(
       <MetricFilters
@@ -85,7 +86,7 @@ describe('Metrics component', () => {
   });
 
   it('should render the Metric Filter 2', async () => {
-    const onRefetch = jest.fn();
+    const onRefetch = vi.fn();
 
     render(
       <MetricFilters

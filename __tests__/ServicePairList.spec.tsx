@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import pairs from '../mocks/data/PROCESS_PAIRS.json';
 import servicesData from '../mocks/data/SERVICES.json';
@@ -15,6 +16,10 @@ import { Providers } from '../src/providers';
 const servicesResults = servicesData.results;
 const pairsResults = pairs.results;
 
+vi.mock('@nivo/sankey', () => ({
+  ResponsiveSankey: () => <div />
+}));
+
 describe('Begin testing the Http requests component', () => {
   let server: Server;
 
@@ -25,7 +30,7 @@ describe('Begin testing the Http requests component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the Requests view -> Requests after the data loading is complete', async () => {

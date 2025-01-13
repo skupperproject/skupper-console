@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
-import * as router from 'react-router';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
@@ -13,16 +13,17 @@ import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import Process from '../src/pages/Processes/views/Process';
 import { Providers } from '../src/providers';
+import { setMockUseParams } from '../vite.setup';
 
 const processResult = processesData.results[0] as extendedProcessResponse;
+
+setMockUseParams({ id: `${processResult.name}@${processResult.identity}` });
 
 describe('Process component', () => {
   let server: Server;
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
-    // Mock URL query parameters and inject them into the component
-    jest.spyOn(router, 'useParams').mockReturnValue({ id: `${processResult.name}@${processResult.identity}` });
 
     render(
       <Providers>
@@ -35,7 +36,7 @@ describe('Process component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the Process view after the data loading is complete', async () => {

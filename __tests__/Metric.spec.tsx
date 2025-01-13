@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 
 import { act, render, renderHook } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 import { Protocols } from '../src/API/REST.enum';
 import LoadingPage from '../src/core/components/SkLoading';
@@ -50,8 +51,8 @@ describe('Metrics Component', () => {
     sourceProcesses: [],
     destProcesses: [],
     availableProtocols: [Protocols.Http, Protocols.Tcp, Protocols.Http2],
-    onGetMetricFiltersConfig: jest.fn(),
-    onGetExpandedSectionsConfig: jest.fn(),
+    onGetMetricFiltersConfig: vi.fn(),
+    onGetExpandedSectionsConfig: vi.fn(),
     ...overrides
   });
 

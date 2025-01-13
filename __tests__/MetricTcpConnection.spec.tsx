@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
@@ -25,11 +26,11 @@ describe('Tcp component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the Tcp section of the metric', async () => {
-    const handleGetisSectionExpanded = jest.fn();
+    const handleGetisSectionExpanded = vi.fn();
 
     render(
       <Providers>
@@ -62,13 +63,13 @@ describe('Tcp component', () => {
   });
 
   it('should not render the Tcp section', async () => {
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnections')
-      .mockImplementation(jest.fn().mockReturnValue({ data: null }));
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnections').mockImplementation(
+      vi.fn().mockReturnValue({ data: null })
+    );
 
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnectionsInTimeRange')
-      .mockImplementation(jest.fn().mockReturnValue({ data: null }));
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnectionsInTimeRange').mockImplementation(
+      vi.fn().mockReturnValue({ data: null })
+    );
 
     render(
       <Providers>

@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
@@ -25,11 +26,11 @@ describe('Response component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the Reponse section of the metric', async () => {
-    const handleGetisSectionExpanded = jest.fn();
+    const handleGetisSectionExpanded = vi.fn();
 
     render(
       <Providers>
@@ -65,9 +66,9 @@ describe('Response component', () => {
   });
 
   it('should not render the Response section', async () => {
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchResponseCountsByPartialCodeInTimeRange')
-      .mockImplementation(jest.fn().mockReturnValue({ data: null }));
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchResponseCountsByPartialCodeInTimeRange').mockImplementation(
+      vi.fn().mockReturnValue({ data: null })
+    );
 
     render(
       <Providers>

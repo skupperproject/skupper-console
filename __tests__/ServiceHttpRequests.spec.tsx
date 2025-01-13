@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import httpRequests from '../mocks/data/HTTP_REQUESTS.json';
 import servicesData from '../mocks/data/SERVICES.json';
@@ -25,7 +26,7 @@ describe('Begin testing the Http requests component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the Requests view -> Requests after the data loading is complete', async () => {

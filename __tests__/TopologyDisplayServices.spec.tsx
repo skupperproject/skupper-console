@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { render } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { loadMockServer } from '../mocks/server';
 import LoadingPage from '../src/core/components/SkLoading';
@@ -18,14 +19,14 @@ describe('DisplayServices', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders DisplayServices component placehoder without service options an disabled', () => {
     const { getByRole } = render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
-          <DisplayServices initialIdsSelected={undefined} onSelected={jest.fn()} />
+          <DisplayServices initialIdsSelected={undefined} onSelected={vi.fn()} />
         </Suspense>
       </Providers>
     );

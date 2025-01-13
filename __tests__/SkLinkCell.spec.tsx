@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 import SkLinkCell from '../src/core/components/SkLinkCell';
 import { Providers } from '../src/providers';

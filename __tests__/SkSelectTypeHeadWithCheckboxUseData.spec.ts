@@ -1,9 +1,10 @@
 import { act, renderHook } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 import { SkSelectTypeHeadWithCheckboxUseData } from '../src/core/components/SkSelectTypeHeadWithCheckbox/SkSelectTypeHeadWithCheckboxUseData';
 
 describe('SkSelectTypeHeadWithCheckboxUseData', () => {
-  const mockOnSelected = jest.fn();
+  const mockOnSelected = vi.fn();
   const initOptions = [
     { key: '1', value: '1', label: 'Service 1' },
     { key: '2', value: '2', label: 'Service 2' },

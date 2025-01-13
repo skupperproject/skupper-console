@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 import SkUpdateDataButton, { refreshDataIntervalMap } from '../src/core/components/SkUpdateDataButton';
 import { Providers } from '../src/providers';
@@ -15,7 +16,7 @@ describe('SkUpdateDataButton component', () => {
   });
 
   it('should opens the refresh interval dropdown on button click', async () => {
-    const onClickMock = jest.fn();
+    const onClickMock = vi.fn();
     render(
       <Providers>
         <SkUpdateDataButton onClick={onClickMock} />
@@ -29,8 +30,8 @@ describe('SkUpdateDataButton component', () => {
   });
 
   it('calls onRefreshIntervalSelected and revalidateLiveQueries when a new interval is selected', async () => {
-    const onRefreshIntervalSelectedMock = jest.fn();
-    const revalidateLiveQueriesMock = jest.fn();
+    const onRefreshIntervalSelectedMock = vi.fn();
+    const revalidateLiveQueriesMock = vi.fn();
 
     render(
       <Providers>
@@ -52,7 +53,7 @@ describe('SkUpdateDataButton component', () => {
   });
 
   it('should calls functions on refresh interval selection', async () => {
-    const revalidateLiveQueriesMock = jest.fn();
+    const revalidateLiveQueriesMock = vi.fn();
     render(
       <Providers>
         <SkUpdateDataButton onClick={revalidateLiveQueriesMock} refreshIntervalDefault={'15'} />

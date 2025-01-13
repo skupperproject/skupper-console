@@ -62,7 +62,7 @@ yarn cy
 
 ## Env variables
 
-- ``: The console uses a real network observer.
+- `OBSERVER_URL`: The console uses a real network observer.
 - `API_VERSION`: Part of the url api. **Note**: Do not include a leading slash (/) in the value of API_VERSION.
 - `BRAND_APP_LOGO`: Customize the logo for the build.
 - `BRAND_FAVICON`: Customize the favicon for the build.

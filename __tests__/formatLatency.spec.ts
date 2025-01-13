@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { formatLatency } from '../src/core/utils/formatLatency';
 
 describe('formatLatency', () => {

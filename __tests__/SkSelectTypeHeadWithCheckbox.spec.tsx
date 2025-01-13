@@ -1,10 +1,11 @@
 import { fireEvent, render } from '@testing-library/react';
 import eventUser from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 
 import SkSelectTypeHeadWithCheckbox from '../src/core/components/SkSelectTypeHeadWithCheckbox';
 
 const initialIdsSelected: string[] = [];
-const mockOnSelected = jest.fn();
+const mockOnSelected = vi.fn();
 const initOptions = [
   { key: '1', value: '1', label: 'Service 1' },
   { key: '2', value: '2', label: 'Service 2' },

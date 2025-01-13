@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
@@ -25,11 +26,11 @@ describe('Latency component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the Latency section of the metric', async () => {
-    const handleGetisSectionExpanded = jest.fn();
+    const handleGetisSectionExpanded = vi.fn();
 
     render(
       <Providers>
@@ -63,9 +64,9 @@ describe('Latency component', () => {
   });
 
   it('should render the Latency section and display the no metric found message', async () => {
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchPercentilesByLeInTimeRange')
-      .mockImplementation(jest.fn().mockReturnValue({ data: null }));
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchPercentilesByLeInTimeRange').mockImplementation(
+      vi.fn().mockReturnValue({ data: null })
+    );
 
     render(
       <Providers>

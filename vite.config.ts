@@ -41,6 +41,16 @@ export default defineConfig(() => {
 
     server: {
       port: 3000
+    },
+
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: ['./vite.setup.ts'],
+      coverage: {
+        all: false,
+        include: ['**/src/**']
+      }
     }
   };
 });

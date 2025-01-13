@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { formatByteRate, formatBytes } from '../src/core/utils/formatBytes';
 
 describe('formatBytes', () => {
