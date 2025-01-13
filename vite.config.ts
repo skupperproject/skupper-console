@@ -48,8 +48,10 @@ export default defineConfig(() => {
       environment: 'jsdom',
       setupFiles: ['./vite.setup.ts'],
       coverage: {
+        reporter: ['text', 'lcov'],
         all: false,
-        include: ['**/src/**']
+        include: ['**/src/**'],
+        exclude: ['**/src/config/**']
       }
     }
   };

@@ -1,8 +1,10 @@
 import { Suspense } from 'react';
 
 import { act, render, renderHook } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { Server } from 'miragejs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { loadMockServer } from '../mocks/server';
 import { Protocols } from '../src/API/REST.enum';
 import LoadingPage from '../src/core/components/SkLoading';
 import Metrics, { MetricsProps } from '../src/pages/shared/Metrics';
@@ -42,6 +44,13 @@ describe('useMetrics', () => {
 });
 
 describe('Metrics Component', () => {
+  let server: Server;
+
+  beforeEach(() => {
+    server = loadMockServer() as Server;
+    server.logging = false;
+  });
+
   const setup = (overrides?: Partial<MetricsProps>) => ({
     configFilters: configDefaultFilters,
     defaultMetricFilterValues: {},

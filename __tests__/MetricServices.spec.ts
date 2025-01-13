@@ -55,6 +55,10 @@ describe('useMetrics', () => {
   it('should getResponse handles errors', async () => {
     const error = new Error('API request failed');
 
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchResponseCountsByPartialCodeInTimeRange').mockImplementation(
+      vi.fn().mockRejectedValue(error)
+    );
+
     vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchHttpErrorRateByPartialCodeInTimeRange').mockImplementation(
       vi.fn().mockRejectedValue(error)
     );
@@ -84,6 +88,10 @@ describe('useMetrics', () => {
     const error = new Error('API request failed');
 
     vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnections').mockImplementation(
+      vi.fn().mockRejectedValue(error)
+    );
+
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnectionsInTimeRange').mockImplementation(
       vi.fn().mockRejectedValue(error)
     );
 

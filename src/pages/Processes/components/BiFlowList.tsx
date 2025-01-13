@@ -115,23 +115,19 @@ const BiFlowList: FC<ProcessBiFlowListProps> = function ({ sourceProcessId, dest
 
   return (
     <Tabs activeKey={determineActiveTab()} onSelect={handleTabClick} component="nav">
-      {tabConfigs.map(({ key, label, isDisabled, columns, filters, additionalProps }) => (
-        <Tab
-          key={key}
-          eventKey={key}
-          title={<TabTitleText>{label}</TabTitleText>}
-          isDisabled={isDisabled}
-          isHidden={key === TAB_KEYS.REQUESTS && isDisabled}
-        >
-          {!isDisabled && (
-            <Card isFullHeight isPlain data-testid={key}>
-              <CardBody>
-                <BiFlowLogs columns={columns} filters={filters} {...additionalProps} />
-              </CardBody>
-            </Card>
-          )}
-        </Tab>
-      ))}
+      {tabConfigs
+        .filter(({ key, isDisabled }) => !(key === TAB_KEYS.REQUESTS && isDisabled))
+        .map(({ key, label, isDisabled, columns, filters, additionalProps }) => (
+          <Tab key={key} eventKey={key} title={<TabTitleText>{label}</TabTitleText>} isDisabled={isDisabled}>
+            {!isDisabled && (
+              <Card isFullHeight isPlain data-testid={key}>
+                <CardBody>
+                  <BiFlowLogs columns={columns} filters={filters} {...additionalProps} />
+                </CardBody>
+              </Card>
+            )}
+          </Tab>
+        ))}
     </Tabs>
   );
 };
