@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { convertToPercentage } from '../src/core/utils/convertToPercentage';
 
 describe('convertToPercentage', () => {

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { describe, expect, it } from 'vitest';
 
 import SkNavigationViewLink from '../src/core/components/SkNavigationViewLink';
 

@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { removeDuplicatesFromArrayOfObjects } from '../src/core/utils/removeDuplicatesFromArrayOfObjects';
 
 describe('removeDuplicatesFromArrayOfObjects', () => {

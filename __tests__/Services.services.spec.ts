@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import connectorsData from '../mocks/data/CONNECTORS.json';
 import listenersData from '../mocks/data/LISTENERS.json';
 import { styles } from '../src/config/styles';

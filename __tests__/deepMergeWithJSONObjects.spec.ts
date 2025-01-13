@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { deepMergeJSONObjects } from '../src/core/utils/deepMergeWithJSONObjects';
 
 describe('deepMergeJSONObjects', () => {

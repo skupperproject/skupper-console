@@ -1,11 +1,12 @@
 import { render } from '@testing-library/react';
 import eventUser from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 
 import SkSearchFilter from '../src/core/components/SkTable/SkSearchFilter';
 import { testIds } from '../src/core/components/SkTable/SkSearchFilter/SkSearchFilter.testIds';
 
 describe('SkSearchFilter', () => {
-  const onSearchMock = jest.fn();
+  const onSearchMock = vi.fn();
   const selectOptions = [
     { id: 'option1', label: 'Option 1' },
     { id: 'option2', label: 'Option 2' }

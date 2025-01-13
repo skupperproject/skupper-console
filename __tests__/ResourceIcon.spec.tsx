@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 import ResourceIcon from '../src/core/components/ResourceIcon';
 
@@ -9,7 +10,7 @@ describe('ResourceIcon', () => {
     expect(img).toBeInTheDocument();
   });
 
-  test('renders site icon', () => {
+  it('renders site icon', () => {
     render(<ResourceIcon type="site" />);
 
     const el = screen.getByRole('site-resource-icon');
@@ -19,7 +20,7 @@ describe('ResourceIcon', () => {
     expect(el).toHaveTextContent('S');
   });
 
-  test('renders process icon', () => {
+  it('renders process icon', () => {
     render(<ResourceIcon type="process" />);
 
     const el = screen.getByRole('process-resource-icon');
@@ -29,7 +30,7 @@ describe('ResourceIcon', () => {
     expect(el).toHaveTextContent('P');
   });
 
-  test('renders component icon', () => {
+  it('renders component icon', () => {
     render(<ResourceIcon type="component" />);
 
     const el = screen.getByRole('component-resource-icon');
@@ -39,7 +40,7 @@ describe('ResourceIcon', () => {
     expect(el).toHaveTextContent('C');
   });
 
-  test('renders service icon', () => {
+  it('renders service icon', () => {
     render(<ResourceIcon type="service" />);
 
     const el = screen.getByRole('service-resource-icon');

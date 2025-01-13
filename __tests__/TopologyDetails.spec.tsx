@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import processesPairsData from '../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../mocks/data/PROCESSES.json';
@@ -24,7 +25,7 @@ describe('Topology details', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render a list of processes when modalType is "process"', () => {

@@ -2,8 +2,8 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { setMockUseParams } from '../jest.setup';
 import componentsData from '../mocks/data/COMPONENTS.json';
 import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
@@ -13,6 +13,7 @@ import LoadingPage from '../src/core/components/SkLoading';
 import Component from '../src/pages/Components/views/Component';
 import { Providers } from '../src/providers';
 import { ComponentResponse } from '../src/types/REST.interfaces';
+import { setMockUseParams } from '../vite.setup';
 
 const componentResults = componentsData.results as ComponentResponse[];
 
@@ -35,7 +36,7 @@ describe('Component component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the Component view after the data loading is complete', async () => {

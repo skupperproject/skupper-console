@@ -1,18 +1,23 @@
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi, beforeEach, Mock } from 'vitest';
 
 import SkDurationCell from '../src/core/components/SKDurationCell';
 import { formatLatency } from '../src/core/utils/formatLatency';
 
-jest.mock('../src/core/utils/formatLatency', () => ({
-  formatLatency: jest.fn()
+vi.mock('../src/core/utils/formatLatency', () => ({
+  formatLatency: vi.fn()
 }));
 
 describe('SkDurationCell', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('renders the formatted duration when value is provided', () => {
     const value = 123456; // microseconds
     const formattedLatency = '123 ms';
 
-    (formatLatency as jest.Mock).mockReturnValue(formattedLatency);
+    (formatLatency as Mock).mockReturnValue(formattedLatency);
 
     render(<SkDurationCell value={value} data={{}} />);
 

@@ -1,4 +1,5 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 import {
   ServiceClientResourceOptions,

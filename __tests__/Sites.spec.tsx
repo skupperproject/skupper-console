@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import { ErrorBoundary } from 'react-error-boundary';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import sitesData from '../mocks/data/SITES.json';
 import { loadMockServer } from '../mocks/server';
@@ -27,7 +28,7 @@ describe('Begin testing the Sites component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render a loading page when data is loading', () => {
@@ -97,7 +98,7 @@ describe('Begin testing the Sites component', () => {
   it('Should call the useNavigate function with the path to an error page when a 404 error is received from sites', async () => {
     server.get(MockApiPaths.Sites, MockApi.get404Error);
     // removes an expected error boundary console.error from react query
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
 
     render(
       <Providers
@@ -128,7 +129,7 @@ describe('Begin testing the Sites component', () => {
   it('Should call the useNavigate function with the path to an error page when a 500 error is received from sites', async () => {
     server.get(MockApiPaths.Sites, MockApi.get500Error);
     // removes an expected error boundary console.error from react query
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
 
     render(
       <Providers

@@ -1,15 +1,16 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
 import useTopologySiteData from '../src/pages/Topology/hooks/useTopologySiteData';
 
-jest.mock('@tanstack/react-query', () => ({
-  useSuspenseQueries: jest.fn()
+vi.mock('@tanstack/react-query', () => ({
+  useSuspenseQueries: vi.fn()
 }));
 
 describe('useTopologySiteData', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should return the expected data when showDataLink, showBytes, showByteRate are true', async () => {
@@ -17,7 +18,7 @@ describe('useTopologySiteData', () => {
     const mockSitesPairs = [{ sourceId: 'site1', destinationId: 'site2' }];
     const mockMetrics = { bytes: 1000 };
 
-    (useSuspenseQueries as jest.Mock).mockReturnValue([
+    (useSuspenseQueries as Mock).mockReturnValue([
       { data: { results: mockSites } },
       { data: undefined },
       { data: { results: mockSitesPairs } },
@@ -49,7 +50,7 @@ describe('useTopologySiteData', () => {
       }
     ];
 
-    (useSuspenseQueries as jest.Mock).mockReturnValue([
+    (useSuspenseQueries as Mock).mockReturnValue([
       { data: { results: mockSites } },
       { data: { results: mockRouterLinks } },
       { data: undefined },
@@ -74,7 +75,7 @@ describe('useTopologySiteData', () => {
     const mockSites = [{ identity: 'site1' }, { identity: 'site2' }];
     const mockSitesPairs = [{ sourceId: 'site1', destinationId: 'site2' }];
 
-    (useSuspenseQueries as jest.Mock).mockReturnValue([
+    (useSuspenseQueries as Mock).mockReturnValue([
       { data: { results: mockSites } },
       { data: undefined },
       { data: { results: mockSitesPairs } },

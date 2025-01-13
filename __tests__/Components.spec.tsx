@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import componentsData from '../mocks/data/COMPONENTS.json';
 import { loadMockServer } from '../mocks/server';
@@ -31,7 +32,7 @@ describe('Begin testing the Components component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render a loading page when data is loading', () => {

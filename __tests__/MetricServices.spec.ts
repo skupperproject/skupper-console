@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from 'vitest';
+
 import * as PrometheusAPIModule from '../src/API/Prometheus.api';
 import {
   MetricsController,
@@ -11,9 +13,9 @@ describe('useMetrics', () => {
   it('should getLatencyPercentiles handles errors', async () => {
     const error = new Error('API request failed');
 
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchPercentilesByLeInTimeRange')
-      .mockImplementation(jest.fn().mockRejectedValue(error));
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchPercentilesByLeInTimeRange').mockImplementation(
+      vi.fn().mockRejectedValue(error)
+    );
 
     await expect(
       MetricsController.getLatencyPercentiles({
@@ -25,9 +27,9 @@ describe('useMetrics', () => {
   it('should getLatencyBuckets handles errors', async () => {
     const error = new Error('API request failed');
 
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchBucketCountsInTimeRange')
-      .mockImplementation(jest.fn().mockRejectedValue(error));
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchBucketCountsInTimeRange').mockImplementation(
+      vi.fn().mockRejectedValue(error)
+    );
 
     await expect(
       MetricsController.getLatencyBuckets({
@@ -39,9 +41,9 @@ describe('useMetrics', () => {
   it('should getRequests handles errors', async () => {
     const error = new Error('API request failed');
 
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchRequestRateByMethodInInTimeRange')
-      .mockImplementation(jest.fn().mockRejectedValue(error));
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchRequestRateByMethodInInTimeRange').mockImplementation(
+      vi.fn().mockRejectedValue(error)
+    );
 
     await expect(
       MetricsController.getRequests({
@@ -53,9 +55,9 @@ describe('useMetrics', () => {
   it('should getResponse handles errors', async () => {
     const error = new Error('API request failed');
 
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchHttpErrorRateByPartialCodeInTimeRange')
-      .mockImplementation(jest.fn().mockRejectedValue(error));
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchHttpErrorRateByPartialCodeInTimeRange').mockImplementation(
+      vi.fn().mockRejectedValue(error)
+    );
 
     await expect(
       MetricsController.getResponses({
@@ -67,9 +69,9 @@ describe('useMetrics', () => {
   it('should getDataTraffic handles errors', async () => {
     const error = new Error('API request failed');
 
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchByteRateInTimeRange')
-      .mockImplementation(jest.fn().mockRejectedValue(error));
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchByteRateInTimeRange').mockImplementation(
+      vi.fn().mockRejectedValue(error)
+    );
 
     await expect(
       MetricsController.getDataTraffic({
@@ -81,9 +83,9 @@ describe('useMetrics', () => {
   it('should getConnections handles errors', async () => {
     const error = new Error('API request failed');
 
-    jest
-      .spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnections')
-      .mockImplementation(jest.fn().mockRejectedValue(error));
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnections').mockImplementation(
+      vi.fn().mockRejectedValue(error)
+    );
 
     await expect(
       MetricsController.getConnections({

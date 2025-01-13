@@ -2,8 +2,8 @@ import { Suspense } from 'react';
 
 import { fireEvent, render, screen, waitForElementToBeRemoved, waitFor } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { setMockUseParams } from '../jest.setup';
 import processesData from '../mocks/data/PROCESSES.json';
 import sitesData from '../mocks/data/SITES.json';
 import { loadMockServer } from '../mocks/server';
@@ -16,6 +16,7 @@ import { ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
 import Site from '../src/pages/Sites/views/Site';
 import { Providers } from '../src/providers';
 import { SiteResponse } from '../src/types/REST.interfaces';
+import { setMockUseParams } from '../vite.setup';
 
 const siteResults = sitesData.results as SiteResponse[];
 const processResults = processesData.results as extendedProcessResponse[];
@@ -28,6 +29,7 @@ describe('Site component', () => {
   beforeEach(() => {
     server = loadMockServer() as Server;
     server.logging = false;
+
     render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
@@ -41,7 +43,7 @@ describe('Site component', () => {
     fireEvent.click(screen.getByText(Labels.Overview));
 
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the sites view after the data loading is complete', async () => {

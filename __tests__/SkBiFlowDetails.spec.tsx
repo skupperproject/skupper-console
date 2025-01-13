@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import httpRequests from '../mocks/data/HTTP_REQUESTS.json';
 import tcpConnections from '../mocks/data/TCP_CONNECTIONS.json';
@@ -21,7 +22,7 @@ describe('BiFlowDetails component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the http/2 Open Request', () => {

@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import servicesData from '../mocks/data/SERVICES.json';
 import tcpConnections from '../mocks/data/TCP_CONNECTIONS.json';
@@ -25,7 +26,7 @@ describe('Begin testing the TCP connections component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the Connection view -> Open connections after the data loading is complete', async () => {

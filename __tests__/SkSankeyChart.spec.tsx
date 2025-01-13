@@ -1,8 +1,13 @@
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 import { Labels } from '../src/config/labels';
 import { styles } from '../src/config/styles';
 import SkSankeyChart, { getColors } from '../src/core/components/SKSanckeyChart/index';
+
+vi.mock('@nivo/sankey', () => ({
+  ResponsiveSankey: () => <div />
+}));
 
 describe('SkSankeyChart', () => {
   it('should return nodeColor if it exists', () => {
@@ -21,7 +26,7 @@ describe('SkSankeyChart', () => {
       links: [{ source: 'node1', target: 'node2', value: 42 }]
     };
 
-    const component = render(<SkSankeyChart data={data} onSearch={jest.fn()} />);
+    const component = render(<SkSankeyChart data={data} onSearch={vi.fn()} />);
     expect(component).toMatchSnapshot();
   });
 
@@ -31,7 +36,7 @@ describe('SkSankeyChart', () => {
       links: []
     };
 
-    render(<SkSankeyChart data={data} onSearch={jest.fn()} />);
+    render(<SkSankeyChart data={data} onSearch={vi.fn()} />);
 
     expect(screen.getByText(Labels.NoMetricFound)).toBeInTheDocument();
     expect(screen.getByText(Labels.NoMetricFoundDescription)).toBeInTheDocument();

@@ -1,10 +1,21 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Server } from 'miragejs';
-import * as router from 'react-router';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { loadMockServer } from '../mocks/server';
 import SkHeader, { HeaderLabels, UserDropdown } from '../src/layout/Header';
 import { Providers } from '../src/providers';
+
+const navigate = vi.hoisted(() => vi.fn());
+
+vi.mock(import('react-router-dom'), async (importOriginal) => {
+  const mod = await importOriginal();
+
+  return {
+    ...mod,
+    useNavigate: vi.fn().mockImplementation(() => navigate)
+  };
+});
 
 describe('SkHeader', () => {
   let server: Server;
@@ -16,7 +27,7 @@ describe('SkHeader', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should renders the header with logo', () => {
@@ -41,9 +52,6 @@ describe('SkHeader', () => {
   });
 
   it('should click logout', async () => {
-    const navigate = jest.fn();
-    jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate);
-
     render(
       <Providers>
         <UserDropdown />

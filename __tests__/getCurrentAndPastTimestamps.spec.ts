@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { getCurrentAndPastTimestamps } from '../src/core/utils/getCurrentAndPastTimestamps';
 
 describe('getCurrentAndPastTimestamps', () => {

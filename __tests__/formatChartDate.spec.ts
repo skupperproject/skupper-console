@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from 'vitest';
+
 import {
   formatChartDate,
   getDayFromTimestamp,
@@ -6,7 +8,7 @@ import {
 } from '../src/core/utils/formatChartDate';
 
 const fixedDate = new Date('2023-08-02T23:00:00');
-jest.spyOn(Date, 'now').mockImplementation(() => fixedDate.getTime());
+vi.spyOn(Date, 'now').mockImplementation(() => fixedDate.getTime());
 
 describe('formatChartDate', () => {
   const now = Date.now(); // Current time in milliseconds

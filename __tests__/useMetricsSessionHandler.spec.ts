@@ -1,6 +1,7 @@
 import { act } from 'react';
 
 import { renderHook } from '@testing-library/react';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
 import { Direction } from '../src/API/REST.enum';
 import { Labels } from '../src/config/labels';
@@ -32,21 +33,19 @@ const mockExpandedMetricSections: ExpandedMetricSections = {
 };
 
 // Mock the utility functions
-jest.mock('../src/core/utils/persistData', () => ({
-  getDataFromSession: jest.fn(),
-  storeDataToSession: jest.fn()
+vi.mock('../src/core/utils/persistData', () => ({
+  getDataFromSession: vi.fn(),
+  storeDataToSession: vi.fn()
 }));
 
 describe('useMetricSessionHandlers', () => {
   const id = 'test-id';
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should return undefined for visibleMetrics if session data is missing', () => {
-    (getDataFromSession as jest.Mock).mockReturnValueOnce(undefined);
-
     const { result } = renderHook(() => useMetricSessionHandlers(id));
     expect(result.current.openSections).toBeUndefined();
   });
@@ -55,7 +54,7 @@ describe('useMetricSessionHandlers', () => {
     const mockFilters: QueryMetricsParams = mockQueryMetricsParams;
     const mockVisibleMetrics = mockExpandedMetricSections;
 
-    (getDataFromSession as jest.Mock).mockImplementation((key: string) =>
+    (getDataFromSession as Mock).mockImplementation((key: string) =>
       key.includes('metric-filters') ? mockFilters : mockVisibleMetrics
     );
 

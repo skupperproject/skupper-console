@@ -1,9 +1,10 @@
-import { Suspense, memo, forwardRef, useImperativeHandle, FC } from 'react';
+import { Suspense } from 'react';
 
 import { Button } from '@patternfly/react-core';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import eventUser from '@testing-library/user-event';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, it, vi } from 'vitest';
 
 import sitePairsData from '../mocks/data/SITE_PAIRS.json';
 import sitesData from '../mocks/data/SITES.json';
@@ -22,28 +23,20 @@ import { PairsResponse, SiteResponse } from '../src/types/REST.interfaces';
 const sitesResults = sitesData.results as SiteResponse[];
 const sitePairsResults = sitePairsData.results as PairsResponse[];
 
-const MockGraphComponent: FC<SkGraphProps> = memo(
-  forwardRef(({ onClickEdge, onClickNode }, ref) => {
-    useImperativeHandle(ref, () => ({
-      saveNodePositions() {
-        return jest.fn();
-      }
-    }));
-
-    return (
-      <>
-        <Button onClick={() => onClickNode && onClickNode(convertSiteToNode(sitesResults[0]))}>onClickNode</Button>
-        <Button
-          onClick={() =>
-            onClickEdge && onClickEdge(TopologyController.convertPairToEdge(sitePairsResults[0], 'SkDataEdge'))
-          }
-        >
-          onClickEdge
-        </Button>
-      </>
-    );
-  })
-);
+vi.mock('../src/core/components/SkGraph', () => ({
+  default: ({ onClickEdge, onClickNode }: SkGraphProps) => (
+    <>
+      <Button onClick={() => onClickNode && onClickNode(convertSiteToNode(sitesResults[0]))}>onClickNode</Button>
+      <Button
+        onClick={() =>
+          onClickEdge && onClickEdge(TopologyController.convertPairToEdge(sitePairsResults[0], 'SkDataEdge'))
+        }
+      >
+        onClickEdge
+      </Button>
+    </>
+  )
+}));
 
 describe('TopologySite', () => {
   let server: Server;
@@ -55,17 +48,14 @@ describe('TopologySite', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('should display with idSelected', async () => {
     render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
-          <TopologySite
-            ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)}
-            GraphComponent={MockGraphComponent}
-          />
+          <TopologySite ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)} />
         </Suspense>
       </Providers>
     );
@@ -81,10 +71,7 @@ describe('TopologySite', () => {
     render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
-          <TopologySite
-            ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)}
-            GraphComponent={MockGraphComponent}
-          />
+          <TopologySite ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)} />
         </Suspense>
       </Providers>
     );
@@ -100,10 +87,7 @@ describe('TopologySite', () => {
     render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
-          <TopologySite
-            ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)}
-            GraphComponent={MockGraphComponent}
-          />
+          <TopologySite ids={TopologyController.transformStringIdsToIds(sitesResults[2].identity)} />
         </Suspense>
       </Providers>
     );
@@ -119,7 +103,7 @@ describe('TopologySite', () => {
     render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
-          <TopologySite GraphComponent={MockGraphComponent} initDisplayOptionsEnabled={[SHOW_DATA_LINKS]} />
+          <TopologySite initDisplayOptionsEnabled={[SHOW_DATA_LINKS]} />
         </Suspense>
       </Providers>
     );

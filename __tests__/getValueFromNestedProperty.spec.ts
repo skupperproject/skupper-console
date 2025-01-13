@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { getValueFromNestedProperty } from '../src/core/utils/getValueFromNestedProperty';
 
 type TestObject = {

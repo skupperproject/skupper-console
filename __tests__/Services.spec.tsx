@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import servicesData from '../mocks/data/SERVICES.json';
 import { loadMockServer } from '../mocks/server';
@@ -33,7 +34,7 @@ describe('Begin testing the Service component', () => {
 
   afterEach(() => {
     server.shutdown();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should render the Services view after the data loading is complete', async () => {

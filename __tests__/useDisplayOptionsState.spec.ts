@@ -1,6 +1,7 @@
 import { act } from 'react';
 
 import { renderHook } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useDisplayOptionsState } from '../src/pages/Topology/hooks/useDisplayOptionsState';
 import {
@@ -13,13 +14,13 @@ import {
 } from '../src/pages/Topology/Topology.constants';
 
 describe('useDisplayOptionsState', () => {
-  const onSelectedMock = jest.fn();
+  const onSelectedMock = vi.fn();
 
   beforeEach(() => {
     onSelectedMock.mockClear();
   });
 
-  test('should handle the site link metrics options properly', () => {
+  it('should handle the site link metrics options properly', () => {
     const { result } = renderHook(() => useDisplayOptionsState({ defaultSelected: [], onSelected: onSelectedMock }));
 
     act(() => {
@@ -52,7 +53,7 @@ describe('useDisplayOptionsState', () => {
     );
   });
 
-  test('should toggle between SHOW_DATA_LINKS and SHOW_ROUTER_LINKS', () => {
+  it('should toggle between SHOW_DATA_LINKS and SHOW_ROUTER_LINKS', () => {
     const { result } = renderHook(() => useDisplayOptionsState({ defaultSelected: [], onSelected: onSelectedMock }));
 
     act(() => {
