@@ -25,7 +25,7 @@ jobs:
 
       - name: Install Dependencies 📦
         run: |
-          HUSKY=0 CYPRESS_RUN_BINARY=0 yarn install --prefer-offline --frozen-lockfile
+          HUSKY=0 CYPRESS_INSTALL_BINARY=0 yarn install --prefer-offline --frozen-lockfile
 
       - name: Build Project 🚧
         run: |
