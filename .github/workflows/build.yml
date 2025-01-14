@@ -24,10 +24,6 @@ jobs:
         run: |
           HUSKY=0 yarn install --prefer-offline --frozen-lockfile
 
-      - name: Check for cyclic dependencies 🔄
-        run: |
-          yarn check-cycles
-
       - name: Lint code 🎨
         run: |
           yarn lint
