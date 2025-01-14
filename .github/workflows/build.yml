@@ -2,9 +2,9 @@ name: Build 🏗️
 
 on:
   push:
-    branches: [main, v2]
+    branches: [main]
   pull_request:
-    branches: [main, v2]
+    branches: [main]
 
 jobs:
   build-and-deploy:
@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies 📦
         run: |
-          HUSKY=0 yarn install --prefer-offline --immutable --check-cache
+          HUSKY=0 yarn install --prefer-offline --frozen-lockfile
 
       - name: Check for cyclic dependencies 🔄
         run: |
