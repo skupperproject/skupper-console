@@ -63,8 +63,9 @@
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react-swc": "^3.7.2",
-    "@vitest/coverage-v8": "2.1.8",
+    "@vitest/coverage-v8": "^2.1.8",
     "@vitest/eslint-plugin": "^1.1.25",
+    "cypress": "^13.17.0",
     "commitizen": "^4.3.1",
     "cz-git": "^1.11.0",
     "eslint": "^9.18.0",
@@ -79,6 +80,7 @@
     "lint-staged": "^15.3.0",
     "miragejs": "^0.1.48",
     "prettier": "^3.4.2",
+    "start-server-and-test": "^2.0.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.20.0",
@@ -87,9 +89,5 @@
     "vite-plugin-favicons-inject": "^2.2.0",
     "vite-plugin-static-copy": "^2.2.0",
     "vitest": "^2.1.8"
-  },
-  "optionalDependencies": {
-    "cypress": "^13.17.0",
-    "start-server-and-test": "^2.0.9"
   }
 }
