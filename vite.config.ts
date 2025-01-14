@@ -1,4 +1,4 @@
-import react from '@vitejs/plugin-react-swc';
+import react from '@vitejs/plugin-react';
 import { defineConfig, PluginOption } from 'vite';
 import circleDependency from 'vite-plugin-circular-dependency';
 import vitePluginFaviconsInject from 'vite-plugin-favicons-inject';

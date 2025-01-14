@@ -62,7 +62,7 @@
     "@types/node": "^22.10.6",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
-    "@vitejs/plugin-react-swc": "^3.7.2",
+    "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-v8": "^2.1.8",
     "@vitest/eslint-plugin": "^1.1.25",
     "cypress": "^13.17.0",
@@ -89,5 +89,6 @@
     "vite-plugin-favicons-inject": "^2.2.0",
     "vite-plugin-static-copy": "^2.2.0",
     "vitest": "^2.1.8"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
