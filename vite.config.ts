@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig, PluginOption } from 'vite';
+import circleDependency from 'vite-plugin-circular-dependency';
 import vitePluginFaviconsInject from 'vite-plugin-favicons-inject';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
@@ -9,6 +10,7 @@ export default defineConfig(() => {
   return {
     plugins: [
       react(),
+      circleDependency(),
       process.env.BRAND_APP_FAVICON && vitePluginFaviconsInject(process.env.BRAND_APP_FAVICON),
       process.env.BRAND_APP_LOGO &&
         viteStaticCopy({

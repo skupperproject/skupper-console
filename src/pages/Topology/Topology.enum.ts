@@ -1,6 +1,5 @@
 export enum TopologyRoutesPaths {
-  Topology = '/topology',
-  Overview = '/topology/Overview'
+  Topology = '/topology'
 }
 
 export enum TopologyViews {

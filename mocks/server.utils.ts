@@ -1,4 +1,4 @@
-import { DataMap, dataMap } from './dataMao';
+import { DataMap, dataMap } from './dataMap';
 import { ApiResponse } from '../src/types/REST.interfaces';
 
 export const loadData = <T>(fileName: keyof DataMap): ApiResponse<T[]> => dataMap[fileName] as ApiResponse<T[]>;

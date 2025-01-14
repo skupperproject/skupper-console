@@ -12,7 +12,7 @@ import BiFlowList from '../components/BiFlowList';
 import PairDetails from '../components/PairDetails';
 import { useProcessPairData } from '../hooks/useProcessPairData';
 
-export interface ProcessPairProps {
+interface ProcessPairProps {
   id: string;
 }
 

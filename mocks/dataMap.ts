@@ -36,7 +36,7 @@ type LinksData = RouterLinkResponse[];
 type ListenersData = ListenerResponse[];
 type ConnectorsData = ConnectorResponse[];
 
-export type DataEntry<T> = {
+type DataEntry<T> = {
   results: T[];
   count: number;
   timeRangeCount: number;
