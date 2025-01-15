@@ -17,7 +17,7 @@ export default [
   eslintConfigPrettier,
   pluginPrettierRecommended,
   {
-    ignores: ['**/build', '**/css']
+    ignores: ['**/build', '**/css', '**/*.mjs']
   },
 
   {
