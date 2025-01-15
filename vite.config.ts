@@ -11,7 +11,7 @@ export default defineConfig(() => {
     plugins: [
       react(),
       circleDependency(),
-      process.env.BRAND_APP_FAVICON && vitePluginFaviconsInject(process.env.BRAND_APP_FAVICON),
+      process.env.BRAND_FAVICON && vitePluginFaviconsInject(process.env.BRAND_FAVICON),
       process.env.BRAND_APP_LOGO &&
         viteStaticCopy({
           targets: [
