@@ -8,8 +8,9 @@ import {
   t_color_purple_50,
   t_color_orange_10,
   t_color_orange_30,
-  t_color_orange_40,
+  t_color_orange_70,
   t_color_red_50,
+  t_color_red_60,
   t_color_teal_50,
   t_color_white,
   t_global_font_size_body_default,
@@ -29,8 +30,9 @@ export const hexColors = {
   Purple500: t_color_purple_50.value,
   Orange100: t_color_orange_10.value,
   Orange300: t_color_orange_30.value,
-  Orange400: t_color_orange_40.value,
+  Orange700: t_color_orange_70.value,
   Red500: t_color_red_50.value,
+  Red600: t_color_red_60.value,
   Teal500: t_color_teal_50.value,
   Green500: t_color_green_50.value
 };
@@ -48,6 +50,6 @@ export const styles = {
     darkTextColor: hexColors.Black900,
     infoColor: hexColors.Blue400,
     errorColor: hexColors.Red500,
-    warningColor: hexColors.Orange400
+    warningColor: hexColors.Orange700
   }
 };

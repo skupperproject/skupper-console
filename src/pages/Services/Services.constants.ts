@@ -63,13 +63,13 @@ export const customServiceCells = {
   SourceProcessNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
     SkLinkCell({
       ...props,
-      type: 'site',
+      type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.sourceName}@${props.data.sourceId}`
     }),
   DestProcessNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
     SkLinkCell({
       ...props,
-      type: 'site',
+      type: 'process',
       link: `${ProcessesRoutesPaths.Processes}/${props.data.destinationName}@${props.data.destinationId}`
     }),
   SourceSiteNameLinkCell: (props: SkLinkCellProps<ProcessPairsResponse>) =>
