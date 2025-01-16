@@ -5,7 +5,7 @@ Base URL used to connect to the Network Observer backend.
 If not explicitly set via environment variables, it defaults to the current host.
 */
 const BASE_URL_NETWORK_OBSERVER = process.env.OBSERVER_URL || `${window.location.protocol}//${window.location.host}`;
-export const API_VERSION = process.env.API_VERSION ? `/${process.env.API_VERSION}` : '/api/v1alpha1';
+export const API_VERSION = process.env.API_VERSION ? `/${process.env.API_VERSION}` : '/api/v2alpha1';
 export const API_URL = `${BASE_URL_NETWORK_OBSERVER}${API_VERSION}`;
 
 export const PROMETHEUS_SUFFIX = '/internal/prom';
