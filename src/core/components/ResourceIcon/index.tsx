@@ -30,11 +30,11 @@ const RESOURCE_MAP = {
   },
   connector: {
     symbol: 'CN',
-    style: { background: hexColors.Orange400 }
+    style: { background: hexColors.Orange700 }
   },
   listener: {
     symbol: 'LS',
-    style: { background: hexColors.Red500 }
+    style: { background: hexColors.Red600 }
   },
   skupper: {
     symbol: '',
