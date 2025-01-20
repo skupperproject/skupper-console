@@ -50,4 +50,5 @@ jobs:
 
       - name: Run Integration tests 🚨
         run: |
-          BROWSER=${{ matrix.browser }} yarn ci
+          export TERM=xterm # Correzione per tput
+          ELECTRON_DISABLE_GPU=1 CYPRESS_NO_COMMAND_LOG=1 BROWSER=${{ matrix.browser }} yarn ci
