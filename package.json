@@ -23,6 +23,12 @@
     "test": "yarn test:watch --run",
     "test:watch": "USE_MOCK_SERVER=true vitest",
     "coverage": "yarn test --coverage",
+<<<<<<< HEAD
+=======
+    "cy:open": "cypress open",
+    "cy:run": "cypress run --browser=${BROWSER:-electron}",
+    "ci": "start-test 3000 cy:run",
+>>>>>>> 5669dcf3 (ci: :ferris_wheel: Adapt script for multibrowser)
     "cy:dev": "cypress open",
     "cy:run": "cypress run",
     "ci": "if [ -z \"$CYPRESS_BASE_URL\" ]; then start-test 3000 cy:run; else yarn cy:run; fi",
