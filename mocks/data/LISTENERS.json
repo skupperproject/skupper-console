@@ -1,8 +1,8 @@
 {
   "results": [
     {
-      "address": "adservice",
-      "addressId": "adr-7375c1d0dcc0c921",
+      "routingKey": "adservice",
+      "serviceId": "adr-7375c1d0dcc0c921",
       "destHost": "0.0.0.0",
       "destPort": "1024",
       "endTime": 0,
@@ -15,8 +15,8 @@
       "startTime": 1733493798977479
     },
     {
-      "address": "cartservice",
-      "addressId": "adr-28bab4448f1c9a48",
+      "routingKey": "cartservice",
+      "serviceId": "adr-28bab4448f1c9a48",
       "destHost": "0.0.0.0",
       "destPort": "1025",
       "endTime": 0,
@@ -29,8 +29,8 @@
       "startTime": 1733493798979102
     },
     {
-      "address": "currencyservice",
-      "addressId": "adr-cab8785b7b99f93f",
+      "routingKey": "currencyservice",
+      "serviceId": "adr-cab8785b7b99f93f",
       "destHost": "0.0.0.0",
       "destPort": "1027",
       "endTime": 0,
@@ -43,8 +43,8 @@
       "startTime": 1733493798981374
     },
     {
-      "address": "paymentservice",
-      "addressId": "adr-97d6f0970aa36488",
+      "routingKey": "paymentservice",
+      "serviceId": "adr-97d6f0970aa36488",
       "destHost": "0.0.0.0",
       "destPort": "1029",
       "endTime": 0,
@@ -57,8 +57,8 @@
       "startTime": 1733493798965401
     },
     {
-      "address": "redis-cart",
-      "addressId": "adr-52d2eda644143ced",
+      "routingKey": "redis-cart",
+      "serviceId": "adr-52d2eda644143ced",
       "destHost": "0.0.0.0",
       "destPort": "1032",
       "endTime": 0,
@@ -71,8 +71,8 @@
       "startTime": 1733493798967323
     },
     {
-      "address": "recommendationservice",
-      "addressId": "adr-0b47bb519031b31f",
+      "routingKey": "recommendationservice",
+      "serviceId": "adr-0b47bb519031b31f",
       "destHost": "0.0.0.0",
       "destPort": "1031",
       "endTime": 0,
@@ -85,8 +85,8 @@
       "startTime": 1733493798969036
     },
     {
-      "address": "shippingservice",
-      "addressId": "adr-00ffe0b268c6eae4",
+      "routingKey": "shippingservice",
+      "serviceId": "adr-00ffe0b268c6eae4",
       "destHost": "0.0.0.0",
       "destPort": "1033",
       "endTime": 0,
@@ -99,8 +99,8 @@
       "startTime": 1733493798970697
     },
     {
-      "address": "checkoutservice",
-      "addressId": "adr-3f65f628c8aa2f3e",
+      "routingKey": "checkoutservice",
+      "serviceId": "adr-3f65f628c8aa2f3e",
       "destHost": "0.0.0.0",
       "destPort": "1026",
       "endTime": 0,
@@ -113,8 +113,8 @@
       "startTime": 1733493798972410
     },
     {
-      "address": "emailservice",
-      "addressId": "adr-5193d597cb3d8442",
+      "routingKey": "emailservice",
+      "serviceId": "adr-5193d597cb3d8442",
       "destHost": "0.0.0.0",
       "destPort": "1028",
       "endTime": 0,
@@ -127,8 +127,8 @@
       "startTime": 1733493798974067
     },
     {
-      "address": "productcatalogservice",
-      "addressId": "adr-026fd79c9d4f5db4",
+      "routingKey": "productcatalogservice",
+      "serviceId": "adr-026fd79c9d4f5db4",
       "destHost": "0.0.0.0",
       "destPort": "1030",
       "endTime": 0,
@@ -141,8 +141,8 @@
       "startTime": 1733493798975820
     },
     {
-      "address": "cartservice",
-      "addressId": "adr-28bab4448f1c9a48",
+      "routingKey": "cartservice",
+      "serviceId": "adr-28bab4448f1c9a48",
       "destHost": "0.0.0.0",
       "destPort": "1025",
       "endTime": 0,
@@ -155,8 +155,8 @@
       "startTime": 1733495314884692
     },
     {
-      "address": "checkoutservice",
-      "addressId": "adr-3f65f628c8aa2f3e",
+      "routingKey": "checkoutservice",
+      "serviceId": "adr-3f65f628c8aa2f3e",
       "destHost": "0.0.0.0",
       "destPort": "1027",
       "endTime": 0,
@@ -169,8 +169,8 @@
       "startTime": 1733495314886936
     },
     {
-      "address": "redis-cart",
-      "addressId": "adr-52d2eda644143ced",
+      "routingKey": "redis-cart",
+      "serviceId": "adr-52d2eda644143ced",
       "destHost": "0.0.0.0",
       "destPort": "1031",
       "endTime": 0,
@@ -183,8 +183,8 @@
       "startTime": 1733495314893532
     },
     {
-      "address": "currencyservice",
-      "addressId": "adr-cab8785b7b99f93f",
+      "routingKey": "currencyservice",
+      "serviceId": "adr-cab8785b7b99f93f",
       "destHost": "0.0.0.0",
       "destPort": "1026",
       "endTime": 0,
@@ -197,8 +197,8 @@
       "startTime": 1733495314896154
     },
     {
-      "address": "shippingservice",
-      "addressId": "adr-00ffe0b268c6eae4",
+      "routingKey": "shippingservice",
+      "serviceId": "adr-00ffe0b268c6eae4",
       "destHost": "0.0.0.0",
       "destPort": "1032",
       "endTime": 0,
@@ -211,8 +211,8 @@
       "startTime": 1733495314900244
     },
     {
-      "address": "paymentservice",
-      "addressId": "adr-97d6f0970aa36488",
+      "routingKey": "paymentservice",
+      "serviceId": "adr-97d6f0970aa36488",
       "destHost": "0.0.0.0",
       "destPort": "1029",
       "endTime": 0,
@@ -225,8 +225,8 @@
       "startTime": 1733495314873972
     },
     {
-      "address": "productcatalogservice",
-      "addressId": "adr-026fd79c9d4f5db4",
+      "routingKey": "productcatalogservice",
+      "serviceId": "adr-026fd79c9d4f5db4",
       "destHost": "0.0.0.0",
       "destPort": "1030",
       "endTime": 0,
@@ -239,8 +239,8 @@
       "startTime": 1733495314876158
     },
     {
-      "address": "recommendationservice",
-      "addressId": "adr-0b47bb519031b31f",
+      "routingKey": "recommendationservice",
+      "serviceId": "adr-0b47bb519031b31f",
       "destHost": "0.0.0.0",
       "destPort": "1033",
       "endTime": 0,
@@ -253,8 +253,8 @@
       "startTime": 1733495314878009
     },
     {
-      "address": "adservice",
-      "addressId": "adr-7375c1d0dcc0c921",
+      "routingKey": "adservice",
+      "serviceId": "adr-7375c1d0dcc0c921",
       "destHost": "0.0.0.0",
       "destPort": "1024",
       "endTime": 0,
@@ -267,8 +267,8 @@
       "startTime": 1733495314880440
     },
     {
-      "address": "emailservice",
-      "addressId": "adr-5193d597cb3d8442",
+      "routingKey": "emailservice",
+      "serviceId": "adr-5193d597cb3d8442",
       "destHost": "0.0.0.0",
       "destPort": "1028",
       "endTime": 0,
@@ -281,8 +281,8 @@
       "startTime": 1733495314882911
     },
     {
-      "address": "recommendationservice",
-      "addressId": "adr-0b47bb519031b31f",
+      "routingKey": "recommendationservice",
+      "serviceId": "adr-0b47bb519031b31f",
       "destHost": "0.0.0.0",
       "destPort": "1031",
       "endTime": 0,
@@ -295,8 +295,8 @@
       "startTime": 1733493697285137
     },
     {
-      "address": "productcatalogservice",
-      "addressId": "adr-026fd79c9d4f5db4",
+      "routingKey": "productcatalogservice",
+      "serviceId": "adr-026fd79c9d4f5db4",
       "destHost": "0.0.0.0",
       "destPort": "1032",
       "endTime": 0,
@@ -309,8 +309,8 @@
       "startTime": 1733493698081082
     },
     {
-      "address": "shippingservice",
-      "addressId": "adr-00ffe0b268c6eae4",
+      "routingKey": "shippingservice",
+      "serviceId": "adr-00ffe0b268c6eae4",
       "destHost": "0.0.0.0",
       "destPort": "1033",
       "endTime": 0,
@@ -323,8 +323,8 @@
       "startTime": 1733493698912135
     },
     {
-      "address": "adservice",
-      "addressId": "adr-7375c1d0dcc0c921",
+      "routingKey": "adservice",
+      "serviceId": "adr-7375c1d0dcc0c921",
       "destHost": "0.0.0.0",
       "destPort": "1024",
       "endTime": 0,
@@ -337,8 +337,8 @@
       "startTime": 1733493693148947
     },
     {
-      "address": "cartservice",
-      "addressId": "adr-28bab4448f1c9a48",
+      "routingKey": "cartservice",
+      "serviceId": "adr-28bab4448f1c9a48",
       "destHost": "0.0.0.0",
       "destPort": "1025",
       "endTime": 0,
@@ -351,8 +351,8 @@
       "startTime": 1733493693265429
     },
     {
-      "address": "checkoutservice",
-      "addressId": "adr-3f65f628c8aa2f3e",
+      "routingKey": "checkoutservice",
+      "serviceId": "adr-3f65f628c8aa2f3e",
       "destHost": "0.0.0.0",
       "destPort": "1026",
       "endTime": 0,
@@ -365,8 +365,8 @@
       "startTime": 1733493693356096
     },
     {
-      "address": "currencyservice",
-      "addressId": "adr-cab8785b7b99f93f",
+      "routingKey": "currencyservice",
+      "serviceId": "adr-cab8785b7b99f93f",
       "destHost": "0.0.0.0",
       "destPort": "1027",
       "endTime": 0,
@@ -379,8 +379,8 @@
       "startTime": 1733493694088604
     },
     {
-      "address": "emailservice",
-      "addressId": "adr-5193d597cb3d8442",
+      "routingKey": "emailservice",
+      "serviceId": "adr-5193d597cb3d8442",
       "destHost": "0.0.0.0",
       "destPort": "1028",
       "endTime": 0,
@@ -393,8 +393,8 @@
       "startTime": 1733493694938611
     },
     {
-      "address": "paymentservice",
-      "addressId": "adr-97d6f0970aa36488",
+      "routingKey": "paymentservice",
+      "serviceId": "adr-97d6f0970aa36488",
       "destHost": "0.0.0.0",
       "destPort": "1029",
       "endTime": 0,
@@ -407,8 +407,8 @@
       "startTime": 1733493695692332
     },
     {
-      "address": "redis-cart",
-      "addressId": "adr-52d2eda644143ced",
+      "routingKey": "redis-cart",
+      "serviceId": "adr-52d2eda644143ced",
       "destHost": "0.0.0.0",
       "destPort": "1030",
       "endTime": 0,

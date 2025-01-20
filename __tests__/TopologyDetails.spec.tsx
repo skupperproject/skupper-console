@@ -5,14 +5,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import processesPairsData from '../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
-import { extendedProcessResponse } from '../mocks/server.API';
-import { mapResponseProperties } from '../src/API/REST.utils';
 import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../src/config/app';
 import TopologyDetails from '../src/pages/Topology/components/TopologyDetails';
 import { Providers } from '../src/providers';
-import { ProcessPairsResponse } from '../src/types/REST.interfaces';
+import { ProcessPairsResponse, ProcessResponse } from '../src/types/REST.interfaces';
 
-const processesResults = mapResponseProperties(processesData.results, 'toFrontend') as extendedProcessResponse[];
+const processesResults = processesData.results as ProcessResponse[];
 const processPairsResults = processesPairsData.results as ProcessPairsResponse[];
 
 describe('Topology details', () => {

@@ -6,7 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
-import { extendedProcessResponse } from '../mocks/server.API';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
@@ -15,7 +14,7 @@ import Traffic from '../src/pages/shared/Metrics/components/Traffic';
 import * as MetricsModule from '../src/pages/shared/Metrics/services/index';
 import { Providers } from '../src/providers';
 
-const processResult = processesData.results[0] as extendedProcessResponse;
+const processResult = processesData.results[0];
 
 describe('Traffic component', () => {
   let server: Server;

@@ -32,6 +32,7 @@ import { ProcessResponse } from '../../../types/REST.interfaces';
 import { TopologyMetrics } from '../../../types/Topology.interfaces';
 import { ComponentRoutesPaths } from '../../Components/Components.enum';
 import { ProcessesRoutesPaths } from '../../Processes/Processes.enum';
+import { ServicesRoutesPaths } from '../../Services/Services.enum';
 import { SitesRoutesPaths } from '../../Sites/Sites.enum';
 
 type Totals = {
@@ -215,9 +216,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                                 {itemSelected?.services?.map((service) => (
                                   <Fragment key={service}>
                                     <ResourceIcon type="service" />
-                                    <Link
-                                      to={`${ComponentRoutesPaths.Components}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
-                                    >
+                                    <Link to={`${ServicesRoutesPaths.Services}/${service}`}>
                                       {service.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[0]}
                                     </Link>
                                   </Fragment>

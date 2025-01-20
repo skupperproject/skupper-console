@@ -10,7 +10,6 @@ import processesPairsData from '../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../mocks/data/PROCESSES.json';
 import servicesData from '../mocks/data/SERVICES.json';
 import { loadMockServer } from '../mocks/server';
-import { extendedProcessResponse } from '../mocks/server.API';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
@@ -23,10 +22,10 @@ import { TopologyController } from '../src/pages/Topology/services';
 import { convertProcessToNode } from '../src/pages/Topology/services/topologyProcessController';
 import { Providers } from '../src/providers';
 import { SkGraphProps } from '../src/types/Graph.interfaces';
-import { ProcessPairsResponse, ServiceResponse } from '../src/types/REST.interfaces';
+import { ProcessPairsResponse, ProcessResponse, ServiceResponse } from '../src/types/REST.interfaces';
 import { mockNavigate } from '../vite.setup';
 
-const processesResults = processesData.results as extendedProcessResponse[];
+const processesResults = processesData.results as ProcessResponse[];
 const processesPairsResults = processesPairsData.results as ProcessPairsResponse[];
 const serviceResults = servicesData.results as ServiceResponse[];
 

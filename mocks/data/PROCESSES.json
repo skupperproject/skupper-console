@@ -1,7 +1,7 @@
 {
   "results": [
     {
-      "addresses": null,
+      "services": null,
       "endTime": 0,
       "groupIdentity": "pg-d79ebbbdb633fc2a",
       "groupName": "frontend",
@@ -17,7 +17,7 @@
       "startTime": 1728076321000000
     },
     {
-      "addresses": ["paymentservice@adr-97d6f0970aa36488@tcp"],
+      "services": ["paymentservice@adr-97d6f0970aa36488@tcp"],
       "endTime": 0,
       "groupIdentity": "pg-7fba04d7d6346935",
       "groupName": "paymentservice",
@@ -33,7 +33,7 @@
       "startTime": 1728076312000000
     },
     {
-      "addresses": null,
+      "services": null,
       "endTime": 0,
       "groupIdentity": "pg-5f1d82bb72e83a81",
       "groupName": "loadgenerator",
@@ -49,7 +49,7 @@
       "startTime": 1731436562000000
     },
     {
-      "addresses": ["recommendationservice@adr-0b47bb519031b31f@tcp"],
+      "services": ["recommendationservice@adr-0b47bb519031b31f@tcp"],
       "endTime": 0,
       "groupIdentity": "pg-43cdb64a292a0df0",
       "groupName": "recommendationservice",
@@ -65,7 +65,7 @@
       "startTime": 1728076323000000
     },
     {
-      "addresses": ["checkoutservice@adr-3f65f628c8aa2f3e@tcp"],
+      "services": ["checkoutservice@adr-3f65f628c8aa2f3e@tcp"],
       "endTime": 0,
       "groupIdentity": "pg-fdda5ea377d48eb3",
       "groupName": "checkoutservice",
@@ -81,7 +81,7 @@
       "startTime": 1728076309000000
     },
     {
-      "addresses": ["adservice@adr-7375c1d0dcc0c921@tcp"],
+      "services": ["adservice@adr-7375c1d0dcc0c921@tcp"],
       "endTime": 0,
       "groupIdentity": "pg-d5cc5b94ed10f44a",
       "groupName": "adservice",
@@ -97,7 +97,7 @@
       "startTime": 1728076309000000
     },
     {
-      "addresses": ["productcatalogservice@adr-026fd79c9d4f5db4@tcp"],
+      "services": ["productcatalogservice@adr-026fd79c9d4f5db4@tcp"],
       "endTime": 0,
       "groupIdentity": "pg-0c5655ed2c6623c9",
       "groupName": "productcatalogservice",
@@ -113,7 +113,7 @@
       "startTime": 1728076309000000
     },
     {
-      "addresses": ["currencyservice@adr-cab8785b7b99f93f@tcp"],
+      "services": ["currencyservice@adr-cab8785b7b99f93f@tcp"],
       "endTime": 0,
       "groupIdentity": "pg-6b1c18c4f360df2c",
       "groupName": "currencyservice",
@@ -129,7 +129,7 @@
       "startTime": 1728076312000000
     },
     {
-      "addresses": ["cartservice@adr-28bab4448f1c9a48@tcp"],
+      "services": ["cartservice@adr-28bab4448f1c9a48@tcp"],
       "endTime": 0,
       "groupIdentity": "pg-0c4223a4b4e64185",
       "groupName": "cartservice",
@@ -145,7 +145,7 @@
       "startTime": 1728076308000000
     },
     {
-      "addresses": ["shippingservice@adr-00ffe0b268c6eae4@tcp"],
+      "services": ["shippingservice@adr-00ffe0b268c6eae4@tcp"],
       "endTime": 0,
       "groupIdentity": "pg-f027f5b8c969c415",
       "groupName": "shippingservice",
@@ -161,7 +161,7 @@
       "startTime": 1728076313000000
     },
     {
-      "addresses": ["redis-cart@adr-52d2eda644143ced@tcp"],
+      "services": ["redis-cart@adr-52d2eda644143ced@tcp"],
       "endTime": 0,
       "groupIdentity": "pg-18d29b4e911dc857",
       "groupName": "redis",
@@ -177,7 +177,7 @@
       "startTime": 1728076313000000
     },
     {
-      "addresses": ["emailservice@adr-5193d597cb3d8442@tcp"],
+      "services": ["emailservice@adr-5193d597cb3d8442@tcp"],
       "endTime": 0,
       "groupIdentity": "pg-fb6ba5be06fcfc1b",
       "groupName": "emailservice",
@@ -193,7 +193,7 @@
       "startTime": 1728076313000000
     },
     {
-      "addresses": ["paymentservice@adr-97d6f0970aa36488@tcp"],
+      "services": ["paymentservice@adr-97d6f0970aa36488@tcp"],
       "endTime": 0,
       "groupIdentity": "pg-7fba04d7d6346935",
       "groupName": "paymentservice",

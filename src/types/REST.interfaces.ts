@@ -54,7 +54,7 @@ export interface UserResponse {
 export interface SiteResponse extends BaseResponse {
   name: string;
   nameSpace: string;
-  siteVersion: string;
+  siteVersion: string | 'unknown';
   platform: 'kubernetes' | 'podman' | string | undefined;
   routerCount: number;
 }
@@ -122,10 +122,9 @@ export interface ListenerResponse extends BaseResponse {
   name: string;
   parent: string;
   serviceId: string;
-  service: string;
+  routingKey: string;
   destHost: string;
-  destPort: number;
-  processId: string;
+  destPort: string;
   siteId: string;
   siteName: string;
 }
@@ -134,9 +133,9 @@ export interface ConnectorResponse extends BaseResponse {
   name: string;
   parent: string;
   serviceId: string;
-  service: string;
+  routingKey: string;
   destHost: string;
-  destPort: number;
+  destPort: string;
   processId: string;
   target: string; //process name associated,
   count?: number;

@@ -6,13 +6,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
-import { extendedProcessResponse } from '../mocks/server.API';
 import LoadingPage from '../src/core/components/SkLoading';
 import Details from '../src/pages/Processes/components/Details';
 import { Providers } from '../src/providers';
+import { ProcessResponse } from '../src/types/REST.interfaces';
 import { setMockUseParams } from '../vite.setup';
 
-const processResult = processesData.results[0] as extendedProcessResponse;
+const processResult = processesData.results[0] as ProcessResponse;
 
 setMockUseParams({ id: `${processResult.name}@${processResult.identity}` });
 
