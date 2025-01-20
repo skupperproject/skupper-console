@@ -1,4 +1,4 @@
-name: Build 🏗️
+name: Build and Test 🏗️
 
 on:
   push:
@@ -9,6 +9,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chrome, firefox, safari, edge]
     steps:
       - name: Checkout code 📥
         uses: actions/checkout@v4
@@ -47,4 +50,4 @@ jobs:
 
       - name: Run Integration tests 🚨
         run: |
-          yarn ci
+          yarn ci --browser ${{ matrix.browser }}
