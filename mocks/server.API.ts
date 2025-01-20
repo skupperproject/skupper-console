@@ -22,17 +22,13 @@ interface ApiProps {
   url?: string;
 }
 
-export interface extendedProcessResponse extends ProcessResponse {
-  addresses: string[]; // TODO: we are changing naming convention from addresses to services. This type is a temporal bridge
-}
-
 const ITEM_COUNT = Number(process.env.MOCK_ITEM_COUNT) || 0;
 
 // Mock data setup
 const sites = loadData<SiteResponse>('SITES');
 const components = loadData<ComponentResponse>('COMPONENTS');
 const componentPairs = loadData<PairsResponse>('COMPONENT_PAIRS');
-const processes = loadData<extendedProcessResponse>('PROCESSES');
+const processes = loadData<ProcessResponse>('PROCESSES');
 const sitePairs = loadData<PairsResponse>('SITE_PAIRS');
 const processPairs = loadData<ProcessPairsResponse>('PROCESS_PAIRS');
 const services = loadData<ServiceResponse>('SERVICES');
@@ -174,8 +170,9 @@ export const MockApi = {
   getServiceProcessPairs: (_: unknown, { params: { id } }: ApiProps) => {
     const processesByServiceIds = processes.results
       .filter(
-        ({ addresses }) =>
-          addresses && addresses.some((service) => service.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[1] === id)
+        ({ services: processServices }) =>
+          processServices &&
+          processServices.some((service) => service.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[1] === id)
       )
       .map(({ identity }) => identity);
 
@@ -353,7 +350,7 @@ for (let i = 0; i < ITEM_COUNT; i++) {
   });
 }
 
-const mockProcessesForPerf: extendedProcessResponse[] = [];
+const mockProcessesForPerf: ProcessResponse[] = [];
 for (let i = 0; i < ITEM_COUNT; i++) {
   const process = processes.results[i % processes.results.length];
 
@@ -365,7 +362,7 @@ for (let i = 0; i < ITEM_COUNT; i++) {
     groupName: process.groupName,
     parent: process.parent,
     parentName: process.parentName,
-    addresses: process.addresses
+    services: process.services
   });
 }
 

@@ -6,7 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
-import { extendedProcessResponse } from '../mocks/server.API';
 import * as PrometheusAPIModule from '../src/API/Prometheus.api';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { Labels } from '../src/config/labels';
@@ -15,7 +14,7 @@ import LoadingPage from '../src/core/components/SkLoading';
 import Latency from '../src/pages/shared/Metrics/components/Latency';
 import { Providers } from '../src/providers';
 
-const processResult = processesData.results[0] as extendedProcessResponse;
+const processResult = processesData.results[0];
 
 describe('Latency component', () => {
   let server: Server;

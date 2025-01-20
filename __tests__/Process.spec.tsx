@@ -6,7 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
-import { extendedProcessResponse } from '../mocks/server.API';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
@@ -15,7 +14,7 @@ import Process from '../src/pages/Processes/views/Process';
 import { Providers } from '../src/providers';
 import { setMockUseParams } from '../vite.setup';
 
-const processResult = processesData.results[0] as extendedProcessResponse;
+const processResult = processesData.results[0];
 
 setMockUseParams({ id: `${processResult.name}@${processResult.identity}` });
 

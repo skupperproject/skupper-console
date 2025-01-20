@@ -7,7 +7,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import processesData from '../mocks/data/PROCESSES.json';
 import sitesData from '../mocks/data/SITES.json';
 import { loadMockServer } from '../mocks/server';
-import { extendedProcessResponse } from '../mocks/server.API';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
@@ -15,11 +14,11 @@ import LoadingPage from '../src/core/components/SkLoading';
 import { ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
 import Site from '../src/pages/Sites/views/Site';
 import { Providers } from '../src/providers';
-import { SiteResponse } from '../src/types/REST.interfaces';
+import { ProcessResponse, SiteResponse } from '../src/types/REST.interfaces';
 import { setMockUseParams } from '../vite.setup';
 
 const siteResults = sitesData.results as SiteResponse[];
-const processResults = processesData.results as extendedProcessResponse[];
+const processResults = processesData.results as ProcessResponse[];
 
 setMockUseParams({ id: `${siteResults[0].name}@${siteResults[0].identity}` });
 

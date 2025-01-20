@@ -1,8 +1,8 @@
 {
   "results": [
     {
-      "address": "shippingservice",
-      "addressId": "adr-00ffe0b268c6eae4",
+      "routingKey": "shippingservice",
+      "serviceId": "adr-00ffe0b268c6eae4",
       "destHost": "172.17.27.114",
       "destPort": "50051",
       "endTime": 0,
@@ -17,8 +17,8 @@
       "target": "shippingservice-5bb6d895cd-n6fzv"
     },
     {
-      "address": "paymentservice",
-      "addressId": "adr-97d6f0970aa36488",
+      "routingKey": "paymentservice",
+      "serviceId": "adr-97d6f0970aa36488",
       "destHost": "172.17.27.110",
       "destPort": "50051",
       "endTime": 0,
@@ -33,8 +33,8 @@
       "target": "paymentservice-69f99b8c87-kztsn"
     },
     {
-      "address": "emailservice",
-      "addressId": "adr-5193d597cb3d8442",
+      "routingKey": "emailservice",
+      "serviceId": "adr-5193d597cb3d8442",
       "destHost": "172.17.27.116",
       "destPort": "5000",
       "endTime": 0,
@@ -49,8 +49,8 @@
       "target": "emailservice-b6b65cc5b-b9bgq"
     },
     {
-      "address": "recommendationservice",
-      "addressId": "adr-0b47bb519031b31f",
+      "routingKey": "recommendationservice",
+      "serviceId": "adr-0b47bb519031b31f",
       "destHost": "172.17.27.107",
       "destPort": "8080",
       "endTime": 0,
@@ -65,8 +65,8 @@
       "target": "recommendationservice-5df44b74b6-tvg2g"
     },
     {
-      "address": "productcatalogservice",
-      "addressId": "adr-026fd79c9d4f5db4",
+      "routingKey": "productcatalogservice",
+      "serviceId": "adr-026fd79c9d4f5db4",
       "destHost": "172.17.27.131",
       "destPort": "3550",
       "endTime": 0,
@@ -81,8 +81,8 @@
       "target": "productcatalogservice-76dfd68fb-zht6x"
     },
     {
-      "address": "cartservice",
-      "addressId": "adr-28bab4448f1c9a48",
+      "routingKey": "cartservice",
+      "serviceId": "adr-28bab4448f1c9a48",
       "destHost": "172.17.27.123",
       "destPort": "7070",
       "endTime": 0,
@@ -97,8 +97,8 @@
       "target": "cartservice-5789774bf4-tdp29"
     },
     {
-      "address": "adservice",
-      "addressId": "adr-7375c1d0dcc0c921",
+      "routingKey": "adservice",
+      "serviceId": "adr-7375c1d0dcc0c921",
       "destHost": "172.17.27.126",
       "destPort": "9555",
       "endTime": 0,
@@ -113,8 +113,8 @@
       "target": "adservice-699bd49fc4-m9kdx"
     },
     {
-      "address": "redis-cart",
-      "addressId": "adr-52d2eda644143ced",
+      "routingKey": "redis-cart",
+      "serviceId": "adr-52d2eda644143ced",
       "destHost": "172.17.27.112",
       "destPort": "6379",
       "endTime": 0,
@@ -129,8 +129,8 @@
       "target": "redis-cart-798466874c-nq855"
     },
     {
-      "address": "currencyservice",
-      "addressId": "adr-cab8785b7b99f93f",
+      "routingKey": "currencyservice",
+      "serviceId": "adr-cab8785b7b99f93f",
       "destHost": "172.17.27.111",
       "destPort": "7000",
       "endTime": 0,
@@ -145,8 +145,8 @@
       "target": "currencyservice-ccb8d746-5h4lj"
     },
     {
-      "address": "checkoutservice",
-      "addressId": "adr-3f65f628c8aa2f3e",
+      "routingKey": "checkoutservice",
+      "serviceId": "adr-3f65f628c8aa2f3e",
       "destHost": "172.17.27.133",
       "destPort": "5050",
       "endTime": 0,
@@ -162,8 +162,8 @@
     },
 
     {
-      "address": "paymentservice",
-      "addressId": "adr-97d6f0970aa36488",
+      "routingKey": "paymentservice",
+      "serviceId": "adr-97d6f0970aa36488",
       "destHost": "172.17.27.110",
       "destPort": "50051",
       "endTime": 1733493802669930,

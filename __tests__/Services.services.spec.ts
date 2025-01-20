@@ -8,8 +8,8 @@ import { ServicesController, aggregateConnectorResponses } from '../src/pages/Se
 import { GraphElementNames, GraphIconKeys } from '../src/types/Graph.interfaces';
 import { ConnectorResponse, ListenerResponse } from '../src/types/REST.interfaces';
 
-const connectorResults = connectorsData.results as any[];
-const listenerResults = listenersData.results as any[];
+const connectorResults = connectorsData.results;
+const listenerResults = listenersData.results;
 
 describe('ServicesController', () => {
   describe('convertPairsToSankeyChartData', () => {
@@ -77,8 +77,8 @@ describe('ServicesController', () => {
 
       const expected = [
         {
-          destinationId: undefined,
-          destinationName: undefined,
+          destinationId: 'adr-7375c1d0dcc0c921',
+          destinationName: 'adservice',
           siteId: '46c2efa0-5fbc-4fe4-bba8-530e775aa2f6-listener',
           siteName: 'dallas',
           sourceId: 'rrrpk:10',
@@ -87,8 +87,8 @@ describe('ServicesController', () => {
           iconName: 'listener'
         },
         {
-          destinationId: undefined,
-          destinationName: undefined,
+          destinationId: 'adr-28bab4448f1c9a48',
+          destinationName: 'cartservice',
           siteId: '46c2efa0-5fbc-4fe4-bba8-530e775aa2f6-listener',
           siteName: 'dallas',
           sourceId: 'rrrpk:11',
@@ -149,16 +149,16 @@ describe('ServicesController', () => {
           destinationId: 'shippingservice@172.17.27.114-46c2efa0-5fbc-4fe4-bba8-530e775aa2f6-50051',
           destinationName: 'shippingservice@172.17.27.114:50051',
           iconName: 'routingKey',
-          sourceId: undefined,
-          sourceName: undefined,
+          sourceId: 'adr-00ffe0b268c6eae4',
+          sourceName: 'shippingservice',
           type: 'SkEmptyNode'
         },
         {
           destinationId: 'paymentservice@172.17.27.110-46c2efa0-5fbc-4fe4-bba8-530e775aa2f6-50051',
           destinationName: 'paymentservice@172.17.27.110:50051',
           iconName: 'routingKey',
-          sourceId: undefined,
-          sourceName: undefined,
+          sourceId: 'adr-97d6f0970aa36488',
+          sourceName: 'paymentservice',
           type: 'SkEmptyNode'
         }
       ];
@@ -287,8 +287,8 @@ describe('ServicesController', () => {
 
       expect(aggregated).toEqual([
         {
-          address: 'shippingservice',
-          addressId: 'adr-00ffe0b268c6eae4',
+          routingKey: 'shippingservice',
+          serviceId: 'adr-00ffe0b268c6eae4',
           count: 1,
           destHost: '172.17.27.114',
           destPort: '50051',
@@ -299,8 +299,8 @@ describe('ServicesController', () => {
           processId: '8483cbc9-c1ba-41e2-8648-eac3dfccaea0',
           processes: [
             {
-              address: 'shippingservice',
-              addressId: 'adr-00ffe0b268c6eae4',
+              routingKey: 'shippingservice',
+              serviceId: 'adr-00ffe0b268c6eae4',
               destHost: '172.17.27.114',
               endTime: 0,
               destPort: '50051',
@@ -323,8 +323,8 @@ describe('ServicesController', () => {
         },
 
         {
-          address: 'paymentservice',
-          addressId: 'adr-97d6f0970aa36488',
+          routingKey: 'paymentservice',
+          serviceId: 'adr-97d6f0970aa36488',
           count: 1,
           destHost: '172.17.27.110',
           destPort: '50051',
@@ -335,8 +335,8 @@ describe('ServicesController', () => {
           processId: '07ef190a-6167-4297-9ecd-ea0dcbf6c5a1',
           processes: [
             {
-              address: 'paymentservice',
-              addressId: 'adr-97d6f0970aa36488',
+              routingKey: 'paymentservice',
+              serviceId: 'adr-97d6f0970aa36488',
               destHost: '172.17.27.110',
               destPort: '50051',
               endTime: 0,
@@ -359,8 +359,8 @@ describe('ServicesController', () => {
         },
 
         {
-          address: 'emailservice',
-          addressId: 'adr-5193d597cb3d8442',
+          routingKey: 'emailservice',
+          serviceId: 'adr-5193d597cb3d8442',
           destHost: '172.17.27.116',
           destPort: '5000',
           endTime: 0,
@@ -371,8 +371,8 @@ describe('ServicesController', () => {
           count: 1,
           processes: [
             {
-              address: 'emailservice',
-              addressId: 'adr-5193d597cb3d8442',
+              routingKey: 'emailservice',
+              serviceId: 'adr-5193d597cb3d8442',
               destHost: '172.17.27.116',
               destPort: '5000',
               endTime: 0,

@@ -7,7 +7,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import processesPairsData from '../mocks/data/PROCESS_PAIRS.json';
 import processesData from '../mocks/data/PROCESSES.json';
 import { loadMockServer } from '../mocks/server';
-import { extendedProcessResponse } from '../mocks/server.API';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
@@ -18,7 +17,7 @@ import { ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
 import { Providers } from '../src/providers';
 import { ProcessResponse, PairsResponse } from '../src/types/REST.interfaces';
 
-const data = processesData.results[0] as extendedProcessResponse;
+const data = processesData.results[0] as ProcessResponse;
 const dataNoPairs = {
   endTime: 0,
   identity: 'no-pairs',

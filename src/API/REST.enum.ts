@@ -3,7 +3,7 @@ export enum RestResources {
   RouterLinks = 'routerlinks',
   Components = 'processgroups',
   Processes = 'processes',
-  Services = 'addresses',
+  Services = 'services',
   Listeners = 'listeners',
   Connectors = 'connectors',
   TcpConnections = 'connections',
