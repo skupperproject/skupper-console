@@ -79,7 +79,7 @@ export interface RouterLinkResponse extends BaseResponse {
 
 export interface ComponentResponse extends BaseResponse {
   name: string;
-  processGroupRole: Role;
+  role: Role;
   processCount: number;
 }
 
@@ -87,11 +87,11 @@ export interface ProcessResponse extends BaseResponse {
   name: string;
   parent: string;
   parentName: string;
-  groupIdentity: string;
-  groupName: string;
+  componentId: string;
+  componentName: string;
   sourceHost: string;
   processBinding: Binding;
-  processRole: Role;
+  role: Role;
   hostName: string | null;
   imageName: string | null;
   services: string[] | null;

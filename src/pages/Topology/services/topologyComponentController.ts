@@ -13,12 +13,7 @@ interface TopologyComponentControllerProps {
   componentsPairs: PairsResponse[];
 }
 
-export const convertComponentToNode = ({
-  identity,
-  name,
-  processGroupRole: role,
-  processCount
-}: ComponentResponse): GraphNode => ({
+export const convertComponentToNode = ({ identity, name, role: role, processCount }: ComponentResponse): GraphNode => ({
   id: identity,
   name,
   label: name,

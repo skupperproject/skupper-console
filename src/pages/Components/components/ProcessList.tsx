@@ -12,7 +12,7 @@ interface ProcessListProps {
 const ProcessList: FC<ProcessListProps> = function ({ processes }) {
   return (
     <SkTable
-      columns={setColumnVisibility(processesTableColumns, { groupName: false })}
+      columns={setColumnVisibility(processesTableColumns, { componentName: false })}
       rows={processes}
       customCells={{
         linkCell: CustomProcessCells.linkCell,

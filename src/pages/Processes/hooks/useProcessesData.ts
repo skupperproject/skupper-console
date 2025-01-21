@@ -11,7 +11,7 @@ import { QueryFilters } from '../../../types/REST.interfaces';
 
 const defaultQueryParams = {
   limit: BIG_PAGINATION_SIZE,
-  processRole: [Role.Remote, Role.External],
+  role: [Role.Remote, Role.External],
   endTime: 0
 };
 

@@ -5,7 +5,7 @@ import { Role } from '../../../API/REST.enum';
 import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 
-const processQueryParams = { processRole: [Role.Remote, Role.External] };
+const processQueryParams = { role: [Role.Remote, Role.External] };
 
 export const useSiteProcessListData = (id: string) => {
   const { data: processes } = useSuspenseQuery({

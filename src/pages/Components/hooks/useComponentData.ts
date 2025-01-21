@@ -8,8 +8,8 @@ export const useComponentData = (id: string) => {
   const [{ data: processes }, { data: component }] = useSuspenseQueries({
     queries: [
       {
-        queryKey: [getAllProcesses(), { groupIdentity: id }],
-        queryFn: () => RESTApi.fetchProcesses({ endTime: 0, groupIdentity: id }),
+        queryKey: [getAllProcesses(), { componentId: id }],
+        queryFn: () => RESTApi.fetchProcesses({ endTime: 0, componentId: id }),
         refetchInterval: UPDATE_INTERVAL
       },
       {

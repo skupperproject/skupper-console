@@ -1,7 +1,7 @@
 export enum RestResources {
   Sites = 'sites',
   RouterLinks = 'routerlinks',
-  Components = 'processgroups',
+  Components = 'components',
   Processes = 'processes',
   Services = 'services',
   Listeners = 'listeners',
@@ -9,7 +9,7 @@ export enum RestResources {
   TcpConnections = 'connections',
   HttpRequests = 'applicationflows',
   SiteDataLinks = 'sitepairs',
-  ComponentDataLinks = 'processgrouppairs',
+  ComponentDataLinks = 'componentpairs',
   ProcessDataLinks = 'processpairs'
 }
 

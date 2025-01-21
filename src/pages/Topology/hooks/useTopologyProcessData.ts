@@ -9,7 +9,7 @@ import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 import { TopologyController } from '../services';
 
 const processesQueryParams = {
-  processRole: [Role.Remote, Role.External],
+  role: [Role.Remote, Role.External],
   endTime: 0
 };
 

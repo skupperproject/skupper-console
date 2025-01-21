@@ -6,7 +6,7 @@ import { RESTApi } from '../../../API/REST.resources';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 
 const componentQueryParams = {
-  processGroupRole: [Role.Remote, Role.External],
+  role: [Role.Remote, Role.External],
   endTime: 0
 };
 

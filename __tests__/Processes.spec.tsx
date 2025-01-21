@@ -63,9 +63,9 @@ describe('Begin testing the Processes component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByRole('link', { name: processesResults[0].groupName })[0]).toHaveAttribute(
+    expect(screen.getAllByRole('link', { name: processesResults[0].componentName })[0]).toHaveAttribute(
       'href',
-      `#${ComponentRoutesPaths.Components}/${processesResults[0].groupName}@${processesResults[0].groupIdentity}`
+      `#${ComponentRoutesPaths.Components}/${processesResults[0].componentName}@${processesResults[0].componentId}`
     );
   });
 
