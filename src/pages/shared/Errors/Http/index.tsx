@@ -3,6 +3,7 @@ import { FC, MouseEventHandler } from 'react';
 import { Button, Divider, List, ListItem, PageSection, Content, ContentVariants, Title } from '@patternfly/react-core';
 
 import { Labels } from '../../../../config/labels';
+import { getTestsIds } from '../../../../config/testIds';
 
 const ErrorHttp: FC<{ code?: string; message?: string; onReset?: MouseEventHandler<HTMLButtonElement> }> = function ({
   code,
@@ -10,8 +11,8 @@ const ErrorHttp: FC<{ code?: string; message?: string; onReset?: MouseEventHandl
   onReset
 }) {
   return (
-    <PageSection hasBodyWrapper={false}>
-      <Content>
+    <PageSection hasBodyWrapper={false} data-testid={getTestsIds.networkErrorView()}>
+      <div data-testid={getTestsIds.networkErrorView}>
         <Title headingLevel="h1">{message || Labels.HttpError}</Title>
         <Title headingLevel="h2">{code || ''}</Title>
         <Divider />
@@ -39,7 +40,7 @@ const ErrorHttp: FC<{ code?: string; message?: string; onReset?: MouseEventHandl
             </Button>
           </ListItem>
         </List>
-      </Content>
+      </div>
     </PageSection>
   );
 };

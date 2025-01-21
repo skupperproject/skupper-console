@@ -11,6 +11,7 @@ export const getTestsIds = {
   serviceView: (id: string) => `sk-service-view-${id}`,
   topologyView: () => 'sk-topology-view',
   notFoundView: () => `sk-not-found-view`,
+  networkErrorView: () => `sk-network-error-view`,
   siteView: (id: string) => `sk-site-view-${id}`,
   componentView: (id: string) => `sk-component-view-${id}`,
   navbarComponent: () => 'sk-nav-bar-component',
