@@ -52,13 +52,18 @@ To run unit tests, use the following command:
 yarn test
 ```
 
-### Integration
+### Local integration and e2e
 
-To run integration tests, use the following command:
+To run local integration tests, use the following command:
 
 ```bash
 yarn cy
 ```
+
+To run the e2e tests, you'll need to configure the following environment variables:
+
+- `CYPRESS_BASE_URL`: This variable is used to specify the base URL of the application under test.
+- `CYPRESS_USERNAME` and `CYPRESS_PASSWORD`: If your application requires Basic Authentication.
 
 ## Env variables
 

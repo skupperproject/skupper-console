@@ -9,47 +9,65 @@ const componentsPath = `/#${ComponentRoutesPaths.Components}`;
 const processesPath = `/#${ProcessesRoutesPaths.Processes}`;
 
 describe('Data Consistency Tests', () => {
-  it('Should maintain data consistency across sites and site detail', () => {
-    let data;
-
+  it('Should handle sites data and details correctly', () => {
     cy.intercept('GET', apiEndpoints.SITES).as('section');
+    cy.visitWithAuth(sitesPath);
 
-    cy.visit(sitesPath);
     cy.wait('@section').then((interception) => {
       const response = interception.response.body;
-      data = response.results[0];
 
-      cy.visit(`${sitesPath}/${data.name}@${data.identity}`);
+      if (!response.results || response.results.length === 0) {
+        cy.log('No sites data available');
+        expect(response.results).to.be.an('array');
+        expect(response.count).to.equal(0);
+
+        return;
+      }
+
+      const data = response.results[0];
+      cy.visitWithAuth(`${sitesPath}/${data.name}@${data.identity}`);
       cy.get(`[data-testid=${getTestsIds.siteView(data.identity)}]`).should('be.visible');
     });
   });
 
-  it('Should maintain data consistency across components and component detail', () => {
-    let data;
-
+  it('Should handle components data and details correctly', () => {
     cy.intercept('GET', `${apiEndpoints.COMPONENTS}*`).as('section');
+    cy.visitWithAuth(componentsPath);
 
-    cy.visit(componentsPath);
     cy.wait('@section').then((interception) => {
       const response = interception.response.body;
-      data = response.results[0];
 
-      cy.visit(`${componentsPath}/${data.name}@${data.identity}`);
+      if (!response.results || response.results.length === 0) {
+        cy.log('No components data available');
+        expect(response.results).to.be.an('array');
+        expect(response.count).to.equal(0);
+
+        return;
+      }
+
+      const data = response.results[0];
+      cy.visitWithAuth(`${componentsPath}/${data.name}@${data.identity}`);
       cy.get(`[data-testid=${getTestsIds.componentView(data.identity)}]`).should('be.visible');
     });
   });
 
-  it('Should maintain data consistency across processes and process detail', () => {
-    let data;
-
+  it('Should handle processes data and details correctly', () => {
     cy.intercept('GET', `${apiEndpoints.PROCESSES}*`).as('section');
+    cy.visitWithAuth(processesPath);
 
-    cy.visit(processesPath);
     cy.wait('@section').then((interception) => {
       const response = interception.response.body;
-      data = response.results[0];
 
-      cy.visit(`${processesPath}/${data.name}@${data.identity}`);
+      if (!response.results || response.results.length === 0) {
+        cy.log('No processes data available');
+        expect(response.results).to.be.an('array');
+        expect(response.count).to.equal(0);
+
+        return;
+      }
+
+      const data = response.results[0];
+      cy.visitWithAuth(`${processesPath}/${data.name}@${data.identity}`);
       cy.get(`[data-testid=${getTestsIds.processView(data.identity)}]`).should('be.visible');
     });
   });
