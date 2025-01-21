@@ -1,4 +1,4 @@
-import sitesData from '../../../../mocks/data/SITES.json';
+import sitesData from '../../../mocks/data/SITES.json';
 
 context('Sites', () => {
   beforeEach(() => {

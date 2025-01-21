@@ -1,4 +1,4 @@
-import { getTestsIds } from '../../../../src/config/testIds';
+import { getTestsIds } from '../../../src/config/testIds';
 
 context('Navigation', () => {
   beforeEach(() => {
@@ -56,6 +56,7 @@ context('Navigation', () => {
 
   it('should reload the page and stay on the last page selected', () => {
     cy.get(`[data-testid=${getTestsIds.navbarComponent()}]`).contains('Sites').click({ force: true });
+    cy.wait(500);
     cy.reload();
     cy.location('hash').should('include', 'sites');
 
