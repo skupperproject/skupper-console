@@ -206,9 +206,9 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                               <FlexItem>
                                 <ResourceIcon type="component" />
                                 <Link
-                                  to={`${ComponentRoutesPaths.Components}/${itemSelected.groupName}@${itemSelected.groupIdentity}`}
+                                  to={`${ComponentRoutesPaths.Components}/${itemSelected.componentName}@${itemSelected.componentId}`}
                                 >
-                                  {itemSelected.groupName}
+                                  {itemSelected.componentName}
                                 </Link>
                               </FlexItem>
 

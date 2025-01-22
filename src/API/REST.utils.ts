@@ -2,8 +2,8 @@ import { Protocols, SortDirection } from './REST.enum';
 import { backendToFrontendPropertyMapper } from '../config/api';
 import { PairsResponse, RouterLinkResponse, QueryFilters, QueryParams } from '../types/REST.interfaces';
 
-/* 
-  Composes a path from an array of strings. 
+/*
+  Composes a path from an array of strings.
   This function joins the elements of the provided array using '/' as a separator,
   typically used to create API endpoint paths.
 */
@@ -11,7 +11,7 @@ export function composePath(elements: string[]): string {
   return elements.join('/');
 }
 
-/* 
+/*
   Aggregates an array of PairsResponse objects by unique combinations of sourceId and destinationId,
   merging protocols for each pair. It ensures that transport protocols (e.g., TCP) are processed first,
   followed by application protocols.
@@ -47,7 +47,7 @@ export const aggregateDistinctPairs = <T extends PairsResponse>(pairs: T[]): T[]
   return Array.from(map.values());
 };
 
-/* 
+/*
   Aggregates RouterLinkResponse objects by their sourceSiteId and destinationSiteId, combining links with the same site pair.
   - It groups links by site combination and determines the overall status (up, down, partially_up) based on the individual link statuses.
   - Returns a new list of aggregated links, where each entry represents a unique site pair with its combined status.
@@ -83,18 +83,15 @@ export const aggregateLinksBySite = (linksData: RouterLinkResponse[]): RouterLin
  * Transforms the keys in the `results` array or object to align with the specified mapping.
  */
 export function mapResponseProperties<T>(results: T, direction: 'toFrontend' | 'toBackend'): T {
-  // Helper per invertire la mappa al volo
   const mapKey = (key: string) => {
     if (direction === 'toFrontend') {
       return backendToFrontendPropertyMapper[key] || key;
     }
-    // Trova la chiave inversa nella mappa per 'toBackend'
     const entry = Object.entries(backendToFrontendPropertyMapper).find(([, value]) => value === key);
 
     return entry ? entry[0] : key;
   };
 
-  // Helper per mappare un singolo oggetto
   const mapItem = (item: Record<string, unknown>) => {
     const mappedItem = {} as Record<string, unknown>;
     for (const key in item) {
@@ -115,7 +112,7 @@ export function mapResponseProperties<T>(results: T, direction: 'toFrontend' | '
   return mapItem(results as Record<string, unknown>) as T;
 }
 
-/* 
+/*
   Maps the Application filters object to QueryParams, adjusting and adding properties as needed for API requests.
   - Includes filter, pagination (offset, limit), time range (start, end), and sorting (sortName, sortDirection).
   - Returns a QueryParams object compatible with backend API query parameters.

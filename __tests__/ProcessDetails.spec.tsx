@@ -37,7 +37,7 @@ describe('Process component', () => {
 
   it('should render the title, description data and processes associated the data loading is complete', async () => {
     expect(screen.getByText(processResult.parentName)).toBeInTheDocument();
-    expect(screen.getByText(processResult.groupName)).toBeInTheDocument();
+    expect(screen.getByText(processResult.componentName)).toBeInTheDocument();
     expect(screen.getByText(processResult.hostName as string)).toBeInTheDocument();
     expect(screen.getByText(processResult.sourceHost)).toBeInTheDocument();
   });

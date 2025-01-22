@@ -7,7 +7,7 @@ import { UPDATE_INTERVAL } from '../../../config/reactQuery';
 
 const processQueryParams = {
   limit: 0,
-  processRole: [Role.Remote, Role.External]
+  role: [Role.Remote, Role.External]
 };
 
 export const useSiteData = (id: string) => {

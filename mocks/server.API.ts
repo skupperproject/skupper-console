@@ -358,8 +358,8 @@ for (let i = 0; i < ITEM_COUNT; i++) {
     ...processes.results[0],
     identity: `${process.identity}-${i}`,
     name: `${process.name} ${i}`,
-    groupIdentity: process.groupIdentity,
-    groupName: process.groupName,
+    componentId: process.componentId,
+    componentName: process.componentName,
     parent: process.parent,
     parentName: process.parentName,
     services: process.services

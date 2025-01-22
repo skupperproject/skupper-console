@@ -122,7 +122,7 @@ describe('Topology details', () => {
       </Providers>
     );
 
-    expect(screen.getAllByText(processesResults[12].groupName)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(processesResults[12].componentName)[0]).toBeInTheDocument();
     expect(screen.getAllByText(processesResults[12].parentName)[0]).toBeInTheDocument();
     expect(
       screen.getAllByText(

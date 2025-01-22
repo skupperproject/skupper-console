@@ -32,7 +32,7 @@ export const CustomProcessCells = {
     SkLinkCell({
       ...props,
       type: 'component',
-      link: `${ComponentRoutesPaths.Components}/${props.data.groupName}@${props.data.groupIdentity}`
+      link: `${ComponentRoutesPaths.Components}/${props.data.componentName}@${props.data.componentId}`
     }),
   TimestampCell: SkEndTimeCell
 };
@@ -55,26 +55,26 @@ export const CustomProcessPairCells = {
 export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
   {
     name: Labels.Name,
-    prop: 'name' as keyof ProcessResponse,
+    prop: 'name',
     customCellName: 'linkCell'
   },
   {
     name: Labels.Component,
-    prop: 'groupName' as keyof ProcessResponse,
+    prop: 'componentName',
     customCellName: 'linkComponentCell'
   },
   {
     name: Labels.Site,
-    prop: 'parentName' as keyof ProcessResponse,
+    prop: 'parentName',
     customCellName: 'linkCellSite'
   },
   {
     name: Labels.BindingState,
-    prop: 'processBinding' as keyof ProcessResponse
+    prop: 'processBinding'
   },
   {
     name: Labels.Created,
-    prop: 'startTime' as keyof ProcessResponse,
+    prop: 'startTime',
     customCellName: 'TimestampCell',
     modifier: 'fitContent'
   }
@@ -122,7 +122,7 @@ export const processesSelectOptions: SkSelectOption[] = [
   },
   {
     label: 'Component',
-    id: 'groupName'
+    id: 'componentName'
   },
   {
     label: 'Site',

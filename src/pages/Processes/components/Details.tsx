@@ -36,8 +36,8 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
     parent,
     parentName,
     imageName,
-    groupName,
-    groupIdentity,
+    componentName,
+    componentId,
     sourceHost,
     hostName,
     startTime,
@@ -69,7 +69,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
                 <DescriptionListTerm>{Labels.Component}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <ResourceIcon type="component" />
-                  <Link to={`${ComponentRoutesPaths.Components}/${groupName}@${groupIdentity}`}>{groupName}</Link>
+                  <Link to={`${ComponentRoutesPaths.Components}/${componentName}@${componentId}`}>{componentName}</Link>
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>

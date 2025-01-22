@@ -30,9 +30,9 @@ export const convertProcessToNode = ({
   name,
   parent: combo,
   parentName: comboName,
-  groupIdentity,
-  groupName,
-  processRole: role,
+  componentId,
+  componentName,
+  role,
   processBinding
 }: ProcessResponse): GraphNode => ({
   type: shape[role === Role.Remote ? role : processBinding],
@@ -42,8 +42,8 @@ export const convertProcessToNode = ({
   iconName: role === Role.Internal ? 'skupper' : 'process',
   combo,
   comboName,
-  groupId: groupIdentity,
-  groupName
+  groupId: componentId,
+  groupName: componentName
 });
 
 const convertProcessesToNodes = (processes: ProcessResponse[]): GraphNode[] => processes?.map(convertProcessToNode);
