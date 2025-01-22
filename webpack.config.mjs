@@ -109,7 +109,10 @@ const config = {
   mode: 'production',
   devtool: 'source-map',
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.tsx', '.js'],
+    alias: {
+      'hull.js': false
+    }
   },
   module: {
     rules: moduleRules
