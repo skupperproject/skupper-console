@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -78,7 +79,11 @@ const pluginsConfig = () => [
   defineEnvVariables(),
   new HtmlWebpackPlugin({
     template: path.resolve(ROOT, 'index.html'),
-    favicon: process.env.BRAND_FAVICON || path.resolve(ROOT, 'public', 'favicon.ico')
+    favicon: process.env.BRAND_FAVICON || path.resolve(ROOT, 'public', 'favicon.ico'),
+    templateContent: (parameters, compilation, options) => {
+      const html = fs.readFileSync(path.resolve(ROOT, 'index.html'), 'utf8');
+      return html.replace(/<!-- vite only -->[\s\S]*?<\/script>/, ''); // remove the script tag used by vite in dev mode
+    }
   }),
   ...(process.env.BRAND_APP_LOGO
     ? [
