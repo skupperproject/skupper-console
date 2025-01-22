@@ -8,7 +8,7 @@
       "platform": "kubernetes",
       "provider": "kubernetes",
       "routerCount": 1,
-      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "version": "2.0.0-preview-1-66-gdbd5e3e",
       "startTime": 1733493767000000
     },
     {
@@ -19,7 +19,7 @@
       "platform": "kubernetes",
       "provider": "kubernetes",
       "routerCount": 1,
-      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "version": "2.0.0-preview-1-66-gdbd5e3e",
       "startTime": 1733493674000000
     },
     {
@@ -30,7 +30,7 @@
       "platform": "kubernetes",
       "provider": "kubernetes",
       "routerCount": 1,
-      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "version": "2.0.0-preview-1-66-gdbd5e3e",
       "startTime": 1733493473000000
     },
     {
@@ -41,7 +41,7 @@
       "platform": "podman",
       "provider": "podman",
       "routerCount": 2,
-      "siteVersion": "2.0.0-preview-1-66-gdbd5e3e",
+      "version": "2.0.0-preview-1-66-gdbd5e3e",
       "startTime": 1733493000000000
     }
   ]

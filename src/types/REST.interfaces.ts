@@ -54,7 +54,7 @@ export interface UserResponse {
 export interface SiteResponse extends BaseResponse {
   name: string;
   nameSpace: string;
-  siteVersion: string | 'unknown';
+  version: string | 'unknown';
   platform: 'kubernetes' | 'podman' | string | undefined;
   routerCount: number;
 }

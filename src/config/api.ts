@@ -30,7 +30,7 @@ export const backendToFrontendPropertyMapper: Record<string, string> = {
   authType: 'authType',
   name: 'name',
   nameSpace: 'nameSpace',
-  siteVersion: 'siteVersion',
+  version: 'version',
   platform: 'platform',
   routerCount: 'routerCount',
   parent: 'parent',
