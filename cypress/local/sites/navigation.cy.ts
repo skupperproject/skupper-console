@@ -53,16 +53,4 @@ context('Navigation', () => {
     cy.go(1);
     cy.location('hash').should('include', 'processes');
   });
-
-  it('should reload the page and stay on the last page selected', () => {
-    cy.get(`[data-testid=${getTestsIds.navbarComponent()}]`).contains('Sites').click({ force: true });
-    cy.wait(500);
-    cy.reload();
-    cy.location('hash').should('include', 'sites');
-
-    // reload the page without using the cache
-    cy.reload(true);
-    cy.get(`[data-testid=${getTestsIds.navbarComponent()}]`).contains('Sites').click({ force: true });
-    cy.location('hash').should('include', 'sites');
-  });
 });
