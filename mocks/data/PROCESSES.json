@@ -11,7 +11,7 @@
       "name": "frontend-657d5d4867-tvk2j",
       "parent": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "parentName": "malaga",
-      "processBinding": "unbound",
+      "binding": "unbound",
       "role": "external",
       "sourceHost": "172.17.27.113",
       "startTime": 1728076321000000
@@ -27,7 +27,7 @@
       "name": "paymentservice-69f99b8c87-kztsn",
       "parent": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "parentName": "dallas",
-      "processBinding": "bound",
+      "binding": "bound",
       "role": "external",
       "sourceHost": "172.17.27.110",
       "startTime": 1728076312000000
@@ -43,7 +43,7 @@
       "name": "loadgenerator-86bcc9c848-9xq86",
       "parent": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "parentName": "malaga",
-      "processBinding": "unbound",
+      "binding": "unbound",
       "role": "external",
       "sourceHost": "172.17.0.52",
       "startTime": 1731436562000000
@@ -59,7 +59,7 @@
       "name": "recommendationservice-5df44b74b6-tvg2g",
       "parent": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "parentName": "malaga",
-      "processBinding": "bound",
+      "binding": "bound",
       "role": "external",
       "sourceHost": "172.17.27.107",
       "startTime": 1728076323000000
@@ -75,7 +75,7 @@
       "name": "checkoutservice-684ff774fd-4bttd",
       "parent": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "parentName": "london",
-      "processBinding": "bound",
+      "binding": "bound",
       "role": "external",
       "sourceHost": "172.17.27.133",
       "startTime": 1728076309000000
@@ -91,7 +91,7 @@
       "name": "adservice-699bd49fc4-m9kdx",
       "parent": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "parentName": "london",
-      "processBinding": "bound",
+      "binding": "bound",
       "role": "external",
       "sourceHost": "172.17.27.126",
       "startTime": 1728076309000000
@@ -107,7 +107,7 @@
       "name": "productcatalogservice-76dfd68fb-zht6x",
       "parent": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "parentName": "malaga",
-      "processBinding": "bound",
+      "binding": "bound",
       "role": "external",
       "sourceHost": "172.17.27.131",
       "startTime": 1728076309000000
@@ -123,7 +123,7 @@
       "name": "currencyservice-ccb8d746-5h4lj",
       "parent": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "parentName": "london",
-      "processBinding": "bound",
+      "binding": "bound",
       "role": "external",
       "sourceHost": "172.17.27.111",
       "startTime": 1728076312000000
@@ -139,7 +139,7 @@
       "name": "cartservice-5789774bf4-tdp29",
       "parent": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "parentName": "london",
-      "processBinding": "bound",
+      "binding": "bound",
       "role": "external",
       "sourceHost": "172.17.27.123",
       "startTime": 1728076308000000
@@ -155,7 +155,7 @@
       "name": "shippingservice-5bb6d895cd-n6fzv",
       "parent": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "parentName": "dallas",
-      "processBinding": "bound",
+      "binding": "bound",
       "role": "external",
       "sourceHost": "172.17.27.114",
       "startTime": 1728076313000000
@@ -171,7 +171,7 @@
       "name": "redis-cart-798466874c-nq855",
       "parent": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "parentName": "london",
-      "processBinding": "bound",
+      "binding": "bound",
       "role": "external",
       "sourceHost": "172.17.27.112",
       "startTime": 1728076313000000
@@ -187,7 +187,7 @@
       "name": "emailservice-b6b65cc5b-b9bgq",
       "parent": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "parentName": "dallas",
-      "processBinding": "bound",
+      "binding": "bound",
       "role": "external",
       "sourceHost": "172.17.27.116",
       "startTime": 1728076313000000
@@ -203,7 +203,7 @@
       "name": "paymentservice-131f99g8c15-replica-1",
       "parent": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "parentName": "dallas",
-      "processBinding": "bound",
+      "binding": "bound",
       "role": "external",
       "sourceHost": "172.17.27.140",
       "startTime": 1728076312000000
@@ -216,7 +216,7 @@
       "name": "site-clients-ec00feed-172.17.17.225",
       "parent": "12345678-abcd-4321-efgh-87654321abcd",
       "parentName": "Sidney",
-      "processBinding": "unbound",
+      "binding": "unbound",
       "role": "remote",
       "startTime": 1736272015000000
     },
@@ -228,7 +228,7 @@
       "name": "site-clients-ec00feed-172.17.61.134",
       "parent": "12345678-abcd-4321-efgh-87654321abcd",
       "parentName": "Sidney",
-      "processBinding": "unbound",
+      "binding": "unbound",
       "role": "remote",
       "startTime": 1736272015000000
     }

@@ -90,7 +90,7 @@ export interface ProcessResponse extends BaseResponse {
   componentId: string;
   componentName: string;
   sourceHost: string;
-  processBinding: Binding;
+  binding: Binding;
   role: Role;
   hostName: string | null;
   imageName: string | null;

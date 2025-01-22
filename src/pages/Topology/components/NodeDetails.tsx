@@ -154,7 +154,7 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                         </FlexItem>
                         <FlexItem>
                           <Label variant="outline" color="teal">
-                            {itemSelected.processBinding}
+                            {itemSelected.binding}
                           </Label>
                         </FlexItem>
                       </Flex>

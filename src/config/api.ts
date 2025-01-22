@@ -63,7 +63,7 @@ export const backendToFrontendPropertyMapper: Record<string, string> = {
   componentId: 'componentId',
   componentName: 'componentName',
   sourceHost: 'sourceHost',
-  processBinding: 'processBinding',
+  binding: 'binding',
   services: 'services',
   serviceId: 'serviceId',
   processPairs: 'processPairs',

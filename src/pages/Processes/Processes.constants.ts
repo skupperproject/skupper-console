@@ -70,7 +70,7 @@ export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
   },
   {
     name: Labels.BindingState,
-    prop: 'processBinding'
+    prop: 'binding'
   },
   {
     name: Labels.Created,
