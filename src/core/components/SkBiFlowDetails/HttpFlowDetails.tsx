@@ -14,12 +14,21 @@ interface HttpFlowDetailsProps {
 
 const HttpFlowDetails: FC<HttpFlowDetailsProps> = function ({
   title,
-  flow: { sourceProcessId, destProcessId, sourceProcessName, destProcessName, octets, octetsReverse, method, status },
+  flow: {
+    sourceProcessId,
+    destProcessId,
+    sourceProcessName,
+    destProcessName,
+    octetCount,
+    octetReverseCount,
+    method,
+    status
+  },
   isCounterflow = false
 }) {
   const processId = isCounterflow ? sourceProcessId : destProcessId;
   const processName = isCounterflow ? sourceProcessName : destProcessName;
-  const octetsResolved = isCounterflow ? octets : octetsReverse;
+  const octetCountResolved = isCounterflow ? octetCount : octetReverseCount;
   const methodResolved = isCounterflow ? '' : method;
   const resultResolved = isCounterflow ? status : '';
 
@@ -28,7 +37,7 @@ const HttpFlowDetails: FC<HttpFlowDetailsProps> = function ({
       title={title}
       processId={processId}
       processName={processName}
-      octets={octetsResolved}
+      octetCount={octetCountResolved}
       isCounterflow={isCounterflow}
       additionalDetails={
         <>

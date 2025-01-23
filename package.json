@@ -25,7 +25,7 @@
     "coverage": "yarn test --coverage",
     "cy:dev": "cypress open",
     "cy:run": "cypress run",
-    "ci": "if [ -z \"$CYPRESS_BASE_URL\" ]; then start-test 3000 cy:run; else yarn cy:run; fi",
+    "ci": "if [ -z \"$CYPRESS_BASE_URL\" ]; then start-test 3000 cy:run; else yarn cy:dev; fi",
     "lint": "TIMING=1 eslint --cache",
     "lint-fix": "yarn lint --fix",
     "format": "prettier --write '*/**/*.{ts,tsx,json,css}'",

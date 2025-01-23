@@ -74,16 +74,16 @@ export const tcpBiFlowColumns: SKTableColumn<TransportFlowResponse>[] = [
   },
   {
     name: Labels.Port,
-    prop: 'sourcePort' as keyof BiFlowResponse
+    prop: 'sourcePort'
   },
   {
     name: Labels.BytesOut,
-    prop: 'octets',
+    prop: 'octetCount',
     format: formatBytes
   },
   {
     name: Labels.BytesIn,
-    prop: 'octetsReverse',
+    prop: 'octetReverseCount',
     format: formatBytes
   },
   {
@@ -143,12 +143,12 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   },
   {
     name: Labels.BytesOut,
-    prop: 'octets',
+    prop: 'octetCount',
     format: formatBytes
   },
   {
     name: Labels.BytesIn,
-    prop: 'octetsReverse',
+    prop: 'octetReverseCount',
     format: formatBytes
   },
   {

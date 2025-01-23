@@ -20,8 +20,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -43,8 +43,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:22",
@@ -66,8 +66,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq", "0/london-skupper-router-758f596f49-tqw2g"],
       "traceSites": ["malaga", "london"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:24",
@@ -89,8 +89,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq", "0/london-skupper-router-758f596f49-tqw2g"],
       "traceSites": ["malaga", "london"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:22",
@@ -112,8 +112,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq", "0/london-skupper-router-758f596f49-tqw2g"],
       "traceSites": ["malaga", "london"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:27",
@@ -135,8 +135,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:29",
@@ -158,8 +158,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -181,8 +181,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -204,8 +204,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -227,8 +227,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -250,8 +250,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -273,8 +273,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:36",
@@ -296,8 +296,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq", "0/london-skupper-router-758f596f49-tqw2g"],
       "traceSites": ["malaga", "london"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -319,8 +319,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:22",
@@ -342,8 +342,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq", "0/london-skupper-router-758f596f49-tqw2g"],
       "traceSites": ["malaga", "london"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:24",
@@ -365,8 +365,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq", "0/london-skupper-router-758f596f49-tqw2g"],
       "traceSites": ["malaga", "london"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:22",
@@ -388,8 +388,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq", "0/london-skupper-router-758f596f49-tqw2g"],
       "traceSites": ["malaga", "london"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:27",
@@ -411,8 +411,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:29",
@@ -434,8 +434,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -457,8 +457,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -480,8 +480,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -503,8 +503,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -526,8 +526,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:20",
@@ -549,8 +549,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq"],
       "traceSites": ["malaga"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:36",
@@ -572,8 +572,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq", "0/london-skupper-router-758f596f49-tqw2g"],
       "traceSites": ["malaga", "london"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     },
     {
       "connectionId": "s86xq:22",
@@ -595,8 +595,8 @@
       "status": "200",
       "traceRouters": ["0/malaga-skupper-router-68665b86cd-s86xq", "0/london-skupper-router-758f596f49-tqw2g"],
       "traceSites": ["malaga", "london"],
-      "octets": 0,
-      "octetsReverse": 0
+      "octetCount": 0,
+      "octetReverseCount": 0
     }
   ]
 }

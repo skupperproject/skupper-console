@@ -67,8 +67,8 @@ export interface RouterLinkResponse extends BaseResponse {
   destinationSiteId: string | null;
   destinationSiteName: string | null;
   name: string;
-  octets: number;
-  octetsReverse: number;
+  octetCount: number;
+  octetReverseCount: number;
   routerId: string;
   routerName: string;
   sourceSiteId: string;
@@ -166,8 +166,8 @@ interface BaseFlow extends BaseResponse {
   destProcessName: string;
   routingKey: string;
   duration: number | null;
-  octets: number;
-  octetsReverse: number;
+  octetCount: number;
+  octetReverseCount: number;
   traceRouters: string[];
   traceSites: string[];
   protocol: Protocols;
