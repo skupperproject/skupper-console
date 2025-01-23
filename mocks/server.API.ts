@@ -344,7 +344,7 @@ for (let i = 0; i < ITEM_COUNT; i++) {
     startTime: 1674048705000000,
     endTime: 0,
     name: `site ${i}`,
-    nameSpace: `config-grpc-site-${i}-test`,
+    namespace: `config-grpc-site-${i}-test`,
     version: 'x.x.x',
     routerCount: 1
   });

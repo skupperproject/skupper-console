@@ -59,7 +59,7 @@ export const siteColumns: SKTableColumn<SiteResponse>[] = [
 
   {
     name: Labels.Namespace,
-    prop: 'nameSpace'
+    prop: 'namespace'
   },
   {
     name: Labels.Platform,
