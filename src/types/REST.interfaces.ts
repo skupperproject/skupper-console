@@ -53,8 +53,8 @@ export interface UserResponse {
 
 export interface SiteResponse extends BaseResponse {
   name: string;
-  nameSpace: string;
-  siteVersion: string | 'unknown';
+  namespace: string;
+  version: string | 'unknown';
   platform: 'kubernetes' | 'podman' | string | undefined;
   routerCount: number;
 }
@@ -67,8 +67,8 @@ export interface RouterLinkResponse extends BaseResponse {
   destinationSiteId: string | null;
   destinationSiteName: string | null;
   name: string;
-  octets: number;
-  octetsReverse: number;
+  octetCount: number;
+  octetReverseCount: number;
   routerId: string;
   routerName: string;
   sourceSiteId: string;
@@ -90,7 +90,7 @@ export interface ProcessResponse extends BaseResponse {
   componentId: string;
   componentName: string;
   sourceHost: string;
-  processBinding: Binding;
+  binding: Binding;
   role: Role;
   hostName: string | null;
   imageName: string | null;
@@ -166,8 +166,8 @@ interface BaseFlow extends BaseResponse {
   destProcessName: string;
   routingKey: string;
   duration: number | null;
-  octets: number;
-  octetsReverse: number;
+  octetCount: number;
+  octetReverseCount: number;
   traceRouters: string[];
   traceSites: string[];
   protocol: Protocols;

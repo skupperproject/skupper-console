@@ -16,7 +16,7 @@ context('Site Detail', () => {
 
   it('should navigate to the Site section', () => {
     cy.get(`[data-testid="${testId}"]`).contains(site.name).should('have.length', 1);
-    cy.get(`[data-testid="${testId}"]`).contains(site.nameSpace).should('have.length', 1);
+    cy.get(`[data-testid="${testId}"]`).contains(site.namespace).should('have.length', 1);
   });
 
   it('should navigate to the correct site page when clicking on a link', () => {

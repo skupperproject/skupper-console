@@ -25,7 +25,7 @@ interface FlowDetailsBaseProps {
   title: string;
   processName: string;
   processId: string | number;
-  octets: number;
+  octetCount: number;
   latency?: number;
   isCounterflow?: boolean;
   additionalDetails?: ReactNode; // for any flow-specific details like HTTP method, status, etc.
@@ -35,7 +35,7 @@ const FlowDetailsBase: FC<FlowDetailsBaseProps> = function ({
   title,
   processName,
   processId,
-  octets,
+  octetCount,
   latency,
   isCounterflow = false,
   additionalDetails
@@ -63,7 +63,7 @@ const FlowDetailsBase: FC<FlowDetailsBaseProps> = function ({
             </DescriptionListDescription>
 
             <DescriptionListTerm>{Labels.BytesTransferred}</DescriptionListTerm>
-            <DescriptionListDescription>{formatBytes(octets) || EMPTY_VALUE_SYMBOL}</DescriptionListDescription>
+            <DescriptionListDescription>{formatBytes(octetCount) || EMPTY_VALUE_SYMBOL}</DescriptionListDescription>
 
             {latency !== undefined && <DescriptionListTerm>{Labels.Latency}</DescriptionListTerm>}
             {latency !== undefined && (

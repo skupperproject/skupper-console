@@ -59,7 +59,7 @@ export const siteColumns: SKTableColumn<SiteResponse>[] = [
 
   {
     name: Labels.Namespace,
-    prop: 'nameSpace'
+    prop: 'namespace'
   },
   {
     name: Labels.Platform,
@@ -67,8 +67,8 @@ export const siteColumns: SKTableColumn<SiteResponse>[] = [
   },
 
   {
-    name: Labels.SiteVersion,
-    prop: 'siteVersion'
+    name: Labels.version,
+    prop: 'version'
   },
   {
     name: Labels.HA,

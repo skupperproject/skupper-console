@@ -33,9 +33,9 @@ export const convertProcessToNode = ({
   componentId,
   componentName,
   role,
-  processBinding
+  binding
 }: ProcessResponse): GraphNode => ({
-  type: shape[role === Role.Remote ? role : processBinding],
+  type: shape[role === Role.Remote ? role : binding],
   id: identity,
   name,
   label: name,

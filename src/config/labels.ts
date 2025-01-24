@@ -17,7 +17,7 @@ export const Labels = {
   From: 'From',
   To: 'To',
   Namespace: 'Namespace',
-  SiteVersion: 'Version',
+  version: 'Version',
   Cost: 'Cost',
   Platform: 'Platform',
   LinkStatus: 'Status',

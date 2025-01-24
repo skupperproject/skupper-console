@@ -15,11 +15,11 @@ interface TopologySiteControllerProps {
   options: TopologyShowOptionsSelected;
 }
 
-export const convertSiteToNode = ({ identity, name, siteVersion, platform, routerCount }: SiteResponse): GraphNode => ({
+export const convertSiteToNode = ({ identity, name, version, platform, routerCount }: SiteResponse): GraphNode => ({
   type: 'SkNode',
   id: identity,
   name,
-  label: siteVersion ? `${name} (${siteVersion})` : name,
+  label: version ? `${name} (${version})` : name,
   iconName: platform !== 'podman' && platform !== 'kubernetes' ? 'site' : platform,
   info: {
     secondary: routerCount > 1 ? 'HA' : ''

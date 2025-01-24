@@ -344,8 +344,8 @@ for (let i = 0; i < ITEM_COUNT; i++) {
     startTime: 1674048705000000,
     endTime: 0,
     name: `site ${i}`,
-    nameSpace: `config-grpc-site-${i}-test`,
-    siteVersion: 'x.x.x',
+    namespace: `config-grpc-site-${i}-test`,
+    version: 'x.x.x',
     routerCount: 1
   });
 }
@@ -397,8 +397,8 @@ mockSitePairsForPerf.forEach((_, index) => {
       role: 'inter-router',
       name: 'out link',
       cost: 1,
-      octets: 10,
-      octetsReverse: 100,
+      octetCount: 10,
+      octetReverseCount: 100,
       routerAccessId: '',
       routerId: '',
       sourceSiteId: site1.identity,
@@ -416,8 +416,8 @@ mockSitePairsForPerf.forEach((_, index) => {
       endTime: 0,
       role: 'edge-router',
       name: 'in link',
-      octets: 205,
-      octetsReverse: 1100,
+      octetCount: 205,
+      octetReverseCount: 1100,
       cost: 1,
       routerAccessId: '',
       routerId: '',

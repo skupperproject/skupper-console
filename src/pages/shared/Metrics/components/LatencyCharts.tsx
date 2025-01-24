@@ -46,7 +46,7 @@ const LatencyCharts: FC<{
 
         <Divider orientation={{ default: 'vertical' }} />
 
-        <FlexItem flex={{ default: 'flex_1' }}>
+        <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfFlexStart' }}>
           <Table borders={false} variant="compact">
             <Thead noWrap>
               <Tr>

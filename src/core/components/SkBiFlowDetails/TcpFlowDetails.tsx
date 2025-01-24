@@ -25,8 +25,8 @@ const TcpFlowDetails: FC<TcpFlowDetailsProps> = function ({
     destPort,
     proxyHost,
     proxyPort,
-    octets,
-    octetsReverse,
+    octetCount,
+    octetReverseCount,
     latency,
     latencyReverse
   },
@@ -36,7 +36,7 @@ const TcpFlowDetails: FC<TcpFlowDetailsProps> = function ({
   const processName = isCounterflow ? destProcessName : sourceProcessName;
   const host = isCounterflow ? `${destHost} : ${destPort}` : `${sourceHost} : ${sourcePort}`;
   const resolvedProxyHost = isCounterflow ? `${proxyHost} : ${proxyPort}` : undefined;
-  const transferredOctets = isCounterflow ? octetsReverse : octets;
+  const directionalOctetCount = isCounterflow ? octetReverseCount : octetCount;
   const resolvedLatency = isCounterflow ? latencyReverse : latency;
 
   return (
@@ -44,7 +44,7 @@ const TcpFlowDetails: FC<TcpFlowDetailsProps> = function ({
       title={title}
       processId={processId}
       processName={processName}
-      octets={transferredOctets}
+      octetCount={directionalOctetCount}
       latency={resolvedLatency}
       isCounterflow={isCounterflow}
       additionalDetails={

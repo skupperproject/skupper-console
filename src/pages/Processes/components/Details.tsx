@@ -41,7 +41,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
     sourceHost,
     hostName,
     startTime,
-    processBinding,
+    binding,
     services
   } = process;
 
@@ -109,7 +109,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
             <GridItem span={6}>
               <DescriptionListGroup>
                 <DescriptionListTerm>{Labels.BindingState}</DescriptionListTerm>
-                <DescriptionListDescription>{processBinding}</DescriptionListDescription>
+                <DescriptionListDescription>{binding}</DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>
 
