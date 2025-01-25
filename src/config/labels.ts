@@ -54,7 +54,8 @@ export const Labels = {
   Remote: 'Remote resource',
   DataLink: 'Data link',
   SiteLink: 'Router link',
-
+  Outbound: 'Outbound',
+  Inbound: 'Inbound',
   NoClients: 'No Clients',
   OpenConnections: 'Open connections',
   OldConnections: 'Connection history',
@@ -101,8 +102,8 @@ export const Labels = {
   AllConnectedProcesses: 'All connected processes',
   AllProtocols: 'All protocols',
 
-  PercentileOverTime: 'Percentile over time',
-  Buckets: 'Buckets',
+  PercentileOverTimeIn: 'Inbound Connections',
+  PercentileOverTimeOut: 'Outbound Connections',
   LatencyMetric50quantile: '50th percentile',
   LatencyMetric90quantile: '90th percentile',
   LatencyMetric95quantile: '95th percentile',

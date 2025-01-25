@@ -1,6 +1,5 @@
 import { FC, memo } from 'react';
 
-import { ChartThemeColor } from '@patternfly/react-charts/victory';
 import { Divider, Flex, FlexItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
@@ -19,7 +18,6 @@ const RequestCharts: FC<{
         data={requestRateData.map(({ data }) => data)}
         formatY={(y: number) => `${formatToDecimalPlacesIfCents(y, 3)} rps`}
         legendLabels={requestRateData.map(({ label }) => `${label}`)}
-        themeColor={ChartThemeColor.yellow}
       />
     </FlexItem>
 
@@ -38,9 +36,9 @@ const RequestCharts: FC<{
           {requestPerf?.map((request, index) => (
             <Tr key={`${request.label}-${index}`}>
               <Td>{request.label}</Td>
-              <Th>{request.max}</Th>
-              <Th>{request.avg}</Th>
-              <Th>{request.current}</Th>
+              <Td>{request.max}</Td>
+              <Td>{request.avg}</Td>
+              <Td>{request.current}</Td>
             </Tr>
           ))}
         </Tbody>

@@ -55,17 +55,14 @@ export const timeIntervalMap: IntervalTimeMap = {
   sixHours: { seconds: 6 * 3600, label: 'Last 6 hours' },
   twelveHours: { seconds: 12 * 3600, label: 'Last 12 hours' },
   oneDay: { seconds: 24 * 3600, label: 'Last day' },
-  twoDay: { seconds: 2 * 24 * 3600, label: 'Last 2 day' },
-  fourDay: { seconds: 4 * 24 * 3600, label: 'Last 4 day' }
+  twoDay: { seconds: 2 * 24 * 3600, label: 'Last 2 day' }
 };
 
 export const defaultTimeInterval = Object.values(timeIntervalMap)[0];
 
 export enum PrometheusLabelsV2 {
   SourceSiteId = 'source_site_id',
-  SourceSiteName = 'source_site_name',
   DestSiteId = 'dest_site_id',
-  DestSiteName = 'dest_site_name',
   SourceProcessName = 'source_process_name',
   DestProcessName = 'dest_process_name',
   SourceComponentName = 'source_component_name',
@@ -82,7 +79,6 @@ export enum PrometheusMetricsV2 {
   ReceivedBytes = 'skupper_received_bytes_total',
   LatencyBuckets = 'legacy_flow_latency_microseconds_bucket',
   LatencySum = 'legacy_flow_latency_microseconds_sum',
-  LatencyCount = 'legacy_flow_latency_microseconds_count',
   HttpRequests = 'skupper_requests_total',
   TcpOpenConnections = 'skupper_connections_opened_total',
   TcpCloseCOnnections = 'skupper_connections_closed_total'

@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
-import { ChartProps, Chart, ChartAxis, ChartBar, ChartThemeColor, ChartStack } from '@patternfly/react-charts/victory';
+import { ChartProps, Chart, ChartAxis, ChartBar, ChartStack } from '@patternfly/react-charts/victory';
 import { getResizeObserver } from '@patternfly/react-core';
 
 const DEFAULT_CHART_PADDING = {
@@ -68,7 +68,6 @@ const SkChartBar: FC<SkChartBarProps> = function ({
         legendOrientation={legendOrientation}
         legendPosition={legendPosition}
         domainPadding={{ x: [width / 10 - 25, 0] }}
-        themeColor={props.themeColor || ChartThemeColor.multi}
         padding={props.padding || DEFAULT_CHART_PADDING}
         {...props}
       >

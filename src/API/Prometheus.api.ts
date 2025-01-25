@@ -6,7 +6,9 @@ import {
   PrometheusResponse,
   PrometheusLabels,
   PrometheusQueryParamsLatency,
-  PrometheusMetric
+  PrometheusMetric,
+  MetricType,
+  PrometheusResult
 } from '../types/Prometheus.interfaces';
 
 export const PrometheusApi = {
@@ -28,7 +30,7 @@ export const PrometheusApi = {
       }
     });
 
-    return result;
+    return fillMatrixTimeseriesGaps(result, start, end);
   },
 
   fetchPercentilesByLeInTimeRange: async (
@@ -41,32 +43,14 @@ export const PrometheusApi = {
       data: { result }
     } = await fetchApiData<PrometheusResponse<'matrix'>>(gePrometheusQueryPATH(), {
       params: {
-        query: queries.getPercentilesByLeInTimeRange(queryFilterString, '1m', quantile),
+        query: queries.calculateHistogramPercentileTimeRange(queryFilterString, '1m', quantile),
         start,
         end,
         step
       }
     });
 
-    return result;
-  },
-
-  fetchBucketCountsInTimeRange: async (params: PrometheusQueryParams): Promise<PrometheusMetric<'matrix'>[]> => {
-    const { start, end, ...queryParams } = params;
-    const queryFilterString = convertToPrometheusQueryParams(queryParams);
-
-    const {
-      data: { result }
-    } = await fetchApiData<PrometheusResponse<'matrix'>>(gePrometheusQueryPATH(), {
-      params: {
-        query: queries.getBucketCountsInTimeRange(queryFilterString, `${end - start}s`),
-        start,
-        end,
-        step: `${end - start}s`
-      }
-    });
-
-    return result;
+    return fillMatrixTimeseriesGaps(result, start, end);
   },
 
   fetchRequestRateByMethodInInTimeRange: async (
@@ -86,7 +70,7 @@ export const PrometheusApi = {
       }
     });
 
-    return result;
+    return fillMatrixTimeseriesGaps(result, start, end);
   },
 
   fetchResponseCountsByPartialCodeInTimeRange: async (
@@ -126,7 +110,7 @@ export const PrometheusApi = {
       }
     });
 
-    return result;
+    return fillMatrixTimeseriesGaps(result, start, end);
   },
 
   fetchAllProcessPairsBytes: async (
@@ -191,7 +175,7 @@ export const PrometheusApi = {
       }
     });
 
-    return result;
+    return fillMatrixTimeseriesGaps(result, start, end);
   },
 
   fetchOpenConnections: async (params: PrometheusQueryParams): Promise<PrometheusMetric<'vector'>[]> => {
@@ -212,3 +196,40 @@ export const PrometheusApi = {
     return result;
   }
 };
+
+/**
+ * Fills missing timestamp values in a Prometheus matrix result with zeros.
+ * For each metric in the result, it adds data points with value 0 for any timestamp
+ * between startTime and endTime that isn't present in the original data.
+ */
+function fillMatrixTimeseriesGaps(
+  result: PrometheusResult<'matrix'> | [],
+  startTime: number,
+  endTime: number
+): PrometheusResult<'matrix'> {
+  if (!Array.isArray(result) || result.length === 0) {
+    return result as PrometheusResult<'matrix'>;
+  }
+
+  const filledResult = result.map((metric: MetricType<'matrix'>) => {
+    if (!('values' in metric)) {
+      return metric;
+    }
+
+    const orderedTimes = metric.values.map(([t]) => t).sort((a, b) => a - b);
+    const interval = orderedTimes[1] - orderedTimes[0];
+    const filledValues: [number, number | typeof NaN][] = [];
+
+    for (let t = startTime; t <= endTime; t += interval) {
+      const value = metric.values.find(([time]) => time === t)?.[1] ?? 0;
+      filledValues.push([t, value]);
+    }
+
+    return {
+      ...metric,
+      values: filledValues
+    };
+  });
+
+  return filledResult as PrometheusResult<'matrix'>;
+}

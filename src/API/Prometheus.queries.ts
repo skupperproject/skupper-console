@@ -10,12 +10,13 @@ export const queries = {
   },
 
   // latency queries
-  getPercentilesByLeInTimeRange(param: string, range: string, quantile: Quantiles) {
-    return `histogram_quantile(${quantile},sum(rate(${PrometheusMetricsV2.LatencyBuckets}{${param}}[${range}]))by(le))`;
-  },
 
-  getBucketCountsInTimeRange(param: string, range: string) {
-    return `sum by(le)(floor(delta(${PrometheusMetricsV2.LatencyBuckets}{${param}}[${range}])))`;
+  /**
+   * Calculates percentile values over time from histogram buckets.
+   * Uses increase() to maintain the distribution for accurate percentile calculation.
+   */
+  calculateHistogramPercentileTimeRange(param: string, range: string, quantile: Quantiles) {
+    return `histogram_quantile(${quantile}, sum(increase(${PrometheusMetricsV2.LatencyBuckets}{${param}}[${range}]))by(le))`;
   },
 
   // calculate the open connections serie

@@ -2,9 +2,10 @@ import { FC, useCallback, useEffect, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQueries } from '@tanstack/react-query';
 
 import LatencyCharts from './LatencyCharts';
+import { Direction } from '../../../../API/REST.enum';
 import { Labels } from '../../../../config/labels';
 import SKEmptyData from '../../../../core/components/SkEmptyData';
 import SkIsLoading from '../../../../core/components/SkIsLoading';
@@ -20,8 +21,6 @@ interface LatencyProps {
   onGetIsSectionExpanded?: Function;
 }
 
-const minChartHeight = 680;
-
 const Latency: FC<LatencyProps> = function ({
   title = '',
   selectedFilters,
@@ -32,25 +31,23 @@ const Latency: FC<LatencyProps> = function ({
 }) {
   const [isExpanded, setIsExpanded] = useState(openSections);
 
-  const { data, refetch, isRefetching, isLoading } = useQuery({
-    queryKey: [QueriesMetrics.GetLatency, selectedFilters],
-    queryFn: () => MetricsController.getLatencyPercentiles(selectedFilters),
-    refetchInterval,
-    placeholderData: keepPreviousData,
-    enabled: isExpanded
-  });
-
-  const {
-    data: bucketsData,
-    refetch: refetchBuckets,
-    isRefetching: isRefetchingBuckets,
-    isLoading: isLoadingBuckets
-  } = useQuery({
-    queryKey: [QueriesMetrics.GetLatencyBuckets, selectedFilters],
-    queryFn: () => MetricsController.getLatencyBuckets(selectedFilters),
-    refetchInterval,
-    placeholderData: keepPreviousData,
-    enabled: isExpanded
+  const [dataIn, dataOut] = useQueries({
+    queries: [
+      {
+        queryKey: [QueriesMetrics.GetLatency, { ...selectedFilters, direction: Direction.Incoming }],
+        queryFn: () => MetricsController.getLatencyPercentiles({ ...selectedFilters, direction: Direction.Incoming }),
+        refetchInterval,
+        placeholderData: keepPreviousData,
+        enabled: isExpanded
+      },
+      {
+        queryKey: ['QueriesMetrics.GetLatency', { ...selectedFilters, direction: Direction.Outgoing }],
+        queryFn: () => MetricsController.getLatencyPercentiles({ ...selectedFilters, direction: Direction.Outgoing }),
+        refetchInterval,
+        placeholderData: keepPreviousData,
+        enabled: isExpanded
+      }
+    ]
   });
 
   const handleExpand = useCallback(() => {
@@ -63,9 +60,9 @@ const Latency: FC<LatencyProps> = function ({
 
   //Filters: refetch manually the prometheus API
   const handleRefetchMetrics = useCallback(() => {
-    refetch();
-    refetchBuckets();
-  }, [refetch, refetchBuckets]);
+    dataIn.refetch();
+    dataOut.refetch();
+  }, [dataIn.refetch, dataOut.refetch]);
 
   useEffect(() => {
     if (forceUpdate && isExpanded) {
@@ -81,19 +78,24 @@ const Latency: FC<LatencyProps> = function ({
 
       <CardExpandableContent>
         {/*display grid center the child SKEmptyData */}
-        <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
-          {(isLoading || isLoadingBuckets) && <SkIsLoading />}
-          {!isLoading && !isLoadingBuckets && data?.length && bucketsData && (
+        <CardBody>
+          {dataIn.isLoading && dataOut.isLoading && <SkIsLoading />}
+
+          {!dataIn.isLoading && dataIn.data?.length && (
             <>
-              {!isLoading && !isLoadingBuckets && isRefetching && isRefetchingBuckets && <SkIsLoading />}
-              <LatencyCharts
-                latenciesData={data}
-                bucketsData={bucketsData.distribution}
-                summary={bucketsData.summary}
-              />
+              {!dataIn.isLoading && dataIn.isRefetching && <SkIsLoading />}
+              <LatencyCharts latenciesData={dataIn.data} title={Labels.PercentileOverTimeOut} />
             </>
           )}
-          {!isLoading && !isLoadingBuckets && (!data?.length || !bucketsData) && (
+
+          {!dataOut.isLoading && dataOut.data?.length && (
+            <>
+              {!dataOut.isLoading && dataOut.isRefetching && <SkIsLoading />}
+              <LatencyCharts latenciesData={dataOut.data} title={Labels.PercentileOverTimeIn} />
+            </>
+          )}
+
+          {!dataIn.isLoading && !dataOut.isLoading && !dataIn.data?.length && !dataOut.data?.length && (
             <SKEmptyData
               message={Labels.NoMetricFound}
               description={Labels.NoMetricFoundDescription}
