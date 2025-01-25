@@ -44,8 +44,7 @@ describe('Topology details', () => {
                   direction: 'incoming',
                   sourceProcess: processesResults[12].name
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               },
               {
                 metric: {
@@ -53,8 +52,7 @@ describe('Topology details', () => {
                   direction: 'incoming',
                   sourceProcess: processesResults[12].name
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               }
             ],
             destToSourceBytes: [
@@ -64,8 +62,7 @@ describe('Topology details', () => {
                   direction: 'incoming',
                   sourceProcess: processesResults[12].name
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               },
               {
                 metric: {
@@ -73,8 +70,7 @@ describe('Topology details', () => {
                   direction: 'incoming',
                   sourceProcess: processesResults[12].name
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               }
             ],
             sourceToDestByteRate: [
@@ -84,8 +80,7 @@ describe('Topology details', () => {
                   direction: 'incoming',
                   sourceProcess: processesResults[12].name
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               },
               {
                 metric: {
@@ -93,8 +88,7 @@ describe('Topology details', () => {
                   direction: 'incoming',
                   sourceProcess: processesResults[12].name
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               }
             ],
             destToSourceByteRate: [
@@ -104,8 +98,7 @@ describe('Topology details', () => {
                   direction: 'incoming',
                   sourceProcess: processesResults[12].name
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               },
               {
                 metric: {
@@ -113,8 +106,7 @@ describe('Topology details', () => {
                   direction: 'incoming',
                   sourceProcess: processesResults[12].name
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               }
             ]
           }}
@@ -148,8 +140,7 @@ describe('Topology details', () => {
                   destProcess: processPairsResults[2].destinationName,
                   sourceProcess: processPairsResults[2].sourceName
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               }
             ],
             destToSourceBytes: [
@@ -158,8 +149,7 @@ describe('Topology details', () => {
                   destProcess: processPairsResults[2].destinationName,
                   sourceProcess: processPairsResults[2].sourceName
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               }
             ],
             sourceToDestByteRate: [
@@ -168,8 +158,7 @@ describe('Topology details', () => {
                   destProcess: processPairsResults[2].destinationName,
                   sourceProcess: processPairsResults[2].sourceName
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               }
             ],
             destToSourceByteRate: [
@@ -178,8 +167,7 @@ describe('Topology details', () => {
                   destProcess: processPairsResults[2].destinationName,
                   sourceProcess: processPairsResults[2].sourceName
                 },
-                value: [1722715709.263, 38],
-                values: [] as never
+                value: [1722715709.263, 38]
               }
             ]
           }}
