@@ -20,7 +20,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }
           <SkChartArea
             colorScale={colorScale && [colorScale[0]]}
             formatY={formatByteRate}
-            legendLabels={[Labels.BytesIn]}
+            legendLabels={[Labels.Inbound]}
             height={250}
             data={MetricsController.fillMissingDataWithZeros(byteRateData.rxTimeSerie?.data)}
           />
@@ -29,7 +29,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }
             colorScale={colorScale && [colorScale[1]]}
             themeColor={ChartThemeColor.green}
             formatY={formatByteRate}
-            legendLabels={[Labels.BytesOut]}
+            legendLabels={[Labels.Outbound]}
             height={250}
             data={MetricsController.fillMissingDataWithZeros(byteRateData.txTimeSerie?.data)}
           />
@@ -51,13 +51,13 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }
             </Thead>
             <Tbody>
               <Tr>
-                <Td style={{ fontWeight: styles.default.fontLightBold.value }}>{Labels.BytesIn}</Td>
+                <Td style={{ fontWeight: styles.default.fontLightBold.value }}>{Labels.Inbound}</Td>
                 <Td>{formatByteRate(byteRateData?.maxRxValue || 0)}</Td>
                 <Td>{formatByteRate(byteRateData?.avgRxValue || 0)}</Td>
                 <Td>{formatByteRate(byteRateData?.currentRxValue || 0)}</Td>
               </Tr>
               <Tr>
-                <Td style={{ fontWeight: styles.default.fontLightBold.value }}>{Labels.BytesOut}</Td>
+                <Td style={{ fontWeight: styles.default.fontLightBold.value }}>{Labels.Outbound}</Td>
                 <Td>{formatByteRate(byteRateData?.maxTxValue || 0)}</Td>
                 <Td>{formatByteRate(byteRateData?.avgTxValue || 0)}</Td>
                 <Td>{formatByteRate(byteRateData?.currentTxValue || 0)}</Td>

@@ -24,20 +24,6 @@ describe('useMetrics', () => {
     ).rejects.toThrow(error);
   });
 
-  it('should getLatencyBuckets handles errors', async () => {
-    const error = new Error('API request failed');
-
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchBucketCountsInTimeRange').mockImplementation(
-      vi.fn().mockRejectedValue(error)
-    );
-
-    await expect(
-      MetricsController.getLatencyBuckets({
-        /* ... */
-      })
-    ).rejects.toThrow(error);
-  });
-
   it('should getRequests handles errors', async () => {
     const error = new Error('API request failed');
 
@@ -179,32 +165,28 @@ describe('normalizeResponsesFromSeries', () => {
         values: [
           [1, 10],
           [2, 20]
-        ],
-        value: [] as never
+        ]
       },
       {
         metric: { code: '3' },
         values: [
           [1, 10],
           [2, 20]
-        ],
-        value: [] as never
+        ]
       },
       {
         metric: { code: '4' },
         values: [
           [1, 10],
           [2, 20]
-        ],
-        value: [] as never
+        ]
       },
       {
         metric: { code: '5' },
         values: [
           [1, 10],
           [2, 20]
-        ],
-        value: [] as never
+        ]
       }
     ];
 

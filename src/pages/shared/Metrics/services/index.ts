@@ -15,7 +15,6 @@ import {
   LatencyMetrics,
   RequestMetrics,
   ResponseMetrics,
-  LantencyBucketMetrics,
   ConnectionMetrics,
   QueryMetricsParams,
   getDataTrafficMetrics
@@ -67,83 +66,6 @@ export const MetricsController = {
       });
 
       return latenciesData;
-    } catch (e: unknown) {
-      return Promise.reject(e);
-    }
-  },
-
-  getLatencyBuckets: async ({
-    sourceSite,
-    destSite,
-    sourceComponent,
-    destComponent,
-    sourceProcess,
-    destProcess,
-    service,
-    direction,
-    duration = defaultTimeInterval.seconds,
-    start = getCurrentAndPastTimestamps(duration).start,
-    end = getCurrentAndPastTimestamps(duration).end
-  }: QueryMetricsParams): Promise<LantencyBucketMetrics | null> => {
-    const params: PrometheusQueryParams = {
-      sourceSite,
-      destSite,
-      sourceComponent,
-      destComponent,
-      sourceProcess,
-      destProcess,
-      service,
-      direction,
-      start,
-      end,
-      step: calculateStep(end - start)
-    };
-
-    const bucketLabels: Record<string, { le: string; position: number }> = {
-      '+Inf': { le: 'Other', position: 8 },
-      '1e+07': { le: '10 sec', position: 7 },
-      '1e+06': { le: '1 sec', position: 6 },
-      '100000': { le: '100ms', position: 5 },
-      '10000': { le: '10 ms', position: 4 },
-      '5000': { le: '5 ms', position: 3 },
-      '2000': { le: '2 ms', position: 2 },
-      '1000': { le: '1 ms', position: 1 }
-    };
-
-    try {
-      const distributionBuckets = await PrometheusApi.fetchBucketCountsInTimeRange(params);
-
-      if (!distributionBuckets.length) {
-        return null;
-      }
-
-      const buckets = distributionBuckets
-        .map(({ values, metric }) => ({ values, metric: bucketLabels[metric?.le] }))
-        .sort((a, b) => a.metric.position - b.metric.position);
-
-      const bucketsNormalized = buckets?.map(({ metric, values }, index) => ({
-        data: [
-          {
-            x: metric?.le,
-            y: Number(values[values.length - 1][1]) - Number(buckets[index - 1]?.values[values.length - 1][1] || 0)
-          }
-        ],
-        label: metric?.le || ''
-      }));
-
-      const lastBucket = buckets[buckets.length - 1].values;
-      const total = Number(lastBucket[lastBucket.length - 1][1]) || 0;
-
-      const summary = buckets.map(({ metric, values }) => {
-        const lessThanCount = Number(values[values.length - 1][1]);
-        const lessThanPerc = Math.round((lessThanCount / (total || 1)) * 100);
-        const greaterThanCount = total - Number(values[values.length - 1][1]) || 0;
-        const greaterThanPerc = Math.round((greaterThanCount / (total || 1)) * 100);
-
-        return { bound: metric?.le, lessThanCount, lessThanPerc, greaterThanCount, greaterThanPerc };
-      });
-
-      return { distribution: bucketsNormalized, summary };
     } catch (e: unknown) {
       return Promise.reject(e);
     }
@@ -606,8 +528,7 @@ function sumValuesByTimestamp(combinedArray: PrometheusMetric<'matrix'>[]): Prom
   return [
     {
       metric: {},
-      values: resultValues,
-      value: undefined as never // Explicitly set value to never for matrix type
+      values: resultValues
     }
   ];
 }

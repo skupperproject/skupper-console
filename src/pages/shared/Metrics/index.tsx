@@ -9,7 +9,7 @@ import Response from './components/Response';
 import TcpConnection from './components/TcpConnection';
 import Traffic from './components/Traffic';
 import { useMetricsState } from './hooks/useMetricsState';
-import { Protocols, Direction } from '../../../API/REST.enum';
+import { Protocols } from '../../../API/REST.enum';
 import { Labels } from '../../../config/labels';
 import { hexColors } from '../../../config/styles';
 import { ConfigMetricFilters, QueryMetricsParams } from '../../../types/Metrics.interfaces';
@@ -87,19 +87,9 @@ const Metrics: FC<MetricsProps> = function (props) {
 
         <StackItem>
           <Latency
-            title={Labels.LatencyOut}
-            selectedFilters={{ ...selectedFilters, direction: Direction.Incoming }}
+            title={Labels.Latency}
+            selectedFilters={selectedFilters}
             openSections={openSections?.[Labels.LatencyOut]}
-            forceUpdate={shouldUpdateData}
-            onGetIsSectionExpanded={handleSectionToggle}
-          />
-        </StackItem>
-
-        <StackItem>
-          <Latency
-            title={Labels.LatencyIn}
-            selectedFilters={{ ...selectedFilters, direction: Direction.Outgoing }}
-            openSections={openSections?.[Labels.LatencyIn]}
             forceUpdate={shouldUpdateData}
             onGetIsSectionExpanded={handleSectionToggle}
           />
