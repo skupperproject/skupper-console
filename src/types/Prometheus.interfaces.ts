@@ -3,30 +3,45 @@ import { Direction, Protocols, Quantiles } from '../API/REST.enum';
 // Common base type for result types
 type PrometheusResultType = 'matrix' | 'vector' | 'scalar' | 'string';
 
-// Interface for the overall Prometheus response
-export interface PrometheusResponse<T extends PrometheusResultType> {
-  status: string; // Response status (e.g., "success")
-  data: {
-    resultType: T; // Type of the result
-    result: PrometheusResult<T> | [];
-  };
+interface MatrixMetric {
+  metric: { [key: string]: string };
+  values: [number, number | typeof NaN][];
 }
 
-// Union type representing different result data structures
-type PrometheusResult<T extends PrometheusResultType> = T extends 'matrix'
-  ? PrometheusMetric<'matrix'>[]
-  : T extends 'vector'
-    ? PrometheusMetric<'vector'>[]
-    : T extends 'scalar'
-      ? number
-      : T extends 'string'
-        ? string
-        : never; // Enforces valid result types
+interface VectorMetric {
+  metric: { [key: string]: string };
+  value: [number, number | typeof NaN];
+}
 
-export interface PrometheusMetric<T extends PrometheusResultType> {
-  metric: { [key: string]: string }; // Object containing metric labels
-  values: T extends 'matrix' ? [number, number | typeof NaN][] : never; // Array of samples for matrix results
-  value: T extends 'vector' ? [number, number | typeof NaN] : never; // Single sample with timestamp and value for vector results
+interface BaseMetric {
+  metric: { [key: string]: string };
+}
+
+export type PrometheusMetric<T> = T extends 'matrix' ? MatrixMetric : T extends 'vector' ? VectorMetric : BaseMetric;
+
+export type MetricType<T extends PrometheusResultType> = BaseMetric &
+  (T extends 'matrix'
+    ? { values: [number, number | typeof NaN][] }
+    : T extends 'vector'
+      ? { value: [number, number | typeof NaN] }
+      : '');
+
+// Union type representing different result data structures
+export type PrometheusResult<T extends PrometheusResultType> = T extends 'matrix' | 'vector'
+  ? MetricType<T>[]
+  : T extends 'scalar'
+    ? number
+    : T extends 'string'
+      ? string
+      : never;
+
+// Interface for the overall Prometheus response
+export interface PrometheusResponse<T extends PrometheusResultType> {
+  status: string;
+  data: {
+    resultType: T;
+    result: PrometheusResult<T> | [];
+  };
 }
 
 export interface PrometheusLabels {

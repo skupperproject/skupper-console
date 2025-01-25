@@ -479,7 +479,7 @@ exports[`Metrics Component > renders correctly 1`] = `
       class="pf-v6-l-stack__item"
     >
       <div
-        aria-label="Tcp latency Out"
+        aria-label="Latency"
         class="pf-v6-c-card pf-m-full-height"
         data-ouia-component-id="OUIA-Generated-Card-3"
         data-ouia-component-type="PF6/Card"
@@ -532,7 +532,7 @@ exports[`Metrics Component > renders correctly 1`] = `
               <div
                 class="pf-v6-c-card__title-text"
               >
-                Tcp latency Out
+                Latency
               </div>
             </div>
           </div>
@@ -543,8 +543,8 @@ exports[`Metrics Component > renders correctly 1`] = `
       class="pf-v6-l-stack__item"
     >
       <div
-        aria-label="Tcp latency In"
-        class="pf-v6-c-card pf-m-full-height"
+        aria-label="Http requests"
+        class="pf-v6-c-card"
         data-ouia-component-id="OUIA-Generated-Card-4"
         data-ouia-component-type="PF6/Card"
         data-ouia-safe="true"
@@ -596,7 +596,7 @@ exports[`Metrics Component > renders correctly 1`] = `
               <div
                 class="pf-v6-c-card__title-text"
               >
-                Tcp latency In
+                Http requests
               </div>
             </div>
           </div>
@@ -607,7 +607,7 @@ exports[`Metrics Component > renders correctly 1`] = `
       class="pf-v6-l-stack__item"
     >
       <div
-        aria-label="Http requests"
+        aria-label="Http responses"
         class="pf-v6-c-card"
         data-ouia-component-id="OUIA-Generated-Card-5"
         data-ouia-component-type="PF6/Card"
@@ -624,70 +624,6 @@ exports[`Metrics Component > renders correctly 1`] = `
               aria-disabled="false"
               class="pf-v6-c-button pf-m-plain"
               data-ouia-component-id="OUIA-Generated-Button-plain-5"
-              data-ouia-component-type="PF6/Button"
-              data-ouia-safe="true"
-              type="button"
-            >
-              <span
-                class="pf-v6-c-button__icon"
-              >
-                <span
-                  class="pf-v6-c-card__header-toggle-icon"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="pf-v6-svg"
-                    fill="currentColor"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 256 512"
-                    width="1em"
-                  >
-                    <path
-                      d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </button>
-          </div>
-          <div
-            class="pf-v6-c-card__header-main"
-          >
-            <div
-              class="pf-v6-c-card__title"
-            >
-              <div
-                class="pf-v6-c-card__title-text"
-              >
-                Http requests
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="pf-v6-l-stack__item"
-    >
-      <div
-        aria-label="Http responses"
-        class="pf-v6-c-card"
-        data-ouia-component-id="OUIA-Generated-Card-6"
-        data-ouia-component-type="PF6/Card"
-        data-ouia-safe="true"
-        id=""
-      >
-        <div
-          class="pf-v6-c-card__header"
-        >
-          <div
-            class="pf-v6-c-card__header-toggle"
-          >
-            <button
-              aria-disabled="false"
-              class="pf-v6-c-button pf-m-plain"
-              data-ouia-component-id="OUIA-Generated-Button-plain-6"
               data-ouia-component-type="PF6/Button"
               data-ouia-safe="true"
               type="button"

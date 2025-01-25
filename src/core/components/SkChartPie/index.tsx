@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
-import { ChartDonutProps, ChartDonut, ChartThemeColor, ChartTooltip } from '@patternfly/react-charts/victory';
+import { ChartDonutProps, ChartDonut, ChartTooltip } from '@patternfly/react-charts/victory';
 import { getResizeObserver } from '@patternfly/react-core';
 
 import { formatToDecimalPlacesIfCents } from '../../utils/formatToDecimalPlacesIfCents';
@@ -77,7 +77,6 @@ const SkChartPie: FC<SkChartPieProps> = function ({
         legendPosition={legendPosition}
         legendData={legendData}
         padding={props.padding || DEFAULT_CHART_PADDING}
-        themeColor={ChartThemeColor.multi}
         {...props}
       />
     </div>

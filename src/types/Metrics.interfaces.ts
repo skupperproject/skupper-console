@@ -15,7 +15,6 @@ export interface ConfigMetricFilters {
 export enum QueriesMetrics {
   GetTraffic = 'get-metric-traffic-query',
   GetLatency = 'get-metric-latency-query',
-  GetLatencyBuckets = 'get-metric-latency-buckets-query',
   GetRequest = 'get-metric-request-query',
   GetResponse = 'get-metric-response-query',
   GetConnection = 'get-metric-connection-query'
@@ -62,23 +61,6 @@ export interface ResponseMetrics {
 export interface RequestMetrics {
   data: skAxisXY[];
   label: string;
-}
-
-export interface LatencyBucketDistributionData {
-  data: { x: string; y: number }[];
-  label: string;
-}
-export interface LatencyBucketSummary {
-  bound: string;
-  lessThanCount: number;
-  greaterThanCount: number;
-  lessThanPerc: number;
-  greaterThanPerc: number;
-}
-
-export interface LantencyBucketMetrics {
-  distribution: LatencyBucketDistributionData[];
-  summary: LatencyBucketSummary[];
 }
 
 export interface ByteRateMetrics {
