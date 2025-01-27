@@ -44,23 +44,23 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }
             <Thead noWrap>
               <Tr>
                 <Th aria-label="metric" />
+                <Th>{Labels.ByteRateMinCol}</Th>
                 <Th>{Labels.ByteRateMaxCol}</Th>
                 <Th>{Labels.ByteRateAvgCol}</Th>
-                <Th>{Labels.ByteRateCurrentCol}</Th>
               </Tr>
             </Thead>
             <Tbody>
               <Tr>
                 <Td style={{ fontWeight: styles.default.fontLightBold.value }}>{Labels.Inbound}</Td>
+                <Td>{formatByteRate(byteRateData?.minRxValue || 0)}</Td>
                 <Td>{formatByteRate(byteRateData?.maxRxValue || 0)}</Td>
                 <Td>{formatByteRate(byteRateData?.avgRxValue || 0)}</Td>
-                <Td>{formatByteRate(byteRateData?.currentRxValue || 0)}</Td>
               </Tr>
               <Tr>
                 <Td style={{ fontWeight: styles.default.fontLightBold.value }}>{Labels.Outbound}</Td>
+                <Td>{formatByteRate(byteRateData?.minTxValue || 0)}</Td>
                 <Td>{formatByteRate(byteRateData?.maxTxValue || 0)}</Td>
                 <Td>{formatByteRate(byteRateData?.avgTxValue || 0)}</Td>
-                <Td>{formatByteRate(byteRateData?.currentTxValue || 0)}</Td>
               </Tr>
             </Tbody>
           </Table>

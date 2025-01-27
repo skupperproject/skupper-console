@@ -28,15 +28,15 @@ const fetchResponseCountsByPartialCodeInTimeRange = async (params: PrometheusQue
 const fetchHttpErrorRateByPartialCodeInTimeRange = async (params: PrometheusQueryParams) =>
   executeQuery(queries.getResponseRateByPartialCodeInTimeRange, { ...params, code: '4.*|5.*' }, 'matrix', ['5m']);
 
-const fetchProcessPairs = async (
+const fetchNetworkTrafficData = async (
   groupBy: string,
   type: 'bytes' | 'rates',
   filters?: PrometheusLabels,
   isRx = false
 ) => {
   const queryMap = {
-    bytes: queries.getAllPairsBytes,
-    rates: queries.getAllPairsByteRates
+    bytes: queries.getCurrentBytes,
+    rates: queries.getCurrentByteRate
   };
 
   return executeQuery(queryMap[type], { ...filters }, 'vector', [groupBy, isRx]);
@@ -54,7 +54,7 @@ export const PrometheusApi = {
   fetchRequestRateByMethodInInTimeRange: fetchRequestRateByMethodInTimeRange,
   fetchResponseCountsByPartialCodeInTimeRange,
   fetchHttpErrorRateByPartialCodeInTimeRange,
-  fetchProcessPairs,
+  fetchProcessPairs: fetchNetworkTrafficData,
   fetchOpenConnections,
   fetchOpenConnectionsInTimeRange
 };

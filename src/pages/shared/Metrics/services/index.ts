@@ -437,8 +437,13 @@ function normalizeByteRateFromSeries(
     return Math.max(...timeSerie.map(({ y }) => y));
   };
 
-  const currentTxValue = txTimeSerie?.[txTimeSerie.length - 1]?.y;
-  const currentRxValue = rxTimeSerie?.[rxTimeSerie.length - 1]?.y;
+  const calculateMinValue = (timeSerie: skAxisXY[] | undefined): number | undefined => {
+    if (!timeSerie) {
+      return undefined;
+    }
+
+    return Math.min(...timeSerie.map(({ y }) => y));
+  };
 
   return {
     txTimeSerie: txTimeSerie ? { data: txTimeSerie, label: 'Tx' } : undefined,
@@ -447,8 +452,8 @@ function normalizeByteRateFromSeries(
     avgRxValue: calculateAverage(rxTimeSerie, totalAvgRxValue),
     maxTxValue: calculateMaxValue(txTimeSerie),
     maxRxValue: calculateMaxValue(rxTimeSerie),
-    currentTxValue,
-    currentRxValue,
+    minTxValue: calculateMinValue(txTimeSerie),
+    minRxValue: calculateMinValue(rxTimeSerie),
     totalTxValue,
     totalRxValue
   };
