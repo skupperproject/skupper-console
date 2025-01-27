@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
@@ -13,23 +13,14 @@ import { MetricsController } from '../services';
 
 interface ResponseProps {
   selectedFilters: QueryMetricsParams;
-  openSections?: boolean;
-  forceUpdate?: number;
   refetchInterval?: number;
-  onGetIsSectionExpanded?: Function;
   onIsLoaded?: Function;
 }
 
 const minChartHeight = 450;
 
-const Response: FC<ResponseProps> = function ({
-  selectedFilters,
-  forceUpdate,
-  openSections = true,
-  refetchInterval,
-  onGetIsSectionExpanded
-}) {
-  const [isExpanded, setIsExpanded] = useState(openSections);
+const Response: FC<ResponseProps> = function ({ selectedFilters, refetchInterval }) {
+  const [isExpanded, setIsExpanded] = useState(true);
 
   // This filter collect promehetus query results from a response of a request for this  source site/process
   const selectedFiltersReverse = {
@@ -42,7 +33,6 @@ const Response: FC<ResponseProps> = function ({
 
   const {
     data: response,
-    refetch: refetchResponse,
     isRefetching: isRefetchingResponse,
     isLoading
   } = useQuery({
@@ -55,7 +45,6 @@ const Response: FC<ResponseProps> = function ({
 
   const {
     data: responseReverse,
-    refetch: refetchResponseReverse,
     isRefetching: isRefetchingResponseReverse,
     isLoading: isLoadingReverse
   } = useQuery({
@@ -68,23 +57,7 @@ const Response: FC<ResponseProps> = function ({
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
-
-    if (onGetIsSectionExpanded) {
-      onGetIsSectionExpanded({ response: !isExpanded });
-    }
-  }, [isExpanded, onGetIsSectionExpanded]);
-
-  //Filters: refetch manually the prometheus API
-  const handleRefetchMetrics = useCallback(() => {
-    refetchResponse();
-    refetchResponseReverse();
-  }, [refetchResponse, refetchResponseReverse]);
-
-  useEffect(() => {
-    if (forceUpdate && isExpanded) {
-      handleRefetchMetrics();
-    }
-  }, [forceUpdate, handleRefetchMetrics, isExpanded]);
+  }, [isExpanded]);
 
   const responseData = responseReverse?.responseData
     ? { ...response?.responseData, ...responseReverse.responseData }

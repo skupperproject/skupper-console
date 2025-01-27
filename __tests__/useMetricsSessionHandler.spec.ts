@@ -45,11 +45,6 @@ describe('useMetricSessionHandlers', () => {
     vi.clearAllMocks();
   });
 
-  it('should return undefined for visibleMetrics if session data is missing', () => {
-    const { result } = renderHook(() => useMetricSessionHandlers(id));
-    expect(result.current.openSections).toBeUndefined();
-  });
-
   it('should retrieve selectedFilters and visibleMetrics from session', () => {
     const mockFilters: QueryMetricsParams = mockQueryMetricsParams;
     const mockVisibleMetrics = mockExpandedMetricSections;
@@ -61,8 +56,7 @@ describe('useMetricSessionHandlers', () => {
     const { result } = renderHook(() => useMetricSessionHandlers(id));
 
     expect(result.current.selectedFilters).toEqual(mockFilters);
-    expect(result.current.openSections).toEqual(mockVisibleMetrics);
-    expect(getDataFromSession).toHaveBeenCalledTimes(2);
+    expect(getDataFromSession).toHaveBeenCalledTimes(1);
   });
 
   it('should store selectedFilters to session', () => {
@@ -74,16 +68,5 @@ describe('useMetricSessionHandlers', () => {
     });
 
     expect(storeDataToSession).toHaveBeenCalledWith(`metric-filters-${id}`, mockFilters);
-  });
-
-  it('should store visibleMetrics to session', () => {
-    const mockVisibleMetrics = mockExpandedMetricSections;
-    const { result } = renderHook(() => useMetricSessionHandlers(id));
-
-    act(() => {
-      result.current.setOpenSections(mockVisibleMetrics);
-    });
-
-    expect(storeDataToSession).toHaveBeenCalledWith(`metric-sections-${id}`, mockVisibleMetrics);
   });
 });

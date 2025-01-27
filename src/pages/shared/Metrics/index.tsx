@@ -37,14 +37,7 @@ const Metrics: FC<MetricsProps> = function (props) {
     availableProtocols
   } = props;
 
-  const {
-    selectedFilters,
-    openSections,
-    shouldUpdateData,
-    triggerMetricUpdate,
-    handleFilterChange,
-    handleSectionToggle
-  } = useMetricsState({
+  const { selectedFilters, handleFilterChange } = useMetricsState({
     sessionKey,
     defaultMetricFilterValues
   });
@@ -61,58 +54,31 @@ const Metrics: FC<MetricsProps> = function (props) {
           destSites={destSites}
           sourceProcesses={sourceProcesses}
           destProcesses={destProcesses}
-          onRefetch={triggerMetricUpdate}
           onSelectFilters={handleFilterChange}
         />
       </div>
 
       <Stack hasGutter>
         <StackItem>
-          <Traffic
-            selectedFilters={selectedFilters}
-            forceUpdate={shouldUpdateData}
-            openSections={openSections?.byterate}
-            onGetIsSectionExpanded={handleSectionToggle}
-          />
+          <Traffic selectedFilters={selectedFilters} />
         </StackItem>
 
         <StackItem>
-          <TcpConnection
-            selectedFilters={selectedFilters}
-            forceUpdate={shouldUpdateData}
-            openSections={openSections?.connection}
-            onGetIsSectionExpanded={handleSectionToggle}
-          />
+          <TcpConnection selectedFilters={selectedFilters} />
         </StackItem>
 
         <StackItem>
-          <Latency
-            title={Labels.Latency}
-            selectedFilters={selectedFilters}
-            openSections={openSections?.[Labels.LatencyOut]}
-            forceUpdate={shouldUpdateData}
-            onGetIsSectionExpanded={handleSectionToggle}
-          />
+          <Latency title={Labels.Latency} selectedFilters={selectedFilters} />
         </StackItem>
 
         {showHttp && (
           <>
             <StackItem>
-              <Request
-                selectedFilters={selectedFilters}
-                openSections={openSections?.request}
-                forceUpdate={shouldUpdateData}
-                onGetIsSectionExpanded={handleSectionToggle}
-              />
+              <Request selectedFilters={selectedFilters} />
             </StackItem>
 
             <StackItem>
-              <Response
-                selectedFilters={selectedFilters}
-                openSections={openSections?.response}
-                forceUpdate={shouldUpdateData}
-                onGetIsSectionExpanded={handleSectionToggle}
-              />
+              <Response selectedFilters={selectedFilters} />
             </StackItem>
           </>
         )}

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -29,8 +29,6 @@ describe('Latency component', () => {
   });
 
   it('should render the Latency section of the metric', async () => {
-    const handleGetisSectionExpanded = vi.fn();
-
     render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
@@ -39,9 +37,6 @@ describe('Latency component', () => {
             selectedFilters={{
               sourceProcess: processResult.name
             }}
-            openSections={true}
-            forceUpdate={1}
-            onGetIsSectionExpanded={handleGetisSectionExpanded}
           />
         </Suspense>
       </Providers>
@@ -52,14 +47,6 @@ describe('Latency component', () => {
     });
 
     expect(screen.getByText(Labels.LatencyIn)).toBeInTheDocument();
-
-    const latencyButton = screen.getByLabelText(Labels.LatencyIn)?.querySelector('button');
-
-    if (latencyButton) {
-      fireEvent.click(latencyButton);
-    }
-
-    expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 
   it('should render the Latency section and display the no metric found message', async () => {
@@ -74,7 +61,6 @@ describe('Latency component', () => {
             selectedFilters={{
               sourceProcess: processResult.name
             }}
-            openSections={true}
           />
         </Suspense>
       </Providers>

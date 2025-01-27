@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -29,8 +29,6 @@ describe('Response component', () => {
   });
 
   it('should render the Reponse section of the metric', async () => {
-    const handleGetisSectionExpanded = vi.fn();
-
     render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
@@ -38,9 +36,6 @@ describe('Response component', () => {
             selectedFilters={{
               sourceProcess: processResult.name
             }}
-            openSections={true}
-            forceUpdate={1}
-            onGetIsSectionExpanded={handleGetisSectionExpanded}
           />
         </Suspense>
       </Providers>
@@ -51,17 +46,6 @@ describe('Response component', () => {
     });
 
     expect(screen.getByText(Labels.Responses)).toBeInTheDocument();
-
-    const responseLabel = screen.getByLabelText(Labels.Responses);
-
-    if (responseLabel) {
-      const button = responseLabel.querySelector('button');
-      if (button) {
-        fireEvent.click(button);
-      }
-    }
-
-    expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 
   it('should not render the Response section', async () => {
@@ -76,8 +60,6 @@ describe('Response component', () => {
             selectedFilters={{
               sourceProcess: processResult.name
             }}
-            openSections={true}
-            forceUpdate={1}
           />
         </Suspense>
       </Providers>

@@ -165,44 +165,18 @@ export function getPrometheusResolutionInSeconds(range: number): {
   step: string;
   loopback: string;
 } {
-  let step: number;
-  let loopback: number;
+  let loopback = 60;
 
-  if (range <= 60) {
-    step = 1;
-    loopback = 30;
-  } else if (range <= 60 * 5) {
-    // 5m
-    step = 2;
-    loopback = 30;
-  } else if (range <= 60 * 15) {
-    // 15m
-    step = 6;
-    loopback = 30;
-  } else if (range <= 60 * 30) {
-    // 30m
-    step = 12;
-    loopback = 30;
-  } else if (range <= 60 * 60) {
-    // 1h
-    step = 24;
-    loopback = 60;
-  } else if (range <= 60 * 60 * 2) {
-    // 2h
-    step = 48;
-    loopback = 60 * 2;
-  } else if (range <= 60 * 60 * 6) {
-    // 6h
-    step = 96;
-    loopback = 60 * 6;
-  } else if (range <= 24 * 60 * 60) {
-    // 24h
-    step = 384;
-    loopback = 60 * 24;
-  } else {
-    step = 768;
-    loopback = 60 * 48;
+  if (range >= 60 * 60 * 24) {
+    loopback = 60 * 15;
+  } else if (range >= 60 * 60 * 12) {
+    loopback = 60 * 5;
+  } else if (range >= 60 * 60 * 6) {
+    loopback = 60 * 3;
   }
+
+  const K = 240;
+  const step = Math.ceil(range / K);
 
   return { step: `${step}s`, loopback: `${loopback}s` };
 }

@@ -9,8 +9,7 @@ export const timeIntervalMap: IntervalTimeMap = {
   twoHours: { seconds: 2 * 3600, label: 'Last 2 hours' },
   sixHours: { seconds: 6 * 3600, label: 'Last 6 hours' },
   twelveHours: { seconds: 12 * 3600, label: 'Last 12 hours' },
-  oneDay: { seconds: 24 * 3600, label: 'Last day' },
-  twoDay: { seconds: 2 * 24 * 3600, label: 'Last 2 day' }
+  oneDay: { seconds: 24 * 3600, label: 'Last day' }
 };
 
 export const defaultTimeInterval = Object.values(timeIntervalMap)[0];

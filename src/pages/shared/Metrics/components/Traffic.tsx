@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
@@ -14,24 +14,15 @@ import { MetricsController } from '../services';
 
 interface TrafficProps {
   selectedFilters: QueryMetricsParams;
-  openSections?: boolean;
-  forceUpdate?: number;
   refetchInterval?: number;
-  onGetIsSectionExpanded?: Function;
 }
 
 const minChartHeight = 450;
 
-const Traffic: FC<TrafficProps> = function ({
-  selectedFilters,
-  forceUpdate,
-  refetchInterval,
-  openSections = true,
-  onGetIsSectionExpanded
-}) {
-  const [isExpanded, setIsExpanded] = useState(openSections);
+const Traffic: FC<TrafficProps> = function ({ selectedFilters, refetchInterval }) {
+  const [isExpanded, setIsExpanded] = useState(true);
 
-  const { data, refetch, isRefetching, isLoading } = useQuery({
+  const { data, isRefetching, isLoading } = useQuery({
     queryKey: [QueriesMetrics.GetTraffic, selectedFilters],
     queryFn: () => MetricsController.getDataTraffic(selectedFilters),
     refetchInterval,
@@ -41,21 +32,7 @@ const Traffic: FC<TrafficProps> = function ({
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
-
-    if (onGetIsSectionExpanded) {
-      onGetIsSectionExpanded({ byterate: !isExpanded });
-    }
-  }, [isExpanded, onGetIsSectionExpanded]);
-
-  const handleRefetchMetrics = useCallback(() => {
-    refetch();
-  }, [refetch]);
-
-  useEffect(() => {
-    if (forceUpdate && isExpanded) {
-      handleRefetchMetrics();
-    }
-  }, [forceUpdate, handleRefetchMetrics, isExpanded]);
+  }, [isExpanded]);
 
   const dataClientAvailable =
     !!data?.trafficClient.txTimeSerie?.data.length && !!data?.trafficClient.rxTimeSerie?.data.length;

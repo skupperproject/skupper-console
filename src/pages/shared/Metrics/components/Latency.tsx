@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
@@ -15,21 +15,11 @@ import { MetricsController } from '../services';
 interface LatencyProps {
   title?: string;
   selectedFilters: QueryMetricsParams;
-  openSections?: boolean;
-  forceUpdate?: number;
   refetchInterval?: number;
-  onGetIsSectionExpanded?: Function;
 }
 
-const Latency: FC<LatencyProps> = function ({
-  title = '',
-  selectedFilters,
-  forceUpdate,
-  openSections = true,
-  refetchInterval,
-  onGetIsSectionExpanded
-}) {
-  const [isExpanded, setIsExpanded] = useState(openSections);
+const Latency: FC<LatencyProps> = function ({ title = '', selectedFilters, refetchInterval }) {
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const [dataIn, dataOut] = useQueries({
     queries: [
@@ -52,23 +42,7 @@ const Latency: FC<LatencyProps> = function ({
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
-
-    if (onGetIsSectionExpanded) {
-      onGetIsSectionExpanded({ [title]: !isExpanded });
-    }
-  }, [isExpanded, onGetIsSectionExpanded, title]);
-
-  //Filters: refetch manually the prometheus API
-  const handleRefetchMetrics = useCallback(() => {
-    dataIn.refetch();
-    dataOut.refetch();
-  }, [dataIn.refetch, dataOut.refetch]);
-
-  useEffect(() => {
-    if (forceUpdate && isExpanded) {
-      handleRefetchMetrics();
-    }
-  }, [forceUpdate, handleRefetchMetrics, isExpanded]);
+  }, [isExpanded]);
 
   return (
     <Card isExpanded={isExpanded} aria-label={title} isFullHeight>

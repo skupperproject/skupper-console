@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -29,8 +29,6 @@ describe('Tcp component', () => {
   });
 
   it('should render the Tcp section of the metric', async () => {
-    const handleGetisSectionExpanded = vi.fn();
-
     render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
@@ -38,9 +36,6 @@ describe('Tcp component', () => {
             selectedFilters={{
               sourceProcess: processResult.name
             }}
-            openSections={true}
-            forceUpdate={1}
-            onGetIsSectionExpanded={handleGetisSectionExpanded}
           />
         </Suspense>
       </Providers>
@@ -51,14 +46,6 @@ describe('Tcp component', () => {
     });
 
     expect(screen.getByText(Labels.TcpConnections)).toBeInTheDocument();
-
-    const button = screen.getByLabelText(Labels.TcpConnections)?.querySelector('button');
-
-    if (button) {
-      fireEvent.click(button);
-    }
-
-    expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 
   it('should not render the Tcp section', async () => {
@@ -77,8 +64,6 @@ describe('Tcp component', () => {
             selectedFilters={{
               sourceProcess: processResult.name
             }}
-            openSections={true}
-            forceUpdate={1}
           />
         </Suspense>
       </Providers>
