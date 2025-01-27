@@ -6,7 +6,7 @@
  * This module ensures modularity and reusability across the application.
  */
 
-import { fetchApiData, fetchApiDataWithMapper } from './apiClient';
+import { fetchApiData, fetchApiDataWithMapper } from './ApiClient';
 import {
   getSiteById,
   getComponentById,

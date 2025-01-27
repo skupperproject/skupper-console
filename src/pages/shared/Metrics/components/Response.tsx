@@ -25,7 +25,7 @@ const minChartHeight = 450;
 const Response: FC<ResponseProps> = function ({
   selectedFilters,
   forceUpdate,
-  openSections = false,
+  openSections = true,
   refetchInterval,
   onGetIsSectionExpanded
 }) {

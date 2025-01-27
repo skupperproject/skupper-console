@@ -39,7 +39,7 @@ export const queries = {
   },
 
   // TOPOLOGY instant queries
-  getAllPairsBytes(groupBy: string, params?: string, areDataReceived = false) {
+  getAllPairsBytes(params?: string, groupBy?: string, areDataReceived = false) {
     const label = areDataReceived ? PrometheusMetricsV2.ReceivedBytes : PrometheusMetricsV2.SentBytes;
 
     if (params) {
@@ -49,7 +49,7 @@ export const queries = {
     return `sum by(${groupBy})(${label})`;
   },
 
-  getAllPairsByteRates(groupBy: string, params?: string, areDataReceived = false) {
+  getAllPairsByteRates(params?: string, groupBy?: string, areDataReceived = false) {
     const label = areDataReceived ? PrometheusMetricsV2.ReceivedBytes : PrometheusMetricsV2.SentBytes;
 
     if (params) {
@@ -57,13 +57,5 @@ export const queries = {
     }
 
     return `sum by(${groupBy})(rate(${label}[1m]))`;
-  },
-
-  getAllPairsLatencies(groupBy: string, params?: string) {
-    if (params) {
-      return `sum by(${groupBy})(rate(${PrometheusMetricsV2.LatencySum}{${params}}[1m]))`;
-    }
-
-    return `sum by(${groupBy})(rate(${PrometheusMetricsV2.LatencySum}[1m]))`;
   }
 };

@@ -25,7 +25,7 @@ const Latency: FC<LatencyProps> = function ({
   title = '',
   selectedFilters,
   forceUpdate,
-  openSections = false,
+  openSections = true,
   refetchInterval,
   onGetIsSectionExpanded
 }) {

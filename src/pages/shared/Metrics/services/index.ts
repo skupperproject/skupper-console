@@ -6,7 +6,7 @@ import {
 } from '../../../../API/Prometheus.utils';
 import { Quantiles } from '../../../../API/REST.enum';
 import { Labels } from '../../../../config/labels';
-import { calculateStep, defaultTimeInterval } from '../../../../config/prometheus';
+import { defaultTimeInterval } from '../../../../config/prometheus';
 import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDecimalPlacesIfCents';
 import { getCurrentAndPastTimestamps } from '../../../../core/utils/getCurrentAndPastTimestamps';
 import {
@@ -46,8 +46,7 @@ export const MetricsController = {
       service,
       direction,
       start,
-      end,
-      step: calculateStep(end - start)
+      end
     };
 
     try {
@@ -97,8 +96,7 @@ export const MetricsController = {
       service,
       protocol,
       start,
-      end,
-      step: calculateStep(end - start)
+      end
     };
     try {
       const requestsByProcess = await PrometheusApi.fetchRequestRateByMethodInInTimeRange(params);
@@ -147,8 +145,7 @@ export const MetricsController = {
         service,
         protocol,
         start,
-        end,
-        step: calculateStep(end - start)
+        end
       };
 
       const [responsesByProcess, errorRateByProcess] = await Promise.all([
@@ -184,7 +181,6 @@ export const MetricsController = {
       service,
       start,
       end,
-      step: calculateStep(end - start),
       sourceSite,
       destSite,
       sourceComponent,
@@ -265,8 +261,7 @@ export const MetricsController = {
       destProcess,
       service,
       start,
-      end,
-      step: calculateStep(end - start)
+      end
     };
 
     const invertedParams = {

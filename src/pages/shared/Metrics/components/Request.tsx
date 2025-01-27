@@ -25,7 +25,7 @@ const minChartHeight = 350;
 const Request: FC<RequestProps> = function ({
   selectedFilters,
   forceUpdate,
-  openSections = false,
+  openSections = true,
   refetchInterval,
   onGetIsSectionExpanded
 }) {

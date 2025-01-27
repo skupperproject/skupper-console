@@ -36,7 +36,7 @@ const minChartHeight = 340;
 const TcpConnection: FC<TcpConnectionProps> = function ({
   selectedFilters,
   forceUpdate,
-  openSections = false,
+  openSections = true,
   refetchInterval,
   onGetIsSectionExpanded
 }) {

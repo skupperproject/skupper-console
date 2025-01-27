@@ -269,7 +269,7 @@ const fetchBytesMetrics = async (
   isRx = false
 ): Promise<PrometheusMetric<'vector'>[]> =>
   showBytes
-    ? PrometheusApi.fetchAllProcessPairsBytes(metricQueryParams.fetchBytes.groupBy, metricQueryParams.filterBy, isRx)
+    ? PrometheusApi.fetchProcessPairs(metricQueryParams.fetchBytes.groupBy, 'bytes', metricQueryParams.filterBy, isRx)
     : [];
 
 // Helper function to fetch byte rate metrics
@@ -279,8 +279,9 @@ const fetchByteRateMetrics = async (
   isRx = false
 ): Promise<PrometheusMetric<'vector'>[]> =>
   showByteRate
-    ? PrometheusApi.fetchAllProcessPairsByteRates(
+    ? PrometheusApi.fetchProcessPairs(
         metricQueryParams.fetchByteRate.groupBy,
+        'rates',
         metricQueryParams.filterBy,
         isRx
       )

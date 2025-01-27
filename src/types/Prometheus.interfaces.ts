@@ -58,7 +58,6 @@ export interface PrometheusLabels {
 }
 
 export interface PrometheusQueryParams extends PrometheusLabels {
-  step: string;
   start: number;
   end: number;
 }
@@ -75,3 +74,6 @@ export interface MetricData {
   values: skAxisXY[][];
   labels: string[];
 }
+
+export type ExecuteQueryQueryType = 'matrix' | 'vector';
+export type ExecuteQueryFunction = (filterString: string, ...args: any[]) => string;
