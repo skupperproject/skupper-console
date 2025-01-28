@@ -1,5 +1,5 @@
 import { PrometheusApi } from '../../../../API/Prometheus.api';
-import { getTimeSeriesValuesFromPrometheusData } from '../../../../API/Prometheus.utils';
+import { getHistoryValuesFromPrometheusData } from '../../../../API/Prometheus.utils';
 import { Quantiles } from '../../../../API/REST.enum';
 import { defaultTimeInterval } from '../../../../config/prometheus';
 import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDecimalPlacesIfCents';
@@ -200,24 +200,20 @@ export const MetricsController = {
       destProcess: sourceProcess
     };
 
-    const isServiceWIthoutSelecedResources = !!service && !sourceSite && !destSite && !sourceProcess && !destProcess;
+    const areAllServicesSelected = !!service && !sourceSite && !destSite && !sourceProcess && !destProcess;
     const isSameSite = !!sourceSite && !!destSite && sourceSite === destSite;
 
     try {
       const [sourceToDestByteRateTx, destToSourceByteRateRx, destToSourceByteRateTx, sourceToDestByteRateRx] =
         await Promise.all([
           // Outgoing byte rate: Data sent from the source to the destination
-          isServiceWIthoutSelecedResources || (!service && isSameSite)
-            ? []
-            : PrometheusApi.fetchByteRateHistory(params),
+          areAllServicesSelected || (!service && isSameSite) ? [] : PrometheusApi.fetchByteRateHistory(params),
           // Incoming byte rate: Data received at the destination from the source
-          isServiceWIthoutSelecedResources || (!service && isSameSite)
-            ? []
-            : PrometheusApi.fetchByteRateHistory(params, true),
+          areAllServicesSelected || (!service && isSameSite) ? [] : PrometheusApi.fetchByteRateHistory(params, true),
           // Outgoing byte rate from the other side: Data sent from the destination to the source
-          !isServiceWIthoutSelecedResources && service ? [] : PrometheusApi.fetchByteRateHistory(invertedParams),
+          !areAllServicesSelected && service ? [] : PrometheusApi.fetchByteRateHistory(invertedParams),
           // Incoming byte rate from the other side: Data received at the source from the destination
-          !isServiceWIthoutSelecedResources && service ? [] : PrometheusApi.fetchByteRateHistory(invertedParams, true)
+          !areAllServicesSelected && service ? [] : PrometheusApi.fetchByteRateHistory(invertedParams, true)
         ]);
 
       return {
@@ -294,7 +290,7 @@ export const MetricsController = {
       const liveConnectionsCount =
         (Number(liveConnectionsIn[0]?.value[1]) || 0) + (Number(liveConnectionOut[0]?.value[1]) || 0);
 
-      const liveConnectionsSerie = getTimeSeriesValuesFromPrometheusData(
+      const liveConnectionsSerie = getHistoryValuesFromPrometheusData(
         sumValuesByTimestamp([...liveConnectionsInTimeRangeData, ...liveConnectionsOutTimeRangeData])
       );
 

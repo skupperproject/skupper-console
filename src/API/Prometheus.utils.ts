@@ -15,7 +15,7 @@ import {
 } from '../types/Prometheus.interfaces';
 import { skAxisXY } from '../types/SkChartArea.interfaces';
 
-export const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
+const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
   queryType === 'range' ? PROMETHEUS_URL_RANGE_QUERY : PROMETHEUS_URL_SINGLE_QUERY;
 
 function convertToPrometheusQueryParams({
@@ -49,7 +49,7 @@ function convertToPrometheusQueryParams({
     .join(','); // Join the filters with commas
 }
 
-export function getTimeSeriesValuesFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): skAxisXY[][] | null {
+function getHistoryValuesFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): skAxisXY[][] | null {
   // Prometheus can retrieve empty arrays wich are not valid data for us
   if (!data.length) {
     return null;
@@ -67,7 +67,7 @@ export function getTimeSeriesValuesFromPrometheusData(data: PrometheusMetric<'ma
 /**
  * Converts an array of Prometheus result objects to a two-dimensional array of metric labels.
  */
-export function getHistoryLabelsFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): string[] | null {
+function getHistoryLabelsFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): string[] | null {
   // Validate the input
   if (!Array.isArray(data) || data.length === 0) {
     return null;
@@ -77,12 +77,12 @@ export function getHistoryLabelsFromPrometheusData(data: PrometheusMetric<'matri
   return data.flatMap(({ metric }) => Object.values(metric));
 }
 
-export function getHistoryFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): MetricValuesAndLabels | null {
+function getHistoryFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): MetricValuesAndLabels | null {
   if (!data.length) {
     return null;
   }
 
-  const values = getTimeSeriesValuesFromPrometheusData(data) as skAxisXY[][];
+  const values = getHistoryValuesFromPrometheusData(data) as skAxisXY[][];
   const labels = getHistoryLabelsFromPrometheusData(data) as string[];
 
   return { values, labels };
@@ -130,7 +130,7 @@ function fillMatrixTimeseriesGaps(
  * This helps optimize query performance and data visualization by adjusting the data point density.
  */
 
-export function getPrometheusResolutionInSeconds(range: number): {
+function getPrometheusResolutionInSeconds(range: number): {
   step: string;
   loopback: string;
 } {
@@ -154,7 +154,7 @@ export function getPrometheusResolutionInSeconds(range: number): {
  * Executes a Prometheus query with the provided parameters and handles the response based on query type (matrix/vector).
  * For matrix queries, it fills gaps in time series data.
  */
-export const executeQuery = async <T extends ExecuteQueryQueryType>(
+const executeQuery = async <T extends ExecuteQueryQueryType>(
   queryFn: ExecuteQueryFunction,
   params: Partial<PrometheusQueryParams & PrometheusQueryParamsLatency>,
   queryType: T,
@@ -179,4 +179,14 @@ export const executeQuery = async <T extends ExecuteQueryQueryType>(
   }
 
   return result;
+};
+
+export {
+  executeQuery,
+  fillMatrixTimeseriesGaps,
+  gePrometheusQueryPATH,
+  getPrometheusResolutionInSeconds,
+  getHistoryFromPrometheusData,
+  getHistoryLabelsFromPrometheusData,
+  getHistoryValuesFromPrometheusData
 };

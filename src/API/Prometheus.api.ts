@@ -28,6 +28,12 @@ const fetchResponseCountsByPartialCodeHistory = async (params: PrometheusQueryPa
 const fetchHttpErrorRateByPartialCodeHistory = async (params: PrometheusQueryParams) =>
   executeQuery(queries.getResponseRateByPartialCodeInTimeRange, { ...params, code: '4.*|5.*' }, 'matrix', ['5m']);
 
+const fetchInstantOpenConnections = async (params: PrometheusQueryParams) =>
+  executeQuery(queries.getOpenConnections, params, 'vector');
+
+const fetchOpenConnectionsHistory = async (params: PrometheusQueryParams) =>
+  executeQuery(queries.getOpenConnections, params, 'matrix');
+
 const fetchInstantTrafficValue = async (
   groupBy: string,
   type: 'bytes' | 'rates',
@@ -41,12 +47,6 @@ const fetchInstantTrafficValue = async (
 
   return executeQuery(queryMap[type], { ...filters }, 'vector', [groupBy, isRx]);
 };
-
-const fetchInstantOpenConnections = async (params: PrometheusQueryParams) =>
-  executeQuery(queries.getOpenConnections, params, 'vector');
-
-const fetchOpenConnectionsHistory = async (params: PrometheusQueryParams) =>
-  executeQuery(queries.getOpenConnections, params, 'matrix');
 
 export const PrometheusApi = {
   fetchByteRateHistory,

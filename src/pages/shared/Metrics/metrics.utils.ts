@@ -1,7 +1,7 @@
 import {
   getHistoryFromPrometheusData,
   getHistoryLabelsFromPrometheusData,
-  getTimeSeriesValuesFromPrometheusData as getHistoryValuesFromPrometheusData
+  getHistoryValuesFromPrometheusData
 } from '../../../API/Prometheus.utils';
 import { Labels } from '../../../config/labels';
 import {
