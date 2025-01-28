@@ -106,18 +106,32 @@ const SkGraph: FC<SkGraphProps> = memo(
         graph.on<IPointerEvent<Combo>>(ComboEvent.DRAG_END, () => toggleHover(true));
 
         graph.on<IPointerEvent<Node>>(NodeEvent.CLICK, ({ target }) => {
-          // if the node is already selected , set id = undefined to deleselect it
-          const selected = graph.getElementDataByState('node', GraphLabels.Select);
-          const data = graph.getElementData(target.id).data as unknown as GraphNode;
+          const currentlySelectedNodes = graph.getElementDataByState('node', GraphLabels.Select);
+          const clickedNodeData = graph.getElementData(target.id).data as unknown as GraphNode;
+          const isClickedNodeAlreadySelected =
+            target.id === (currentlySelectedNodes.length && currentlySelectedNodes[0].id);
+          const isGroupNode = clickedNodeData.groupCount && clickedNodeData.groupCount > 1;
 
-          onClickNode?.(target.id === (selected.length && selected[0].id) ? null : data);
+          // Deselect node if it's a group node and already selected, otherwise select it
+          onClickNode?.(
+            isGroupNode && isClickedNodeAlreadySelected
+              ? { ...clickedNodeData, id: '' } // Deselect by clearing id
+              : clickedNodeData // Normal selection
+          );
         });
-        graph.on<IPointerEvent<Edge>>(EdgeEvent.CLICK, ({ target }) => {
-          // if the edge is already selected , set id = undefined to deleselect it
-          const selected = graph.getElementDataByState('edge', GraphLabels.Select);
-          const data = graph.getElementData(target.id).data as unknown as GraphEdge;
 
-          onClickEdge?.(target.id === (selected.length && selected[0].id) ? null : data);
+        graph.on<IPointerEvent<Edge>>(EdgeEvent.CLICK, ({ target }) => {
+          const currentlySelectedEdges = graph.getElementDataByState('edge', GraphLabels.Select);
+          const clickedEdgeData = graph.getElementData(target.id).data as unknown as GraphEdge;
+          const isClickedEdgeAlreadySelected =
+            target.id === (currentlySelectedEdges.length && currentlySelectedEdges[0].id);
+
+          // Deselect edge if already selected, otherwise select it
+          onClickEdge?.(
+            isClickedEdgeAlreadySelected
+              ? { ...clickedEdgeData, id: '' } // Deselect by clearing id
+              : clickedEdgeData // Normal selection
+          );
         });
 
         graph.render().then(() => {
