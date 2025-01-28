@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -29,8 +29,6 @@ describe('Request component', () => {
   });
 
   it('should render the Request section of the metric', async () => {
-    const handleGetisSectionExpanded = vi.fn();
-
     render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
@@ -38,9 +36,6 @@ describe('Request component', () => {
             selectedFilters={{
               sourceProcess: processResult.name
             }}
-            openSections={true}
-            forceUpdate={1}
-            onGetIsSectionExpanded={handleGetisSectionExpanded}
           />
         </Suspense>
       </Providers>
@@ -51,18 +46,10 @@ describe('Request component', () => {
     });
 
     expect(screen.getByText(Labels.Requests)).toBeInTheDocument();
-
-    const button = screen.getByLabelText(Labels.Requests)?.querySelector('button');
-
-    if (button) {
-      fireEvent.click(button);
-    }
-
-    expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 
   it('should not render the Request section', async () => {
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchRequestRateByMethodInInTimeRange').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchRequestRateByMethodHistory').mockImplementation(
       vi.fn().mockReturnValue({ data: null })
     );
 
@@ -73,8 +60,6 @@ describe('Request component', () => {
             selectedFilters={{
               sourceProcess: processResult.name
             }}
-            openSections={true}
-            forceUpdate={1}
           />
         </Suspense>
       </Providers>

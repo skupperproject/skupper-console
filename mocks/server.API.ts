@@ -284,24 +284,15 @@ export const MockApi = {
           resultType: 'vector',
           result: [
             {
-              metric: {
-                dest_process_name: 'paymentservice-69f99b8c87-kztsn',
-                source_process_name: 'checkoutservice-684ff774fd-4bttd'
-              },
+              metric: {},
               value: [1700918014, '1024']
             },
             {
-              metric: {
-                dest_process_name: 'paymentservice-131f99g8c15-replica-1',
-                source_process_name: 'checkoutservice-684ff774fd-4bttd'
-              },
+              metric: {},
               value: [1700918024.674, '10000']
             },
             {
-              metric: {
-                dest_process_name: 'process cash desk 1',
-                source_process_name: 'checkoutservice-684ff774fd-4bttd'
-              },
+              metric: {},
               value: [1700918904.674, '20000']
             }
           ]
@@ -321,14 +312,16 @@ export const MockApi = {
     };
   },
 
-  getPrometheusRangeQuery: () => ({
+  getPrometheusRangeQuery: (_: unknown, { queryParams }: ApiProps) => ({
     data: {
       result: [
         {
           metric: {},
           values: [
-            [1192026035, 0],
-            [1592026935, 1]
+            [queryParams.start, 0],
+            [Number(queryParams.end) - 40, 10000],
+            [Number(queryParams.end) - 20, 30000],
+            [queryParams.end, 1]
           ]
         }
       ]

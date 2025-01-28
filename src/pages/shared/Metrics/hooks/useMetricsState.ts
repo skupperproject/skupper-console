@@ -9,20 +9,12 @@ interface UseMetricsProps {
 }
 
 export const useMetricsState = ({ sessionKey, defaultMetricFilterValues }: UseMetricsProps) => {
-  const {
-    selectedFilters: storedFilters,
-    openSections,
-    setSelectedFilters: setStoredFilters,
-    setOpenSections
-  } = useMetricSessionHandlers(sessionKey, defaultMetricFilterValues);
-
-  const [shouldUpdateData, setShouldUpdateData] = useState(0);
+  const { selectedFilters: storedFilters, setSelectedFilters: setStoredFilters } = useMetricSessionHandlers(
+    sessionKey,
+    defaultMetricFilterValues
+  );
 
   const [selectedFilters, setSelectedFilters] = useState<QueryMetricsParams>(storedFilters);
-
-  const triggerMetricUpdate = () => {
-    setShouldUpdateData(new Date().getTime());
-  };
 
   const handleFilterChange = useCallback(
     (updatedFilters: QueryMetricsParams) => {
@@ -37,19 +29,8 @@ export const useMetricsState = ({ sessionKey, defaultMetricFilterValues }: UseMe
     [defaultMetricFilterValues, setStoredFilters]
   );
 
-  const handleSectionToggle = useCallback(
-    (section: Record<string, boolean>) => {
-      setOpenSections(section);
-    },
-    [setOpenSections]
-  );
-
   return {
     selectedFilters,
-    openSections,
-    shouldUpdateData,
-    triggerMetricUpdate,
-    handleFilterChange,
-    handleSectionToggle
+    handleFilterChange
   };
 };

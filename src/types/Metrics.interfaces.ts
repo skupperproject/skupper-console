@@ -70,8 +70,8 @@ export interface ByteRateMetrics {
   avgRxValue: number | undefined;
   maxTxValue: number | undefined;
   maxRxValue: number | undefined;
-  currentTxValue: number | undefined;
-  currentRxValue: number | undefined;
+  minTxValue: number | undefined;
+  minRxValue: number | undefined;
   totalTxValue: number | undefined;
   totalRxValue: number | undefined;
 }

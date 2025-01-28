@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
@@ -13,27 +13,17 @@ import { MetricsController } from '../services';
 
 interface RequestProps {
   selectedFilters: QueryMetricsParams;
-  openSections?: boolean;
-  forceUpdate?: number;
   refetchInterval?: number;
-  onGetIsSectionExpanded?: Function;
   onIsLoaded?: Function;
 }
 
 const minChartHeight = 350;
 
-const Request: FC<RequestProps> = function ({
-  selectedFilters,
-  forceUpdate,
-  openSections = false,
-  refetchInterval,
-  onGetIsSectionExpanded
-}) {
-  const [isExpanded, setIsExpanded] = useState(openSections);
+const Request: FC<RequestProps> = function ({ selectedFilters, refetchInterval }) {
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const {
     data: request,
-    refetch: refetchRequest,
     isRefetching,
     isLoading
   } = useQuery({
@@ -46,22 +36,7 @@ const Request: FC<RequestProps> = function ({
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
-
-    if (onGetIsSectionExpanded) {
-      onGetIsSectionExpanded({ request: !isExpanded });
-    }
-  }, [isExpanded, onGetIsSectionExpanded]);
-
-  //Filters: refetch manually the prometheus API
-  const handleRefetchMetrics = useCallback(() => {
-    refetchRequest();
-  }, [refetchRequest]);
-
-  useEffect(() => {
-    if (forceUpdate && isExpanded) {
-      handleRefetchMetrics();
-    }
-  }, [forceUpdate, handleRefetchMetrics, isExpanded]);
+  }, [isExpanded]);
 
   return (
     <Card isExpanded={isExpanded} aria-label={Labels.Requests}>

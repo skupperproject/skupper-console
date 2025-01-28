@@ -1,11 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import * as PrometheusAPIModule from '../src/API/Prometheus.api';
-import {
-  MetricsController,
-  alignDataSeriesWithZeros,
-  normalizeResponsesFromSeries
-} from '../src/pages/shared/Metrics/services';
+import { alignDataSeriesWithZeros, normalizeResponsesFromSeries } from '../src/pages/shared/Metrics/metrics.utils';
+import { MetricsController } from '../src/pages/shared/Metrics/services';
 import { PrometheusMetric } from '../src/types/Prometheus.interfaces';
 import { skAxisXY } from '../src/types/SkChartArea.interfaces';
 
@@ -13,7 +10,7 @@ describe('useMetrics', () => {
   it('should getLatencyPercentiles handles errors', async () => {
     const error = new Error('API request failed');
 
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchPercentilesByLeInTimeRange').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchPercentilesByLeHistory').mockImplementation(
       vi.fn().mockRejectedValue(error)
     );
 
@@ -27,7 +24,7 @@ describe('useMetrics', () => {
   it('should getRequests handles errors', async () => {
     const error = new Error('API request failed');
 
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchRequestRateByMethodInInTimeRange').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchRequestRateByMethodHistory').mockImplementation(
       vi.fn().mockRejectedValue(error)
     );
 
@@ -41,11 +38,11 @@ describe('useMetrics', () => {
   it('should getResponse handles errors', async () => {
     const error = new Error('API request failed');
 
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchResponseCountsByPartialCodeInTimeRange').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchResponseCountsByPartialCodeHistory').mockImplementation(
       vi.fn().mockRejectedValue(error)
     );
 
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchHttpErrorRateByPartialCodeInTimeRange').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchHttpErrorRateByPartialCodeHistory').mockImplementation(
       vi.fn().mockRejectedValue(error)
     );
 
@@ -59,7 +56,7 @@ describe('useMetrics', () => {
   it('should getDataTraffic handles errors', async () => {
     const error = new Error('API request failed');
 
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchByteRateInTimeRange').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchByteRateHistory').mockImplementation(
       vi.fn().mockRejectedValue(error)
     );
 
@@ -73,11 +70,11 @@ describe('useMetrics', () => {
   it('should getConnections handles errors', async () => {
     const error = new Error('API request failed');
 
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnections').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchInstantOpenConnections').mockImplementation(
       vi.fn().mockRejectedValue(error)
     );
 
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnectionsInTimeRange').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnectionsHistory').mockImplementation(
       vi.fn().mockRejectedValue(error)
     );
 

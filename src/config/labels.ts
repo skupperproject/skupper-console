@@ -115,6 +115,7 @@ export const Labels = {
   ByteRateTotalCol: 'Total',
   ByteRateCurrentCol: 'Current',
   ByteRateMaxCol: 'Max',
+  ByteRateMinCol: 'Min',
   TcpTraffic: 'Tcp traffic',
   TcpConnections: 'Tcp connections',
   RequestRate: 'Request rate',

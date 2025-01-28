@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Server } from 'miragejs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -29,8 +29,6 @@ describe('Traffic component', () => {
   });
 
   it('should render the Traffic section of the metric', async () => {
-    const handleGetisSectionExpanded = vi.fn();
-
     render(
       <Providers>
         <Suspense fallback={<LoadingPage />}>
@@ -38,9 +36,6 @@ describe('Traffic component', () => {
             selectedFilters={{
               sourceProcess: processResult.name
             }}
-            openSections={true}
-            forceUpdate={1}
-            onGetIsSectionExpanded={handleGetisSectionExpanded}
           />
         </Suspense>
       </Providers>
@@ -51,14 +46,6 @@ describe('Traffic component', () => {
     });
 
     expect(screen.getByText(Labels.TcpTraffic)).toBeInTheDocument();
-
-    const button = screen.getByLabelText(Labels.TcpTraffic)?.querySelector('button');
-
-    if (button) {
-      fireEvent.click(button);
-    }
-
-    expect(handleGetisSectionExpanded).toHaveBeenCalledTimes(1);
   });
 
   it('should render the Traffic section and display the no metric found message', async () => {

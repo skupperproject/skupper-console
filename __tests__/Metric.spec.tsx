@@ -21,15 +21,6 @@ describe('useMetrics', () => {
   it('initializes with the correct state from props', () => {
     const { result } = renderHook(() => useMetricsState(initialProps));
     expect(result.current.selectedFilters).toEqual({ protocol: Protocols.Http });
-    expect(result.current.shouldUpdateData).toBe(0);
-  });
-
-  it('updates shouldUpdateData correctly when triggerMetricUpdate is called', () => {
-    const { result } = renderHook(() => useMetricsState(initialProps));
-    act(() => {
-      result.current.triggerMetricUpdate();
-    });
-    expect(result.current.shouldUpdateData).not.toBe(0);
   });
 
   it('updates queryParams and calls onGetMetricFiltersConfig when handleFilterChange is invoked', () => {

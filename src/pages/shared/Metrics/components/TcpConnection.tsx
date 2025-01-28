@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import {
   Bullseye,
@@ -25,26 +25,16 @@ import { MetricsController } from '../services';
 
 interface TcpConnectionProps {
   selectedFilters: QueryMetricsParams;
-  openSections?: boolean;
-  forceUpdate?: number;
   refetchInterval?: number;
-  onGetIsSectionExpanded?: Function;
 }
 
 const minChartHeight = 340;
 
-const TcpConnection: FC<TcpConnectionProps> = function ({
-  selectedFilters,
-  forceUpdate,
-  openSections = false,
-  refetchInterval,
-  onGetIsSectionExpanded
-}) {
-  const [isExpanded, setIsExpanded] = useState(openSections);
+const TcpConnection: FC<TcpConnectionProps> = function ({ selectedFilters, refetchInterval }) {
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const {
     data: connections,
-    refetch,
     isRefetching,
     isLoading
   } = useQuery({
@@ -56,22 +46,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({
 
   const handleExpand = useCallback(() => {
     setIsExpanded(!isExpanded);
-
-    if (onGetIsSectionExpanded) {
-      onGetIsSectionExpanded({ connection: !isExpanded });
-    }
-  }, [isExpanded, onGetIsSectionExpanded]);
-
-  //Filters: refetch manually the prometheus API
-  const handleRefetchMetrics = useCallback(() => {
-    refetch();
-  }, [refetch]);
-
-  useEffect(() => {
-    if (forceUpdate && isExpanded) {
-      handleRefetchMetrics();
-    }
-  }, [forceUpdate, handleRefetchMetrics, isExpanded]);
+  }, [isExpanded]);
 
   return (
     <Card isExpanded={isExpanded} aria-label={Labels.TcpConnections}>
