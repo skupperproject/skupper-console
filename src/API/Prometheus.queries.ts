@@ -23,10 +23,10 @@ export const queries = {
     const label = areDataReceived ? PrometheusMetricsV2.ReceivedBytes : PrometheusMetricsV2.SentBytes;
 
     if (params) {
-      return `sum by(${groupBy})(rate(${label}{${params}}[30s]))`;
+      return `sum by(${groupBy})(rate(${label}{${params}}[60s]))`;
     }
 
-    return `sum by(${groupBy})(rate(${label}[30s]))`;
+    return `sum by(${groupBy})(rate(${label}[60s]))`;
   },
 
   // latency queries

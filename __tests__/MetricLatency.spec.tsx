@@ -50,7 +50,7 @@ describe('Latency component', () => {
   });
 
   it('should render the Latency section and display the no metric found message', async () => {
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchPercentilesByLeInTimeRange').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchPercentilesByLeHistory').mockImplementation(
       vi.fn().mockReturnValue({ data: null })
     );
 

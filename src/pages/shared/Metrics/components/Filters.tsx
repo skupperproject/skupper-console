@@ -10,7 +10,7 @@ import { deepMergeJSONObjects } from '../../../../core/utils/deepMergeWithJSONOb
 import { ConfigMetricFilters, QueryMetricsParams } from '../../../../types/Metrics.interfaces';
 import useMetricFiltersState from '../hooks/useMetricFiltersState';
 import { configDefaultFilters } from '../Metrics.constants';
-import { generateFilterItems } from '../services';
+import { generateFilterItems } from '../metrics.utils';
 
 interface MetricFiltersProps {
   defaultMetricFilterValues: QueryMetricsParams;

@@ -67,7 +67,7 @@ export function getTimeSeriesValuesFromPrometheusData(data: PrometheusMetric<'ma
 /**
  * Converts an array of Prometheus result objects to a two-dimensional array of metric labels.
  */
-export function getTimeSeriesLabelsFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): string[] | null {
+export function getHistoryLabelsFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): string[] | null {
   // Validate the input
   if (!Array.isArray(data) || data.length === 0) {
     return null;
@@ -77,13 +77,13 @@ export function getTimeSeriesLabelsFromPrometheusData(data: PrometheusMetric<'ma
   return data.flatMap(({ metric }) => Object.values(metric));
 }
 
-export function getTimeSeriesFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): MetricValuesAndLabels | null {
+export function getHistoryFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): MetricValuesAndLabels | null {
   if (!data.length) {
     return null;
   }
 
   const values = getTimeSeriesValuesFromPrometheusData(data) as skAxisXY[][];
-  const labels = getTimeSeriesLabelsFromPrometheusData(data) as string[];
+  const labels = getHistoryLabelsFromPrometheusData(data) as string[];
 
   return { values, labels };
 }
@@ -126,6 +126,31 @@ function fillMatrixTimeseriesGaps(
 }
 
 /**
+ * Calculates the appropriate step for Prometheus range queries based on the time range.
+ * This helps optimize query performance and data visualization by adjusting the data point density.
+ */
+
+export function getPrometheusResolutionInSeconds(range: number): {
+  step: string;
+  loopback: string;
+} {
+  const K = 240;
+  let loopback = 60;
+
+  if (range >= 60 * 60 * 24) {
+    loopback = 60 * 15;
+  } else if (range >= 60 * 60 * 12) {
+    loopback = 60 * 5;
+  } else if (range >= 60 * 60 * 6) {
+    loopback = 60 * 3;
+  }
+
+  const step = Math.ceil(range / K);
+
+  return { step: `${step}s`, loopback: `${loopback}s` };
+}
+
+/**
  * Executes a Prometheus query with the provided parameters and handles the response based on query type (matrix/vector).
  * For matrix queries, it fills gaps in time series data.
  */
@@ -155,28 +180,3 @@ export const executeQuery = async <T extends ExecuteQueryQueryType>(
 
   return result;
 };
-
-/**
- * Calculates the appropriate step for Prometheus range queries based on the time range.
- * This helps optimize query performance and data visualization by adjusting the data point density.
- */
-
-export function getPrometheusResolutionInSeconds(range: number): {
-  step: string;
-  loopback: string;
-} {
-  let loopback = 60;
-
-  if (range >= 60 * 60 * 24) {
-    loopback = 60 * 15;
-  } else if (range >= 60 * 60 * 12) {
-    loopback = 60 * 5;
-  } else if (range >= 60 * 60 * 6) {
-    loopback = 60 * 3;
-  }
-
-  const K = 240;
-  const step = Math.ceil(range / K);
-
-  return { step: `${step}s`, loopback: `${loopback}s` };
-}

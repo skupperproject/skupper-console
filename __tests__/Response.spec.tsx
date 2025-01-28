@@ -49,7 +49,7 @@ describe('Response component', () => {
   });
 
   it('should not render the Response section', async () => {
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchResponseCountsByPartialCodeInTimeRange').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchResponseCountsByPartialCodeHistory').mockImplementation(
       vi.fn().mockReturnValue({ data: null })
     );
 

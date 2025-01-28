@@ -49,7 +49,7 @@ describe('Request component', () => {
   });
 
   it('should not render the Request section', async () => {
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchRequestRateByMethodInInTimeRange').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchRequestRateByMethodHistory').mockImplementation(
       vi.fn().mockReturnValue({ data: null })
     );
 

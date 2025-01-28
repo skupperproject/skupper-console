@@ -49,11 +49,11 @@ describe('Tcp component', () => {
   });
 
   it('should not render the Tcp section', async () => {
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnections').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchInstantOpenConnections').mockImplementation(
       vi.fn().mockReturnValue({ data: null })
     );
 
-    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnectionsInTimeRange').mockImplementation(
+    vi.spyOn(PrometheusAPIModule.PrometheusApi, 'fetchOpenConnectionsHistory').mockImplementation(
       vi.fn().mockReturnValue({ data: null })
     );
 
