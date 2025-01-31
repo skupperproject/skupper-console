@@ -17,7 +17,7 @@
 
 ![alt text](https://github.com/user-attachments/assets/b5c7941f-bc4d-4f72-875a-d12890c1e9a7)
 
-![alt text](https://github.com/user-attachments/assets/862e61a3-067d-48ed-b612-bee1efd1ffc2)
+![alt text](https://github.com/user-attachments/assets/ba57d9ce-369c-4ada-b41c-993fba830350)
 
 ## Enable the console from Skupper
 

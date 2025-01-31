@@ -1,6 +1,6 @@
 import { FC, useCallback, useState } from 'react';
 
-import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } from '@patternfly/react-core';
+import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
@@ -43,6 +43,7 @@ const Request: FC<RequestProps> = function ({ selectedFilters, refetchInterval }
       <CardHeader onExpand={handleExpand}>
         <CardTitle>{Labels.Requests}</CardTitle>
       </CardHeader>
+
       <CardExpandableContent>
         {/*display grid center the child SKEmptyData */}
         <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
@@ -51,8 +52,11 @@ const Request: FC<RequestProps> = function ({ selectedFilters, refetchInterval }
           {!isLoading && request?.requestRateData?.length && (
             <>
               {isRefetching && <SkIsLoading />}
-              <Title headingLevel="h4">{Labels.RequestRate} </Title>
-              <RequestCharts requestRateData={request.requestRateData} requestPerf={request.requestPerf} />
+              <RequestCharts
+                title={Labels.RequestRateByMethod}
+                requestRateData={request.requestRateData}
+                requestPerf={request.requestPerf}
+              />
             </>
           )}
 

@@ -11,20 +11,22 @@ import {
   ChartArea,
   ChartLine
 } from '@patternfly/react-charts/victory';
-import { getResizeObserver } from '@patternfly/react-core';
+import { getResizeObserver, Title } from '@patternfly/react-core';
 
 import { skAxisXY } from '../../../types/SkChartArea.interfaces';
 import { formatChartDate } from '../../utils/formatChartDate';
 
 const DEFAULT_CHART_PADDING = {
-  bottom: 70,
+  bottom: 0,
   left: 70,
   right: 0,
-  top: 20
+  top: 0
 };
 
 interface SkChartAreaProps extends ChartProps {
   data: skAxisXY[][];
+  title?: string;
+  subTitle?: string;
   formatY?: Function;
   formatYTooltip?: Function;
   formatX?: Function;
@@ -44,6 +46,8 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
   legendLabels = [],
   showLegend = true,
   isChartLine = false,
+  title,
+  subTitle,
   height = 300,
   ...props
 }) {
@@ -74,10 +78,15 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
   const startDate = data[0][0]?.x;
 
   return (
-    <div ref={chartContainerRef} style={{ width: '100%', height: `100%` }}>
+    <div ref={chartContainerRef} style={{ width: '100%', height: `${height + 0}px`, position: 'relative' }}>
+      <div style={{ position: 'absolute', left: '35px', top: '10px' }}>
+        <Title headingLevel="h4">{title}</Title>
+        <p>{subTitle} </p>
+      </div>
+
       <Chart
         width={width}
-        height={height}
+        height={height - 110}
         legendData={showLegend ? legendData : []}
         legendOrientation={legendOrientation}
         legendPosition={legendPosition}
@@ -106,7 +115,7 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
       >
         <ChartAxis
           style={{
-            tickLabels: { fontSize: 10 }
+            tickLabels: { fontSize: 12 }
           }}
           tickFormat={(tick) => tick && formatX(tick, startDate)}
           showGrid
@@ -116,8 +125,8 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
           dependentAxis
           minDomain={{ y: 0 }}
           style={{
-            tickLabels: { fontSize: 10 },
-            axisLabel: { fontSize: 15, padding: 90 }
+            tickLabels: { fontSize: 12 },
+            axisLabel: { fontSize: 15, padding: 0 }
           }}
           tickFormat={(tick) => tick && formatY(tick < 0.001 ? 0 : tick)}
           showGrid

@@ -407,6 +407,11 @@ exports[`Metrics Component > renders correctly 1`] = `
                 </svg>
               </div>
             </div>
+            <div
+              class="pf-v6-l-stack pf-m-gutter"
+            >
+               
+            </div>
           </div>
         </div>
       </div>
@@ -513,8 +518,8 @@ exports[`Metrics Component > renders correctly 1`] = `
       class="pf-v6-l-stack__item"
     >
       <div
-        aria-label="Latency"
-        class="pf-v6-c-card pf-m-expanded pf-m-full-height"
+        aria-label="Tcp latency"
+        class="pf-v6-c-card pf-m-expanded"
         data-ouia-component-id="OUIA-Generated-Card-3"
         data-ouia-component-type="PF6/Card"
         data-ouia-safe="true"
@@ -566,7 +571,7 @@ exports[`Metrics Component > renders correctly 1`] = `
               <div
                 class="pf-v6-c-card__title-text"
               >
-                Latency
+                Tcp latency
               </div>
             </div>
           </div>
@@ -576,6 +581,7 @@ exports[`Metrics Component > renders correctly 1`] = `
         >
           <div
             class="pf-v6-c-card__body"
+            style="min-height: 350px; display: grid;"
           >
             <div
               style="position: absolute; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.5); left: 0px; right: 0px; top: 0px; bottom: 0px; z-index: 1;"
@@ -602,6 +608,9 @@ exports[`Metrics Component > renders correctly 1`] = `
                 </svg>
               </div>
             </div>
+            <div
+              class="pf-v6-l-flex pf-m-row-on-xl pf-m-column pf-m-gap-4xl"
+            />
           </div>
         </div>
       </div>

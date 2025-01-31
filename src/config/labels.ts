@@ -31,6 +31,7 @@ export const Labels = {
   TerminatedConnections: 'Closed connections',
   LiveConnections: 'Open connections',
   Requests: 'Http requests',
+  RequestRateByMethod: 'Requests Per Second by Method',
   Responses: 'Http responses',
 
   Created: 'Created',
@@ -58,6 +59,7 @@ export const Labels = {
   Inbound: 'Inbound',
   NoClients: 'No Clients',
   OpenConnections: 'Open connections',
+  ConnectionActivity: 'Connection Activity',
   OldConnections: 'Connection history',
   TcpTrafficTx: 'Outbound traffic ',
   TcpTrafficRx: 'Inbound traffic',
@@ -102,8 +104,6 @@ export const Labels = {
   AllConnectedProcesses: 'All connected processes',
   AllProtocols: 'All protocols',
 
-  PercentileOverTimeIn: 'Inbound Connections',
-  PercentileOverTimeOut: 'Outbound Connections',
   LatencyMetric50quantile: '50th percentile',
   LatencyMetric90quantile: '90th percentile',
   LatencyMetric95quantile: '95th percentile',
@@ -143,7 +143,7 @@ export const Labels = {
   BytesOut: 'Data Out',
   BytesIn: 'Data In',
   ByteRate: 'Byte rate',
-  Latency: 'Latency',
+  Latency: 'Tcp latency',
   LatencyOut: 'Tcp latency Out',
   LatencyIn: 'Tcp latency In',
 
@@ -177,6 +177,6 @@ export const Labels = {
     'No metrics are currently accessible or meet the filter criteria. Please modify all filters, then attempt the operation again.',
   NoBiflowFoundDescription:
     'As new connections or requests are established, they will be dynamically added to the table for display',
-  ByteRateDataOutDescription: 'Analyze outbound and inbound traffic when sending data',
-  ByteRateDataInDescription: 'Analyze outbound and inbound traffic when receiving data'
+  ByteRateDataOutDescription: 'Client Role Traffic',
+  ByteRateDataInDescription: 'Server Role Traffic'
 } as const; // makes sure that all values are treated as literal types

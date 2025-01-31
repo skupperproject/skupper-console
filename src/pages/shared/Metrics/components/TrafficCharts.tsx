@@ -12,34 +12,32 @@ import { formatByteRate, formatBytes } from '../../../../core/utils/formatBytes'
 import { ByteRateMetrics } from '../../../../types/Metrics.interfaces';
 import { MetricsController } from '../services';
 
-const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }> = memo(
-  ({ byteRateData, colorScale }) => (
-    <Flex direction={{ xl: 'row', default: 'column' }} style={{ alignItems: 'center' }}>
+const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[]; title?: string; subTitle?: string }> =
+  memo(({ byteRateData, colorScale, title, subTitle }) => (
+    <Flex direction={{ sm: 'row', default: 'column' }} style={{ alignItems: 'stretch' }}>
       <FlexItem flex={{ default: 'flex_2' }}>
-        <Flex>
-          <SkChartArea
-            colorScale={colorScale && [colorScale[0]]}
-            formatY={formatByteRate}
-            legendLabels={[Labels.Inbound]}
-            height={250}
-            data={MetricsController.fillMissingDataWithZeros(byteRateData.rxTimeSerie?.data)}
-          />
+        <SkChartArea
+          title={title}
+          subTitle={subTitle}
+          colorScale={colorScale && [colorScale[0]]}
+          formatY={formatByteRate}
+          legendLabels={[Labels.Inbound]}
+          data={MetricsController.fillMissingDataWithZeros(byteRateData.rxTimeSerie?.data)}
+        />
 
-          <SkChartArea
-            colorScale={colorScale && [colorScale[1]]}
-            themeColor={ChartThemeColor.green}
-            formatY={formatByteRate}
-            legendLabels={[Labels.Outbound]}
-            height={250}
-            data={MetricsController.fillMissingDataWithZeros(byteRateData.txTimeSerie?.data)}
-          />
-        </Flex>
+        <SkChartArea
+          colorScale={colorScale && [colorScale[1]]}
+          themeColor={ChartThemeColor.green}
+          formatY={formatByteRate}
+          legendLabels={[Labels.Outbound]}
+          data={MetricsController.fillMissingDataWithZeros(byteRateData.txTimeSerie?.data)}
+        />
       </FlexItem>
 
       <Divider orientation={{ default: 'vertical' }} />
 
       <FlexItem flex={{ xl: 'flex_1' }}>
-        <Flex>
+        <Flex style={{ height: '100%' }} alignItems={{ default: 'alignItemsStretch' }}>
           <Table borders={false}>
             <Thead noWrap>
               <Tr>
@@ -71,13 +69,14 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }
             colorScale={colorScale}
             format={formatBytes}
             themeColor={ChartThemeColor.multi}
+            height={350}
             data={[
               {
-                x: Labels.BytesIn,
+                x: Labels.Inbound,
                 y: byteRateData?.totalRxValue || 0
               },
               {
-                x: Labels.BytesOut,
+                x: Labels.Outbound,
                 y: byteRateData?.totalTxValue || 0
               }
             ]}
@@ -85,7 +84,6 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[] }
         </Flex>
       </FlexItem>
     </Flex>
-  )
-);
+  ));
 
 export default TrafficCharts;

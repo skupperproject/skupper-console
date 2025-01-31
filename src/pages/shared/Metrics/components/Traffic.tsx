@@ -1,6 +1,6 @@
 import { FC, useCallback, useState } from 'react';
 
-import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Title } from '@patternfly/react-core';
+import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Stack, StackItem } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
@@ -52,39 +52,38 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, refetchInterval }
         <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
           {isLoading && <SkIsLoading />}
 
-          {(!!data?.traffic.txTimeSerie?.data.length || !!data?.traffic.rxTimeSerie?.data.length) && (
-            <>
-              {!isLoading && isRefetching && <SkIsLoading />}
-              <Title headingLevel="h4">{`${Labels.ByteRate}`} </Title>
-              <TrafficCharts byteRateData={data.traffic} />
-            </>
-          )}
-
-          {isOnlyClientOrServer &&
-            (!!data?.trafficClient.txTimeSerie?.data.length || !!data?.trafficClient.rxTimeSerie?.data.length) && (
-              <>
+          <Stack hasGutter>
+            {(!!data?.traffic.txTimeSerie?.data.length || !!data?.traffic.rxTimeSerie?.data.length) && (
+              <StackItem>
                 {!isLoading && isRefetching && <SkIsLoading />}
-                <Title headingLevel="h4">{`${Labels.ByteRate} as Client`} </Title>
-                <small>{Labels.ByteRateDataOutDescription} </small>
-                <TrafficCharts
-                  byteRateData={data.trafficClient}
-                  colorScale={[hexColors.Orange100, styles.default.warningColor]}
-                />
-              </>
+                <TrafficCharts byteRateData={data.traffic} colorScale={[hexColors.Blue400, hexColors.Green500]} />
+              </StackItem>
             )}
-
-          {isOnlyClientOrServer &&
-            (!!data?.trafficServer.txTimeSerie?.data.length || !!data?.trafficServer.rxTimeSerie?.data.length) && (
-              <>
-                {!isLoading && isRefetching && <SkIsLoading />}
-                <Title headingLevel="h4">{`${Labels.ByteRate} as Server`} </Title>
-                <small>{Labels.ByteRateDataInDescription} </small>
-                <TrafficCharts
-                  byteRateData={data.trafficServer}
-                  colorScale={[hexColors.Purple100, hexColors.Purple500]}
-                />
-              </>
-            )}
+            {isOnlyClientOrServer &&
+              (!!data?.trafficClient.txTimeSerie?.data.length || !!data?.trafficClient.rxTimeSerie?.data.length) && (
+                <StackItem>
+                  {!isLoading && isRefetching && <SkIsLoading />}
+                  <br></br> <br></br> <br></br> <br></br>
+                  <TrafficCharts
+                    title={`${Labels.ByteRateDataOutDescription}`}
+                    byteRateData={data.trafficClient}
+                    colorScale={[hexColors.Orange100, styles.default.warningColor]}
+                  />
+                </StackItem>
+              )}
+            {isOnlyClientOrServer &&
+              (!!data?.trafficServer.txTimeSerie?.data.length || !!data?.trafficServer.rxTimeSerie?.data.length) && (
+                <StackItem>
+                  {!isLoading && isRefetching && <SkIsLoading />}
+                  <br></br> <br></br> <br></br> <br></br>
+                  <TrafficCharts
+                    title={`${Labels.ByteRateDataInDescription}`}
+                    byteRateData={data.trafficServer}
+                    colorScale={[hexColors.Purple100, hexColors.Purple500]}
+                  />
+                </StackItem>
+              )}{' '}
+          </Stack>
 
           {!isLoading && !data?.traffic.txTimeSerie?.data.length && !data?.traffic.rxTimeSerie?.data.length && (
             <SKEmptyData
