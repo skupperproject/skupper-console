@@ -85,8 +85,8 @@ export interface ComponentResponse extends BaseResponse {
 
 export interface ProcessResponse extends BaseResponse {
   name: string;
-  parent: string;
-  parentName: string;
+  siteId: string;
+  siteName: string;
   componentId: string;
   componentName: string;
   sourceHost: string;
@@ -120,7 +120,7 @@ export type PairsResponse = BasePairsResponse | ProcessPairsResponse;
 
 export interface ListenerResponse extends BaseResponse {
   name: string;
-  parent: string;
+  routerId: string;
   serviceId: string;
   routingKey: string;
   destHost: string;
@@ -131,7 +131,7 @@ export interface ListenerResponse extends BaseResponse {
 
 export interface ConnectorResponse extends BaseResponse {
   name: string;
-  parent: string;
+  routerId: string;
   serviceId: string;
   routingKey: string;
   destHost: string;

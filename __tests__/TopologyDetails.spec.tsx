@@ -115,7 +115,7 @@ describe('Topology details', () => {
     );
 
     expect(screen.getAllByText(processesResults[12].componentName)[0]).toBeInTheDocument();
-    expect(screen.getAllByText(processesResults[12].parentName)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(processesResults[12].siteName)[0]).toBeInTheDocument();
     expect(
       screen.getAllByText(
         (processesResults[12].services as string[])[0]?.split(DEFAULT_COMPLEX_STRING_SEPARATOR)[0] as string

@@ -98,3 +98,10 @@ export interface ConnectionMetrics {
   liveConnectionsCount: number;
   liveConnectionsSerie: skAxisXY[][] | null;
 }
+
+export interface MetricProcess {
+  id: string;
+  destinationName: string;
+  parentId?: string;
+  parentName?: string;
+}

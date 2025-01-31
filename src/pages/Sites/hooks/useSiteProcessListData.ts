@@ -9,8 +9,8 @@ const processQueryParams = { role: [Role.Remote, Role.External] };
 
 export const useSiteProcessListData = (id: string) => {
   const { data: processes } = useSuspenseQuery({
-    queryKey: [getAllProcesses(), { ...processQueryParams, parent: id }],
-    queryFn: () => RESTApi.fetchProcesses({ ...processQueryParams, parent: id }),
+    queryKey: [getAllProcesses(), { ...processQueryParams, siteId: id }],
+    queryFn: () => RESTApi.fetchProcesses({ ...processQueryParams, siteId: id }),
     refetchInterval: UPDATE_INTERVAL
   });
 

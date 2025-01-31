@@ -295,7 +295,7 @@ describe('ServicesController', () => {
           endTime: 0,
           identity: 'rrrpk:13',
           name: 'shippingservice',
-          parent: 'rrrpk:0',
+          routerId: 'rrrpk:0',
           processId: '8483cbc9-c1ba-41e2-8648-eac3dfccaea0',
           processes: [
             {
@@ -306,7 +306,7 @@ describe('ServicesController', () => {
               destPort: '50051',
               identity: 'rrrpk:13',
               name: 'shippingservice@172.17.27.114',
-              parent: 'rrrpk:0',
+              routerId: 'rrrpk:0',
               processId: '8483cbc9-c1ba-41e2-8648-eac3dfccaea0',
               protocol: 'tcp',
               siteId: '46c2efa0-5fbc-4fe4-bba8-530e775aa2f6',
@@ -331,7 +331,7 @@ describe('ServicesController', () => {
           endTime: 0,
           identity: 'rrrpk:14',
           name: 'paymentservice',
-          parent: 'rrrpk:0',
+          routerId: 'rrrpk:0',
           processId: '07ef190a-6167-4297-9ecd-ea0dcbf6c5a1',
           processes: [
             {
@@ -342,7 +342,7 @@ describe('ServicesController', () => {
               endTime: 0,
               identity: 'rrrpk:14',
               name: 'paymentservice@172.17.27.110',
-              parent: 'rrrpk:0',
+              routerId: 'rrrpk:0',
               processId: '07ef190a-6167-4297-9ecd-ea0dcbf6c5a1',
               protocol: 'tcp',
               siteId: '46c2efa0-5fbc-4fe4-bba8-530e775aa2f6',
@@ -366,7 +366,7 @@ describe('ServicesController', () => {
           endTime: 0,
           identity: 'rrrpk:15',
           name: 'emailservice',
-          parent: 'rrrpk:0',
+          routerId: 'rrrpk:0',
           processId: 'f814f84d-1a0b-44ae-9a3f-1777a866f498',
           count: 1,
           processes: [
@@ -378,7 +378,7 @@ describe('ServicesController', () => {
               endTime: 0,
               identity: 'rrrpk:15',
               name: 'emailservice@172.17.27.116',
-              parent: 'rrrpk:0',
+              routerId: 'rrrpk:0',
               protocol: 'tcp',
               processId: 'f814f84d-1a0b-44ae-9a3f-1777a866f498',
               siteId: '46c2efa0-5fbc-4fe4-bba8-530e775aa2f6',

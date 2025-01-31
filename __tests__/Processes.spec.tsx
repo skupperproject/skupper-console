@@ -10,6 +10,7 @@ import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
 import LoadingPage from '../src/core/components/SkLoading';
 import { ComponentRoutesPaths } from '../src/pages/Components/Components.enum';
+import { ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
 import Processes from '../src/pages/Processes/views/Processes';
 import { SitesRoutesPaths } from '../src/pages/Sites/Sites.enum';
 import { Providers } from '../src/providers';
@@ -74,20 +75,20 @@ describe('Begin testing the Processes component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getAllByRole('link', { name: processesResults[0].parentName })[0]).toHaveAttribute(
+    expect(screen.getAllByRole('link', { name: processesResults[0].siteName })[0]).toHaveAttribute(
       'href',
-      `#${SitesRoutesPaths.Sites}/${processesResults[0].parentName}@${processesResults[0].parent}`
+      `#${SitesRoutesPaths.Sites}/${processesResults[0].siteName}@${processesResults[0].siteId}`
     );
   });
 
-  // it('Should ensure the Processes component renders with correct Name link href after loading page', async () => {
-  //   await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
-  //     timeout: waitForElementToBeRemovedTimeout
-  //   });
+  it('Should ensure the Processes component renders with correct Name link href after loading page', async () => {
+    await waitForElementToBeRemoved(() => screen.queryByTestId(getTestsIds.loadingView()), {
+      timeout: waitForElementToBeRemovedTimeout
+    });
 
-  //   expect(screen.getByRole('link', { name: processesResults[0].name })).toHaveAttribute(
-  //     'href',
-  //     `#${ProcessesRoutesPaths.Processes}/${processesResults[0].name}@${processesResults[0].identity}`
-  //   );
-  // });
+    expect(screen.getByRole('link', { name: processesResults[0].name })).toHaveAttribute(
+      'href',
+      `#${ProcessesRoutesPaths.Processes}/${processesResults[0].name}@${processesResults[0].identity}`
+    );
+  });
 });

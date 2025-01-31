@@ -33,8 +33,8 @@ interface DetailsProps {
 
 const Details: FC<DetailsProps> = function ({ process, title }) {
   const {
-    parent,
-    parentName,
+    siteId,
+    siteName,
     imageName,
     componentName,
     componentId,
@@ -60,7 +60,7 @@ const Details: FC<DetailsProps> = function ({ process, title }) {
                 <DescriptionListTerm>{Labels.Site}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <ResourceIcon type="site" />
-                  <Link to={`${SitesRoutesPaths.Sites}/${parentName}@${parent}`}>{parentName}</Link>
+                  <Link to={`${SitesRoutesPaths.Sites}/${siteName}@${siteId}`}>{siteName}</Link>
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </GridItem>

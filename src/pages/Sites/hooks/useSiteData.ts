@@ -18,8 +18,8 @@ export const useSiteData = (id: string) => {
   });
 
   const { data: processes } = useQuery({
-    queryKey: [getAllProcesses(), { ...processQueryParams, parent: id }],
-    queryFn: () => RESTApi.fetchProcesses({ ...processQueryParams, parent: id }),
+    queryKey: [getAllProcesses(), { ...processQueryParams, siteId: id }],
+    queryFn: () => RESTApi.fetchProcesses({ ...processQueryParams, siteId: id }),
     refetchInterval: UPDATE_INTERVAL
   });
 

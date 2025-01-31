@@ -26,7 +26,7 @@ export const CustomProcessCells = {
     SkLinkCell({
       ...props,
       type: 'site',
-      link: `${SitesRoutesPaths.Sites}/${props.data.parentName}@${props.data.parent}`
+      link: `${SitesRoutesPaths.Sites}/${props.data.siteName}@${props.data.siteId}`
     }),
   linkComponentCell: (props: SkLinkCellProps<ProcessResponse>) =>
     SkLinkCell({
@@ -65,7 +65,7 @@ export const processesTableColumns: SKTableColumn<ProcessResponse>[] = [
   },
   {
     name: Labels.Site,
-    prop: 'parentName',
+    prop: 'siteName',
     customCellName: 'linkCellSite'
   },
   {
@@ -126,6 +126,6 @@ export const processesSelectOptions: SkSelectOption[] = [
   },
   {
     label: 'Site',
-    id: 'parentName'
+    id: 'siteName'
   }
 ];
