@@ -211,7 +211,7 @@ export function aggregateConnectorResponses(connectors: ConnectorResponse[]) {
 
   connectors.forEach((connector) => {
     const baseName = getConnectorBaseName(connector.name);
-    const key = `${connector.parent}-${baseName}`;
+    const key = `${connector.routerId}-${baseName}`;
 
     if (!aggregatedResults[key]) {
       aggregatedResults[key] = { ...connector, name: baseName, count: 1, processes: [connector] };

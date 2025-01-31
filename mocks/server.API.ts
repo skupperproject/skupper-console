@@ -353,8 +353,8 @@ for (let i = 0; i < ITEM_COUNT; i++) {
     name: `${process.name} ${i}`,
     componentId: process.componentId,
     componentName: process.componentName,
-    parent: process.parent,
-    parentName: process.parentName,
+    siteId: process.siteId,
+    siteName: process.siteName,
     services: process.services
   });
 }

@@ -1,4 +1,5 @@
 import { removeDuplicatesFromArrayOfObjects } from './removeDuplicatesFromArrayOfObjects';
+import { MetricProcess } from '../../types/Metrics.interfaces';
 
 /**
  * Maps an array of data to filter options for metrics. Each item is mapped to an object with a destination name (from the key)
@@ -11,7 +12,7 @@ export function mapDataToMetricFilterOptions<T>(
   key: keyof T,
   siteKeyId?: keyof T,
   siteKey?: keyof T
-) {
+): MetricProcess[] {
   return mapAndDeduplicate(data, (item) => ({
     id: item[keyId] as string,
     destinationName: item[key] as string,

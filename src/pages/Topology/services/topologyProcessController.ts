@@ -28,8 +28,8 @@ interface TopologyProcessControllerProps {
 export const convertProcessToNode = ({
   identity,
   name,
-  parent: combo,
-  parentName: comboName,
+  siteId: combo,
+  siteName: comboName,
   componentId,
   componentName,
   role,

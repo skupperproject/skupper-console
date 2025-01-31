@@ -196,10 +196,8 @@ const NodeDetails: FC<{ data: ProcessResponse[]; metrics: TopologyMetrics }> = f
                             <Flex direction={{ default: 'column' }}>
                               <FlexItem>
                                 <ResourceIcon type="site" />
-                                <Link
-                                  to={`${SitesRoutesPaths.Sites}/${itemSelected.parentName}@${itemSelected.parent}`}
-                                >
-                                  {itemSelected.parentName}
+                                <Link to={`${SitesRoutesPaths.Sites}/${itemSelected.siteName}@${itemSelected.siteId}`}>
+                                  {itemSelected.siteName}
                                 </Link>
                               </FlexItem>
 

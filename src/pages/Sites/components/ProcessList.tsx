@@ -15,7 +15,7 @@ const ProcessList: FC<ProcessListProps> = function ({ site: { identity: id } }) 
 
   return (
     <SkTable
-      columns={setColumnVisibility(processesTableColumns, { parentName: false })}
+      columns={setColumnVisibility(processesTableColumns, { siteName: false })}
       rows={processes}
       customCells={{
         linkCell: CustomProcessCells.linkCell,
