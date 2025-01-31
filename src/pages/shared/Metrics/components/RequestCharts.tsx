@@ -9,12 +9,14 @@ import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDec
 import { RequestMetrics } from '../../../../types/Metrics.interfaces';
 
 const RequestCharts: FC<{
+  title?: string;
   requestRateData: RequestMetrics[];
   requestPerf: { avg: number; max: number; current: number; label: string }[] | undefined;
-}> = memo(({ requestRateData, requestPerf }) => (
+}> = memo(({ requestRateData, requestPerf, title }) => (
   <Flex direction={{ xl: 'row', default: 'column' }}>
     <FlexItem flex={{ default: 'flex_2' }}>
       <SkChartArea
+        title={title}
         data={requestRateData.map(({ data }) => data)}
         formatY={(y: number) => `${formatToDecimalPlacesIfCents(y, 3)} rps`}
         legendLabels={requestRateData.map(({ label }) => `${label}`)}
@@ -22,7 +24,8 @@ const RequestCharts: FC<{
     </FlexItem>
 
     <Divider orientation={{ default: 'vertical' }} />
-    <Flex flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
+
+    <FlexItem flex={{ default: 'flex_1' }} alignSelf={{ default: 'alignSelfStretch' }}>
       <Table borders={false}>
         <Thead noWrap>
           <Tr>
@@ -43,7 +46,7 @@ const RequestCharts: FC<{
           ))}
         </Tbody>
       </Table>
-    </Flex>
+    </FlexItem>
   </Flex>
 ));
 

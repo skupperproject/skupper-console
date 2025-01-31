@@ -18,6 +18,8 @@ interface LatencyProps {
   refetchInterval?: number;
 }
 
+const minChartHeight = 350;
+
 const Latency: FC<LatencyProps> = function ({ title = '', selectedFilters, refetchInterval }) {
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -45,30 +47,23 @@ const Latency: FC<LatencyProps> = function ({ title = '', selectedFilters, refet
   }, [isExpanded]);
 
   return (
-    <Card isExpanded={isExpanded} aria-label={title} isFullHeight>
+    <Card isExpanded={isExpanded} aria-label={title}>
       <CardHeader onExpand={handleExpand}>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
 
       <CardExpandableContent>
-        {/*display grid center the child SKEmptyData */}
-        <CardBody>
+        <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>
           {dataIn.isLoading && dataOut.isLoading && <SkIsLoading />}
 
-          {!dataIn.isLoading && dataIn.data?.length && (
-            <>
-              {!dataIn.isLoading && dataIn.isRefetching && <SkIsLoading />}
-              <LatencyCharts latenciesData={dataIn.data} title={Labels.PercentileOverTimeOut} />
-            </>
-          )}
-
-          {!dataOut.isLoading && dataOut.data?.length && (
-            <>
-              {!dataOut.isLoading && dataOut.isRefetching && <SkIsLoading />}
-              <LatencyCharts latenciesData={dataOut.data} title={Labels.PercentileOverTimeIn} />
-            </>
-          )}
-
+          <LatencyCharts
+            inboundData={dataIn.data}
+            outboundData={dataOut.data}
+            isInboundLoading={dataIn.isLoading}
+            isOutboundLoading={dataOut.isLoading}
+            isInboundRefetching={dataIn.isRefetching}
+            isOutboundRefetching={dataOut.isRefetching}
+          />
           {!dataIn.isLoading && !dataOut.isLoading && !dataIn.data?.length && !dataOut.data?.length && (
             <SKEmptyData
               message={Labels.NoMetricFound}

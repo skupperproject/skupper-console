@@ -12,8 +12,7 @@ import { convertToPercentage } from '../../../../core/utils/convertToPercentage'
 import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDecimalPlacesIfCents';
 import { ResponseMetrics } from '../../../../types/Metrics.interfaces';
 
-const errorDistributionPadding = { left: 0, bottom: 65, top: 50, right: 0 };
-const errorRateChartPadding = { left: 40, bottom: 80, top: 50, right: 40 };
+const errorRateChartPadding = { left: 40, bottom: 0, top: 0, right: 40 };
 
 function createStatusLabel(label: string) {
   return `${label}xx`;
@@ -24,28 +23,28 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
     <>
       <Grid hasGutter>
         {/* HTTP stats */}
-        <GridItem span={3}>
+        <GridItem md={3} sm={12}>
           <SkBasicTile
             title={createStatusLabel(responseData.statusCode2xx.label)}
             value={convertToPercentage(responseData.statusCode2xx.total, responseData.total) || ' - '}
             bgColor={hexColors.Green500}
           />
         </GridItem>
-        <GridItem span={3}>
+        <GridItem md={3} sm={12}>
           <SkBasicTile
             title={createStatusLabel(responseData.statusCode3xx.label)}
             value={convertToPercentage(responseData.statusCode3xx.total, responseData.total) || ' - '}
             bgColor={hexColors.Blue400}
           />
         </GridItem>
-        <GridItem span={3}>
+        <GridItem md={3} sm={12}>
           <SkBasicTile
             title={createStatusLabel(responseData.statusCode4xx.label)}
             value={convertToPercentage(responseData.statusCode4xx.total, responseData.total) || ' - '}
             bgColor={hexColors.Orange300}
           />
         </GridItem>
-        <GridItem span={3}>
+        <GridItem md={3} sm={12}>
           <SkBasicTile
             title={createStatusLabel(responseData.statusCode5xx.label)}
             value={convertToPercentage(responseData.statusCode5xx.total, responseData.total) || ' - '}
@@ -55,10 +54,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
       </Grid>
       <br /> <br />
       {/* Errors distribution */}
-      <Flex
-        alignItems={{ default: 'alignItemsStretch', md: 'alignItemsStretch' }}
-        direction={{ xl: 'row', default: 'column' }}
-      >
+      <Flex style={{ alignItems: 'center' }} direction={{ xl: 'row', default: 'column' }}>
         <FlexItem flex={{ default: 'flex_1' }}>
           <SkChartArea
             formatY={(y: number) => formatToDecimalPlacesIfCents(y, 3)}
@@ -85,6 +81,7 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
 
         <FlexItem flex={{ default: 'flex_1' }}>
           <SkChartPie
+            height={300}
             format={(y: number) => `${y} ${Labels.Errors}`}
             data={[
               {
@@ -96,7 +93,6 @@ const ResponseCharts: FC<{ responseRateData: ResponseMetrics | null; responseDat
                 y: responseData.statusCode5xx.total
               }
             ]}
-            padding={errorDistributionPadding}
             themeColor={ChartThemeColor.orange}
           />
         </FlexItem>

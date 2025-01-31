@@ -65,7 +65,11 @@ const TcpConnection: FC<TcpConnectionProps> = function ({ selectedFilters, refet
               <Flex direction={{ xl: 'row', default: 'column' }}>
                 <FlexItem flex={{ default: 'flex_2' }}>
                   {connections.liveConnectionsSerie && (
-                    <SkChartArea data={connections.liveConnectionsSerie} legendLabels={[`${Labels.OpenConnections}`]} />
+                    <SkChartArea
+                      title={Labels.ConnectionActivity}
+                      data={connections.liveConnectionsSerie}
+                      legendLabels={[`${Labels.OpenConnections}`]}
+                    />
                   )}
                 </FlexItem>
 

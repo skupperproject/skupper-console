@@ -72,6 +72,7 @@ const Response: FC<ResponseProps> = function ({ selectedFilters, refetchInterval
       <CardHeader onExpand={handleExpand}>
         <CardTitle>{Labels.Responses}</CardTitle>
       </CardHeader>
+
       <CardExpandableContent>
         {/*display grid center the child SKEmptyData */}
         <CardBody style={{ minHeight: minChartHeight, display: 'grid' }}>

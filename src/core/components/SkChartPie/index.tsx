@@ -57,7 +57,7 @@ const SkChartPie: FC<SkChartPieProps> = function ({
   }));
 
   return (
-    <div ref={chartContainerRef} style={{ width: '100%', height: `100%` }}>
+    <div ref={chartContainerRef} style={{ width: `100%`, height: `${height}px` }}>
       <ChartDonut
         width={width}
         height={height}
