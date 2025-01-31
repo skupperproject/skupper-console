@@ -24,7 +24,7 @@ const LatencyCharts: FC<LatencyChartsProps> = memo(
         <FlexItem flex={{ default: 'flex_1' }}>
           {!isOutboundLoading && isOutboundRefetching && <SkIsLoading />}
           <SkChartArea
-            title={Labels.Inbound}
+            title={`${Labels.LatencyInDescription} (${Labels.Inbound})`}
             formatY={formatLatency}
             legendLabels={outboundData.map(({ label }) => label)}
             data={outboundData.map(({ data }) => data)}
@@ -36,7 +36,7 @@ const LatencyCharts: FC<LatencyChartsProps> = memo(
         <FlexItem flex={{ default: 'flex_1' }}>
           {!isInboundLoading && isInboundRefetching && <SkIsLoading />}
           <SkChartArea
-            title={Labels.Outbound}
+            title={`${Labels.LatencyOutDescription} (${Labels.Outbound})`}
             formatY={formatLatency}
             legendLabels={inboundData.map(({ label }) => label)}
             data={inboundData.map(({ data }) => data)}

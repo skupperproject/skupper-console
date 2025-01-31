@@ -50,16 +50,14 @@ function convertToPrometheusQueryParams({
 }
 
 function getHistoryValuesFromPrometheusData(data: PrometheusMetric<'matrix'>[] | []): skAxisXY[][] | null {
-  // Prometheus can retrieve empty arrays wich are not valid data for us
-  if (!data.length) {
+  if (!data.length || data.every(({ values }) => values.every(([, val]) => isNaN(Number(val))))) {
     return null;
   }
 
   return data.map(({ values }) =>
-    values.map((value) => ({
-      x: Number(value[0]),
-      // y should be a numeric value, we sanitize 'NaN' in 0
-      y: isNaN(Number(value[1])) ? 0 : Number(value[1])
+    values.map(([x, y]) => ({
+      x: Number(x),
+      y: isNaN(Number(y)) ? 0 : Number(y)
     }))
   );
 }

@@ -56,7 +56,11 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, refetchInterval }
             {(!!data?.traffic.txTimeSerie?.data.length || !!data?.traffic.rxTimeSerie?.data.length) && (
               <StackItem>
                 {!isLoading && isRefetching && <SkIsLoading />}
-                <TrafficCharts byteRateData={data.traffic} colorScale={[hexColors.Blue400, hexColors.Green500]} />
+                <TrafficCharts
+                  title={Labels.BytesPerSeconds}
+                  byteRateData={data.traffic}
+                  colorScale={[hexColors.Blue400, hexColors.Green500]}
+                />
               </StackItem>
             )}
             {isOnlyClientOrServer &&
@@ -65,7 +69,7 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, refetchInterval }
                   {!isLoading && isRefetching && <SkIsLoading />}
                   <br></br> <br></br> <br></br> <br></br>
                   <TrafficCharts
-                    title={`${Labels.ByteRateDataOutDescription}`}
+                    title={`${Labels.BytesPerSeconds} (${Labels.ByteRateDataOutDescription})`}
                     byteRateData={data.trafficClient}
                     colorScale={[hexColors.Orange100, styles.default.warningColor]}
                   />
@@ -77,7 +81,7 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, refetchInterval }
                   {!isLoading && isRefetching && <SkIsLoading />}
                   <br></br> <br></br> <br></br> <br></br>
                   <TrafficCharts
-                    title={`${Labels.ByteRateDataInDescription}`}
+                    title={`${Labels.BytesPerSeconds} (${Labels.ByteRateDataInDescription})`}
                     byteRateData={data.trafficServer}
                     colorScale={[hexColors.Purple100, hexColors.Purple500]}
                   />
