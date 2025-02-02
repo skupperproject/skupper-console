@@ -43,6 +43,17 @@
       "routerCount": 2,
       "version": "2.0.0-preview-1-66-gdbd5e3e",
       "startTime": 1733493000000000
+    },
+    {
+      "endTime": 0,
+      "identity": "12345678-abcd-4321-efgh-876543217777",
+      "name": "paris",
+      "namespace": "vb-boutique-e",
+      "platform": "podman",
+      "provider": "podman",
+      "routerCount": 0,
+      "version": "2.0.0-preview-1-66-gdbd5e3e",
+      "startTime": 1733493000000000
     }
   ]
 }

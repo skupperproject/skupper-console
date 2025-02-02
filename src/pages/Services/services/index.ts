@@ -194,7 +194,7 @@ const generateSankeyLinks = (
       .filter(({ source, target }) => source && target)
   );
 
-function getConnectorBaseName(name: string): string {
+export function getConnectorBaseName(name: string): string {
   // the name of a connector as this format name@IP
   const partialName = name.split(DEFAULT_COMPLEX_STRING_SEPARATOR);
 

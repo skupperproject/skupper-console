@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useMemo } from 'react';
 
 import {
   ChartProps,
@@ -12,16 +12,18 @@ import {
   ChartLine,
   ChartLabel
 } from '@patternfly/react-charts/victory';
-import { getResizeObserver } from '@patternfly/react-core';
 
+import { CHART_CONFIG } from './SkChartArea.constants';
+import { calculateTickDensity, getChartDynamicPaddingLeft } from './SkChartArea.utils';
+import { useChartDimensions } from '../../../hooks/useChartDimensions';
 import { skAxisXY } from '../../../types/SkChartArea.interfaces';
-import { formatChartDate } from '../../utils/formatChartDate';
+import { formatChartDateByRange } from '../../utils/formatChartDateByRange';
 
 interface SkChartAreaProps extends ChartProps {
   data: skAxisXY[][];
   title?: string;
-  formatY?: Function;
-  formatX?: (timestamp: number, start: number) => string;
+  formatY?: (y: number) => string | number;
+  formatX?: (timestamp: number, range: number) => string;
   axisYLabel?: string;
   legendLabels?: string[];
   isChartLine?: boolean;
@@ -29,90 +31,61 @@ interface SkChartAreaProps extends ChartProps {
   showLegend?: boolean;
 }
 
-// Chart layout configuration
-const CHART_LAYOUT = {
-  DEFAULT_PADDING: { bottom: 0, left: 70, right: 0, top: 0 },
-  DEFAULT_HEIGHT: 300,
-  CHART_OFFSET: 110
-};
-
-// Tooltip configuration
-const TOOLTIP_CONFIG = {
-  PADDING: 0,
-  CORNER_RADIUS: 5,
-  STYLE: { fillOpacity: 0.75 }
-};
-
-// Axis style
-const AXIS_STYLE = {
-  LABEL_PADDING: 0,
-  DEFAULT_FONT_SIZE: 12,
-  TITLE_FONT_SIZE: 16
-};
-
-// Tick configuration
-const TICKS = {
-  DENSITY: 48,
-  MIN_COUNT: 5
-};
-
 const SkChartArea: FC<SkChartAreaProps> = function ({
   data,
   formatY = (y: number) => y,
-  formatX = (timestamp, start) => formatChartDate(timestamp, start),
+  formatX = (timestamp, range) => formatChartDateByRange(timestamp, range),
   axisYLabel,
   legendLabels = [],
   showLegend = true,
   isChartLine = false,
   title,
-  height = CHART_LAYOUT.DEFAULT_HEIGHT,
+  height = CHART_CONFIG.LAYOUT.DEFAULT_HEIGHT,
   legendOrientation = 'horizontal',
   legendPosition = 'bottom',
-  padding = CHART_LAYOUT.DEFAULT_PADDING,
+  padding = CHART_CONFIG.LAYOUT.DEFAULT_PADDING,
   ...props
 }) {
-  const CursorVoronoiContainer = createContainer('voronoi', 'cursor');
+  const CursorVoronoiContainer = useMemo(() => createContainer('voronoi', 'cursor'), []);
+  const { chartWidth, chartContainerRef } = useChartDimensions();
 
-  const [chartWidth, setChartWidth] = useState<number>(0);
-  const resizeObserver = useRef<Function>(() => null);
-  const chartContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!chartContainerRef.current) {
-      return;
-    }
-
-    const updateChartWidth = () => {
-      if (chartContainerRef.current?.clientWidth) {
-        setChartWidth(chartContainerRef.current.clientWidth);
-      }
-    };
-
-    resizeObserver.current = getResizeObserver(chartContainerRef.current, updateChartWidth);
-    updateChartWidth();
-
-    return () => resizeObserver.current();
-  }, []);
-
+  const legendData = legendLabels.map((label) => ({ childName: label, name: label }));
   const startDate = data[0]?.[0]?.x ?? 0;
   const endDate = data[data.length - 1]?.[data[0]?.length - 1]?.x ?? startDate + 1000;
 
-  const tickYCount = Math.max(TICKS.MIN_COUNT, Math.floor((height - CHART_LAYOUT.CHART_OFFSET) / TICKS.DENSITY));
-  const tickXCount = Math.max(TICKS.MIN_COUNT, Math.floor((chartWidth - 50) / (TICKS.DENSITY * 2)));
+  // tick count calculation
+  const tickYCount = useMemo(
+    () =>
+      Math.max(
+        CHART_CONFIG.TICKS.MIN_COUNT,
+        Math.min(
+          CHART_CONFIG.TICKS.MAX_COUNT,
+          Math.floor((height - CHART_CONFIG.LAYOUT.CHART_OFFSET) / calculateTickDensity(chartWidth))
+        )
+      ),
+    [height, chartWidth]
+  );
 
-  const legendData = legendLabels.map((label) => ({ childName: label, name: label }));
-  const displayLegendData = showLegend ? legendData : [];
+  const tickXCount = useMemo(
+    () =>
+      Math.max(
+        CHART_CONFIG.TICKS.MIN_COUNT,
+        Math.min(CHART_CONFIG.TICKS.MAX_COUNT, Math.floor((chartWidth - 50) / calculateTickDensity(chartWidth, 160)))
+      ),
+    [chartWidth]
+  );
 
+  // Dynamic padding calculation
   const dynamicPaddingLeft = getChartDynamicPaddingLeft(data, formatY);
   const calculatedPadding = { ...padding, left: dynamicPaddingLeft };
 
   return (
     <div ref={chartContainerRef} style={{ height: `${height}px` }}>
-      {chartWidth && (
+      {chartWidth > 0 && (
         <Chart
           width={chartWidth}
-          height={height - CHART_LAYOUT.CHART_OFFSET}
-          legendData={displayLegendData}
+          height={height - CHART_CONFIG.LAYOUT.CHART_OFFSET}
+          legendData={showLegend ? legendData : []}
           legendOrientation={legendOrientation}
           legendPosition={legendPosition}
           themeColor={props.themeColor || ChartThemeColor.multi}
@@ -125,22 +98,34 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
               labelComponent={
                 <ChartLegendTooltip
                   legendData={legendData}
-                  title={(datum) => `${formatX(Number(datum.x), startDate)}`}
-                  cornerRadius={TOOLTIP_CONFIG.CORNER_RADIUS}
-                  flyoutStyle={TOOLTIP_CONFIG.STYLE}
+                  title={(datum) => `${formatX(Number(datum.x), endDate - startDate)}`}
+                  cornerRadius={CHART_CONFIG.TOOLTIP.CORNER_RADIUS}
+                  flyoutStyle={CHART_CONFIG.TOOLTIP.STYLE}
                 />
               }
               mouseFollowTooltips
-              voronoiPadding={TOOLTIP_CONFIG.PADDING}
+              voronoiPadding={CHART_CONFIG.TOOLTIP.PADDING}
             />
           }
           {...props}
         >
-          <ChartLabel text={title} x={20} y={-40} textAnchor="start" style={{ fontSize: AXIS_STYLE.TITLE_FONT_SIZE }} />
+          {title && (
+            <ChartLabel
+              text={title}
+              x={20}
+              y={-40}
+              textAnchor="start"
+              style={{ fontSize: CHART_CONFIG.AXIS.TITLE_FONT_SIZE }}
+            />
+          )}
 
           <ChartAxis
-            style={{ tickLabels: { fontSize: AXIS_STYLE.DEFAULT_FONT_SIZE, padding: 10 } }}
-            tickFormat={(tick) => tick && formatX(tick, startDate)}
+            style={{
+              tickLabels: {
+                fontSize: CHART_CONFIG.AXIS.DEFAULT_FONT_SIZE
+              }
+            }}
+            tickFormat={(tick) => tick && formatX(tick, endDate - startDate)}
             tickCount={tickXCount}
             domain={[startDate, endDate]}
             showGrid
@@ -150,8 +135,11 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
             dependentAxis
             minDomain={0}
             style={{
-              tickLabels: { fontSize: AXIS_STYLE.DEFAULT_FONT_SIZE },
-              axisLabel: { fontSize: AXIS_STYLE.DEFAULT_FONT_SIZE, padding: AXIS_STYLE.LABEL_PADDING }
+              tickLabels: { fontSize: CHART_CONFIG.AXIS.DEFAULT_FONT_SIZE },
+              axisLabel: {
+                fontSize: CHART_CONFIG.AXIS.DEFAULT_FONT_SIZE,
+                padding: CHART_CONFIG.AXIS.LABEL_PADDING
+              }
             }}
             tickCount={tickYCount}
             tickFormat={(tick) => tick && formatY(tick < 0.001 ? 0 : tick)}
@@ -173,12 +161,3 @@ const SkChartArea: FC<SkChartAreaProps> = function ({
 };
 
 export default SkChartArea;
-
-const getChartDynamicPaddingLeft = (data: skAxisXY[][], formatY: Function) => {
-  const longestFormattedY = data
-    .flat()
-    .map((point) => formatY(point.y)?.toString())
-    .reduce((longest, current) => (current.length > longest.length ? current : longest), '');
-
-  return Math.max(35, longestFormattedY.length * 7 + 8);
-};
