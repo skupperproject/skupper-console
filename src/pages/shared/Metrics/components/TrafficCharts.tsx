@@ -12,13 +12,12 @@ import { formatByteRate, formatBytes } from '../../../../core/utils/formatBytes'
 import { ByteRateMetrics } from '../../../../types/Metrics.interfaces';
 import { MetricsController } from '../services';
 
-const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[]; title?: string; subTitle?: string }> =
-  memo(({ byteRateData, colorScale, title, subTitle }) => (
+const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[]; title?: string }> = memo(
+  ({ byteRateData, colorScale, title }) => (
     <Flex direction={{ sm: 'row', default: 'column' }} style={{ alignItems: 'stretch' }}>
       <FlexItem flex={{ default: 'flex_2' }}>
         <SkChartArea
           title={title}
-          subTitle={subTitle}
           colorScale={colorScale && [colorScale[0]]}
           formatY={formatByteRate}
           legendLabels={[Labels.Inbound]}
@@ -84,6 +83,7 @@ const TrafficCharts: FC<{ byteRateData: ByteRateMetrics; colorScale?: string[]; 
         </Flex>
       </FlexItem>
     </Flex>
-  ));
+  )
+);
 
 export default TrafficCharts;

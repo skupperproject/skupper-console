@@ -79,22 +79,26 @@ export const tcpBiFlowColumns: SKTableColumn<TransportFlowResponse>[] = [
   {
     name: Labels.BytesOut,
     prop: 'octetCount',
-    format: formatBytes
+    format: formatBytes,
+    modifier: 'fitContent'
   },
   {
     name: Labels.BytesIn,
     prop: 'octetReverseCount',
-    format: formatBytes
+    format: formatBytes,
+    modifier: 'fitContent'
   },
   {
     name: Labels.LatencyOut,
     prop: 'latency',
-    format: formatLatency
+    format: formatLatency,
+    modifier: 'fitContent'
   },
   {
     name: Labels.LatencyIn,
     prop: 'latencyReverse',
-    format: formatLatency
+    format: formatLatency,
+    modifier: 'fitContent'
   },
   {
     name: '',
@@ -144,12 +148,14 @@ export const httpBiFlowColumns: SKTableColumn<BiFlowResponse>[] = [
   {
     name: Labels.BytesOut,
     prop: 'octetCount',
-    format: formatBytes
+    format: formatBytes,
+    modifier: 'fitContent'
   },
   {
     name: Labels.BytesIn,
     prop: 'octetReverseCount',
-    format: formatBytes
+    format: formatBytes,
+    modifier: 'fitContent'
   },
   {
     name: '',

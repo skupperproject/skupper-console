@@ -123,7 +123,8 @@ export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
   {
     name: Labels.Name,
     prop: 'name',
-    customCellName: 'ListenerNameLinkCell'
+    customCellName: 'ListenerNameLinkCell',
+    width: 25
   },
   {
     name: Labels.Site,
@@ -143,7 +144,8 @@ export const ConnectorColumns: SKTableColumn<ConnectorResponse>[] = [
   {
     name: Labels.Name,
     prop: 'name',
-    customCellName: 'ConnectorNameLinkCell'
+    customCellName: 'ConnectorNameLinkCell',
+    width: 25
   },
   {
     name: Labels.Site,
@@ -161,7 +163,8 @@ export const ConnectorColumns: SKTableColumn<ConnectorResponse>[] = [
   {
     name: Labels.Processes,
     prop: 'count',
-    customCellName: 'ConnectorProcessCountCell'
+    customCellName: 'ConnectorProcessCountCell',
+    modifier: 'fitContent'
   },
 
   {
@@ -196,12 +199,14 @@ export const PairColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
   {
     name: Labels.Bytes,
     prop: 'bytes',
-    format: formatBytes
+    format: formatBytes,
+    modifier: 'fitContent'
   },
   {
     name: Labels.ByteRate,
     prop: 'byteRate',
-    format: formatByteRate
+    format: formatByteRate,
+    modifier: 'fitContent'
   }
 ];
 

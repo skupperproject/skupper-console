@@ -88,21 +88,25 @@ export const PairsListColumns: SKTableColumn<PairsWithInstantMetrics>[] = [
   },
   {
     name: Labels.TCP,
-    prop: 'protocol'
+    prop: 'protocol',
+    modifier: 'fitContent'
   },
   {
     name: Labels.HTTP,
-    prop: 'observedApplicationProtocols'
+    prop: 'observedApplicationProtocols',
+    modifier: 'fitContent'
   },
   {
     name: Labels.Bytes,
     prop: 'bytes',
-    format: formatBytes
+    format: formatBytes,
+    modifier: 'fitContent'
   },
   {
     name: Labels.ByteRate,
     prop: 'byteRate',
-    format: formatByteRate
+    format: formatByteRate,
+    modifier: 'fitContent'
   }
 ];
 
