@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useMemo } from 'react';
 
 import {
   ChartProps,
@@ -9,138 +9,153 @@ import {
   ChartLegendTooltip,
   ChartThemeColor,
   ChartArea,
-  ChartLine
+  ChartLine,
+  ChartLabel
 } from '@patternfly/react-charts/victory';
-import { getResizeObserver, Title } from '@patternfly/react-core';
 
+import { CHART_CONFIG } from './SkChartArea.constants';
+import { calculateTickDensity, getChartDynamicPaddingLeft } from './SkChartArea.utils';
+import { useChartDimensions } from '../../../hooks/useChartDimensions';
 import { skAxisXY } from '../../../types/SkChartArea.interfaces';
-import { formatChartDate } from '../../utils/formatChartDate';
-
-const DEFAULT_CHART_PADDING = {
-  bottom: 0,
-  left: 70,
-  right: 0,
-  top: 0
-};
+import { formatChartDateByRange } from '../../utils/formatChartDateByRange';
 
 interface SkChartAreaProps extends ChartProps {
   data: skAxisXY[][];
   title?: string;
-  subTitle?: string;
-  formatY?: Function;
-  formatYTooltip?: Function;
-  formatX?: Function;
+  formatY?: (y: number) => string | number;
+  formatX?: (timestamp: number, range: number) => string;
   axisYLabel?: string;
   legendLabels?: string[];
   isChartLine?: boolean;
+  padding?: Record<string, number>;
   showLegend?: boolean;
 }
 
 const SkChartArea: FC<SkChartAreaProps> = function ({
   data,
   formatY = (y: number) => y,
-  formatX = (timestamp: number, start: number) => formatChartDate(timestamp, start),
+  formatX = (timestamp, range) => formatChartDateByRange(timestamp, range),
   axisYLabel,
-  legendOrientation = 'horizontal',
-  legendPosition = 'bottom',
   legendLabels = [],
   showLegend = true,
   isChartLine = false,
   title,
-  subTitle,
-  height = 300,
+  height = CHART_CONFIG.LAYOUT.DEFAULT_HEIGHT,
+  legendOrientation = 'horizontal',
+  legendPosition = 'bottom',
+  padding = CHART_CONFIG.LAYOUT.DEFAULT_PADDING,
   ...props
 }) {
-  const observer = useRef<Function>(() => null);
-  const chartContainerRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState<number>(0);
+  const CursorVoronoiContainer = useMemo(() => createContainer('voronoi', 'cursor'), []);
+  const { chartWidth, chartContainerRef } = useChartDimensions();
 
-  function handleResize() {
-    if (chartContainerRef.current && chartContainerRef.current?.clientWidth) {
-      setWidth(chartContainerRef.current.clientWidth);
-    }
-  }
+  const legendData = legendLabels.map((label) => ({ childName: label, name: label }));
+  const startDate = data[0]?.[0]?.x ?? 0;
+  const endDate = data[data.length - 1]?.[data[0]?.length - 1]?.x ?? startDate + 1000;
 
-  useEffect(() => {
-    if (!chartContainerRef.current) {
-      return;
-    }
+  // tick count calculation
+  const tickYCount = useMemo(
+    () =>
+      Math.max(
+        CHART_CONFIG.TICKS.MIN_COUNT,
+        Math.min(
+          CHART_CONFIG.TICKS.MAX_COUNT,
+          Math.floor((height - CHART_CONFIG.LAYOUT.CHART_OFFSET) / calculateTickDensity(chartWidth))
+        )
+      ),
+    [height, chartWidth]
+  );
 
-    observer.current = getResizeObserver(chartContainerRef.current, handleResize);
-    handleResize();
+  const tickXCount = useMemo(
+    () =>
+      Math.max(
+        CHART_CONFIG.TICKS.MIN_COUNT,
+        Math.min(CHART_CONFIG.TICKS.MAX_COUNT, Math.floor((chartWidth - 50) / calculateTickDensity(chartWidth, 160)))
+      ),
+    [chartWidth]
+  );
 
-    return () => observer.current();
-  }, []);
-
-  const legendData = legendLabels.map((name) => ({ childName: name, name }));
-
-  const CursorVoronoiContainer = createContainer('voronoi', 'cursor');
-  const startDate = data[0][0]?.x;
+  // Dynamic padding calculation
+  const dynamicPaddingLeft = getChartDynamicPaddingLeft(data, formatY);
+  const calculatedPadding = { ...padding, left: dynamicPaddingLeft };
 
   return (
-    <div ref={chartContainerRef} style={{ width: '100%', height: `${height + 0}px`, position: 'relative' }}>
-      <div style={{ position: 'absolute', left: '35px', top: '10px' }}>
-        <Title headingLevel="h4">{title}</Title>
-        <p>{subTitle} </p>
-      </div>
-
-      <Chart
-        width={width}
-        height={height - 110}
-        legendData={showLegend ? legendData : []}
-        legendOrientation={legendOrientation}
-        legendPosition={legendPosition}
-        themeColor={props.themeColor || ChartThemeColor.multi}
-        padding={props.padding || DEFAULT_CHART_PADDING}
-        containerComponent={
-          <CursorVoronoiContainer
-            cursorDimension="x"
-            voronoiDimension="x"
-            labels={({ datum }: { datum: skAxisXY }) => formatY(datum.y)}
-            labelComponent={
-              <ChartLegendTooltip
-                legendData={legendData}
-                title={(datum) => `${formatX(datum.x, startDate)}`}
-                cornerRadius={5}
-                flyoutStyle={{
-                  fillOpacity: 0.75
-                }}
-              />
-            }
-            mouseFollowTooltips
-            voronoiPadding={20}
-          />
-        }
-        {...props}
-      >
-        <ChartAxis
-          style={{
-            tickLabels: { fontSize: 12 }
-          }}
-          tickFormat={(tick) => tick && formatX(tick, startDate)}
-          showGrid
-        />
-        <ChartAxis
-          label={axisYLabel}
-          dependentAxis
-          minDomain={{ y: 0 }}
-          style={{
-            tickLabels: { fontSize: 12 },
-            axisLabel: { fontSize: 15, padding: 0 }
-          }}
-          tickFormat={(tick) => tick && formatY(tick < 0.001 ? 0 : tick)}
-          showGrid
-        />
-        <ChartGroup>
-          {data.map((row, index: number) =>
-            isChartLine ? (
-              <ChartLine key={index} data={row} name={legendData[index]?.name} />
-            ) : (
-              <ChartArea key={index} data={row} name={legendData[index]?.name} />
-            )
+    <div ref={chartContainerRef} style={{ height: `${height}px` }}>
+      {chartWidth > 0 && (
+        <Chart
+          width={chartWidth}
+          height={height - CHART_CONFIG.LAYOUT.CHART_OFFSET}
+          legendData={showLegend ? legendData : []}
+          legendOrientation={legendOrientation}
+          legendPosition={legendPosition}
+          themeColor={props.themeColor || ChartThemeColor.multi}
+          padding={calculatedPadding}
+          containerComponent={
+            <CursorVoronoiContainer
+              cursorDimension="x"
+              voronoiDimension="x"
+              labels={({ datum }: { datum: skAxisXY }) => formatY(datum.y)}
+              labelComponent={
+                <ChartLegendTooltip
+                  legendData={legendData}
+                  title={(datum) => `${formatX(Number(datum.x), endDate - startDate)}`}
+                  cornerRadius={CHART_CONFIG.TOOLTIP.CORNER_RADIUS}
+                  flyoutStyle={CHART_CONFIG.TOOLTIP.STYLE}
+                />
+              }
+              mouseFollowTooltips
+              voronoiPadding={CHART_CONFIG.TOOLTIP.PADDING}
+            />
+          }
+          {...props}
+        >
+          {title && (
+            <ChartLabel
+              text={title}
+              x={20}
+              y={-40}
+              textAnchor="start"
+              style={{ fontSize: CHART_CONFIG.AXIS.TITLE_FONT_SIZE }}
+            />
           )}
-        </ChartGroup>
-      </Chart>
+
+          <ChartAxis
+            style={{
+              tickLabels: {
+                fontSize: CHART_CONFIG.AXIS.DEFAULT_FONT_SIZE
+              }
+            }}
+            tickFormat={(tick) => tick && formatX(tick, endDate - startDate)}
+            tickCount={tickXCount}
+            domain={[startDate, endDate]}
+            showGrid
+          />
+          <ChartAxis
+            label={axisYLabel}
+            dependentAxis
+            minDomain={0}
+            style={{
+              tickLabels: { fontSize: CHART_CONFIG.AXIS.DEFAULT_FONT_SIZE },
+              axisLabel: {
+                fontSize: CHART_CONFIG.AXIS.DEFAULT_FONT_SIZE,
+                padding: CHART_CONFIG.AXIS.LABEL_PADDING
+              }
+            }}
+            tickCount={tickYCount}
+            tickFormat={(tick) => tick && formatY(tick < 0.001 ? 0 : tick)}
+            showGrid
+          />
+          <ChartGroup>
+            {data.map((series, index) =>
+              isChartLine ? (
+                <ChartLine key={index} data={series} name={legendData[index]?.name} />
+              ) : (
+                <ChartArea key={index} data={series} name={legendData[index]?.name} />
+              )
+            )}
+          </ChartGroup>
+        </Chart>
+      )}
     </div>
   );
 };

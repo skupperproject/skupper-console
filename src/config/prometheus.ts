@@ -5,11 +5,12 @@ export const timeIntervalMap: IntervalTimeMap = {
   fiveMinutes: { seconds: 5 * 60, label: 'Last 5 min.' },
   fifteenMinutes: { seconds: 15 * 60, label: 'Last 15 min.' },
   thirtyMinutes: { seconds: 30 * 60, label: 'Last 30 min.' },
-  oneHours: { seconds: 3600, label: 'Last hour' },
+  oneHour: { seconds: 3600, label: 'Last hour' },
   twoHours: { seconds: 2 * 3600, label: 'Last 2 hours' },
   sixHours: { seconds: 6 * 3600, label: 'Last 6 hours' },
   twelveHours: { seconds: 12 * 3600, label: 'Last 12 hours' },
-  oneDay: { seconds: 24 * 3600, label: 'Last day' }
+  oneDay: { seconds: 24 * 3600, label: 'Last day' },
+  twoDays: { seconds: 48 * 3600, label: 'Last 2 days' }
 };
 
 export const defaultTimeInterval = Object.values(timeIntervalMap)[0];

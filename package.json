@@ -33,7 +33,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@antv/g6": "5.0.42",
+    "@antv/g6": "5.0.36",
     "@nivo/sankey": "0.88.0",
     "@patternfly/patternfly": "6.1.0",
     "@patternfly/react-charts": "8.1.0",
@@ -46,10 +46,9 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-error-boundary": "5.0.0",
-    "react-router-dom": "7.1.4",
+    "react-router-dom": "7.1.5",
     "victory": "37.3.6"
   },
-  "_comment": "Note: Victory 37.3.4 break legend in @patternfly/react-charts",
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
@@ -58,7 +57,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^22.12.0",
+    "@types/node": "^22.13.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
