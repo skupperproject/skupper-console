@@ -1,7 +1,7 @@
 import { render, fireEvent } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import SkViewDetailCell from '../src/core/components/SkViewDetailsCell/index';
+import SkViewDetailCell from '../src/core/components/SkTable/SkCustomCells/SkViewDetailsCell/index';
 
 describe('ViewDetailCell', () => {
   it('should render a button with a search icon', () => {

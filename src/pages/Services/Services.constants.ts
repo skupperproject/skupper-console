@@ -3,9 +3,9 @@ import { ServicesRoutesPaths } from './Services.enum';
 import { SortDirection, TcpStatus } from '../../API/REST.enum';
 import { BIG_PAGINATION_SIZE, EMPTY_VALUE_SYMBOL } from '../../config/app';
 import { Labels } from '../../config/labels';
-import SkEndTimeCell from '../../core/components/SkEndTimeCell';
-import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { SkSelectOption } from '../../core/components/SkSelect';
+import SkEndTimeCell from '../../core/components/SkTable/SkCustomCells/SkEndTimeCell';
+import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkTable/SkCustomCells/SkLinkCell';
 import { formatByteRate, formatBytes } from '../../core/utils/formatBytes';
 import {
   ServiceResponse,

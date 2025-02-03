@@ -3,11 +3,11 @@ import { FC, useCallback, useState, startTransition } from 'react';
 import { Card, CardBody, CardHeader, Content, ContentVariants } from '@patternfly/react-core';
 
 import { Labels } from '../../../config/labels';
-import SkSankeyChart from '../../../core/components/SKSanckeyChart';
+import SkSankeyChart from '../../../core/components/SkCharts/SKSanckeyChart';
 import {
   ServiceClientResourceOptions,
   ServiceServerResourceOptions
-} from '../../../core/components/SKSanckeyChart/SkSankey.constants';
+} from '../../../core/components/SkCharts/SKSanckeyChart/SkSankey.constants';
 import { formatByteRate, formatBytes } from '../../../core/utils/formatBytes';
 import { MetricKeys } from '../../../types/SkSankeyChart.interfaces';
 import { ServicesController } from '../services';

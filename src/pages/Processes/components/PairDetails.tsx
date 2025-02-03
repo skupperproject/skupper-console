@@ -5,7 +5,7 @@ import { LongArrowAltRightIcon } from '@patternfly/react-icons';
 
 import Details from './Details';
 import { styles } from '../../../config/styles';
-import SkLinkCell from '../../../core/components/SkLinkCell';
+import SkLinkCell from '../../../core/components/SkTable/SkCustomCells/SkLinkCell';
 import { ProcessResponse } from '../../../types/REST.interfaces';
 import { ProcessesRoutesPaths } from '../Processes.enum';
 

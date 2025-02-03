@@ -1,4 +1,4 @@
-import { skAxisXY } from './SkChartArea.interfaces';
+import { skAxisXY } from './SkCharts';
 import { Direction, Protocols, Quantiles } from '../API/REST.enum';
 // Common base type for result types
 type PrometheusResultType = 'matrix' | 'vector' | 'scalar' | 'string';

@@ -1,5 +1,5 @@
-import { Labels } from '../../../config/labels';
-import { MetricKeys } from '../../../types/SkSankeyChart.interfaces';
+import { Labels } from '../../../../config/labels';
+import { MetricKeys } from '../../../../types/SkSankeyChart.interfaces';
 
 export const DEFAULT_SANKEY_CHART_FLOW_VALUE = 0.000001;
 export const DEFAULT_SANKEY_CHART_HEIGHT = '350px';

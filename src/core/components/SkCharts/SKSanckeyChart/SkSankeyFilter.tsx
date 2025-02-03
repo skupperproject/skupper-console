@@ -4,8 +4,8 @@ import { Toolbar, ToolbarContent, ToolbarToggleGroup, ToolbarItem, ToolbarGroup 
 import { FilterIcon } from '@patternfly/react-icons';
 
 import { SankeyMetricOptions, ServiceClientResourceOptions, ServiceServerResourceOptions } from './SkSankey.constants';
-import { MetricKeys } from '../../../types/SkSankeyChart.interfaces';
-import SkSelect from '../SkSelect';
+import { MetricKeys } from '../../../../types/SkSankeyChart.interfaces';
+import SkSelect from '../../SkSelect';
 
 const SankeyFilter: FC<{ onSearch?: Function }> = memo(({ onSearch }) => {
   const [clientType, setClientType] = useState(ServiceClientResourceOptions[0].id);

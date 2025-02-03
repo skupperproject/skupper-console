@@ -5,9 +5,9 @@ import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { customCells } from './BiFlowList.constants';
 import { BiFlowResponse } from '../../../types/REST.interfaces';
 import SkBiFlowDetails from '../SkBiFlowDetails';
-import { SkLinkCellProps } from '../SkLinkCell';
 import SkTable, { SKTableProps } from '../SkTable';
-import SkViewDetailCell from '../SkViewDetailsCell';
+import { SkLinkCellProps } from '../SkTable/SkCustomCells/SkLinkCell';
+import SkViewDetailCell from '../SkTable/SkCustomCells/SkViewDetailsCell';
 
 type SkBiFlowListProps<T extends BiFlowResponse> = SKTableProps<T>;
 

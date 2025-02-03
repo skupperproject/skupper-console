@@ -3,7 +3,7 @@ import { FC, memo } from 'react';
 import { Flex, FlexItem } from '@patternfly/react-core';
 
 import { Labels } from '../../../../config/labels';
-import SkChartArea from '../../../../core/components/SkChartArea';
+import SkChartArea from '../../../../core/components/SkCharts/SkChartArea';
 import SkIsLoading from '../../../../core/components/SkIsLoading';
 import { formatLatency } from '../../../../core/utils/formatLatency';
 import { LatencyMetrics } from '../../../../types/Metrics.interfaces';

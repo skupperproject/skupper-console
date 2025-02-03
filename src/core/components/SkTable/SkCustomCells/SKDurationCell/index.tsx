@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { formatLatency } from '../../utils/formatLatency';
+import { formatLatency } from '../../../../utils/formatLatency';
 
 interface SKDurationCellProps<T> {
   data: T;

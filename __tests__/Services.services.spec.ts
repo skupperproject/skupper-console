@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import connectorsData from '../mocks/data/CONNECTORS.json';
 import listenersData from '../mocks/data/LISTENERS.json';
 import { styles } from '../src/config/styles';
-import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../src/core/components/SKSanckeyChart/SkSankey.constants';
+import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../src/core/components/SkCharts/SKSanckeyChart/SkSankey.constants';
 import { ServicesController, aggregateConnectorResponses } from '../src/pages/Services/services';
 import { GraphElementNames, GraphIconKeys } from '../src/types/Graph.interfaces';
 import { ConnectorResponse, ListenerResponse } from '../src/types/REST.interfaces';

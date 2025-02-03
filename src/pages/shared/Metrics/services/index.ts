@@ -13,7 +13,7 @@ import {
   getDataTrafficMetrics
 } from '../../../../types/Metrics.interfaces';
 import { PrometheusQueryParams } from '../../../../types/Prometheus.interfaces';
-import { skAxisXY } from '../../../../types/SkChartArea.interfaces';
+import { skAxisXY } from '../../../../types/SkCharts';
 import {
   alignDataSeriesWithZeros,
   normalizeByteRateFromSeries,

@@ -2,7 +2,7 @@ import { Button, List, ListItem, Popover } from '@patternfly/react-core';
 import { ConnectorResponse } from 'types/REST.interfaces';
 
 import { Labels } from '../../../config/labels';
-import SkLinkCell, { SkLinkCellProps } from '../../../core/components/SkLinkCell';
+import SkLinkCell, { SkLinkCellProps } from '../../../core/components/SkTable/SkCustomCells/SkLinkCell';
 import { ProcessesRoutesPaths } from '../../Processes/Processes.enum';
 
 const ConnectorProcessCountCell = function (props: SkLinkCellProps<ConnectorResponse>) {
