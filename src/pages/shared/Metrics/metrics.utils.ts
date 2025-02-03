@@ -12,7 +12,7 @@ import {
   ResponseMetrics
 } from '../../../types/Metrics.interfaces';
 import { PrometheusMetric } from '../../../types/Prometheus.interfaces';
-import { skAxisXY } from '../../../types/SkChartArea.interfaces';
+import { skAxisXY } from '../../../types/SkCharts';
 
 function normalizeResponsesFromSeries(data: PrometheusMetric<'matrix'>[]): ResponseMetrics | null {
   // Convert the Prometheus API result into a chart data format

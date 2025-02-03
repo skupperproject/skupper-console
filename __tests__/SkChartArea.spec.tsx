@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 
-import SkChartArea from '../src/core/components/SkChartArea';
+import SkChartArea from '../src/core/components/SkCharts/SkChartArea';
 
 vi.mock('@patternfly/react-charts/victory', () => ({
   Chart: vi.fn(({ children }) => <div data-testid="mock-chart">{children}</div>),

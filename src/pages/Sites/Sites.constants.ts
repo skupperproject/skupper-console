@@ -2,9 +2,9 @@ import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { SitesRoutesPaths } from './Sites.enum';
 import { Labels } from '../../config/labels';
-import SkEndTimeCell from '../../core/components/SkEndTimeCell';
-import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
-import SkLinkStatusCell from '../../core/components/SkLinkStatusCell';
+import SkEndTimeCell from '../../core/components/SkTable/SkCustomCells/SkEndTimeCell';
+import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkTable/SkCustomCells/SkLinkCell';
+import SkLinkStatusCell from '../../core/components/SkTable/SkCustomCells/SkLinkStatusCell';
 import { PairsResponse, RouterLinkResponse, SiteResponse } from '../../types/REST.interfaces';
 
 export const SitesPaths = {

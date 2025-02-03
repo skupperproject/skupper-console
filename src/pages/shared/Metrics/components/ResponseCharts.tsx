@@ -6,8 +6,8 @@ import { Divider, Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core'
 import { Labels } from '../../../../config/labels';
 import { hexColors } from '../../../../config/styles';
 import SkBasicTile from '../../../../core/components/SkBasicTile';
-import SkChartArea from '../../../../core/components/SkChartArea';
-import SkChartPie from '../../../../core/components/SkChartPie';
+import SkChartArea from '../../../../core/components/SkCharts/SkChartArea';
+import SkChartPie from '../../../../core/components/SkCharts/SkChartPie';
 import { convertToPercentage } from '../../../../core/utils/convertToPercentage';
 import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDecimalPlacesIfCents';
 import { ResponseMetrics } from '../../../../types/Metrics.interfaces';

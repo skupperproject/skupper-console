@@ -2,8 +2,8 @@ import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ComponentRoutesPaths } from './Components.enum';
 import { Labels } from '../../config/labels';
-import SkEndTimeCell from '../../core/components/SkEndTimeCell';
-import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
+import SkEndTimeCell from '../../core/components/SkTable/SkCustomCells/SkEndTimeCell';
+import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkTable/SkCustomCells/SkLinkCell';
 import { ComponentResponse, PairsResponse } from '../../types/REST.interfaces';
 
 export const ComponentsPaths = {

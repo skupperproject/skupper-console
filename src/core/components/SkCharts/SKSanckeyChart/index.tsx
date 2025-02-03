@@ -4,10 +4,10 @@ import { ResponsiveSankey } from '@nivo/sankey';
 
 import { DEFAULT_SANKEY_CHART_HEIGHT } from './SkSankey.constants';
 import SankeyFilter from './SkSankeyFilter';
-import { Labels } from '../../../config/labels';
-import { styles } from '../../../config/styles';
-import { SkSankeyChartLink, SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
-import SKEmptyData from '../SkEmptyData';
+import { Labels } from '../../../../config/labels';
+import { styles } from '../../../../config/styles';
+import { SkSankeyChartLink, SkSankeyChartNode } from '../../../../types/SkSankeyChart.interfaces';
+import SKEmptyData from '../../SkEmptyData';
 
 interface SkSankeyChartProps {
   nodes: SkSankeyChartNode[];

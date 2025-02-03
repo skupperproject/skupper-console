@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi, beforeEach, Mock } from 'vitest';
 
-import SkDurationCell from '../src/core/components/SKDurationCell';
+import SkDurationCell from '../src/core/components/SkTable/SkCustomCells/SKDurationCell';
 import { formatLatency } from '../src/core/utils/formatLatency';
 
 vi.mock('../src/core/utils/formatLatency', () => ({

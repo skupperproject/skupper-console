@@ -2,9 +2,9 @@ import { SKTableColumn } from 'types/SkTable.interfaces';
 
 import { ProcessesRoutesPaths } from './Processes.enum';
 import { Labels } from '../../config/labels';
-import SkEndTimeCell from '../../core/components/SkEndTimeCell';
-import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkLinkCell';
 import { SkSelectOption } from '../../core/components/SkSelect';
+import SkEndTimeCell from '../../core/components/SkTable/SkCustomCells/SkEndTimeCell';
+import SkLinkCell, { SkLinkCellProps } from '../../core/components/SkTable/SkCustomCells/SkLinkCell';
 import { formatByteRate, formatBytes } from '../../core/utils/formatBytes';
 import { ProcessPairsResponse, ProcessResponse, PairsWithInstantMetrics } from '../../types/REST.interfaces';
 import { ComponentRoutesPaths } from '../Components/Components.enum';

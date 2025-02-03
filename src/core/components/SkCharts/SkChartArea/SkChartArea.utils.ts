@@ -1,5 +1,5 @@
 import { CHART_CONFIG } from './SkChartArea.constants';
-import { skAxisXY } from '../../../types/SkChartArea.interfaces';
+import { skAxisXY } from '../../../../types/SkCharts';
 
 /**
  * Calculates tick density based on chart width

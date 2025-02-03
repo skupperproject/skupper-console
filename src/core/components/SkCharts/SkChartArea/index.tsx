@@ -15,9 +15,9 @@ import {
 
 import { CHART_CONFIG } from './SkChartArea.constants';
 import { calculateTickDensity, getChartDynamicPaddingLeft } from './SkChartArea.utils';
-import { useChartDimensions } from '../../../hooks/useChartDimensions';
-import { skAxisXY } from '../../../types/SkChartArea.interfaces';
-import { formatChartDateByRange } from '../../utils/formatChartDateByRange';
+import { useChartDimensions } from '../../../../hooks/useChartDimensions';
+import { skAxisXY } from '../../../../types/SkCharts';
+import { formatChartDateByRange } from '../../../utils/formatChartDateByRange';
 
 interface SkChartAreaProps extends ChartProps {
   data: skAxisXY[][];

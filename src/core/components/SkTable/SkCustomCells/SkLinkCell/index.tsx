@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
-import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
-import ResourceIcon, { ResourceIconProps } from '../ResourceIcon';
+import { EMPTY_VALUE_SYMBOL } from '../../../../../config/app';
+import ResourceIcon, { ResourceIconProps } from '../../../ResourceIcon';
 
 export interface SkLinkCellProps<T> {
   data: T;

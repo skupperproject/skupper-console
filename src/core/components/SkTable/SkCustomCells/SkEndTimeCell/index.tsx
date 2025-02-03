@@ -3,8 +3,8 @@ import { ReactNode } from 'react';
 import { Icon, Content, Tooltip } from '@patternfly/react-core';
 import { GlobeAmericasIcon } from '@patternfly/react-icons';
 
-import { EMPTY_VALUE_SYMBOL } from '../../../config/app';
-import { formatLocalizedDateTime } from '../../utils/formatLocalizedDateTime';
+import { EMPTY_VALUE_SYMBOL } from '../../../../../config/app';
+import { formatLocalizedDateTime } from '../../../../utils/formatLocalizedDateTime';
 
 interface EndTimeCellProps<T> {
   data: T;

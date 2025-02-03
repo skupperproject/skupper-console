@@ -6,10 +6,10 @@ import { SitesRoutesPaths } from '../../../pages/Sites/Sites.enum';
 import { BiFlowResponse, TransportFlowResponse } from '../../../types/REST.interfaces';
 import { formatBytes } from '../../utils/formatBytes';
 import { formatLatency } from '../../utils/formatLatency';
-import SkDurationCell from '../SKDurationCell';
-import SkEndTimeCell from '../SkEndTimeCell';
-import SkLinkCell, { SkLinkCellProps } from '../SkLinkCell';
 import { SkSelectOption } from '../SkSelect';
+import SkDurationCell from '../SkTable/SkCustomCells/SKDurationCell';
+import SkEndTimeCell from '../SkTable/SkCustomCells/SkEndTimeCell';
+import SkLinkCell, { SkLinkCellProps } from '../SkTable/SkCustomCells/SkLinkCell';
 
 export const customCells = {
   ProcessNameLinkCell: (props: SkLinkCellProps<BiFlowResponse>) =>

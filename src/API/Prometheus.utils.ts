@@ -13,7 +13,7 @@ import {
   ExecuteQueryQueryType,
   ExecuteQueryFunction
 } from '../types/Prometheus.interfaces';
-import { skAxisXY } from '../types/SkChartArea.interfaces';
+import { skAxisXY } from '../types/SkCharts';
 
 const gePrometheusQueryPATH = (queryType: 'single' | 'range' = 'range') =>
   queryType === 'range' ? PROMETHEUS_URL_RANGE_QUERY : PROMETHEUS_URL_SINGLE_QUERY;

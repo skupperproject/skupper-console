@@ -4,7 +4,7 @@ import { Divider, Flex, FlexItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { Labels } from '../../../../config/labels';
-import SkChartArea from '../../../../core/components/SkChartArea';
+import SkChartArea from '../../../../core/components/SkCharts/SkChartArea';
 import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDecimalPlacesIfCents';
 import { RequestMetrics } from '../../../../types/Metrics.interfaces';
 

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import SkLinkStatusCell from '../src/core/components/SkLinkStatusCell';
+import SkLinkStatusCell from '../src/core/components/SkTable/SkCustomCells/SkLinkStatusCell';
 
 describe('SkLinkStatusCell', () => {
   const mockRouterLinkResponseUp: { destinationSiteId: string; status: 'up' } = {

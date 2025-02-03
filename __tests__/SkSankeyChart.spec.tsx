@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { Labels } from '../src/config/labels';
 import { styles } from '../src/config/styles';
-import SkSankeyChart, { getColors } from '../src/core/components/SKSanckeyChart/index';
+import SkSankeyChart, { getColors } from '../src/core/components/SkCharts/SKSanckeyChart/index';
 
 vi.mock('@nivo/sankey', () => ({
   ResponsiveSankey: () => <div />

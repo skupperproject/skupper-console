@@ -16,7 +16,7 @@ import { SearchIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
 import { Labels } from '../../../../config/labels';
-import SkChartArea from '../../../../core/components/SkChartArea';
+import SkChartArea from '../../../../core/components/SkCharts/SkChartArea';
 import SKEmptyData from '../../../../core/components/SkEmptyData';
 import SkIsLoading from '../../../../core/components/SkIsLoading';
 import { formatNumber } from '../../../../core/utils/formatNumber';

@@ -6,8 +6,8 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { Labels } from '../../../../config/labels';
 import { styles } from '../../../../config/styles';
-import SkChartArea from '../../../../core/components/SkChartArea';
-import SkChartPie from '../../../../core/components/SkChartPie';
+import SkChartArea from '../../../../core/components/SkCharts/SkChartArea';
+import SkChartPie from '../../../../core/components/SkCharts/SkChartPie';
 import { formatByteRate, formatBytes } from '../../../../core/utils/formatBytes';
 import { ByteRateMetrics } from '../../../../types/Metrics.interfaces';
 import { MetricsController } from '../services';

@@ -5,8 +5,8 @@ import {
   ServiceClientResourceOptions,
   ServiceServerResourceOptions,
   SankeyMetricOptions
-} from '../src/core/components/SKSanckeyChart/SkSankey.constants';
-import SankeyFilter from '../src/core/components/SKSanckeyChart/SkSankeyFilter';
+} from '../src/core/components/SkCharts/SKSanckeyChart/SkSankey.constants';
+import SankeyFilter from '../src/core/components/SkCharts/SKSanckeyChart/SkSankeyFilter';
 
 describe('SankeyFilter', () => {
   it('should render the SankeyFilter component', () => {

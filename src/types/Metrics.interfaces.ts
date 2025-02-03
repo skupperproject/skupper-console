@@ -1,5 +1,5 @@
 import { PrometheusMetric } from './Prometheus.interfaces';
-import { skAxisXY } from './SkChartArea.interfaces';
+import { skAxisXY } from './SkCharts';
 import { Protocols, Direction } from '../API/REST.enum';
 import { Labels } from '../config/labels';
 
