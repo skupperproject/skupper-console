@@ -186,10 +186,10 @@
     "@babel/runtime" "^7.25.6"
     tslib "^2.5.3"
 
-"@antv/g6@5.0.36":
-  version "5.0.36"
-  resolved "https://registry.yarnpkg.com/@antv/g6/-/g6-5.0.36.tgz#deed1d1aadfd7868e7f8d501d336f5a14779d8a3"
-  integrity sha512-TWhva2btGWvjisVDmINNq7usjcjVknvPW2aWp0d0cZTcpoYtD7riXnLRp9sOCf/N0BW/tPAOj9DdittEFXxe8A==
+"@antv/g6@5.0.42":
+  version "5.0.42"
+  resolved "https://registry.yarnpkg.com/@antv/g6/-/g6-5.0.42.tgz#07519766549b558040fad25cff26f53e5d5177f1"
+  integrity sha512-JGYSeicGIX5C1EGN7DZOYbFm6k18eFlHSdJLQOq5l9bJmWD3Zq7mpRPK8PVsb8YlmFdqajJrCPKnw0zp22kACg==
   dependencies:
     "@antv/algorithm" "^0.1.26"
     "@antv/component" "^2.1.2"
@@ -202,7 +202,7 @@
     "@antv/layout" "1.2.14-beta.9"
     "@antv/util" "^3.3.10"
     bubblesets-js "^2.3.4"
-    hull.js "github:andriiheonia/hull#semver:^1.0.10"
+    hull.js "^1.0.6"
 
 "@antv/g@^6.1.11", "@antv/g@^6.1.14":
   version "6.1.19"
@@ -4405,9 +4405,10 @@ https-proxy-agent@^7.0.6:
     agent-base "^7.1.2"
     debug "4"
 
-"hull.js@github:andriiheonia/hull#semver:^1.0.10":
-  version "1.0.12"
-  resolved "https://codeload.github.com/andriiheonia/hull/tar.gz/8f7d2a968c0da014de3ca5c1c784559ff49f4cd9"
+hull.js@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/hull.js/-/hull.js-1.0.6.tgz#75f013e8171eb9a871b4a94887e89eb555461d0e"
+  integrity sha512-TC7e9sHYOaCVms0sn2hN7buxnaGfcl9h5EPVoVX9DTPoMpqQiS9bf3tmGDgiNaMVHBD91RAvWjCxrJ5Jx8BI5A==
 
 human-signals@^1.1.1:
   version "1.1.1"
