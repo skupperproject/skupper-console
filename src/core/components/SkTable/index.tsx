@@ -1,7 +1,7 @@
 import { KeyboardEvent, MouseEvent as ReactMouseEvent, useCallback, useState, useMemo, FC } from 'react';
 
 import { Card, CardBody, CardHeader, Flex, Content, Title } from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
+import { CubesIcon } from '@patternfly/react-icons';
 import {
   InnerScrollContainer,
   SortByDirection,
@@ -217,7 +217,7 @@ const SkTable = function <T>({
               {skRows.length === 0 && (
                 <Tr>
                   <Td colSpan={12}>
-                    <SKEmptyData icon={SearchIcon} />
+                    <SKEmptyData icon={CubesIcon} />
                   </Td>
                 </Tr>
               )}

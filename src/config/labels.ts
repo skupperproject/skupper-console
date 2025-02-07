@@ -21,6 +21,7 @@ export const Labels = {
   Cost: 'Cost',
   Platform: 'Platform',
   LinkStatus: 'Status',
+  HAShort: 'HA',
   HA: 'High availability',
   YES: 'true',
   NO: 'false',

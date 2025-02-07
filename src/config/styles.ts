@@ -49,7 +49,7 @@ export const styles = {
     darkBackgroundColor: hexColors.Black500,
     darkTextColor: hexColors.Black900,
     infoColor: hexColors.Blue400,
-    errorColor: hexColors.Red500,
-    warningColor: hexColors.Orange700
+    errorColor: hexColors.Red600,
+    warningColor: hexColors.Orange300
   }
 };

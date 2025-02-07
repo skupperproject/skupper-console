@@ -3,6 +3,7 @@ import { Content, Divider, Flex, FlexItem, Panel, PanelHeader, PanelMainBody, Ti
 import SvgCircle from './Shapes/Circle';
 import SvgDiamond from './Shapes/Diamond';
 import SvgHorizontalLine from './Shapes/HorizontalLine';
+import { LINE_COLOR_ERROR, LINE_COLOR_WARNING } from './Shapes/Shapes.constants';
 import SvgSquare from './Shapes/Square';
 import { Labels } from '../../../../../config/labels';
 
@@ -40,6 +41,10 @@ const ProcessLegend = function () {
                   <SvgCircle dimension={8} fillOpacity={1} />
                 </Content>
               </FlexItem>
+
+              <FlexItem>
+                <Content>{Labels.HAShort}</Content>
+              </FlexItem>
             </Flex>
 
             <Flex direction={{ default: 'column' }}>
@@ -54,6 +59,9 @@ const ProcessLegend = function () {
               </FlexItem>
               <FlexItem>
                 <Content>{Labels.Remote}</Content>
+              </FlexItem>
+              <FlexItem>
+                <Content>{Labels.HA}</Content>
               </FlexItem>
             </Flex>
           </Flex>
@@ -81,6 +89,18 @@ const ProcessLegend = function () {
                   <SvgHorizontalLine dashed />
                 </Content>
               </FlexItem>
+
+              <FlexItem>
+                <Content>
+                  <SvgHorizontalLine dashed color={LINE_COLOR_ERROR} />
+                </Content>
+              </FlexItem>
+
+              <FlexItem>
+                <Content>
+                  <SvgHorizontalLine dashed color={LINE_COLOR_WARNING} />
+                </Content>
+              </FlexItem>
             </Flex>
 
             <Flex direction={{ default: 'column' }}>
@@ -89,6 +109,14 @@ const ProcessLegend = function () {
               </FlexItem>
               <FlexItem>
                 <Content>{Labels.SiteLink}</Content>
+              </FlexItem>
+
+              <FlexItem>
+                <Content>{Labels.SiteLink} Down</Content>
+              </FlexItem>
+
+              <FlexItem>
+                <Content>{Labels.SiteLink} Partially Up</Content>
               </FlexItem>
             </Flex>
           </Flex>

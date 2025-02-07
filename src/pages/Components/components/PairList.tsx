@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { Card, Flex } from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
+import { CubesIcon } from '@patternfly/react-icons';
 
 import { SMALL_PAGINATION_SIZE } from '../../../config/app';
 import { Labels } from '../../../config/labels';
@@ -44,7 +44,7 @@ const PairsList: FC<PairsListProps> = function ({ component: { identity: id, nam
   if (isEmpty) {
     return (
       <Card isFullHeight>
-        <SKEmptyData icon={SearchIcon} />
+        <SKEmptyData icon={CubesIcon} />
       </Card>
     );
   }
