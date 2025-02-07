@@ -21,7 +21,7 @@ const SankeyFilter: FC<{ onSearch?: Function }> = memo(({ onSearch }) => {
   };
 
   const handleMetricSelect = (selected?: string | number) => {
-    setVisibleMetrics(selected as MetricKeys | '');
+    setVisibleMetrics((selected as MetricKeys) || '');
   };
 
   useEffect(() => {

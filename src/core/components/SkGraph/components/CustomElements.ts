@@ -88,12 +88,30 @@ class SkSiteEdge extends SkDataEdge {
   }
 }
 
-class SkSiteEdgeDown extends SkSiteEdge {
+class SkSiteEdgeDown extends Quadratic {
   render(attrs: Required<QuadraticStyleProps>) {
     super.render({
       ...attrs,
+      lineDash: 3,
+      endArrow: false,
       stroke: theme.colors.edgeLineDown,
-      lineWidth: 2
+      badge: true,
+      badgeText: '!',
+      badgeFontWeight: 900,
+      badgeFontSize: theme.edge.badgeFontSize + 1,
+      badgeFill: theme.colors.edgeBadgeTextColor,
+      badgeBackgroundStroke: 'transparent',
+      badgeBackgroundFill: theme.colors.edgeLineDown,
+      label: true,
+      labelText: 'down',
+      labelPadding: 0,
+      labelAutoRotate: true,
+      labelBackgroundStroke: 'transparent',
+      badgeBackgroundHeight: 8,
+      badgeBackgroundWidth: 8,
+      badgePlacement: 'prefix',
+      labelOffsetY: 0.7,
+      labelOffsetX: 11
     });
   }
 }
@@ -102,8 +120,7 @@ class SkSiteEdgePartialUp extends SkSiteEdge {
   render(attrs: Required<QuadraticStyleProps>) {
     super.render({
       ...attrs,
-      stroke: theme.colors.edgeLinePartialDown,
-      lineWidth: 2
+      stroke: theme.colors.edgeLinePartialDown
     });
   }
 }

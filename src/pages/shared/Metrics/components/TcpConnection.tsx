@@ -12,7 +12,7 @@ import {
   FlexItem,
   Title
 } from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
+import { CubesIcon } from '@patternfly/react-icons';
 import { useQuery } from '@tanstack/react-query';
 
 import { Labels } from '../../../../config/labels';
@@ -97,7 +97,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({ selectedFilters, refet
             <SKEmptyData
               message={Labels.NoMetricFound}
               description={Labels.NoMetricFoundDescription}
-              icon={SearchIcon}
+              icon={CubesIcon}
             />
           )}
         </CardBody>

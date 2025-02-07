@@ -6,7 +6,7 @@ export const DEFAULT_SANKEY_CHART_HEIGHT = '350px';
 
 //Filters
 export const SankeyMetricOptions: {
-  id: MetricKeys | ''; // 'id' può essere un MetricKeys o una stringa vuota
+  id: MetricKeys | '';
   label: string;
 }[] = [
   { id: '', label: 'No Metrics' },

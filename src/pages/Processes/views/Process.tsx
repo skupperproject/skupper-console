@@ -50,6 +50,7 @@ const ProcessContent: FC<ProcessProps> = function ({ id, defaultTab }) {
     <MainContainer
       dataTestId={getTestsIds.processView(id)}
       title={process.name}
+      labelTitle={process.binding}
       link={`${TopologyRoutesPaths.Topology}?${TopologyURLQueyParams.Type}=${TopologyViews.Processes}&${TopologyURLQueyParams.IdSelected}=${id}`}
       navigationComponent={<NavigationMenu />}
       mainContentChildren={

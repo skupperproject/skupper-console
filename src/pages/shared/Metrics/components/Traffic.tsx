@@ -1,7 +1,7 @@
 import { FC, useCallback, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle, Stack, StackItem } from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
+import { CubesIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import TrafficCharts from './TrafficCharts';
@@ -93,7 +93,7 @@ const Traffic: FC<TrafficProps> = function ({ selectedFilters, refetchInterval }
             <SKEmptyData
               message={Labels.NoMetricFound}
               description={Labels.NoMetricFoundDescription}
-              icon={SearchIcon}
+              icon={CubesIcon}
             />
           )}
         </CardBody>

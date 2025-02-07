@@ -11,7 +11,8 @@ import {
   Title,
   Toolbar,
   ToolbarContent,
-  ToolbarItem
+  ToolbarItem,
+  Label
 } from '@patternfly/react-core';
 
 import { Labels } from '../config/labels';
@@ -23,6 +24,7 @@ import TransitionPage from '../core/components/TransitionPages/Fade';
 interface MainContainerProps {
   dataTestId?: string;
   title?: string;
+  labelTitle?: string;
   link?: string;
   linkLabel?: string;
   iconName?: 'topologyIcon' | 'listIcon';
@@ -35,16 +37,28 @@ interface MainContainerProps {
 /** Subcomponent for rendering the header section */
 const HeaderSection: FC<{
   title?: string;
+  labelTitle?: string;
   description?: string;
   link?: string;
   linkLabel?: string;
   iconName?: 'topologyIcon' | 'listIcon';
-}> = function ({ title, description, link, linkLabel, iconName }) {
+}> = function ({ title, labelTitle, description, link, linkLabel, iconName }) {
   return (
     <PageSection role="sk-heading">
       <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }} alignItems={{ default: 'alignItemsFlexStart' }}>
         <Content>
-          {title && <Title headingLevel="h1">{title}</Title>}
+          {title && (
+            <Flex alignItems={{ default: 'alignItemsCenter' }}>
+              <FlexItem>
+                <Title headingLevel="h1">{title}</Title>
+              </FlexItem>
+              {labelTitle && (
+                <FlexItem>
+                  <Label>{labelTitle}</Label>
+                </FlexItem>
+              )}
+            </Flex>
+          )}
           {description && <Content component={ContentVariants.p} dangerouslySetInnerHTML={{ __html: description }} />}
         </Content>
         <Flex>
@@ -94,6 +108,7 @@ const ContentSection: FC<{
 const MainContainer: FC<MainContainerProps> = function ({
   dataTestId,
   title,
+  labelTitle,
   link,
   linkLabel = Labels.TopologyView,
   iconName = 'topologyIcon',
@@ -108,6 +123,7 @@ const MainContainer: FC<MainContainerProps> = function ({
         {title && (
           <HeaderSection
             title={title}
+            labelTitle={labelTitle}
             description={description}
             link={link}
             linkLabel={linkLabel}

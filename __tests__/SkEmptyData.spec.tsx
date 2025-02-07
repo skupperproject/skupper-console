@@ -1,12 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import SKEmptyData, { SkEmptyDataLabels } from '../src/core/components/SkEmptyData';
+import { Labels } from '../src/config/labels';
+import SKEmptyData from '../src/core/components/SkEmptyData';
 
 describe('SkEmptyData', () => {
   it('should render with default message', () => {
     render(<SKEmptyData />);
-    expect(screen.getByText(SkEmptyDataLabels.Default)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoDataFound)).toBeInTheDocument();
   });
 
   it('should render with custom message', () => {

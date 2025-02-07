@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { Card, Stack, StackItem } from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
+import { CubesIcon } from '@patternfly/react-icons';
 
 import { SMALL_PAGINATION_SIZE } from '../../../config/app';
 import { Labels } from '../../../config/labels';
@@ -23,7 +23,7 @@ const Links: FC<PairsListProps> = function ({ site: { identity: id } }) {
   if (isEmpty) {
     return (
       <Card isFullHeight>
-        <SKEmptyData icon={SearchIcon} />
+        <SKEmptyData icon={CubesIcon} message={Labels.NoLinkFound} description={Labels.NoLinkFoundDescription} />
       </Card>
     );
   }

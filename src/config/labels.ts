@@ -21,6 +21,7 @@ export const Labels = {
   Cost: 'Cost',
   Platform: 'Platform',
   LinkStatus: 'Status',
+  HAShort: 'HA',
   HA: 'High availability',
   YES: 'true',
   NO: 'false',
@@ -162,6 +163,10 @@ export const Labels = {
   ConsoleError: 'An error occurred on client side',
   NoMetricFound: 'No metrics found',
   NoBiflowFound: 'No connections or requests to display',
+
+  NoDataFound: 'No data found',
+  NoLinkFound: 'No link found',
+  NoLinkFoundDescription: 'There are currently no available connections between the resources',
 
   fetchDataDescription: 'The data for the service network is being retrieved. One moment please...',
   ProcessDescription:

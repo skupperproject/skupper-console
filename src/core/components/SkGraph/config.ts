@@ -27,6 +27,7 @@ export const theme = {
     edgeLabelText: styles.default.darkTextColor,
     edgeLine: styles.default.darkBackgroundColor,
     edgeLineDown: styles.default.errorColor,
+    edgeBadgeTextColor: styles.default.lightTextColor,
     edgeLinePartialDown: styles.default.warningColor,
     edgeSelectLine: styles.default.infoColor,
     edgeTerminal: styles.default.darkBackgroundColor,
