@@ -1,7 +1,7 @@
 import { FC, useCallback, useState } from 'react';
 
 import { Card, CardBody, CardExpandableContent, CardHeader, CardTitle } from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
+import { CubesIcon } from '@patternfly/react-icons';
 import { keepPreviousData, useQueries } from '@tanstack/react-query';
 
 import LatencyCharts from './LatencyCharts';
@@ -68,7 +68,7 @@ const Latency: FC<LatencyProps> = function ({ title = '', selectedFilters, refet
             <SKEmptyData
               message={Labels.NoMetricFound}
               description={Labels.NoMetricFoundDescription}
-              icon={SearchIcon}
+              icon={CubesIcon}
             />
           )}
         </CardBody>

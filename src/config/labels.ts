@@ -164,6 +164,10 @@ export const Labels = {
   NoMetricFound: 'No metrics found',
   NoBiflowFound: 'No connections or requests to display',
 
+  NoDataFound: 'No data found',
+  NoLinkFound: 'No link found',
+  NoLinkFoundDescription: 'There are currently no available connections between the resources',
+
   fetchDataDescription: 'The data for the service network is being retrieved. One moment please...',
   ProcessDescription:
     'A process represents running application code.<br>On Kubernetes, a process is a pod. On Docker or Podman, a process is a container. On virtual machines or bare metal hosts',

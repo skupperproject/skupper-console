@@ -10,7 +10,6 @@ import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
-import { SkEmptyDataLabels } from '../src/core/components/SkEmptyData';
 import LoadingPage from '../src/core/components/SkLoading';
 import PairsList from '../src/pages/Processes/components/PairsList';
 import { ProcessesRoutesPaths } from '../src/pages/Processes/Processes.enum';
@@ -71,6 +70,6 @@ describe('Process Pairs List component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(SkEmptyDataLabels.Default)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoDataFound)).toBeInTheDocument();
   });
 });

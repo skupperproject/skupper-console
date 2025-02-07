@@ -44,7 +44,7 @@ const PairsList: FC<PairsListProps> = function ({ component: { identity: id, nam
   if (isEmpty) {
     return (
       <Card isFullHeight>
-        <SKEmptyData icon={CubesIcon} />
+        <SKEmptyData icon={CubesIcon} message={Labels.NoLinkFound} description={Labels.NoLinkFoundDescription} />
       </Card>
     );
   }

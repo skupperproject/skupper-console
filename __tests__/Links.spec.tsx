@@ -10,7 +10,6 @@ import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
-import { SkEmptyDataLabels } from '../src/core/components/SkEmptyData';
 import LoadingPage from '../src/core/components/SkLoading';
 import Links from '../src/pages/Sites/components/Links';
 import { Providers } from '../src/providers';
@@ -96,7 +95,7 @@ describe('Links component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(SkEmptyDataLabels.Default)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoLinkFound)).toBeInTheDocument();
     expect(screen.queryByText(Labels.OutLinks)).not.toBeInTheDocument();
     expect(screen.queryByText(Labels.InLinks)).not.toBeInTheDocument();
   });

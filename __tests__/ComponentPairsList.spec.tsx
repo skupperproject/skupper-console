@@ -8,8 +8,8 @@ import pairsList from '../mocks/data/COMPONENT_PAIRS.json';
 import components from '../mocks/data/COMPONENTS.json';
 import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
+import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
-import { SkEmptyDataLabels } from '../src/core/components/SkEmptyData';
 import LoadingPage from '../src/core/components/SkLoading';
 import PairsList from '../src/pages/Components/components/PairList';
 import { Providers } from '../src/providers';
@@ -65,6 +65,6 @@ describe('Component Pairs Llist component', () => {
       timeout: waitForElementToBeRemovedTimeout
     });
 
-    expect(screen.getByText(SkEmptyDataLabels.Default)).toBeInTheDocument();
+    expect(screen.getByText(Labels.NoLinkFound)).toBeInTheDocument();
   });
 });

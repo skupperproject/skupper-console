@@ -7644,13 +7644,6 @@ vite-node@3.0.5:
   optionalDependencies:
     fsevents "~2.3.3"
 
-<<<<<<< HEAD
-vitest@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/vitest/-/vitest-3.0.5.tgz#a9a3fa1203d85869c9ba66f3ea990b72d00ddeb0"
-  integrity sha512-4dof+HvqONw9bvsYxtkfUp2uHsTN9bV2CZIi1pWgoFpL1Lld8LA1ka9q/ONSsoScAKG7NVGf2stJTI7XRkXb2Q==
-  dependencies:
-=======
 vite@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/vite/-/vite-6.1.0.tgz#00a4e99a23751af98a2e4701c65ba89ce23858a6"
@@ -7667,7 +7660,6 @@ vitest@^3.0.5:
   resolved "https://registry.yarnpkg.com/vitest/-/vitest-3.0.5.tgz#a9a3fa1203d85869c9ba66f3ea990b72d00ddeb0"
   integrity sha512-4dof+HvqONw9bvsYxtkfUp2uHsTN9bV2CZIi1pWgoFpL1Lld8LA1ka9q/ONSsoScAKG7NVGf2stJTI7XRkXb2Q==
   dependencies:
->>>>>>> bfc9e3a6 (chore: :hammer: Update dev dependecies)
     "@vitest/expect" "3.0.5"
     "@vitest/mocker" "3.0.5"
     "@vitest/pretty-format" "^3.0.5"
