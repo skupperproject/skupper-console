@@ -28,7 +28,7 @@ const getChartDynamicPaddingLeft = (data: skAxisXY[][], formatY: (y: number) => 
     .map((point) => formatY(point.y)?.toString() ?? '')
     .reduce((longest, current) => (current.length > longest.length ? current : longest), '');
 
-  return Math.max(CHART_CONFIG.LAYOUT.DEFAULT_PADDING.left / 2, longestFormattedY.length * 6 + 12);
+  return Math.max(CHART_CONFIG.LAYOUT.DEFAULT_PADDING.left / 2, longestFormattedY.length * 7 + 13);
 };
 
 export { calculateTickDensity, getChartDynamicPaddingLeft };

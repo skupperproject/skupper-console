@@ -55,7 +55,7 @@ export interface SiteResponse extends BaseResponse {
   name: string;
   namespace: string;
   version: string | 'unknown';
-  platform: 'kubernetes' | 'podman' | string | undefined;
+  platform: 'kubernetes' | 'podman' | 'docker' | 'linux' | 'unknown' | string;
   routerCount: number;
 }
 

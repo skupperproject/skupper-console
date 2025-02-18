@@ -16,8 +16,8 @@
       "identity": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "name": "london",
       "namespace": "vb-boutique-b",
-      "platform": "kubernetes",
-      "provider": "kubernetes",
+      "platform": "docker",
+      "provider": "docker",
       "routerCount": 1,
       "version": "2.0.0-preview-1-66-gdbd5e3e",
       "startTime": 1733493674000000
@@ -27,8 +27,8 @@
       "identity": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "name": "malaga",
       "namespace": "vb-boutique-a",
-      "platform": "kubernetes",
-      "provider": "kubernetes",
+      "platform": "linux",
+      "provider": "linux",
       "routerCount": 1,
       "version": "2.0.0-preview-1-66-gdbd5e3e",
       "startTime": 1733493473000000
@@ -49,8 +49,8 @@
       "identity": "12345678-abcd-4321-efgh-876543217777",
       "name": "paris",
       "namespace": "vb-boutique-e",
-      "platform": "podman",
-      "provider": "podman",
+      "platform": "unknown",
+      "provider": "unknown",
       "routerCount": 0,
       "version": "2.0.0-preview-1-66-gdbd5e3e",
       "startTime": 1733493000000000
