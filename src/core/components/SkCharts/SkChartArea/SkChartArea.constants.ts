@@ -1,6 +1,6 @@
 const CHART_CONFIG = {
   LAYOUT: {
-    DEFAULT_PADDING: { bottom: 0, left: 70, right: 0, top: 0 },
+    DEFAULT_PADDING: { bottom: 0, left: 70, right: 0, top: 15 },
     DEFAULT_HEIGHT: 300,
     CHART_OFFSET: 110
   },

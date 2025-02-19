@@ -96,8 +96,8 @@ const getChartDynamicPaddingLeft = (data: skAxisXY[][], formatY: (y: number) => 
   const textWidth = measureTextWidth(longestFormattedY, cachedFont!); // cachedFont is never null here
 
   // Add minimum padding and margin for visual clarity (increased to compensate for potential SVG rendering differences).
-  const minPadding = 18;
-  const minMargin = 18;
+  const minPadding = 12;
+  const minMargin = 12;
 
   // Calculate the final padding value, ensuring it's at least the default padding.
   return Math.max(CHART_CONFIG.LAYOUT.DEFAULT_PADDING.left / 2, textWidth + minPadding + minMargin);
