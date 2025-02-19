@@ -9,26 +9,48 @@ interface FormatTimeOptions {
 }
 
 export function formatLatency(time: number, options?: FormatTimeOptions) {
-  const startSize = options?.startSize ?? 'µs';
-  const decimals = options?.decimals ?? 2;
+  const { decimals = 1, startSize = 'µs' } = options || {};
+  const sizes = ['µs', 'ms', 'sec'];
+  let currentIndex = sizes.findIndex((size) => size === startSize);
 
-  if (time === 0) {
-    return `0 ${startSize}`;
+  if (currentIndex === -1) {
+    currentIndex = 0;
   }
 
-  const k = 1000;
-  const dm = decimals < 0 ? 0 : decimals;
+  if (time === 0) {
+    return `0 ${sizes[currentIndex]}`;
+  }
 
-  const sizes = ['µs', 'ms', 'sec'];
-  const sizeFromIndex = sizes.findIndex((size) => size === startSize);
-  const sizeFrom = sizes.slice(sizeFromIndex);
+  if (time < 1 && currentIndex === 0) {
+    return `${time.toFixed(decimals)} ${sizes[currentIndex]}`;
+  }
 
-  const i = Math.floor(Math.log(time) / Math.log(k));
-  const timeSized = parseFloat((time / Math.pow(k, i)).toFixed(dm));
+  let timeSized = time;
 
-  if (isNaN(timeSized)) {
+  if (time >= 1) {
+    const i = Math.floor(Math.log(time) / Math.log(1000));
+    timeSized = time / Math.pow(1000, i);
+    currentIndex = Math.min(currentIndex + i, sizes.length - 1); // Adjust index if possible
+  } else {
+    if (currentIndex === 0) {
+      timeSized *= 1000;
+      currentIndex = 1;
+
+      if (timeSized >= 1000) {
+        timeSized /= 1000;
+        currentIndex = 2;
+      }
+    } else if (currentIndex === 1 && time < 0.001) {
+      timeSized *= 1000000;
+      currentIndex = 0;
+    }
+  }
+
+  const timeSizedRounded = parseFloat(timeSized.toFixed(decimals));
+
+  if (isNaN(timeSizedRounded)) {
     return '';
   }
 
-  return `${timeSized} ${sizeFrom[i]}`;
+  return `${timeSizedRounded} ${sizes[currentIndex]}`;
 }
