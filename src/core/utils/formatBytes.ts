@@ -4,7 +4,7 @@
 const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 const K = 1024;
 
-export function formatBytes(bytes: number, decimals = 2) {
+export function formatBytes(bytes: number, decimals = 1) {
   if (isNaN(bytes) || bytes < 0) {
     return '';
   }
@@ -19,7 +19,7 @@ export function formatBytes(bytes: number, decimals = 2) {
   return `${bytesSized} ${sizes[i]}`;
 }
 
-export function formatByteRate(byteRate: number, decimals = 2) {
+export function formatByteRate(byteRate: number, decimals = 1) {
   const byteRateFormatted = formatBytes(byteRate, decimals);
 
   return byteRateFormatted ? `${byteRateFormatted}/s` : '';

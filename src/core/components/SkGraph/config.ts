@@ -4,7 +4,9 @@ import { behaviors } from './behaviours';
 import { GraphLabels } from './enum';
 import componentIcon from '../../../assets/component.svg';
 import connectorIcon from '../../../assets/connector.svg';
+import dockerIcon from '../../../assets/docker.svg';
 import kubernetesIcon from '../../../assets/kubernetes.svg';
+import linuxIcon from '../../../assets/linux.svg';
 import listenrIcon from '../../../assets/listener.svg';
 import podmanIcon from '../../../assets/podman.svg';
 import processIcon from '../../../assets/process.svg';
@@ -240,6 +242,8 @@ export const iconMapper: GraphIconsMap = {
   process: processIcon,
   site: siteIcon,
   podman: podmanIcon,
+  docker: dockerIcon,
+  linux: linuxIcon,
   kubernetes: kubernetesIcon,
   skupper: skupperIcon,
   connector: connectorIcon,

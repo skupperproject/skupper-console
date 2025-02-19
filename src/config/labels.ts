@@ -14,6 +14,8 @@ export const Labels = {
   InLinks: 'Incoming',
   OutLinks: 'Outgoing',
 
+  Id: 'Id',
+
   From: 'From',
   To: 'To',
   Namespace: 'Namespace',

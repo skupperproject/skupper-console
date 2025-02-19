@@ -20,7 +20,7 @@ interface DetailsProps {
   site: SiteResponse;
 }
 
-const Details: FC<DetailsProps> = function ({ site: { namespace, version, platform, routerCount } }) {
+const Details: FC<DetailsProps> = function ({ site: { identity, namespace, version, platform, routerCount } }) {
   return (
     <Grid hasGutter>
       <GridItem>
@@ -31,6 +31,8 @@ const Details: FC<DetailsProps> = function ({ site: { namespace, version, platfo
           <CardBody>
             <DescriptionList>
               <DescriptionListGroup>
+                <DescriptionListTerm>{Labels.Id}</DescriptionListTerm>
+                <DescriptionListDescription>{identity}</DescriptionListDescription>
                 <DescriptionListTerm>{Labels.Namespace}</DescriptionListTerm>
                 <DescriptionListDescription>{namespace}</DescriptionListDescription>
                 <DescriptionListTerm>{Labels.Platform}</DescriptionListTerm>

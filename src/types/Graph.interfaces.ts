@@ -14,6 +14,8 @@ export type GraphIconKeys =
   | 'process'
   | 'site'
   | 'podman'
+  | 'docker'
+  | 'linux'
   | 'kubernetes'
   | 'skupper'
   | 'connector'

@@ -66,6 +66,7 @@ const TcpConnection: FC<TcpConnectionProps> = function ({ selectedFilters, refet
                 <FlexItem flex={{ default: 'flex_2' }}>
                   {connections.liveConnectionsSerie && (
                     <SkChartArea
+                      formatY={formatNumber}
                       title={Labels.ConnectionActivity}
                       data={connections.liveConnectionsSerie}
                       legendLabels={[`${Labels.OpenConnections}`]}

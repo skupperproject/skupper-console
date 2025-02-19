@@ -11,7 +11,7 @@
   - [Testing](#testing)
 - [ENV variables](#env-variables)
 
-![alt text](https://github.com/user-attachments/assets/702ae1fa-a52d-4564-a9ff-3f250bb00cf3)
+![alt text](https://github.com/user-attachments/assets/9644516c-bbdc-4dc7-9760-5e9da9fdd09f)
 
 ![alt text](https://github.com/user-attachments/assets/91b284f6-a1b3-4ee1-83cd-656d0b65b0d0)
 

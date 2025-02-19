@@ -5,7 +5,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import { Labels } from '../../../../config/labels';
 import SkChartArea from '../../../../core/components/SkCharts/SkChartArea';
-import { formatToDecimalPlacesIfCents } from '../../../../core/utils/formatToDecimalPlacesIfCents';
+import { formatNumber } from '../../../../core/utils/formatNumber';
 import { RequestMetrics } from '../../../../types/Metrics.interfaces';
 
 const RequestCharts: FC<{
@@ -18,7 +18,7 @@ const RequestCharts: FC<{
       <SkChartArea
         title={title}
         data={requestRateData.map(({ data }) => data)}
-        formatY={(y: number) => `${formatToDecimalPlacesIfCents(y, 3)} rps`}
+        formatY={(y: number) => formatNumber(y)}
         legendLabels={requestRateData.map(({ label }) => `${label}`)}
       />
     </FlexItem>

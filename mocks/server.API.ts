@@ -319,7 +319,7 @@ export const MockApi = {
           metric: {},
           values: [
             [queryParams.start, 0],
-            [Number(queryParams.end) - 40, 10000],
+            [Number(queryParams.end) - 40, 1000],
             [Number(queryParams.end) - 20, 30000],
             [queryParams.end, 1]
           ]
