@@ -57,7 +57,7 @@ function getHistoryValuesFromPrometheusData(data: PrometheusMetric<'matrix'>[] |
   return data.map(({ values }) =>
     values.map(([x, y]) => ({
       x: Number(x),
-      y: isNaN(Number(y)) ? 0 : Number(y)
+      y: isNaN(Number(y)) ? 0 : Number(Number(y).toFixed(1))
     }))
   );
 }
