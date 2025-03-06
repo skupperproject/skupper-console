@@ -172,7 +172,7 @@ export const Labels = {
 
   fetchDataDescription: 'The data for the service network is being retrieved. One moment please...',
   ProcessDescription:
-    'A process represents running application code.<br>On Kubernetes, a process is a pod. On Docker or Podman, a process is a container. On virtual machines or bare metal hosts',
+    'A process represents running application code.<br>On Kubernetes, a process is a pod. On Docker or Podman, a process is a container.',
   ComponentsDescription:
     'A component is a logical application unit with specific responsibilities, implemented by processes across multiple sites.',
   ServicesDescription:
