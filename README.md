@@ -10,6 +10,7 @@
   - [Run the Console with external routes](#run-the-console-with-external-routes)
   - [Testing](#testing)
 - [ENV variables](#env-variables)
+- [Supported Browsers](#supported-browsers)
 
 ![alt text](https://github.com/user-attachments/assets/9644516c-bbdc-4dc7-9760-5e9da9fdd09f)
 
@@ -74,3 +75,7 @@ To run the e2e tests, you'll need to configure the following environment variabl
 - `USE_MOCK_SERVER`: Use predefined static data to display the console.
 - `MOCK_RESPONSE_DELAY`: It simulates a delay (milliseconds) in the response when using the mock server.
 - `MOCK_ITEM_COUNT`: It generates X random resources (processes, sites, links, etc.)
+
+## Supported browsers
+
+We support the last two versions of Firefox and Chrome
