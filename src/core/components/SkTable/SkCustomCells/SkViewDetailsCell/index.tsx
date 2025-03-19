@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import { Button } from '@patternfly/react-core';
-import { CubesIcon } from '@patternfly/react-icons';
+import { SearchIcon } from '@patternfly/react-icons';
 
 interface SkViewDetailCellProps<T> {
   link?: string;
@@ -17,7 +17,7 @@ const SkViewDetailCell = function <T>({ value, onClick }: SkViewDetailCellProps<
   }, [value, onClick]);
 
   return (
-    <Button icon={<CubesIcon />} variant="plain" aria-label="Action" onClick={handleOnClick} title="Click details" />
+    <Button icon={<SearchIcon />} variant="plain" aria-label="Action" onClick={handleOnClick} title="Click details" />
   );
 };
 
