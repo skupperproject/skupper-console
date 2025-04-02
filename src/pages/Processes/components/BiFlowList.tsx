@@ -5,6 +5,7 @@ import { ResourcesEmptyIcon } from '@patternfly/react-icons';
 
 import { SMALL_PAGINATION_SIZE } from '../../../config/app';
 import { Labels } from '../../../config/labels';
+import BiFlowLogs from '../../../core/components/BiFlowLogs';
 import { httpBiFlowColumns, tcpBiFlowColumns } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
 import SKEmptyData from '../../../core/components/SkEmptyData';
 import { setColumnVisibility } from '../../../core/components/SkTable/SkTable.utils';
@@ -14,7 +15,6 @@ import {
   initRequestsQueryParams,
   initTerminatedConnectionsQueryParams
 } from '../../Services/Services.constants';
-import BiFlowLogs from '../../shared/BiFlowLogs';
 import { TopologyURLQueyParams } from '../../Topology/Topology.enum';
 import { useBiflowListData } from '../hooks/useBiflowListData';
 

@@ -5,8 +5,8 @@ import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
 import { Direction } from '../src/API/REST.enum';
 import { Labels } from '../src/config/labels';
+import { useMetricSessionHandlers } from '../src/core/components/Metrics/hooks/useMetricsSessionHandler';
 import { getDataFromSession, storeDataToSession } from '../src/core/utils/persistData';
-import { useMetricSessionHandlers } from '../src/pages/shared/Metrics/hooks/useMetricsSessionHandler';
 import { QueryMetricsParams, ExpandedMetricSections } from '../src/types/Metrics.interfaces';
 
 const mockQueryMetricsParams: QueryMetricsParams = {

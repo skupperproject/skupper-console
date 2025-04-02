@@ -10,8 +10,8 @@ import * as PrometheusAPIModule from '../src/API/Prometheus.api';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
+import TcpConnection from '../src/core/components/Metrics/components/TcpConnection';
 import LoadingPage from '../src/core/components/SkLoading';
-import TcpConnection from '../src/pages/shared/Metrics/components/TcpConnection';
 import { Providers } from '../src/providers';
 
 const processResult = processesData.results[0];

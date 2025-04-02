@@ -6,10 +6,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { loadMockServer } from '../mocks/server';
 import { Protocols } from '../src/API/REST.enum';
+import Metrics, { MetricsProps } from '../src/core/components/Metrics';
+import { useMetricsState } from '../src/core/components/Metrics/hooks/useMetricsState';
+import { configDefaultFilters } from '../src/core/components/Metrics/Metrics.constants';
 import LoadingPage from '../src/core/components/SkLoading';
-import Metrics, { MetricsProps } from '../src/pages/shared/Metrics';
-import { useMetricsState } from '../src/pages/shared/Metrics/hooks/useMetricsState';
-import { configDefaultFilters } from '../src/pages/shared/Metrics/Metrics.constants';
 import { Providers } from '../src/providers';
 
 describe('useMetrics', () => {

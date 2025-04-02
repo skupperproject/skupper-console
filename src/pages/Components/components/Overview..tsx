@@ -1,9 +1,9 @@
 import { FC } from 'react';
 
 import { Protocols } from '../../../API/REST.enum';
+import Metrics from '../../../core/components/Metrics';
 import { extractUniqueValues } from '../../../core/utils/extractUniqueValues';
 import { ComponentResponse, ProcessResponse } from '../../../types/REST.interfaces';
-import Metrics from '../../shared/Metrics';
 import { useComponentOverviewData } from '../hooks/useOverviewData';
 
 interface OverviewProps {

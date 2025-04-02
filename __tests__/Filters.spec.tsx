@@ -7,7 +7,7 @@ import siteData from '../mocks/data/SITES.json';
 import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { Labels } from '../src/config/labels';
-import MetricFilters from '../src/pages/shared/Metrics/components/Filters';
+import MetricFilters from '../src/core/components/Metrics/components/Filters';
 
 describe('Metrics component', () => {
   let server: Server;

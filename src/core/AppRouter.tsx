@@ -4,8 +4,8 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRoutes } from 'react-router-dom';
 
+import ErrorConsole from './components/Errors/Console';
 import LoadingPage from './components/SkLoading';
-import ErrorConsole from '../pages/shared/Errors/Console';
 import { routes } from '../routes/index';
 
 const AppRouter = function () {
