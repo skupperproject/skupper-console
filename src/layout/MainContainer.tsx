@@ -17,7 +17,7 @@ import {
 
 import { Labels } from '../config/labels';
 import LoadingPage from '../core/components/SkLoading';
-import SkNavigationViewLink from '../core/components/SkNavigationViewLink';
+import SkNavigationViewLink from '../core/components/SkTable/SkNavigationViewLink';
 import SkUpdateDataButton from '../core/components/SkUpdateDataButton';
 import TransitionPage from '../core/components/TransitionPages/Fade';
 

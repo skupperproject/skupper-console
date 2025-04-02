@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
+import BiFlowLogs from '../../../core/components/BiFlowLogs';
 import { httpBiFlowColumns, httpSelectOptions } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
-import BiFlowLogs from '../../shared/BiFlowLogs';
 import { initRequestsQueryParams } from '../Services.constants';
 
 interface HttpRequestsProps {

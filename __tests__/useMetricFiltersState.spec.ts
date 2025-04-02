@@ -3,7 +3,7 @@ import { act } from 'react';
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import useMetricFiltersState from '../src/pages/shared/Metrics/hooks/useMetricFiltersState';
+import useMetricFiltersState from '../src/core/components/Metrics/hooks/useMetricFiltersState';
 import { QueryMetricsParams } from '../src/types/Metrics.interfaces';
 
 describe('useMetricFiltersState', () => {

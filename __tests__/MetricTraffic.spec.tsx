@@ -9,9 +9,9 @@ import { loadMockServer } from '../mocks/server';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { Labels } from '../src/config/labels';
 import { getTestsIds } from '../src/config/testIds';
+import Traffic from '../src/core/components/Metrics/components/Traffic';
+import * as MetricsModule from '../src/core/components/Metrics/services/index';
 import LoadingPage from '../src/core/components/SkLoading';
-import Traffic from '../src/pages/shared/Metrics/components/Traffic';
-import * as MetricsModule from '../src/pages/shared/Metrics/services/index';
 import { Providers } from '../src/providers';
 
 const processResult = processesData.results[0];

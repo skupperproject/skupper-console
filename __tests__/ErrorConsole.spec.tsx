@@ -2,10 +2,10 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { Labels } from '../src/config/labels';
-import ErrorConsole from '../src/pages/shared/Errors/Console';
-import ErrorHttp from '../src/pages/shared/Errors/Http';
+import ErrorConsole from '../src/core/components/Errors/Console';
+import ErrorHttp from '../src/core/components/Errors/Http';
 
-vi.mock('../src/pages/shared/Errors/Http', () => ({
+vi.mock('../src/core/components/Errors/Http', () => ({
   default: vi.fn().mockImplementation(({ code, message, onReset }) => (
     <section data-testid="sk-network-error-view">
       <div>

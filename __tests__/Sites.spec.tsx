@@ -11,8 +11,8 @@ import { MockApi } from '../mocks/server.API';
 import { MockApiPaths } from '../mocks/server.config';
 import { waitForElementToBeRemovedTimeout } from '../src/config/app';
 import { getTestsIds } from '../src/config/testIds';
+import ErrorConsole from '../src/core/components/Errors/Console';
 import LoadingPage from '../src/core/components/SkLoading';
-import ErrorConsole from '../src/pages/shared/Errors/Console';
 import Sites from '../src/pages/Sites/views/Sites';
 import { Providers } from '../src/providers';
 

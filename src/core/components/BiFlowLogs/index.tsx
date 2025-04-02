@@ -7,10 +7,10 @@ import { getAllHttpRequests, getAllTcpConnections } from '../../../API/REST.endp
 import { RESTApi } from '../../../API/REST.resources';
 import { BIG_PAGINATION_SIZE } from '../../../config/app';
 import { UPDATE_INTERVAL } from '../../../config/reactQuery';
-import SkBiFlowList from '../../../core/components/SkBiFlowList';
-import { SkSelectOption } from '../../../core/components/SkSelect';
-import SkSearchFilter from '../../../core/components/SkTable/SkSearchFilter';
 import { BiFlowResponse, QueryFilters } from '../../../types/REST.interfaces';
+import SkBiFlowList from '../SkBiFlowList';
+import { SkSelectOption } from '../SkSelect';
+import SkSearchFilter from '../SkTable/SkSearchFilter';
 
 interface BiFlowProps<T extends BiFlowResponse> {
   columns: SKTableColumn<NonNullableValue<T>>[];

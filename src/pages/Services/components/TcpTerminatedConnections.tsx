@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
+import BiFlowLogs from '../../../core/components/BiFlowLogs';
 import { tcpBiFlowColumns, tcpSelectOptions } from '../../../core/components/SkBiFlowList/BiFlowList.constants';
-import BiFlowLogs from '../../shared/BiFlowLogs';
 import { initTerminatedConnectionsQueryParams } from '../Services.constants';
 
 interface TcpConnectionsProps {

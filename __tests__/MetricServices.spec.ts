@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import * as PrometheusAPIModule from '../src/API/Prometheus.api';
-import { alignDataSeriesWithZeros, normalizeResponsesFromSeries } from '../src/pages/shared/Metrics/metrics.utils';
-import { MetricsController } from '../src/pages/shared/Metrics/services';
+import { alignDataSeriesWithZeros, normalizeResponsesFromSeries } from '../src/core/components/Metrics/metrics.utils';
+import { MetricsController } from '../src/core/components/Metrics/services';
 import { PrometheusMetric } from '../src/types/Prometheus.interfaces';
 import { skAxisXY } from '../src/types/SkCharts';
 
