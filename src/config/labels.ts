@@ -1,3 +1,5 @@
+// entry point for all static labels and titles of the application
+
 export const Labels = {
   Sites: 'Sites',
   Processes: 'Processes',

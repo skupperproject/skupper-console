@@ -1,5 +1,10 @@
 import { IntervalTimeMap } from '../types/Prometheus.interfaces';
 
+// This file defines constants and enums used for querying and displaying data from Prometheus, particularly related to network metrics collected by Skupper.
+// It provides a mapping of time intervals, default time interval, and enumerations for Prometheus labels and metrics.
+
+// `timeIntervalMap`: Defines a mapping of human-readable time interval labels (e.g., "Last 1 min.") to their corresponding durations in seconds.
+// This map is used to configure the time range for Prometheus queries.
 export const timeIntervalMap: IntervalTimeMap = {
   oneMinute: { seconds: 60, label: 'Last 1 min.' },
   fiveMinutes: { seconds: 5 * 60, label: 'Last 5 min.' },
@@ -15,6 +20,7 @@ export const timeIntervalMap: IntervalTimeMap = {
 
 export const defaultTimeInterval = Object.values(timeIntervalMap)[0];
 
+// The enum values correspond to the Prometheus label names. This enum serves as a reusable mapping, allowing easy updates if the Prometheus metric names change.
 export enum PrometheusLabelsV2 {
   SourceSiteId = 'source_site_id',
   DestSiteId = 'dest_site_id',

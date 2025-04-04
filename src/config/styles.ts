@@ -1,3 +1,7 @@
+// This file imports design tokens from `@patternfly/react-tokens` and defines:
+// 1. `hexColors`: An object that maps semantic color names (e.g., White, Black300) to their corresponding hex color values derived from the PatternFly tokens.
+// 2. `styles`: An object containing a `default` style configuration. This configuration utilizes PatternFly tokens for values such as font size, font family, border width, border radius, and color assignments for various semantic purposes (e.g., background, text, info, error, warning). This provides a centralized place to manage and reuse consistent styling throughout the application based on the PatternFly design system.
+
 import {
   t_color_gray_90,
   t_color_gray_50,
