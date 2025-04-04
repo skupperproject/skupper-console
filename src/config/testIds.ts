@@ -1,3 +1,6 @@
+// This file defines Cypress test IDs (data-testid attributes) for various UI elements within the application.
+// This approach provides a centralized and maintainable way to manage test IDs, making it easier to update them consistently across the application and its tests.
+
 export const getTestsIds = {
   loadingView: () => 'sk-loading-view',
   header: () => 'sk-header',
