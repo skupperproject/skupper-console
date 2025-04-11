@@ -33,7 +33,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@antv/g6": "5.0.44",
+    "@antv/g6": "5.0.45",
     "@nivo/sankey": "0.88.0",
     "@patternfly/patternfly": "6.1.0",
     "@patternfly/react-charts": "8.1.0",

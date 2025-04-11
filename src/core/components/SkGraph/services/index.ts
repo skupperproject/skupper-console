@@ -213,7 +213,7 @@ export const GraphController = {
           halo: true,
           haloLineWidth:
             source !== target
-              ? normalizeBitrateToLineThickness(metricValue as number, minMetricValue, maxMetricValue)
+              ? normalizeMetricToLineThickness(metricValue as number, minMetricValue, maxMetricValue)
               : 0,
           label: true,
           labelText: label,
@@ -277,7 +277,7 @@ function markPairs(data: GraphEdge[]) {
  * within a specified range, and the result is adjusted to fit within a maximum
  * line thickness. An optional power parameter allows for adjusting the scaling curve.
  */
-function normalizeBitrateToLineThickness(
+function normalizeMetricToLineThickness(
   value: number,
   minMetricValue: number,
   maxMetricValue: number,
