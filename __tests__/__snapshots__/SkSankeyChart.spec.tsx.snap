@@ -26,7 +26,6 @@ exports[`SkSankeyChart > should render the SkSankeyChart component 1`] = `
                 class="pf-v6-c-toolbar__toggle"
               >
                 <button
-                  aria-disabled="false"
                   aria-haspopup="false"
                   aria-label="Show Filters"
                   class="pf-v6-c-button pf-m-plain"
@@ -218,7 +217,6 @@ exports[`SkSankeyChart > should render the SkSankeyChart component 1`] = `
               class="pf-v6-c-toolbar__toggle"
             >
               <button
-                aria-disabled="false"
                 aria-haspopup="false"
                 aria-label="Show Filters"
                 class="pf-v6-c-button pf-m-plain"
