@@ -331,7 +331,6 @@ exports[`Metrics Component > renders correctly 1`] = `
             class="pf-v6-c-card__header-toggle"
           >
             <button
-              aria-disabled="false"
               class="pf-v6-c-button pf-m-plain"
               data-ouia-component-id="OUIA-Generated-Button-plain-1"
               data-ouia-component-type="PF6/Button"
@@ -434,7 +433,6 @@ exports[`Metrics Component > renders correctly 1`] = `
             class="pf-v6-c-card__header-toggle"
           >
             <button
-              aria-disabled="false"
               class="pf-v6-c-button pf-m-plain"
               data-ouia-component-id="OUIA-Generated-Button-plain-2"
               data-ouia-component-type="PF6/Button"
@@ -532,7 +530,6 @@ exports[`Metrics Component > renders correctly 1`] = `
             class="pf-v6-c-card__header-toggle"
           >
             <button
-              aria-disabled="false"
               class="pf-v6-c-button pf-m-plain"
               data-ouia-component-id="OUIA-Generated-Button-plain-3"
               data-ouia-component-type="PF6/Button"
@@ -633,7 +630,6 @@ exports[`Metrics Component > renders correctly 1`] = `
             class="pf-v6-c-card__header-toggle"
           >
             <button
-              aria-disabled="false"
               class="pf-v6-c-button pf-m-plain"
               data-ouia-component-id="OUIA-Generated-Button-plain-4"
               data-ouia-component-type="PF6/Button"
@@ -731,7 +727,6 @@ exports[`Metrics Component > renders correctly 1`] = `
             class="pf-v6-c-card__header-toggle"
           >
             <button
-              aria-disabled="false"
               class="pf-v6-c-button pf-m-plain"
               data-ouia-component-id="OUIA-Generated-Button-plain-5"
               data-ouia-component-type="PF6/Button"
