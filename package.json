@@ -36,7 +36,7 @@
     "commit": "git-cz"
   },
   "dependencies": {
-    "@antv/g6": "^5.0.15",
+    "@antv/g6": "5.0.45",
     "@nivo/sankey": "^0.88.0",
     "@patternfly/patternfly": "^5.4.2",
     "@patternfly/react-charts": "^7.4.8",
