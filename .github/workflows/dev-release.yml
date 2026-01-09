@@ -1,0 +1,83 @@
+name: Development Release 🚧
+
+on:
+  workflow_run:
+    workflows: ["Build and Test 🏗️"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  build-and-release:
+    name: Update Development Release 📦
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code 🛎️
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install Dependencies 📦
+        run: |
+          HUSKY=0 CYPRESS_INSTALL_BINARY=0 yarn install --prefer-offline --frozen-lockfile
+
+      - name: Build Project 🚧
+        run: |
+          yarn build
+        env:
+          CI: false
+
+      - name: Package Build 📦
+        run: |
+          cd build/ && tar -zcvf ../console.tgz --exclude='./data' .
+
+      - name: Get commit info 📋
+        id: commit_info
+        run: |
+          echo "timestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+          echo "message<<EOF" >> $GITHUB_OUTPUT
+          git log -1 --pretty=%B >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Update development tag 🏷️
+        run: |
+          git tag -f development
+          git push -f origin development
+
+      - name: Update Development Release ✨
+        run: |
+          # Delete existing release if it exists
+          gh release delete development --yes || true
+
+          # Create new release
+          gh release create development console.tgz \
+            --title "Development Build" \
+            --notes "$(cat <<EOF
+          🚧 **Development Build** - Latest build from main branch
+
+          This is an automatically updated development release containing the latest build from the main branch.
+
+          **Warning**: This is a development build and may contain unstable features.
+
+          **Built from**: ${{ github.sha }}
+          **Build date**: ${{ steps.commit_info.outputs.timestamp }}
+
+          ## Download
+          - [console.tgz](https://github.com/${{ github.repository }}/releases/download/development/console.tgz)
+
+          ## Latest Commit
+          ${{ steps.commit_info.outputs.message }}
+          EOF
+          )" \
+            --prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
