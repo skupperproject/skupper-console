@@ -31,6 +31,7 @@ const SkGraph: FC<SkGraphProps> = memo(
   }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
     const topologyGraphRef = useRef<Graph>(null);
+    const isInitializedRef = useRef(false);
 
     const prevNodesRef = useRef<GraphNode[]>(nodesWithoutPosition);
     const prevEdgesRef = useRef<GraphEdge[]>(edges);
@@ -82,6 +83,10 @@ const SkGraph: FC<SkGraphProps> = memo(
     const graphRef = useCallback(($node: HTMLDivElement) => {
       if (nodesWithoutPosition && !topologyGraphRef.current) {
         const nodes = savePositions ? GraphController.addPositionsToNodes(nodesWithoutPosition) : nodesWithoutPosition;
+
+        const allPositioned = nodes.every((n) => n.x !== undefined && n.y !== undefined);
+        const activeLayout = allPositioned ? undefined : LAYOUT_MAP[layout];
+
         // Filter the `options.behaviors` array, removing any behaviors that match an entry in the `excludeBehaviors` array.
         const filteredBehaviors = options.behaviors?.filter(
           (behavior) => behavior.key && !(excludeBehaviors as string[]).includes(behavior.key)
@@ -91,7 +96,7 @@ const SkGraph: FC<SkGraphProps> = memo(
           ...options,
           behaviors: filteredBehaviors,
           container: $node,
-          layout: LAYOUT_MAP[layout],
+          layout: activeLayout,
           data: GraphController.transformData({ edges, nodes, combos })
         };
 
@@ -139,6 +144,7 @@ const SkGraph: FC<SkGraphProps> = memo(
 
           // Store the graph instance and set the state
           topologyGraphRef.current = graph;
+          isInitializedRef.current = true;
           setIsGraphLoaded(true); // Mark the graph as loaded
         });
       }
@@ -146,7 +152,7 @@ const SkGraph: FC<SkGraphProps> = memo(
     }, []);
 
     const updateData = useCallback(async () => {
-      if (!isGraphLoaded) {
+      if (!isGraphLoaded || !isInitializedRef.current) {
         return;
       }
 
