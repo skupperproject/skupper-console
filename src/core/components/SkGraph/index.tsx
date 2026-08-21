@@ -31,7 +31,6 @@ const SkGraph: FC<SkGraphProps> = memo(
   }) => {
     const [isGraphLoaded, setIsGraphLoaded] = useState(false);
     const topologyGraphRef = useRef<Graph>(null);
-    const isInitializedRef = useRef(false);
 
     const prevNodesRef = useRef<GraphNode[]>(nodesWithoutPosition);
     const prevEdgesRef = useRef<GraphEdge[]>(edges);
@@ -144,7 +143,6 @@ const SkGraph: FC<SkGraphProps> = memo(
 
           // Store the graph instance and set the state
           topologyGraphRef.current = graph;
-          isInitializedRef.current = true;
           setIsGraphLoaded(true); // Mark the graph as loaded
         });
       }
@@ -152,7 +150,7 @@ const SkGraph: FC<SkGraphProps> = memo(
     }, []);
 
     const updateData = useCallback(async () => {
-      if (!isGraphLoaded || !isInitializedRef.current) {
+      if (!isGraphLoaded) {
         return;
       }
 
