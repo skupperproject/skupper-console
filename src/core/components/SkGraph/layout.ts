@@ -22,7 +22,9 @@ const LAYOUT_TOPOLOGY_COMBO: ComboCombinedLayoutOptions & { type: 'combo-combine
     type: 'antv-dagre',
     controlPoints: true,
     radial: true,
-    rankdir: 'LR'
+    rankdir: 'LR',
+    ranksep: 45,
+    nodesep: 30
   }
 };
 
