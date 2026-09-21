@@ -82,7 +82,6 @@ const SkGraph: FC<SkGraphProps> = memo(
     const graphRef = useCallback(($node: HTMLDivElement) => {
       if (nodesWithoutPosition && !topologyGraphRef.current) {
         const nodes = savePositions ? GraphController.addPositionsToNodes(nodesWithoutPosition) : nodesWithoutPosition;
-
         // Filter the `options.behaviors` array, removing any behaviors that match an entry in the `excludeBehaviors` array.
         const filteredBehaviors = options.behaviors?.filter(
           (behavior) => behavior.key && !(excludeBehaviors as string[]).includes(behavior.key)
