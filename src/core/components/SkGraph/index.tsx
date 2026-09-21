@@ -83,9 +83,6 @@ const SkGraph: FC<SkGraphProps> = memo(
       if (nodesWithoutPosition && !topologyGraphRef.current) {
         const nodes = savePositions ? GraphController.addPositionsToNodes(nodesWithoutPosition) : nodesWithoutPosition;
 
-        const allPositioned = nodes.every((n) => n.x !== undefined && n.y !== undefined);
-        const activeLayout = allPositioned ? undefined : LAYOUT_MAP[layout];
-
         // Filter the `options.behaviors` array, removing any behaviors that match an entry in the `excludeBehaviors` array.
         const filteredBehaviors = options.behaviors?.filter(
           (behavior) => behavior.key && !(excludeBehaviors as string[]).includes(behavior.key)
@@ -95,7 +92,7 @@ const SkGraph: FC<SkGraphProps> = memo(
           ...options,
           behaviors: filteredBehaviors,
           container: $node,
-          layout: activeLayout,
+          layout: LAYOUT_MAP[layout],
           data: GraphController.transformData({ edges, nodes, combos })
         };
 
