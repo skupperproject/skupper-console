@@ -25,6 +25,8 @@ tmp/
 *.launch
 .history
 *.DS_Store
+.npmrc
+.yarnrc
 
 # OS generated files
 Thumbs.db
