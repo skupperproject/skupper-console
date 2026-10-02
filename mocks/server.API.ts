@@ -213,12 +213,16 @@ export const MockApi = {
     };
   },
 
-  getProcessPairs: (_: unknown, { queryParams }: ApiProps) => {
+  getProcessPairs: (_: unknown, { url }: ApiProps) => {
     const results = getMockData(processPairs.results, ITEM_COUNT > 0);
-    const filteredResults = filterResults(results, queryParams);
+    const { limit, offset, sortBy, ...filters } = extractQueryParams(url) || {};
+
+    const filteredResults = filterResults(results, filters);
+    const sortedData = sortData(filteredResults, sortBy);
+    const paginatedResults = paginateResults(sortedData, { offset, limit });
 
     return {
-      results: filteredResults,
+      results: paginatedResults,
       count: filteredResults.length,
       timeRangeCount: filteredResults.length
     };
