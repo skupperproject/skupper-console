@@ -215,10 +215,11 @@ export const MockApi = {
 
   getProcessPairs: (_: unknown, { url }: ApiProps) => {
     const results = getMockData(processPairs.results, ITEM_COUNT > 0);
-    const { limit, offset, ...filters } = extractQueryParams(url) || {};
+    const { limit, offset, sortBy, ...filters } = extractQueryParams(url) || {};
 
     const filteredResults = filterResults(results, filters);
-    const paginatedResults = paginateResults(filteredResults, { offset, limit });
+    const sortedData = sortData(filteredResults, sortBy);
+    const paginatedResults = paginateResults(sortedData, { offset, limit });
 
     return {
       results: paginatedResults,
