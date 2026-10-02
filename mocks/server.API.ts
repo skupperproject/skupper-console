@@ -213,9 +213,10 @@ export const MockApi = {
     };
   },
 
-  getProcessPairs: (_: unknown, { queryParams }: ApiProps) => {
+  getProcessPairs: (_: unknown, { url }: ApiProps) => {
     const results = getMockData(processPairs.results, ITEM_COUNT > 0);
-    const filteredResults = filterResults(results, queryParams);
+    const { ...filters } = extractQueryParams(url) || {};
+    const filteredResults = filterResults(results, filters);
 
     return {
       results: filteredResults,
