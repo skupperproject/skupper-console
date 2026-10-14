@@ -30,9 +30,7 @@ export default defineConfig(() => {
       setupFiles: ['./vite.setup.ts'],
       coverage: {
         reporter: ['text', 'lcov'],
-        all: false,
-        include: ['**/src/**'],
-        exclude: ['**/src/config/**']
+        exclude: ['**/src/config/**', 'mocks/**', '**/*.{json,svg,css}']
       }
     }
   };

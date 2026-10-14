@@ -1,32 +1,33 @@
-const getAuthConfig = () => {
-  const username = Cypress.env('USERNAME');
-  const password = Cypress.env('PASSWORD');
+const getAuthConfig = () =>
+  cy.env(['USERNAME', 'PASSWORD']).then(({ USERNAME, PASSWORD }) => {
+    if (USERNAME && PASSWORD) {
+      return {
+        auth: {
+          username: USERNAME,
+          password: PASSWORD
+        }
+      };
+    }
 
-  if (username && password) {
-    return {
-      auth: {
-        username,
-        password
-      }
-    };
-  }
-
-  return {};
-};
+    return {};
+  });
 
 Cypress.Commands.add('visitWithAuth', (url: string = '/', options = {}) => {
-  cy.visit(url, {
-    ...getAuthConfig(),
-    ...options
+  getAuthConfig().then((authConfig) => {
+    cy.visit(url, {
+      ...authConfig,
+      ...options
+    });
   });
 });
 
 Cypress.Commands.add('requestWithAuth', (method: string, url: string, options = {}) => {
-  const authConfig = getAuthConfig();
-  cy.request({
-    method,
-    url,
-    ...authConfig,
-    ...options
-  }).as('requestResponse');
+  getAuthConfig().then((authConfig) => {
+    cy.request({
+      method,
+      url,
+      ...authConfig,
+      ...options
+    }).as('requestResponse');
+  });
 });
