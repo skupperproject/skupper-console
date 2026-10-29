@@ -12,7 +12,10 @@
       "protocol": "tcp",
       "siteId": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "siteName": "dallas",
-      "startTime": 1733493798977479
+      "startTime": 1733493798977479,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "cartservice",
@@ -26,7 +29,10 @@
       "protocol": "tcp",
       "siteId": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "siteName": "dallas",
-      "startTime": 1733493798979102
+      "startTime": 1733493798979102,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "currencyservice",
@@ -40,7 +46,10 @@
       "protocol": "tcp",
       "siteId": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "siteName": "dallas",
-      "startTime": 1733493798981374
+      "startTime": 1733493798981374,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "paymentservice",
@@ -54,7 +63,10 @@
       "protocol": "tcp",
       "siteId": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "siteName": "dallas",
-      "startTime": 1733493798965401
+      "startTime": 1733493798965401,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "redis-cart",
@@ -68,7 +80,10 @@
       "protocol": "tcp",
       "siteId": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "siteName": "dallas",
-      "startTime": 1733493798967323
+      "startTime": 1733493798967323,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "recommendationservice",
@@ -82,7 +97,10 @@
       "protocol": "tcp",
       "siteId": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "siteName": "dallas",
-      "startTime": 1733493798969036
+      "startTime": 1733493798969036,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "shippingservice",
@@ -96,7 +114,10 @@
       "protocol": "tcp",
       "siteId": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "siteName": "dallas",
-      "startTime": 1733493798970697
+      "startTime": 1733493798970697,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "checkoutservice",
@@ -110,7 +131,10 @@
       "protocol": "tcp",
       "siteId": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "siteName": "dallas",
-      "startTime": 1733493798972410
+      "startTime": 1733493798972410,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "emailservice",
@@ -124,7 +148,10 @@
       "protocol": "tcp",
       "siteId": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "siteName": "dallas",
-      "startTime": 1733493798974067
+      "startTime": 1733493798974067,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "productcatalogservice",
@@ -138,7 +165,10 @@
       "protocol": "tcp",
       "siteId": "46c2efa0-5fbc-4fe4-bba8-530e775aa2f6",
       "siteName": "dallas",
-      "startTime": 1733493798975820
+      "startTime": 1733493798975820,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "cartservice",
@@ -152,7 +182,10 @@
       "protocol": "tcp",
       "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "siteName": "malaga",
-      "startTime": 1733495314884692
+      "startTime": 1733495314884692,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "checkoutservice",
@@ -166,7 +199,10 @@
       "protocol": "tcp",
       "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "siteName": "malaga",
-      "startTime": 1733495314886936
+      "startTime": 1733495314886936,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "redis-cart",
@@ -180,7 +216,10 @@
       "protocol": "tcp",
       "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "siteName": "malaga",
-      "startTime": 1733495314893532
+      "startTime": 1733495314893532,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "currencyservice",
@@ -194,7 +233,10 @@
       "protocol": "tcp",
       "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "siteName": "malaga",
-      "startTime": 1733495314896154
+      "startTime": 1733495314896154,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "shippingservice",
@@ -208,7 +250,10 @@
       "protocol": "tcp",
       "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "siteName": "malaga",
-      "startTime": 1733495314900244
+      "startTime": 1733495314900244,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "paymentservice",
@@ -222,7 +267,10 @@
       "protocol": "tcp",
       "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "siteName": "malaga",
-      "startTime": 1733495314873972
+      "startTime": 1733495314873972,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "productcatalogservice",
@@ -236,7 +284,10 @@
       "protocol": "tcp",
       "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "siteName": "malaga",
-      "startTime": 1733495314876158
+      "startTime": 1733495314876158,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "recommendationservice",
@@ -250,7 +301,10 @@
       "protocol": "tcp",
       "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "siteName": "malaga",
-      "startTime": 1733495314878009
+      "startTime": 1733495314878009,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "adservice",
@@ -264,7 +318,10 @@
       "protocol": "tcp",
       "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "siteName": "malaga",
-      "startTime": 1733495314880440
+      "startTime": 1733495314880440,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "emailservice",
@@ -278,7 +335,10 @@
       "protocol": "tcp",
       "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
       "siteName": "malaga",
-      "startTime": 1733495314882911
+      "startTime": 1733495314882911,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "recommendationservice",
@@ -292,7 +352,10 @@
       "protocol": "tcp",
       "siteId": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "siteName": "london",
-      "startTime": 1733493697285137
+      "startTime": 1733493697285137,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "productcatalogservice",
@@ -306,7 +369,10 @@
       "protocol": "tcp",
       "siteId": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "siteName": "london",
-      "startTime": 1733493698081082
+      "startTime": 1733493698081082,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "shippingservice",
@@ -320,7 +386,10 @@
       "protocol": "tcp",
       "siteId": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "siteName": "london",
-      "startTime": 1733493698912135
+      "startTime": 1733493698912135,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "adservice",
@@ -334,7 +403,10 @@
       "protocol": "tcp",
       "siteId": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "siteName": "london",
-      "startTime": 1733493693148947
+      "startTime": 1733493693148947,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "cartservice",
@@ -348,7 +420,10 @@
       "protocol": "tcp",
       "siteId": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "siteName": "london",
-      "startTime": 1733493693265429
+      "startTime": 1733493693265429,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "checkoutservice",
@@ -362,7 +437,10 @@
       "protocol": "tcp",
       "siteId": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "siteName": "london",
-      "startTime": 1733493693356096
+      "startTime": 1733493693356096,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "currencyservice",
@@ -376,7 +454,10 @@
       "protocol": "tcp",
       "siteId": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "siteName": "london",
-      "startTime": 1733493694088604
+      "startTime": 1733493694088604,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "emailservice",
@@ -390,7 +471,10 @@
       "protocol": "tcp",
       "siteId": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "siteName": "london",
-      "startTime": 1733493694938611
+      "startTime": 1733493694938611,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "paymentservice",
@@ -404,7 +488,10 @@
       "protocol": "tcp",
       "siteId": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "siteName": "london",
-      "startTime": 1733493695692332
+      "startTime": 1733493695692332,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
     },
     {
       "routingKey": "redis-cart",
@@ -418,7 +505,46 @@
       "protocol": "tcp",
       "siteId": "49becd97-6e22-4645-a22f-b5b98c89d827",
       "siteName": "london",
-      "startTime": 1733493696546846
+      "startTime": 1733493696546846,
+      "routingModel": "single-key",
+      "routingKeyCount": 1,
+      "strategy": "not-applicable"
+    },
+    {
+      "routingKey": "inventoryservice-dallas",
+      "serviceId": "adr-c3a9f1b7e2d84056",
+      "destHost": "0.0.0.0",
+      "destPort": "8080",
+      "endTime": 0,
+      "identity": "s86xq:15",
+      "name": "multiAddress/inventoryservice",
+      "routerId": "s86xq:0",
+      "protocol": "tcp",
+      "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
+      "siteName": "malaga",
+      "startTime": 1733493700000010,
+      "routingModel": "multi-key",
+      "routingKeyCount": 2,
+      "strategy": "weighted",
+      "strategyValue": 3
+    },
+    {
+      "routingKey": "inventoryservice-london",
+      "serviceId": "adr-d7f2a04b8e1c5930",
+      "destHost": "0.0.0.0",
+      "destPort": "8080",
+      "endTime": 0,
+      "identity": "s86xq:16",
+      "name": "multiAddress/inventoryservice",
+      "routerId": "s86xq:0",
+      "protocol": "tcp",
+      "siteId": "631f1ef0-b59e-4ed3-a98e-e850b4ca2226",
+      "siteName": "malaga",
+      "startTime": 1733493700000020,
+      "routingModel": "multi-key",
+      "routingKeyCount": 2,
+      "strategy": "weighted",
+      "strategyValue": 1
     }
   ]
 }

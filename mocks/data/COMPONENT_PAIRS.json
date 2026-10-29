@@ -335,6 +335,18 @@
       "sourceId": "pg-d79ebbbdb633fc2a",
       "sourceName": "frontend",
       "startTime": 1733494357355985
+    },
+    {
+      "destinationId": "pg-3e8a1f5c9b2d7046",
+      "destinationName": "inventoryservice",
+      "endTime": 0,
+      "identity": "grouppair-e5f7c1b6a2d38094",
+      "pairType": "PROCESS_GROUP",
+      "protocol": "tcp",
+      "recordCount": 0,
+      "sourceId": "pg-d79ebbbdb633fc2a",
+      "sourceName": "frontend",
+      "startTime": 1733494411400001
     }
   ]
 }

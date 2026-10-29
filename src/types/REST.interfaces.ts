@@ -118,6 +118,9 @@ export interface ProcessPairsResponse extends BasePairsResponse {
 
 export type PairsResponse = BasePairsResponse | ProcessPairsResponse;
 
+export type ListenerRoutingModel = 'single-key' | 'multi-key';
+export type ListenerStrategy = 'not-applicable' | 'priority' | 'weighted';
+
 export interface ListenerResponse extends BaseResponse {
   name: string;
   routerId: string;
@@ -127,6 +130,10 @@ export interface ListenerResponse extends BaseResponse {
   destPort: string;
   siteId: string;
   siteName: string;
+  routingModel: ListenerRoutingModel;
+  routingKeyCount: number;
+  strategy: ListenerStrategy;
+  strategyValue?: number;
 }
 
 export interface ConnectorResponse extends BaseResponse {
@@ -150,6 +157,7 @@ export interface ServiceResponse extends BaseResponse {
   observedApplicationProtocols: string[];
   connectorCount: number;
   listenerCount: number;
+  multiKeyListenerCount: number;
   isBound: boolean;
   hasListener: boolean;
 }
