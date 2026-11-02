@@ -84,6 +84,13 @@ export const customServiceCells = {
       type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteName}@${props.data.destinationSiteId}`
     }),
+  ListenerTypesCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
+    [
+      data?.multiKeyListenerCount > 0 && Labels.MultiKeyListener,
+      data?.listenerCount > data?.multiKeyListenerCount && Labels.SingleKeyListener
+    ]
+      .filter(Boolean)
+      .join(', ') || EMPTY_VALUE_SYMBOL,
   TimestampCell: SkEndTimeCell,
   ApplicationProtocolCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
     data?.observedApplicationProtocols.join(', ') || EMPTY_VALUE_SYMBOL,
@@ -96,6 +103,11 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
     name: Labels.RoutingKey,
     prop: 'name',
     customCellName: 'ServiceNameLinkCell'
+  },
+  {
+    name: Labels.ListenerTypes,
+    prop: 'multiKeyListenerCount',
+    customCellName: 'ListenerTypesCell'
   },
   {
     name: Labels.TCP,
