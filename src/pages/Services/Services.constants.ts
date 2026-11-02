@@ -11,6 +11,8 @@ import {
   ServiceResponse,
   QueryFilters,
   ListenerResponse,
+  ListenerRoutingModel,
+  ListenerStrategy,
   ConnectorResponse,
   ProcessPairsResponse,
   PairsWithInstantMetrics
@@ -30,6 +32,17 @@ export const TAB_2_KEY = Labels.Requests;
 export const TAB_3_KEY = Labels.OpenConnections;
 export const TAB_4_KEY = Labels.OldConnections;
 export const TAB_5_KEY = Labels.ListenersAndConnectors;
+
+const LISTENER_MODEL_LABELS: Record<ListenerRoutingModel, string> = {
+  'single-key': Labels.SingleKeyListener,
+  'multi-key': Labels.MultiKeyListener
+};
+
+const LISTENER_STRATEGY_LABELS: Record<ListenerStrategy, string> = {
+  'not-applicable': Labels.NotApplicable,
+  priority: Labels.Priority,
+  weighted: Labels.Weighted
+};
 
 export const customServiceCells = {
   ServiceNameLinkCell: (props: SkLinkCellProps<ServiceResponse>) =>
@@ -84,6 +97,15 @@ export const customServiceCells = {
       type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteName}@${props.data.destinationSiteId}`
     }),
+  ListenerStrategyCell: ({ data }: SkLinkCellProps<ListenerResponse>) =>
+    [
+      LISTENER_STRATEGY_LABELS[data?.strategy],
+      data?.strategy === 'weighted' && `${Labels.Weight}: ${data?.strategyValue}`
+    ]
+      .filter(Boolean)
+      .join(' · ') || EMPTY_VALUE_SYMBOL,
+  ListenerTypeCell: ({ data }: SkLinkCellProps<ListenerResponse>) =>
+    LISTENER_MODEL_LABELS[data?.routingModel] ?? EMPTY_VALUE_SYMBOL,
   ListenerTypesCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
     [
       data?.multiKeyListenerCount > 0 && Labels.MultiKeyListener,
@@ -142,6 +164,21 @@ export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
     name: Labels.Site,
     prop: 'siteName',
     customCellName: 'SiteNameLinkCell'
+  },
+  {
+    name: Labels.Type,
+    prop: 'routingModel',
+    customCellName: 'ListenerTypeCell'
+  },
+  {
+    name: Labels.Strategy,
+    prop: 'strategy',
+    customCellName: 'ListenerStrategyCell'
+  },
+  {
+    name: Labels.RoutingKeys,
+    prop: 'routingKeyCount',
+    modifier: 'fitContent'
   },
   {
     name: Labels.Created,

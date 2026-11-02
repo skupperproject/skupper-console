@@ -17,6 +17,7 @@ export const Labels = {
   OutLinks: 'Outgoing',
 
   Id: 'Id',
+  Type: 'Type',
 
   From: 'From',
   To: 'To',
@@ -80,6 +81,11 @@ export const Labels = {
   ListenerTypes: 'Listener types',
   MultiKeyListener: 'Multi-key',
   SingleKeyListener: 'Single-key',
+  Strategy: 'Strategy',
+  NotApplicable: 'Not applicable',
+  Priority: 'Priority',
+  Weighted: 'Weighted',
+  Weight: 'Weight',
   IsBound: 'Bound',
   SankeyChartTitle: '',
   SankeyChartDescription: '',
