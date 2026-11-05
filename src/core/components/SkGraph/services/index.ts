@@ -178,7 +178,7 @@ export const GraphController = {
     // Process nodes with combo matching and style assignment
     const transformedNodes = nodes
       .sort(sortNodesByCombo)
-      .map(({ id, combo, label, iconName, type = 'SkNode', info, x, y, ...rest }) => ({
+      .map(({ id, combo, label, iconName, type = 'SkNode', info, details, x, y, ...rest }) => ({
         id,
         combo: combo && comboIds?.includes(combo) ? combo : undefined,
         type,
@@ -195,6 +195,7 @@ export const GraphController = {
           x,
           y,
           labelText: ellipsisInTheMiddle(label),
+          detailLines: details,
           iconSrc: iconMapper[iconName],
           badge: !!info,
           badges: createBadges(info)

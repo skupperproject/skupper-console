@@ -53,3 +53,16 @@ export enum Role {
   Internal = 'internal',
   Remote = 'remote'
 }
+
+// Listener routing model: a single-key listener has one routing key, a multi-key listener has several
+export enum ListenerRoutingModel {
+  SingleKey = 'single-key',
+  MultiKey = 'multi-key'
+}
+
+// Strategy used by a multi-key listener to choose among its routing keys
+export enum ListenerStrategy {
+  NotApplicable = 'not-applicable',
+  Priority = 'priority',
+  Weighted = 'weighted'
+}

@@ -50,7 +50,8 @@ export const theme = {
   node: {
     size: 44,
     iconSize: 22, // NODE size / 2
-    badgeSize: 22
+    badgeSize: 22,
+    listenerSize: [110, 76] as [number, number]
   },
   edge: {
     badgeFontSize: 6

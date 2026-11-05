@@ -83,7 +83,8 @@ describe('ServicesController', () => {
           siteName: 'dallas',
           sourceId: 'rrrpk:10',
           sourceName: 'adservice',
-          type: 'SkEmptyNode',
+          details: ['Single-key listener', '1 routing key'],
+          type: 'SkListenerNode',
           iconName: 'listener'
         },
         {
@@ -93,7 +94,8 @@ describe('ServicesController', () => {
           siteName: 'dallas',
           sourceId: 'rrrpk:11',
           sourceName: 'cartservice',
-          type: 'SkEmptyNode',
+          details: ['Single-key listener', '1 routing key'],
+          type: 'SkListenerNode',
           iconName: 'listener'
         }
       ];

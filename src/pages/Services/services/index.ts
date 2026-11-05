@@ -1,10 +1,13 @@
+import { ListenerRoutingModel, ListenerStrategy } from '../../../API/REST.enum';
 import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/app';
+import { Labels } from '../../../config/labels';
 import { styles } from '../../../config/styles';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../../../core/components/SkCharts/SKSanckeyChart/SkSankey.constants';
 import { removeDuplicatesFromArrayOfObjects } from '../../../core/utils/removeDuplicatesFromArrayOfObjects';
 import { GraphCombo, GraphEdge, GraphElementNames, GraphIconKeys, GraphNode } from '../../../types/Graph.interfaces';
 import { ConnectorResponse, ListenerResponse } from '../../../types/REST.interfaces';
 import { MetricKeys, SkSankeyChartNode } from '../../../types/SkSankeyChart.interfaces';
+import { LISTENER_STRATEGY_LABELS } from '../Services.constants';
 
 export const ServicesController = {
   convertPairsToSankeyChartData: (
@@ -24,14 +27,15 @@ export const ServicesController = {
   },
 
   mapListenersToRoutingKey: (listeners: ListenerResponse[]) =>
-    listeners.map(({ identity, name, siteId, siteName, routingKey, serviceId }) => ({
-      sourceId: identity,
-      sourceName: name,
-      siteId: `${siteId}-listener`, // Avoids including connectors and processes in the combo
-      siteName,
-      destinationId: serviceId,
-      destinationName: routingKey,
-      type: 'SkEmptyNode' as GraphElementNames,
+    listeners.map((listener) => ({
+      sourceId: listener.identity,
+      sourceName: listener.name,
+      siteId: `${listener.siteId}-listener`, // Avoids including connectors and processes in the combo
+      siteName: listener.siteName,
+      destinationId: listener.serviceId,
+      destinationName: listener.routingKey,
+      details: getListenerNodeDetails(listener),
+      type: 'SkListenerNode' as GraphElementNames,
       iconName: 'listener' as GraphIconKeys
     })),
 
@@ -76,6 +80,7 @@ export const ServicesController = {
       siteName?: string;
       destinationId: string;
       destinationName: string;
+      details?: string[];
       byteRate?: number;
       color?: string;
       iconName: GraphIconKeys;
@@ -83,12 +88,13 @@ export const ServicesController = {
     }[]
   ): { nodes: GraphNode[]; edges: GraphEdge[]; combos: GraphCombo[] } => {
     const generateTopologyNodes = (pairs: typeof servicePairs) => {
-      const clients = pairs.map(({ type, iconName, sourceId, sourceName, siteId }) => ({
+      const clients = pairs.map(({ type, iconName, sourceId, sourceName, details, siteId }) => ({
         type,
         id: sourceId,
         name: sourceName,
         label: sourceName,
         iconName,
+        details,
         combo: siteId
       }));
 
@@ -139,6 +145,24 @@ export const ServicesController = {
     return { nodes, edges, combos };
   }
 };
+
+/**
+ * Text lines shown in the listener node: the routing model, the strategy and routing keys count.
+ * The strategy is hidden when it does not apply (i.e. single-key listeners).
+ */
+function getListenerNodeDetails({ routingModel, strategy, routingKeyCount }: ListenerResponse): string[] {
+  const modelLine =
+    routingModel === ListenerRoutingModel.MultiKey ? Labels.MultiKeyListenerNode : Labels.SingleKeyListenerNode;
+
+  const strategyText = strategy !== ListenerStrategy.NotApplicable ? LISTENER_STRATEGY_LABELS[strategy] : '';
+
+  const routingKeysLabel = routingKeyCount === 1 ? Labels.RoutingKey : Labels.RoutingKeys;
+  const routingKeysText = routingKeyCount !== undefined ? `${routingKeyCount} ${routingKeysLabel.toLowerCase()}` : '';
+
+  const summaryLine = [strategyText, routingKeysText].filter(Boolean).join(' · ');
+
+  return [modelLine, summaryLine].filter(Boolean);
+}
 
 /**
  * Removes duplicate objects from an array based on a given key.

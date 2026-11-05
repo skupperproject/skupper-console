@@ -1,6 +1,6 @@
 import ConnectorProcessCountCell from './components/ConnectorProcessCountCell';
 import { ServicesRoutesPaths } from './Services.enum';
-import { SortDirection, TcpStatus } from '../../API/REST.enum';
+import { ListenerRoutingModel, ListenerStrategy, SortDirection, TcpStatus } from '../../API/REST.enum';
 import { BIG_PAGINATION_SIZE, EMPTY_VALUE_SYMBOL } from '../../config/app';
 import { Labels } from '../../config/labels';
 import { SkSelectOption } from '../../core/components/SkSelect';
@@ -11,8 +11,6 @@ import {
   ServiceResponse,
   QueryFilters,
   ListenerResponse,
-  ListenerRoutingModel,
-  ListenerStrategy,
   ConnectorResponse,
   ProcessPairsResponse,
   PairsWithInstantMetrics
@@ -34,14 +32,14 @@ export const TAB_4_KEY = Labels.OldConnections;
 export const TAB_5_KEY = Labels.ListenersAndConnectors;
 
 const LISTENER_MODEL_LABELS: Record<ListenerRoutingModel, string> = {
-  'single-key': Labels.SingleKeyListener,
-  'multi-key': Labels.MultiKeyListener
+  [ListenerRoutingModel.SingleKey]: Labels.SingleKeyListener,
+  [ListenerRoutingModel.MultiKey]: Labels.MultiKeyListener
 };
 
-const LISTENER_STRATEGY_LABELS: Record<ListenerStrategy, string> = {
-  'not-applicable': Labels.NotApplicable,
-  priority: Labels.Priority,
-  weighted: Labels.Weighted
+export const LISTENER_STRATEGY_LABELS: Record<ListenerStrategy, string> = {
+  [ListenerStrategy.NotApplicable]: Labels.NotApplicable,
+  [ListenerStrategy.Priority]: Labels.Priority,
+  [ListenerStrategy.Weighted]: Labels.Weighted
 };
 
 export const customServiceCells = {
@@ -100,7 +98,7 @@ export const customServiceCells = {
   ListenerStrategyCell: ({ data }: SkLinkCellProps<ListenerResponse>) =>
     [
       LISTENER_STRATEGY_LABELS[data?.strategy],
-      data?.strategy === 'weighted' && `${Labels.Weight}: ${data?.strategyValue}`
+      data?.strategy === ListenerStrategy.Weighted && `${Labels.Weight}: ${data?.strategyValue}`
     ]
       .filter(Boolean)
       .join(' · ') || EMPTY_VALUE_SYMBOL,

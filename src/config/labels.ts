@@ -81,6 +81,8 @@ export const Labels = {
   ListenerTypes: 'Listener types',
   MultiKeyListener: 'Multi-key',
   SingleKeyListener: 'Single-key',
+  MultiKeyListenerNode: 'Multi-key listener',
+  SingleKeyListenerNode: 'Single-key listener',
   Strategy: 'Strategy',
   NotApplicable: 'Not applicable',
   Priority: 'Priority',
