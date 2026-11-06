@@ -1,7 +1,7 @@
 import ConnectorProcessCountCell from './components/ConnectorProcessCountCell';
 import { ServicesRoutesPaths } from './Services.enum';
 import { ListenerRoutingModel, ListenerStrategy, SortDirection, TcpStatus } from '../../API/REST.enum';
-import { BIG_PAGINATION_SIZE, EMPTY_VALUE_SYMBOL } from '../../config/app';
+import { BIG_PAGINATION_SIZE, EMPTY_VALUE_SYMBOL, SUMMARY_SEPARATOR } from '../../config/app';
 import { Labels } from '../../config/labels';
 import { SkSelectOption } from '../../core/components/SkSelect';
 import SkEndTimeCell from '../../core/components/SkTable/SkCustomCells/SkEndTimeCell';
@@ -101,7 +101,7 @@ export const customServiceCells = {
       data?.strategy === ListenerStrategy.Weighted && `${Labels.Weight}: ${data?.strategyValue}`
     ]
       .filter(Boolean)
-      .join(' · ') || EMPTY_VALUE_SYMBOL,
+      .join(` ${SUMMARY_SEPARATOR} `) || EMPTY_VALUE_SYMBOL,
   ListenerTypeCell: ({ data }: SkLinkCellProps<ListenerResponse>) =>
     LISTENER_MODEL_LABELS[data?.routingModel] ?? EMPTY_VALUE_SYMBOL,
   ListenerTypesCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>

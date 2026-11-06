@@ -1,3 +1,4 @@
+import type { Path } from '@antv/g';
 import {
   Circle,
   CircleStyleProps,
@@ -181,13 +182,36 @@ class SkListenerNode extends Rect {
   }
 }
 
+// Edge label position: `distance` from the listener (px), `offset*` from the line (px)
+const LISTENER_EDGE_LABEL = {
+  distance: 60,
+  fallbackPlacement: 0.7,
+  offsetX: 8,
+  offsetY: 4
+};
+
 class SkListenerConnectorEdge extends Polyline {
+  // Places the label at a fixed distance from the listener, as a ratio of the path would land on the bends
+  protected getLabelStyle(attrs: Required<PolylineStyleProps>) {
+    const length = (this.shapeMap.key as Path | undefined)?.getTotalLength() || 0;
+    const labelPlacement = length
+      ? Math.min(LISTENER_EDGE_LABEL.distance / length, 1)
+      : LISTENER_EDGE_LABEL.fallbackPlacement;
+
+    return super.getLabelStyle({ ...attrs, labelPlacement });
+  }
+
   render(attrs: Required<PolylineStyleProps>) {
     const extendedProps = {
       lineDash: 4,
       radius: 20,
       endArrow: false,
-      labelBackgroundRadius: 2,
+      labelBackground: false,
+      labelFontSize: LISTENER_CARD.detailsFontSize,
+      labelFill: theme.colors.nodeLabelText,
+      labelTextAlign: 'left' as const,
+      labelOffsetX: LISTENER_EDGE_LABEL.offsetX,
+      labelOffsetY: LISTENER_EDGE_LABEL.offsetY,
       router: {
         type: 'orth'
       }

@@ -1,5 +1,5 @@
 import { ListenerRoutingModel, ListenerStrategy } from '../../../API/REST.enum';
-import { DEFAULT_COMPLEX_STRING_SEPARATOR } from '../../../config/app';
+import { DEFAULT_COMPLEX_STRING_SEPARATOR, SUMMARY_SEPARATOR } from '../../../config/app';
 import { Labels } from '../../../config/labels';
 import { styles } from '../../../config/styles';
 import { DEFAULT_SANKEY_CHART_FLOW_VALUE } from '../../../core/components/SkCharts/SKSanckeyChart/SkSankey.constants';
@@ -35,6 +35,7 @@ export const ServicesController = {
       destinationId: listener.serviceId,
       destinationName: listener.routingKey,
       details: getListenerNodeDetails(listener),
+      edgeLabel: getListenerEdgeLabel(listener),
       type: 'SkListenerNode' as GraphElementNames,
       iconName: 'listener' as GraphIconKeys
     })),
@@ -81,6 +82,7 @@ export const ServicesController = {
       destinationId: string;
       destinationName: string;
       details?: string[];
+      edgeLabel?: string;
       byteRate?: number;
       color?: string;
       iconName: GraphIconKeys;
@@ -112,13 +114,14 @@ export const ServicesController = {
 
     const generateTopologyEdges = (pairs: typeof servicePairs) => {
       const links = pairs
-        .map(({ sourceId, sourceName, destinationId, destinationName }) => ({
+        .map(({ sourceId, sourceName, destinationId, destinationName, edgeLabel }) => ({
           type: 'SkListenerConnectorEdge' as GraphElementNames,
           id: `${sourceId}-${destinationId}`,
           source: sourceId,
           sourceName,
           target: destinationId,
-          targetName: destinationName
+          targetName: destinationName,
+          label: edgeLabel
         }))
         .filter(({ source, target }) => source && target);
 
@@ -147,21 +150,36 @@ export const ServicesController = {
 };
 
 /**
- * Text lines shown in the listener node: the routing model, the strategy and routing keys count.
- * The strategy is hidden when it does not apply (i.e. single-key listeners).
+ * Text lines of the listener node. Strategy and routing keys count are omitted when not applicable or redundant.
  */
-function getListenerNodeDetails({ routingModel, strategy, routingKeyCount }: ListenerResponse): string[] {
+export function getListenerNodeDetails({ routingModel, strategy, routingKeyCount }: ListenerResponse): string[] {
   const modelLine =
     routingModel === ListenerRoutingModel.MultiKey ? Labels.MultiKeyListenerNode : Labels.SingleKeyListenerNode;
-
   const strategyText = strategy !== ListenerStrategy.NotApplicable ? LISTENER_STRATEGY_LABELS[strategy] : '';
-
-  const routingKeysLabel = routingKeyCount === 1 ? Labels.RoutingKey : Labels.RoutingKeys;
-  const routingKeysText = routingKeyCount !== undefined ? `${routingKeyCount} ${routingKeysLabel.toLowerCase()}` : '';
-
-  const summaryLine = [strategyText, routingKeysText].filter(Boolean).join(' · ');
+  const routingKeysText = routingKeyCount > 1 ? `${routingKeyCount} ${Labels.RoutingKeysInline}` : '';
+  const summaryLine = [strategyText, routingKeysText].filter(Boolean).join(` ${SUMMARY_SEPARATOR} `);
 
   return [modelLine, summaryLine].filter(Boolean);
+}
+
+/**
+ * Label of the edge between a multi-key listener and its routing key: the weight, or the strategy name.
+ */
+function getListenerEdgeLabel({ routingModel, strategy, strategyValue }: ListenerResponse): string | undefined {
+  if (routingModel !== ListenerRoutingModel.MultiKey) {
+    return undefined;
+  }
+
+  switch (strategy) {
+    case ListenerStrategy.Weighted:
+      return strategyValue !== undefined && strategyValue !== null
+        ? `${Labels.Weight}: ${strategyValue}`
+        : LISTENER_STRATEGY_LABELS[strategy];
+    case ListenerStrategy.Priority:
+      return LISTENER_STRATEGY_LABELS[strategy];
+    default:
+      return undefined;
+  }
 }
 
 /**

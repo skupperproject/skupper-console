@@ -83,6 +83,7 @@ export const Labels = {
   SingleKeyListener: 'Single-key',
   MultiKeyListenerNode: 'Multi-key listener',
   SingleKeyListenerNode: 'Single-key listener',
+  RoutingKeysInline: 'routing keys', // plural only: the count is shown just for 2 or more keys
   Strategy: 'Strategy',
   NotApplicable: 'Not applicable',
   Priority: 'Priority',
