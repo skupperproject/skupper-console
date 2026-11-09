@@ -9,7 +9,7 @@ import { GraphElementNames, GraphIconKeys } from '../src/types/Graph.interfaces'
 import { ConnectorResponse, ListenerResponse } from '../src/types/REST.interfaces';
 
 const connectorResults = connectorsData.results;
-const listenerResults = listenersData.results;
+const listenerResults = listenersData.results as ListenerResponse[];
 
 describe('ServicesController', () => {
   describe('convertPairsToSankeyChartData', () => {
