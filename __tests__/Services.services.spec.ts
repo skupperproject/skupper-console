@@ -15,7 +15,32 @@ import { GraphElementNames, GraphIconKeys } from '../src/types/Graph.interfaces'
 import { ConnectorResponse, ListenerResponse } from '../src/types/REST.interfaces';
 
 const connectorResults = connectorsData.results;
-const listenerResults = listenersData.results as ListenerResponse[];
+const listenerResults = listenersData.results as unknown as ListenerResponse[];
+
+const singleKeyModel = {
+  routingModel: ListenerRoutingModel.SingleKey,
+  routingKeyCount: 1,
+  strategy: ListenerStrategy.NotApplicable
+};
+const singleKeyListener: ListenerResponse = { ...listenerResults[0], ...singleKeyModel };
+
+// Response of a Network Observer without multi-key listener API support
+const preMultiKeyListener = (() => {
+  const { routingModel, routingKeyCount, strategy, strategyValue, ...preMultiKeyFields } = singleKeyListener;
+  void [routingModel, routingKeyCount, strategy, strategyValue];
+
+  return preMultiKeyFields as unknown as ListenerResponse;
+})();
+
+const multiKeyWeightedListener: ListenerResponse = {
+  ...singleKeyListener,
+  routingModel: ListenerRoutingModel.MultiKey,
+  routingKeyCount: 2,
+  strategy: ListenerStrategy.Weighted,
+  strategyValue: 3
+};
+
+const unsupportedListener = { ...preMultiKeyListener, routingModel: 'unknown-model' } as unknown as ListenerResponse;
 
 describe('ServicesController', () => {
   describe('convertPairsToSankeyChartData', () => {
@@ -79,7 +104,7 @@ describe('ServicesController', () => {
 
   describe('mapListenersToRoutingKey', () => {
     it('should correctly map listeners to routing keys', () => {
-      const listeners: ListenerResponse[] = [listenerResults[0], listenerResults[1]];
+      const listeners: ListenerResponse[] = [singleKeyListener, { ...listenerResults[1], ...singleKeyModel }];
 
       const expected = [
         {
@@ -193,7 +218,31 @@ describe('ServicesController', () => {
     });
 
     it('should not set an edge label for a single-key listener', () => {
-      expect(ServicesController.mapListenersToRoutingKey([listenerResults[0]])[0].edgeLabel).toBeUndefined();
+      expect(ServicesController.mapListenersToRoutingKey([singleKeyListener])[0].edgeLabel).toBeUndefined();
+    });
+
+    it('should not set details nor an edge label for a listener from an API without multi-key support', () => {
+      const [pair] = ServicesController.mapListenersToRoutingKey([preMultiKeyListener]);
+
+      expect(pair.details).toEqual([]);
+      expect(pair.edgeLabel).toBeUndefined();
+      expect(pair.sourceName).toBe(preMultiKeyListener.name);
+      expect(pair.iconName).toBe('listener');
+      expect(pair.type).toBe('SkEmptyNode');
+    });
+
+    it('should not set details nor an edge label for a listener with an unsupported routing model', () => {
+      const [pair] = ServicesController.mapListenersToRoutingKey([unsupportedListener]);
+
+      expect(pair.details).toEqual([]);
+      expect(pair.edgeLabel).toBeUndefined();
+      expect(pair.type).toBe('SkEmptyNode');
+    });
+
+    it('should use the listener card for single-key and multi-key listeners', () => {
+      const pairs = ServicesController.mapListenersToRoutingKey([singleKeyListener, multiKeyWeightedListener]);
+
+      expect(pairs.map(({ type }) => type)).toEqual(['SkListenerNode', 'SkListenerNode']);
     });
 
     it('should handle empty listeners array', () => {
@@ -223,20 +272,44 @@ describe('ServicesController', () => {
     });
 
     it('should show the strategy name and the count for a priority multi-key listener without the raw value', () => {
+      const priorityListener = {
+        ...multiKeyListener,
+        routingKeyCount: 4,
+        strategy: ListenerStrategy.Priority,
+        strategyValue: 1
+      };
       const expected = ['Multi-key listener', `Priority ${SUMMARY_SEPARATOR} 4 routing keys`];
 
-      expect(
-        getListenerNodeDetails({
-          ...multiKeyListener,
-          routingKeyCount: 4,
-          strategy: ListenerStrategy.Priority,
-          strategyValue: 1
-        })
-      ).toEqual(expected);
+      expect(getListenerNodeDetails(priorityListener)).toEqual(expected);
+      expect(ServicesController.mapListenersToRoutingKey([priorityListener])[0].edgeLabel).toBe('Priority');
     });
 
     it('should show only the type for a single-key listener', () => {
-      expect(getListenerNodeDetails(listenerResults[0])).toEqual(['Single-key listener']);
+      expect(getListenerNodeDetails(singleKeyListener)).toEqual(['Single-key listener']);
+    });
+
+    it('should show no details for a listener without multi-key support and with a multiAddress name', () => {
+      expect(getListenerNodeDetails({ ...preMultiKeyListener, name: 'multiAddress/backend' })).toEqual([]);
+    });
+
+    it('should show no details for a listener without multi-key support and with an ordinary name', () => {
+      expect(getListenerNodeDetails({ ...preMultiKeyListener, name: 'shippingservice' })).toEqual([]);
+    });
+
+    it('should show no details when the routing model is null', () => {
+      const nullModel = { ...preMultiKeyListener, routingModel: null } as unknown as ListenerResponse;
+
+      expect(getListenerNodeDetails(nullModel)).toEqual([]);
+    });
+
+    it('should show no details for an unsupported routing model', () => {
+      expect(getListenerNodeDetails(unsupportedListener)).toEqual([]);
+    });
+
+    it('should ignore the strategy fields when the routing model is missing', () => {
+      const withStrategy = { ...preMultiKeyListener, strategy: ListenerStrategy.Weighted, routingKeyCount: 2 };
+
+      expect(getListenerNodeDetails(withStrategy as unknown as ListenerResponse)).toEqual([]);
     });
 
     it('should return valid details when the strategy value is missing', () => {

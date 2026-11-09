@@ -210,6 +210,7 @@ class SkListenerConnectorEdge extends Polyline {
       labelFontSize: LISTENER_CARD.detailsFontSize,
       labelFill: theme.colors.nodeLabelText,
       labelTextAlign: 'left' as const,
+      labelTextBaseline: 'top' as const,
       labelOffsetX: LISTENER_EDGE_LABEL.offsetX,
       labelOffsetY: LISTENER_EDGE_LABEL.offsetY,
       router: {

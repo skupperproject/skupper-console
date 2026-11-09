@@ -27,18 +27,23 @@ export const ServicesController = {
   },
 
   mapListenersToRoutingKey: (listeners: ListenerResponse[]) =>
-    listeners.map((listener) => ({
-      sourceId: listener.identity,
-      sourceName: listener.name,
-      siteId: `${listener.siteId}-listener`, // Avoids including connectors and processes in the combo
-      siteName: listener.siteName,
-      destinationId: listener.serviceId,
-      destinationName: listener.routingKey,
-      details: getListenerNodeDetails(listener),
-      edgeLabel: getListenerEdgeLabel(listener),
-      type: 'SkListenerNode' as GraphElementNames,
-      iconName: 'listener' as GraphIconKeys
-    })),
+    listeners.map((listener) => {
+      const details = getListenerNodeDetails(listener);
+
+      return {
+        sourceId: listener.identity,
+        sourceName: listener.name,
+        siteId: `${listener.siteId}-listener`, // Avoids including connectors and processes in the combo
+        siteName: listener.siteName,
+        destinationId: listener.serviceId,
+        destinationName: listener.routingKey,
+        details,
+        edgeLabel: getListenerEdgeLabel(listener),
+        // Without details (observer without multi-key listener support) the original node is used
+        type: (details.length ? 'SkListenerNode' : 'SkEmptyNode') as GraphElementNames,
+        iconName: 'listener' as GraphIconKeys
+      };
+    }),
 
   mapConnectorsToProcesses: (connectors: ConnectorResponse[]) =>
     connectors.map((item) => ({
@@ -150,16 +155,22 @@ export const ServicesController = {
 };
 
 /**
- * Text lines of the listener node. Strategy and routing keys count are omitted when not applicable or redundant.
+ * Text lines of the listener node, by routing model
  */
 export function getListenerNodeDetails({ routingModel, strategy, routingKeyCount }: ListenerResponse): string[] {
-  const modelLine =
-    routingModel === ListenerRoutingModel.MultiKey ? Labels.MultiKeyListenerNode : Labels.SingleKeyListenerNode;
-  const strategyText = strategy !== ListenerStrategy.NotApplicable ? LISTENER_STRATEGY_LABELS[strategy] : '';
-  const routingKeysText = routingKeyCount > 1 ? `${routingKeyCount} ${Labels.RoutingKeysInline}` : '';
-  const summaryLine = [strategyText, routingKeysText].filter(Boolean).join(` ${SUMMARY_SEPARATOR} `);
+  switch (routingModel) {
+    case ListenerRoutingModel.MultiKey: {
+      const strategyText = strategy !== ListenerStrategy.NotApplicable ? LISTENER_STRATEGY_LABELS[strategy] : '';
+      const routingKeysText = routingKeyCount > 1 ? `${routingKeyCount} ${Labels.RoutingKeysInline}` : '';
+      const summaryLine = [strategyText, routingKeysText].filter(Boolean).join(` ${SUMMARY_SEPARATOR} `);
 
-  return [modelLine, summaryLine].filter(Boolean);
+      return [Labels.MultiKeyListenerNode, summaryLine].filter(Boolean);
+    }
+    case ListenerRoutingModel.SingleKey:
+      return [Labels.SingleKeyListenerNode];
+    default:
+      return [];
+  }
 }
 
 /**
