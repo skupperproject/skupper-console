@@ -40,33 +40,33 @@ const useServiceData = (serviceId: string) => {
   });
 
   const { data: requestsData } = useQuery({
-    queryKey: [getAllHttpRequests(), initServersQueryParams],
+    queryKey: [getAllHttpRequests(), { ...initServersQueryParams, routingKey: service.results.name }],
     queryFn: () => RESTApi.fetchApplicationFlows({ ...initServersQueryParams, routingKey: service.results.name }),
     enabled: !!service.results.observedApplicationProtocols.length,
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: activeConnectionsData } = useQuery({
-    queryKey: [getAllTcpConnections(), activeConnectionsQueryParams],
+    queryKey: [getAllTcpConnections(), { ...activeConnectionsQueryParams, routingKey: service.results.name }],
     queryFn: () => RESTApi.fetchTransportFlows({ ...activeConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: terminatedConnectionsData } = useQuery({
-    queryKey: [getAllTcpConnections(), terminatedConnectionsQueryParams],
+    queryKey: [getAllTcpConnections(), { ...terminatedConnectionsQueryParams, routingKey: service.results.name }],
     queryFn: () =>
       RESTApi.fetchTransportFlows({ ...terminatedConnectionsQueryParams, routingKey: service.results.name }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: listenersData } = useQuery({
-    queryKey: [getAllListeners(), initServersQueryParams],
+    queryKey: [getAllListeners(), { ...initServersQueryParams, serviceId }],
     queryFn: () => RESTApi.fetchListeners({ ...initServersQueryParams, serviceId }),
     refetchInterval: UPDATE_INTERVAL
   });
 
   const { data: connectorsData } = useQuery({
-    queryKey: [getAllConnectors(), initServersQueryParams],
+    queryKey: [getAllConnectors(), { ...initServersQueryParams, serviceId }],
     queryFn: () => RESTApi.fetchConnectors({ ...initServersQueryParams, serviceId }),
     refetchInterval: UPDATE_INTERVAL
   });
