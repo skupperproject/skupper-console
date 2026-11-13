@@ -1,5 +1,5 @@
 import { TopologyMetrics } from './Topology.interfaces';
-import { Protocols, Binding, Role, SortDirection } from '../API/REST.enum';
+import { Protocols, Binding, Role, SortDirection, ListenerRoutingModel, ListenerStrategy } from '../API/REST.enum';
 import { PrometheusLabelsV2 } from '../config/prometheus';
 
 export interface QueryFilters extends Record<string, string | string[] | number | boolean | SortDirection | undefined> {
@@ -127,6 +127,10 @@ export interface ListenerResponse extends BaseResponse {
   destPort: string;
   siteId: string;
   siteName: string;
+  routingModel?: ListenerRoutingModel;
+  routingKeyCount?: number;
+  strategy?: ListenerStrategy;
+  strategyValue?: number;
 }
 
 export interface ConnectorResponse extends BaseResponse {
@@ -150,6 +154,7 @@ export interface ServiceResponse extends BaseResponse {
   observedApplicationProtocols: string[];
   connectorCount: number;
   listenerCount: number;
+  multiKeyListenerCount?: number;
   isBound: boolean;
   hasListener: boolean;
 }

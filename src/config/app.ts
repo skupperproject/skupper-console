@@ -9,6 +9,7 @@ export const SMALL_PAGINATION_SIZE = 10;
 
 export const EMPTY_VALUE_SYMBOL = '-';
 export const DEFAULT_COMPLEX_STRING_SEPARATOR = '@'; // used for: 1) process -> services format and 2) connector name format
+export const SUMMARY_SEPARATOR = '\u00B7'; // middle dot, joins parts of a one-line summary
 
 /** Tests */
 export const waitForElementToBeRemovedTimeout = 10000;

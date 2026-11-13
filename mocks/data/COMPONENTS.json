@@ -103,6 +103,14 @@
       "processCount": 2,
       "role": "remote",
       "startTime": 1733495329535056
+    },
+    {
+      "endTime": 0,
+      "identity": "pg-3e8a1f5c9b2d7046",
+      "name": "inventoryservice",
+      "processCount": 2,
+      "role": "external",
+      "startTime": 1733493800000000
     }
   ]
 }

@@ -30,6 +30,7 @@ export type GraphElementNames =
   | 'SkListenerConnectorEdge'
   | 'SkNode'
   | 'SkEmptyNode'
+  | 'SkListenerNode'
   | 'SkNodeUnexposed'
   | 'SkNodeRemote'
   | 'SkCombo';
@@ -45,6 +46,7 @@ export interface GraphNode {
   label: string;
   combo?: string;
   comboName?: string;
+  details?: string[];
   groupId?: string;
   groupName?: string;
   groupCount?: number;

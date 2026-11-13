@@ -1,7 +1,7 @@
 import ConnectorProcessCountCell from './components/ConnectorProcessCountCell';
 import { ServicesRoutesPaths } from './Services.enum';
-import { SortDirection, TcpStatus } from '../../API/REST.enum';
-import { BIG_PAGINATION_SIZE, EMPTY_VALUE_SYMBOL } from '../../config/app';
+import { ListenerRoutingModel, ListenerStrategy, SortDirection, TcpStatus } from '../../API/REST.enum';
+import { BIG_PAGINATION_SIZE, EMPTY_VALUE_SYMBOL, SUMMARY_SEPARATOR } from '../../config/app';
 import { Labels } from '../../config/labels';
 import { SkSelectOption } from '../../core/components/SkSelect';
 import SkEndTimeCell from '../../core/components/SkTable/SkCustomCells/SkEndTimeCell';
@@ -30,6 +30,17 @@ export const TAB_2_KEY = Labels.Requests;
 export const TAB_3_KEY = Labels.OpenConnections;
 export const TAB_4_KEY = Labels.OldConnections;
 export const TAB_5_KEY = Labels.ListenersAndConnectors;
+
+const LISTENER_MODEL_LABELS: Record<ListenerRoutingModel, string> = {
+  [ListenerRoutingModel.SingleKey]: Labels.SingleKeyListener,
+  [ListenerRoutingModel.MultiKey]: Labels.MultiKeyListener
+};
+
+export const LISTENER_STRATEGY_LABELS: Record<ListenerStrategy, string> = {
+  [ListenerStrategy.NotApplicable]: Labels.NotApplicable,
+  [ListenerStrategy.Priority]: Labels.Priority,
+  [ListenerStrategy.Weighted]: Labels.Weighted
+};
 
 export const customServiceCells = {
   ServiceNameLinkCell: (props: SkLinkCellProps<ServiceResponse>) =>
@@ -84,6 +95,48 @@ export const customServiceCells = {
       type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteName}@${props.data.destinationSiteId}`
     }),
+  ListenerStrategyCell: ({ data }: { data: ListenerResponse }) => {
+    const strategy = data?.strategy;
+    const strategyValue = data?.strategyValue;
+
+    if (!strategy) {
+      return EMPTY_VALUE_SYMBOL;
+    }
+
+    const strategyLabel = LISTENER_STRATEGY_LABELS[strategy];
+
+    if (strategy === ListenerStrategy.Weighted && typeof strategyValue === 'number') {
+      return `${strategyLabel} ${SUMMARY_SEPARATOR} ${Labels.Weight}: ${strategyValue}`;
+    }
+
+    return strategyLabel;
+  },
+  ListenerTypeCell: ({ data }: { data: ListenerResponse }) =>
+    (data?.routingModel && LISTENER_MODEL_LABELS[data.routingModel]) || EMPTY_VALUE_SYMBOL,
+  ListenerTypesCell: ({ data }: { data: ServiceResponse }) => {
+    const multiKeyCount = data?.multiKeyListenerCount;
+
+    if (typeof multiKeyCount !== 'number') {
+      return EMPTY_VALUE_SYMBOL;
+    }
+
+    const hasMultiKey = multiKeyCount > 0;
+    const hasSingleKey = data.listenerCount > multiKeyCount;
+
+    if (hasMultiKey && hasSingleKey) {
+      return `${Labels.MultiKeyListener}, ${Labels.SingleKeyListener}`;
+    }
+
+    if (hasMultiKey) {
+      return Labels.MultiKeyListener;
+    }
+
+    if (hasSingleKey) {
+      return Labels.SingleKeyListener;
+    }
+
+    return EMPTY_VALUE_SYMBOL;
+  },
   TimestampCell: SkEndTimeCell,
   ApplicationProtocolCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
     data?.observedApplicationProtocols.join(', ') || EMPTY_VALUE_SYMBOL,
@@ -96,6 +149,11 @@ export const ServiceColumns: SKTableColumn<ServiceResponse>[] = [
     name: Labels.RoutingKey,
     prop: 'name',
     customCellName: 'ServiceNameLinkCell'
+  },
+  {
+    name: Labels.ListenerTypes,
+    prop: 'multiKeyListenerCount',
+    customCellName: 'ListenerTypesCell'
   },
   {
     name: Labels.TCP,
@@ -130,6 +188,21 @@ export const ListenerColumns: SKTableColumn<ListenerResponse>[] = [
     name: Labels.Site,
     prop: 'siteName',
     customCellName: 'SiteNameLinkCell'
+  },
+  {
+    name: Labels.Type,
+    prop: 'routingModel',
+    customCellName: 'ListenerTypeCell'
+  },
+  {
+    name: Labels.Strategy,
+    prop: 'strategy',
+    customCellName: 'ListenerStrategyCell'
+  },
+  {
+    name: Labels.RoutingKeys,
+    prop: 'routingKeyCount',
+    modifier: 'fitContent'
   },
   {
     name: Labels.Created,

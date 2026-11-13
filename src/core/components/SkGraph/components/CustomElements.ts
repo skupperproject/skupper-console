@@ -1,3 +1,4 @@
+import type { Path } from '@antv/g';
 import {
   Circle,
   CircleStyleProps,
@@ -8,6 +9,8 @@ import {
   PolylineStyleProps,
   Quadratic,
   QuadraticStyleProps,
+  Rect,
+  RectStyleProps,
   RectCombo,
   RectComboStyleProps,
   register
@@ -18,6 +21,7 @@ import { theme } from '../config';
 export function registerElements() {
   register(ExtensionCategory.NODE, 'SkNode', SkNode);
   register(ExtensionCategory.NODE, 'SkEmptyNode', SkEmptyNode);
+  register(ExtensionCategory.NODE, 'SkListenerNode', SkListenerNode);
   register(ExtensionCategory.NODE, 'SkNodeUnexposed', SkNodeUnexposed);
   register(ExtensionCategory.NODE, 'SkNodeRemote', SkNodeRemote);
   register(ExtensionCategory.EDGE, 'SkDataEdge', SkDataEdge);
@@ -125,13 +129,90 @@ class SkSiteEdgePartialUp extends SkSiteEdge {
   }
 }
 
+const LISTENER_CARD = {
+  iconY: -25,
+  labelY: -1,
+  detailsY: [19, 31],
+  detailsFontSize: theme.font.labelFontSize - 1
+};
+class SkListenerNode extends Rect {
+  protected getIconStyle(attrs: Required<RectStyleProps>) {
+    const style = super.getIconStyle(attrs);
+
+    return style && { ...style, y: LISTENER_CARD.iconY };
+  }
+
+  render(attrs: Required<RectStyleProps>, container = this) {
+    const { detailLines = [] } = attrs as unknown as { detailLines?: string[] };
+
+    super.render(
+      {
+        ...attrs,
+        size: theme.node.listenerSize,
+        opacity: 1,
+        fill: 'transparent',
+        stroke: 'transparent',
+        shadowColor: 'transparent',
+        icon: true,
+        labelPlacement: 'center',
+        labelOffsetY: LISTENER_CARD.labelY,
+        labelWordWrap: true,
+        labelMaxWidth: '90%'
+      },
+      container
+    );
+
+    LISTENER_CARD.detailsY.forEach((y, i) => {
+      const text = detailLines[i];
+      const detailLine = text
+        ? {
+            x: 0,
+            y,
+            text,
+            fontSize: LISTENER_CARD.detailsFontSize,
+            fontFamily: theme.font.family,
+            fill: theme.colors.nodeLabelText,
+            textAlign: 'center',
+            textBaseline: 'middle'
+          }
+        : false;
+
+      this.upsert(`detail-${i}`, 'text', detailLine, container);
+    });
+  }
+}
+
+// Edge label position: `distance` from the listener (px), `offset*` from the line (px)
+const LISTENER_EDGE_LABEL = {
+  distance: 60,
+  fallbackPlacement: 0.7,
+  offsetX: 8,
+  offsetY: 4
+};
+
 class SkListenerConnectorEdge extends Polyline {
+  // Fixed pixel distance from the listener; a plain ratio would land on the bends
+  protected getLabelStyle(attrs: Required<PolylineStyleProps>) {
+    const length = (this.shapeMap.key as Path | undefined)?.getTotalLength() || 0;
+    const labelPlacement = length
+      ? Math.min(LISTENER_EDGE_LABEL.distance / length, 1)
+      : LISTENER_EDGE_LABEL.fallbackPlacement;
+
+    return super.getLabelStyle({ ...attrs, labelPlacement });
+  }
+
   render(attrs: Required<PolylineStyleProps>) {
     const extendedProps = {
       lineDash: 4,
       radius: 20,
       endArrow: false,
-      labelBackgroundRadius: 2,
+      labelBackground: false,
+      labelFontSize: LISTENER_CARD.detailsFontSize,
+      labelFill: theme.colors.nodeLabelText,
+      labelTextAlign: 'left' as const,
+      labelTextBaseline: 'top' as const,
+      labelOffsetX: LISTENER_EDGE_LABEL.offsetX,
+      labelOffsetY: LISTENER_EDGE_LABEL.offsetY,
       router: {
         type: 'orth'
       }

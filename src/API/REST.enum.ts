@@ -53,3 +53,14 @@ export enum Role {
   Internal = 'internal',
   Remote = 'remote'
 }
+
+export enum ListenerRoutingModel {
+  SingleKey = 'single-key',
+  MultiKey = 'multi-key'
+}
+
+export enum ListenerStrategy {
+  NotApplicable = 'not-applicable',
+  Priority = 'priority',
+  Weighted = 'weighted'
+}
