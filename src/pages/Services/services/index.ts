@@ -39,7 +39,6 @@ export const ServicesController = {
         destinationName: listener.routingKey,
         details,
         edgeLabel: getListenerEdgeLabel(listener),
-        // Without details (observer without multi-key listener support) the original node is used
         type: (details.length ? 'SkListenerNode' : 'SkEmptyNode') as GraphElementNames,
         iconName: 'listener' as GraphIconKeys
       };
