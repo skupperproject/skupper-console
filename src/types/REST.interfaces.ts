@@ -127,9 +127,9 @@ export interface ListenerResponse extends BaseResponse {
   destPort: string;
   siteId: string;
   siteName: string;
-  routingModel: ListenerRoutingModel;
-  routingKeyCount: number;
-  strategy: ListenerStrategy;
+  routingModel?: ListenerRoutingModel;
+  routingKeyCount?: number;
+  strategy?: ListenerStrategy;
   strategyValue?: number;
 }
 
@@ -154,7 +154,7 @@ export interface ServiceResponse extends BaseResponse {
   observedApplicationProtocols: string[];
   connectorCount: number;
   listenerCount: number;
-  multiKeyListenerCount: number;
+  multiKeyListenerCount?: number;
   isBound: boolean;
   hasListener: boolean;
 }

@@ -191,7 +191,7 @@ const LISTENER_EDGE_LABEL = {
 };
 
 class SkListenerConnectorEdge extends Polyline {
-  // Places the label at a fixed distance from the listener, as a ratio of the path would land on the bends
+  // Fixed pixel distance from the listener; a plain ratio would land on the bends
   protected getLabelStyle(attrs: Required<PolylineStyleProps>) {
     const length = (this.shapeMap.key as Path | undefined)?.getTotalLength() || 0;
     const labelPlacement = length

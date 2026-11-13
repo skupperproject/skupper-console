@@ -15,7 +15,7 @@ import { GraphElementNames, GraphIconKeys } from '../src/types/Graph.interfaces'
 import { ConnectorResponse, ListenerResponse } from '../src/types/REST.interfaces';
 
 const connectorResults = connectorsData.results;
-const listenerResults = listenersData.results as unknown as ListenerResponse[];
+const listenerResults = listenersData.results as ListenerResponse[];
 
 const singleKeyModel = {
   routingModel: ListenerRoutingModel.SingleKey,
@@ -25,11 +25,11 @@ const singleKeyModel = {
 const singleKeyListener: ListenerResponse = { ...listenerResults[0], ...singleKeyModel };
 
 // Response of a Network Observer without multi-key listener API support
-const preMultiKeyListener = (() => {
+const preMultiKeyListener: ListenerResponse = (() => {
   const { routingModel, routingKeyCount, strategy, strategyValue, ...preMultiKeyFields } = singleKeyListener;
   void [routingModel, routingKeyCount, strategy, strategyValue];
 
-  return preMultiKeyFields as unknown as ListenerResponse;
+  return preMultiKeyFields;
 })();
 
 const multiKeyWeightedListener: ListenerResponse = {
@@ -40,7 +40,10 @@ const multiKeyWeightedListener: ListenerResponse = {
   strategyValue: 3
 };
 
-const unsupportedListener = { ...preMultiKeyListener, routingModel: 'unknown-model' } as unknown as ListenerResponse;
+const unsupportedListener: ListenerResponse = {
+  ...preMultiKeyListener,
+  routingModel: 'unknown-model' as ListenerRoutingModel
+};
 
 describe('ServicesController', () => {
   describe('convertPairsToSankeyChartData', () => {
@@ -296,12 +299,6 @@ describe('ServicesController', () => {
       expect(getListenerNodeDetails({ ...preMultiKeyListener, name: 'shippingservice' })).toEqual([]);
     });
 
-    it('should show no details when the routing model is null', () => {
-      const nullModel = { ...preMultiKeyListener, routingModel: null } as unknown as ListenerResponse;
-
-      expect(getListenerNodeDetails(nullModel)).toEqual([]);
-    });
-
     it('should show no details for an unsupported routing model', () => {
       expect(getListenerNodeDetails(unsupportedListener)).toEqual([]);
     });
@@ -309,7 +306,7 @@ describe('ServicesController', () => {
     it('should ignore the strategy fields when the routing model is missing', () => {
       const withStrategy = { ...preMultiKeyListener, strategy: ListenerStrategy.Weighted, routingKeyCount: 2 };
 
-      expect(getListenerNodeDetails(withStrategy as unknown as ListenerResponse)).toEqual([]);
+      expect(getListenerNodeDetails(withStrategy)).toEqual([]);
     });
 
     it('should return valid details when the strategy value is missing', () => {

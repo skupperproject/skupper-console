@@ -95,22 +95,48 @@ export const customServiceCells = {
       type: 'site',
       link: `${SitesRoutesPaths.Sites}/${props.data.destinationSiteName}@${props.data.destinationSiteId}`
     }),
-  ListenerStrategyCell: ({ data }: SkLinkCellProps<ListenerResponse>) =>
-    [
-      LISTENER_STRATEGY_LABELS[data?.strategy],
-      data?.strategy === ListenerStrategy.Weighted && `${Labels.Weight}: ${data?.strategyValue}`
-    ]
-      .filter(Boolean)
-      .join(` ${SUMMARY_SEPARATOR} `) || EMPTY_VALUE_SYMBOL,
-  ListenerTypeCell: ({ data }: SkLinkCellProps<ListenerResponse>) =>
-    LISTENER_MODEL_LABELS[data?.routingModel] ?? EMPTY_VALUE_SYMBOL,
-  ListenerTypesCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
-    [
-      data?.multiKeyListenerCount > 0 && Labels.MultiKeyListener,
-      data?.listenerCount > data?.multiKeyListenerCount && Labels.SingleKeyListener
-    ]
-      .filter(Boolean)
-      .join(', ') || EMPTY_VALUE_SYMBOL,
+  ListenerStrategyCell: ({ data }: { data: ListenerResponse }) => {
+    const strategy = data?.strategy;
+    const strategyValue = data?.strategyValue;
+
+    if (!strategy) {
+      return EMPTY_VALUE_SYMBOL;
+    }
+
+    const strategyLabel = LISTENER_STRATEGY_LABELS[strategy];
+
+    if (strategy === ListenerStrategy.Weighted && typeof strategyValue === 'number') {
+      return `${strategyLabel} ${SUMMARY_SEPARATOR} ${Labels.Weight}: ${strategyValue}`;
+    }
+
+    return strategyLabel;
+  },
+  ListenerTypeCell: ({ data }: { data: ListenerResponse }) =>
+    (data?.routingModel && LISTENER_MODEL_LABELS[data.routingModel]) || EMPTY_VALUE_SYMBOL,
+  ListenerTypesCell: ({ data }: { data: ServiceResponse }) => {
+    const multiKeyCount = data?.multiKeyListenerCount;
+
+    if (typeof multiKeyCount !== 'number') {
+      return EMPTY_VALUE_SYMBOL;
+    }
+
+    const hasMultiKey = multiKeyCount > 0;
+    const hasSingleKey = data.listenerCount > multiKeyCount;
+
+    if (hasMultiKey && hasSingleKey) {
+      return `${Labels.MultiKeyListener}, ${Labels.SingleKeyListener}`;
+    }
+
+    if (hasMultiKey) {
+      return Labels.MultiKeyListener;
+    }
+
+    if (hasSingleKey) {
+      return Labels.SingleKeyListener;
+    }
+
+    return EMPTY_VALUE_SYMBOL;
+  },
   TimestampCell: SkEndTimeCell,
   ApplicationProtocolCell: ({ data }: SkLinkCellProps<ServiceResponse>) =>
     data?.observedApplicationProtocols.join(', ') || EMPTY_VALUE_SYMBOL,

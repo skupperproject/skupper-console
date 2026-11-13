@@ -160,8 +160,10 @@ export const ServicesController = {
 export function getListenerNodeDetails({ routingModel, strategy, routingKeyCount }: ListenerResponse): string[] {
   switch (routingModel) {
     case ListenerRoutingModel.MultiKey: {
-      const strategyText = strategy !== ListenerStrategy.NotApplicable ? LISTENER_STRATEGY_LABELS[strategy] : '';
-      const routingKeysText = routingKeyCount > 1 ? `${routingKeyCount} ${Labels.RoutingKeysInline}` : '';
+      const strategyText =
+        strategy && strategy !== ListenerStrategy.NotApplicable ? LISTENER_STRATEGY_LABELS[strategy] : '';
+      const routingKeysText =
+        routingKeyCount && routingKeyCount > 1 ? `${routingKeyCount} ${Labels.RoutingKeysInline}` : '';
       const summaryLine = [strategyText, routingKeysText].filter(Boolean).join(` ${SUMMARY_SEPARATOR} `);
 
       return [Labels.MultiKeyListenerNode, summaryLine].filter(Boolean);
@@ -183,7 +185,7 @@ function getListenerEdgeLabel({ routingModel, strategy, strategyValue }: Listene
 
   switch (strategy) {
     case ListenerStrategy.Weighted:
-      return strategyValue !== undefined && strategyValue !== null
+      return typeof strategyValue === 'number'
         ? `${Labels.Weight}: ${strategyValue}`
         : LISTENER_STRATEGY_LABELS[strategy];
     case ListenerStrategy.Priority:
